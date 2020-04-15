@@ -1,0 +1,373 @@
+[
+  {
+    "id": "1",
+    "optie": "1",
+    "text": "De supermarkt was dicht dus er waren geen auto's."
+  },
+  {
+    "id": "2",
+    "optie": "1",
+    "text": "De vrouw van wie de auto was kwam net terug.."
+  },
+  {
+    "id": "3",
+    "optie": "1",
+    "text": "Je zag een politieauto voorbij komen en toen durfde je niet meer!"
+  },
+  {
+    "id": "4",
+    "optie": "1",
+    "text": "Toen je in de auto zat, en alleen de motor nog moest starten, kwam er een grote sterke vrouw aan (de eigenaar) en die sloeg je in elkaar! Wat een vernedering! Je bent op het nippertje ontsnapt aan de politie"
+  },
+  {
+    "id": "5",
+    "optie": "1",
+    "text": "Toen je net wegreed en honderd meter gereden had, hield de auto er mee op. De benzine was op. Wat een pech!"
+  },
+  {
+    "id": "6",
+    "optie": "2",
+    "text": "Er was een pauze en iedereen kwam net naar buiten."
+  },
+  {
+    "id": "7",
+    "optie": "2",
+    "text": "Je zag een man staan pissen en die keek net om, dus je deed het toch maar niet.."
+  },
+  {
+    "id": "8",
+    "optie": "2",
+    "text": "Toen je op de auto afliep, zag je dat de auto heen en weer bewoog.."
+  },
+  {
+    "id": "9",
+    "optie": "2",
+    "text": "De auto die je wou stelen reed net weg!"
+  },
+  {
+    "id": "10",
+    "optie": "2",
+    "text": "Je was je gereedschap vergeten mee te nemen"
+  },
+  {
+    "id": "11",
+    "optie": "3",
+    "text": "Het was moeilijk zoeken, maar toen je eindelijk een sleutel had gevonden, vond je geen enkele auto waar die in paste."
+  },
+  { "id": "12", "optie": "3", "text": "De sleutel was kapot.." },
+  {
+    "id": "13",
+    "optie": "3",
+    "text": "Je had een autosleutel gezien in een gevonden voorwerpen bak, en je zei dat de sleutel van jou was, maar de vrouw geloofde je niet en belde de politie! Je bent gauw weggerend!"
+  },
+  {
+    "id": "14",
+    "optie": "3",
+    "text": "Er zaten geen autosleutels in de gevonden voorwerpen bak.."
+  },
+  {
+    "id": "15",
+    "optie": "3",
+    "text": "Je hebt de hele dag gezocht naar de auto voor de sleutel die je uit de gevondenvoorwerpenbak gehaald hebt, en toen je hem eindelijk gevonden had, bleek het dat de sleutel kapot was! Het puntje was afgebroken!"
+  },
+  {
+    "id": "16",
+    "optie": "4",
+    "text": "Je zag een agent staan dus je ging er snel vandoor!"
+  },
+  {
+    "id": "17",
+    "optie": "4",
+    "text": "Iedereen keek naar je toen je die ruit intikte.. waarom doe je het dan midden op de dag!?"
+  },
+  {
+    "id": "18",
+    "optie": "4",
+    "text": "Het alarm ging af en je bent maar weggerend.."
+  },
+  {
+    "id": "19",
+    "optie": "4",
+    "text": "Je snapte er niks van toen er ineens 4 politie agenten om je heen stonden, terwijl je de auto nog niet eens had aangeraakt! Tsja, een oud oma'tje had je zien staan kijken en had 112 gebeld! Je kwam er met een beetje gelul onderuit en ging er toen vandoor! "
+  },
+  {
+    "id": "20",
+    "optie": "4",
+    "text": "Iemand was je voor! De auto die je wou stelen reed net met piepende banden weg.."
+  },
+  {
+    "id": "21",
+    "optie": "5",
+    "text": "Waarom ga je overdag op een parkeerplaats in een forenzenstad een auto proberen te stelen!? De parkeer plaats was hardstikke leeg!"
+  },
+  {
+    "id": "22",
+    "optie": "5",
+    "text": "Er stond een oude oma te gluren uit een raam, dus je liep maar verder.."
+  },
+  {
+    "id": "23",
+    "optie": "5",
+    "text": "Er waren teveel mensen op de parkeerplaats, dus je deed het toch maar niet.."
+  },
+  {
+    "id": "24",
+    "optie": "5",
+    "text": "Er waren alleen nog maar vieze oude krakkebakken op de parkeerplaats! Dat vond je de moeite niet waard!"
+  },
+  {
+    "id": "25",
+    "optie": "5",
+    "text": "Je had per ongeluk de verkeerde draadjes met elkaar verbonden. Plots hoorde je een knal. Je hele gezicht was zwart! Je kon nog net optijd wegkomen voordat iemand je goed zag!"
+  },
+  {
+    "id": "26",
+    "optie": "6",
+    "text": "Het restaurant was dicht, dus alle auto's waren al weg.. Slim hoor."
+  },
+  {
+    "id": "27",
+    "optie": "6",
+    "text": "De auto eigenaar wou net naar huis gaan en hij zag je! Oei, dat scheelde niet veel of hij had je gepakt!"
+  },
+  {
+    "id": "28",
+    "optie": "6",
+    "text": "Je zag een politieauto voorbij komen en toen durfde je niet meer! Komop zeg... Butje!"
+  },
+  {
+    "id": "29",
+    "optie": "6",
+    "text": "Je had de auto nog in de 1e versnelling staan, en je trapte het gaspedaal in (je dacht dat ie in z'n achteruit stond..) Maar voor je stond een boom! Nou, nu is die auto dus niks meer waard. Je ging snel weg voordat iemand je zag"
+  },
+  {
+    "id": "30",
+    "optie": "6",
+    "text": "Toen je net de autodeur open gebroken had, ging het alarm af! De auto-eigenaar kwam op je afrennen met zijn mes en vork nog in z'n handen! Oei, dat scheelde niet veel"
+  },
+  {
+    "id": "31",
+    "optie": "7",
+    "text": "Jij kan echt niet toneelspelen! De automobilist had je meteen door! Hij sloeg je in elkaar."
+  },
+  {
+    "id": "32",
+    "optie": "7",
+    "text": "Waarom ga je dan ook midden op de weg liggen, de automobilist zag je niet liggen, en reed bijna over je heen! Oei.. dat scheelde niet veel, gelukkig kon je net optijd opstaan en weg springen. Daar was je bijna even écht gewond!"
+  },
+  {
+    "id": "33",
+    "optie": "7",
+    "text": "Lig ook niet zo stil, en roep ook eens om help, de auto mobilist dacht dat je al dood was, dus reed gewoon door."
+  },
+  {
+    "id": "34",
+    "optie": "7",
+    "text": "Toen de automobilist naar je toekwam om je te helpen, sloeg je hem bewusteloos en liep naar de auto toe. Je had alleen niet door dat er ook nog 2 kinderen op de achterbank zaten. Toen je net weg reed, gaven ze je een pak slaag! Toen ze je in de houdgreep hadden, belden ze ook nog de politie! Wat een vernedering, gelukkig kon je net optijd los komen en weg rennen."
+  },
+  {
+    "id": "35",
+    "optie": "7",
+    "text": "Na 2 uur liggen was je het zat! Er was nog geen enkele auto langsgekomen!!"
+  },
+  {
+    "id": "36",
+    "optie": "8",
+    "text": "Het was pikdonker in de garage dus je kon de auto's niet vinden.."
+  },
+  {
+    "id": "37",
+    "optie": "8",
+    "text": "Het was best donker, en je was je zaklamp vergeten, dus je deed het maar zonder licht. Toen je een autodeur open had gebroken, bleek het dat het een politieauto was! Dus je dacht, dan moeten ze hier in de buurt zijn, ik ga er maar gauw vandoor!"
+  },
+  {
+    "id": "38",
+    "optie": "8",
+    "text": "Iemand die net af wou rekenen zag je de ruit inslaan, en je zag hem naar z'n mobieltje grijpen, dus je liep maar weg.."
+  },
+  {
+    "id": "39",
+    "optie": "8",
+    "text": "Je had een best mooie auto te pakken, en je scheurde naar de uitgang. Maar wie is er nou zo dom, om geen uitgangskaartje te kopen bij de automaat, nu kon je er niet uit! De politie kwam al naar je toelopen en je kon nog net optijd wegrennen.. Da's niet zo slim van je, hè?"
+  },
+  {
+    "id": "40",
+    "optie": "8",
+    "text": "Toen je net uit de garage racede, hoorde je gepruttel, en het bleek dus dat de benzine op was! Wat ben jij een pechvogel!"
+  },
+  {
+    "id": "41",
+    "optie": "9",
+    "text": "Alle winkels waren gesloten, en er waren dus helemaal geen auto's..."
+  },
+  {
+    "id": "42",
+    "optie": "9",
+    "text": "Je probeerde het bij een best mooie wagen, maar de eigenaar kwam eraan dus je ging ervan door."
+  },
+  {
+    "id": "43",
+    "optie": "9",
+    "text": "Het alarm ging af en je bent maar weggerend.."
+  },
+  {
+    "id": "44",
+    "optie": "9",
+    "text": "Je had een strakke bak gevonden om te jatten, en je dacht: dit is echt mijn geluksdag! Want de deur stond gewoon open! Je wou net instappen en toen je alleen maar de motor moest starten (en de draadjes aan elkaar doen), kwam de eigenaar om de hoek rennen met nog een man. Je had ze door: Het was een val! De ene belde de politie al, en de andere struikelde over de stoeprand, dus gelukkig greep je toen je kans om uit te stappen en heel hard weg te rennen. Oei, dat scheelde niet veel..."
+  },
+  {
+    "id": "45",
+    "optie": "9",
+    "text": "Iemand was je voor! De auto die je wou stelen reed net met piepende banden weg.."
+  },
+  {
+    "id": "46",
+    "optie": "10",
+    "text": "De auto die op de oprit stond was wel mooi, maar je had niet door dat ze er net een band onder weg hadden gehaald omdat die lek was. Niet zo slim, en op 3 wielen kwam je niet ver..."
+  },
+  {
+    "id": "47",
+    "optie": "10",
+    "text": "Er stond een oude oma te gluren uit een raam, dus je liep maar verder.."
+  },
+  {
+    "id": "48",
+    "optie": "10",
+    "text": "Er lag een zwerver in de achterbak te slapen, en je gunde hem het wel, dus je liet de auto maar staan."
+  },
+  {
+    "id": "49",
+    "optie": "10",
+    "text": "Je doel reed er net vandoor toen je op actie wou overgaan! Helaas.."
+  },
+  {
+    "id": "50",
+    "optie": "10",
+    "text": "Je had per ongeluk de verkeerde draadjes met elkaar verbonden. Plots hoorde je een knal. Je hele gezicht was zwart! Je kon nog net optijd wegkomen voordat iemand je goed zag!"
+  },
+  {
+    "id": "51",
+    "optie": "11",
+    "text": "Een bewaker vertrouwde je niet en hield je tegen. Je kwam niet binnen.."
+  },
+  {
+    "id": "52",
+    "optie": "11",
+    "text": "Er zat een klem op de auto, dus toen je weg wou gassen kwam je geen centimeter vooruit. Door de slechte beveiliging kon je gelukkig nog net ontsnappen!"
+  },
+  {
+    "id": "53",
+    "optie": "11",
+    "text": "Je stormde binnen, zocht een auto, en scheurde weg. Je dacht: 'Yes, het is gelukt!'. Maar toen kwamen de bewakers in een snellere auto achter je aan. Je reed nog sneller, en het werd een mooie achtervolging. Ineens kwam er een bocht en dat had je niet door! Je racede zo een tuin in! Je hele auto was total los, want je kwam niet meer weg. Toen stapte je uit en rende naar een sloot, waar je je vervolgens in een buis verstopte. Gatver! Maar gelukkig ben je niet gepakt!"
+  },
+  {
+    "id": "54",
+    "optie": "11",
+    "text": "Toen je net wegreed en honderd meter gereden had, hield de auto er mee op. Ze hadden de benzine eruit gehaald!"
+  },
+  {
+    "id": "55",
+    "optie": "11",
+    "text": "Ze waren zo mooi, je kon gewoon niet kiezen!"
+  },
+  {
+    "id": "56",
+    "optie": "12",
+    "text": "De auto had spraakherkenning en je wist niet van wie je de stem moest nadoen."
+  },
+  {
+    "id": "57",
+    "optie": "12",
+    "text": "Er waren zoveel mooie auto's, dat je ze allemaal eerst wou bekijken, toen je ze na een uur of wat allemaal gezien had, kwam er een man aan. Je kon nog net optijd weg sluipen."
+  },
+  {
+    "id": "58",
+    "optie": "12",
+    "text": "Volgens mij had deze man iets teveel geld uitgegeven aan zijn villa, want hij had geen garage met auto's, alleen 1 autootje die niks waard was.."
+  },
+  {
+    "id": "59",
+    "optie": "12",
+    "text": "De eigenaar lag te zwemmen in zijn luxe zwembad, en jammer genoeg was de auto naast het zwembad geparkeerd."
+  },
+  {
+    "id": "60",
+    "optie": "12",
+    "text": "Je wist niet hoe je zo'n mooie Ferrari moest besturen!"
+  },
+  {
+    "id": "61",
+    "optie": "13",
+    "text": "De camera's merkten je op en het alarm ging af."
+  },
+  {
+    "id": "62",
+    "optie": "13",
+    "text": "Een dikke miljonair zag je bij zijn auto staan en rende erop af. Oei, gelukkig was je sneller dan hem!"
+  },
+  {
+    "id": "63",
+    "optie": "13",
+    "text": "Je wou een autostleutel jatten in de miljonairsclub, maar je kwam niet binnen omdat ze je niet vertrouwden, en je was niet uitgenodigd!"
+  },
+  {
+    "id": "64",
+    "optie": "13",
+    "text": "Toen je binnen was en een sleutel te pakken had, bleek het dat de sleutel nergens op paste.. Hoe kan dat nou?!"
+  },
+  {
+    "id": "65",
+    "optie": "13",
+    "text": "Je was een beetje te laat en de miljonairs gingen al langzaam weer naar huis... Dus je nam geen risico's en liep verder.."
+  },
+  {
+    "id": "66",
+    "optie": "14",
+    "text": "Je probeerde het bij Gordon, maar toen je in z'n roze auto stapte, kwam hij naar buiten met een jachtgeweer! Je verborg je achter de auto zodat hij niet durfde te schieten. Dat was zijn lievelingsauto!"
+  },
+  {
+    "id": "67",
+    "optie": "14",
+    "text": "Balkenende zag je, dus je durfde niet meer"
+  },
+  {
+    "id": "68",
+    "optie": "14",
+    "text": "Er was zoveel beveiliging, dat je er niet eens dichtbij kon komen!"
+  },
+  {
+    "id": "69",
+    "optie": "14",
+    "text": "Je moeder is geen bekende nederlander, hoe dom kun je zijn!"
+  },
+  {
+    "id": "70",
+    "optie": "14",
+    "text": "Je probeerde het bij het huis van Katja Schuurman, maar je werd afgeleid toen je haar zag, en omdat je haar zo mooi vond, besloot je om de auto toch maar niet te stelen.."
+  },
+  {
+    "id": "71",
+    "optie": "15",
+    "text": "Je kon geen legendarische auto vinden.."
+  },
+  {
+    "id": "72",
+    "optie": "15",
+    "text": "Toen je de Bugatti aanraakte ging het alarm af en kwamen er 10 bewakers op je af stormen! Je pakte je wapen en gaf ze er vanlangs! Dat scheelde niet veel, je kwam er met een paar kleerscheuren vanaf!"
+  },
+  {
+    "id": "73",
+    "optie": "15",
+    "text": "Je zag een hele mooie auto, maar toen je er op af liep, zag je ineens 2 bewakers die naar je keken. Shit, alweer mislukt. Je liep de andere kant weer op."
+  },
+  {
+    "id": "74",
+    "optie": "15",
+    "text": "Toen je langs de kroeg liep kon je het niet weerstaan om even 1 biertje te drinken, maar na een paar uur kwam je erachter dat je er al 10 op had, en toen wou het autostelen niet zo goed meer"
+  },
+  {
+    "id": "75",
+    "optie": "15",
+    "text": "De politie stond je al op te wachten dus het ging niet door..."
+  }
+]

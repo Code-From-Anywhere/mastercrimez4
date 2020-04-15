@@ -1,0 +1,942 @@
+const express = require("express");
+const server = express();
+const body_parser = require("body-parser");
+const multer = require("multer");
+const sgMail = require("@sendgrid/mail");
+const fs = require("fs");
+const Jimp = require("jimp");
+
+require("dotenv").config();
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+var cors = require("cors");
+
+const EMAIL_FROM = "info@mastercrimez.nl";
+
+const publicUserFields = [
+  "id",
+  "email",
+  "name",
+  "image",
+
+  "bio",
+
+  "cash",
+  "bank",
+  "bullets",
+  "rank",
+  "health",
+  "city",
+  "wiet",
+  "junkies",
+  "hoeren",
+  "strength",
+  "gamepoints",
+
+  "weapon",
+  "protection",
+  "airplane",
+  "home",
+
+  "level",
+  "activated",
+
+  "onlineAt",
+  "autostelenAt",
+  "crimeAt",
+  "reizenAt",
+  "jailAt",
+  "wietAt",
+  "junkiesAt",
+  "hoerenAt",
+  "gymAt",
+  "gymTime",
+  "bunkerAt",
+  "incomeAt",
+  "robAt",
+  "attackAt",
+];
+
+const { Sequelize, Model, DataTypes, Op } = require("sequelize");
+
+function me(token) {
+  return User.findOne({
+    attributes: publicUserFields,
+    where: { loginToken: token },
+  });
+}
+
+function earthDistance(lat1, long1, lat2, long2, response) {
+  const m = Math.PI / 180;
+
+  lat1 = lat1 * m;
+  long1 = long1 * m;
+  lat2 = lat2 * m;
+  long2 = long2 * m;
+
+  var R = 6371e3; // metres of earth radius
+
+  var x = (long2 - long1) * Math.cos((lat1 + lat2) / 2);
+  var y = lat2 - lat1;
+
+  var d = Math.sqrt(x * x + y * y) * R;
+
+  return response === "m" ? Math.round(d / 10) * 10 : Math.round(d / 1000); //in kilometers!
+}
+
+const sequelize = new Sequelize({
+  dialect: "sqlite",
+  storage: "database/db3.sqlite",
+  logging: null,
+});
+
+class User extends Model {}
+
+User.init(
+  {
+    loginToken: DataTypes.STRING,
+    activationToken: DataTypes.STRING,
+    forgotPasswordToken: DataTypes.STRING,
+    activated: DataTypes.BOOLEAN,
+    level: DataTypes.INTEGER,
+
+    email: DataTypes.STRING,
+    name: DataTypes.STRING,
+    image: DataTypes.STRING,
+    bio: DataTypes.STRING,
+
+    onlineAt: DataTypes.INTEGER,
+    autostelenAt: DataTypes.INTEGER,
+    crimeAt: DataTypes.INTEGER,
+    reizenAt: DataTypes.INTEGER,
+    jailAt: DataTypes.INTEGER,
+    wietAt: DataTypes.INTEGER,
+    junkiesAt: DataTypes.INTEGER,
+    hoerenAt: DataTypes.INTEGER,
+    gymAt: DataTypes.INTEGER,
+    gymTime: DataTypes.INTEGER,
+    bunkerAt: DataTypes.INTEGER,
+    incomeAt: DataTypes.INTEGER,
+
+    attackAt: DataTypes.INTEGER, //wanneer je HEBT aangevallen
+    attackedAt: DataTypes.INTEGER, //wanneer je bent aangevallen
+    robbedAt: DataTypes.INTEGER, //wanneer je bent berooft
+    robAt: DataTypes.INTEGER, //wanneer je HEBT beroofd
+
+    home: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    airplane: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    protection: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    weapon: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    wiet: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    junkies: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    hoeren: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    strength: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    cash: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    gamepoints: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    bank: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    bullets: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    rank: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    health: {
+      type: DataTypes.INTEGER,
+      defaultValue: 100,
+    },
+
+    city: {
+      type: DataTypes.STRING,
+      defaultValue: "Amsterdam",
+    },
+
+    password: DataTypes.STRING,
+  },
+  { sequelize, modelName: "user" }
+);
+
+class Garage extends Model {}
+
+Garage.init(
+  {
+    userId: DataTypes.INTEGER,
+
+    date: DataTypes.DATE,
+    auto: DataTypes.STRING,
+    image: DataTypes.STRING,
+
+    cash: DataTypes.INTEGER,
+    power: DataTypes.INTEGER,
+    kogels: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "garage" }
+);
+
+class Chat extends Model {}
+
+Chat.init(
+  {
+    name: DataTypes.STRING,
+    message: DataTypes.STRING,
+  },
+  { sequelize, modelName: "chat" }
+);
+
+class Image extends Model {}
+
+Image.init(
+  {
+    image: DataTypes.STRING,
+    uid: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "image" }
+);
+
+class Message extends Model {}
+
+Message.init(
+  {
+    from: DataTypes.INTEGER,
+    fromName: DataTypes.STRING,
+    to: DataTypes.INTEGER,
+    message: DataTypes.STRING,
+    read: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  },
+  { sequelize, modelName: "message" }
+);
+
+class ForumTopic extends Model {}
+
+ForumTopic.init(
+  {
+    name: DataTypes.STRING,
+    title: DataTypes.STRING,
+    message: DataTypes.STRING,
+    responses: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+  },
+  { sequelize, modelName: "forum_topic" }
+);
+
+class ForumResponse extends Model {}
+
+ForumResponse.init(
+  {
+    name: DataTypes.STRING,
+    topicId: DataTypes.INTEGER,
+    message: DataTypes.STRING,
+  },
+  { sequelize, modelName: "forum_response" }
+);
+
+class CrimeHelp extends Model {}
+
+CrimeHelp.init(
+  {
+    name: DataTypes.STRING,
+    name2: DataTypes.STRING,
+    date: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "crimehelp" }
+);
+
+/*
+just make an endpoint crimehelp 
+anyone activating that endpoint with any user that is not the same will give {name} a boost for 15 minutes
+the boost translates into hightened probability for car stealing and crimes
+this inspires people to share mcz with their friends
+*/
+try {
+  sequelize.sync({ alter: true });
+} catch (e) {
+  console.log("e", e);
+}
+server.use(body_parser.json({ limit: "10mb", extended: true }));
+server.use(body_parser.urlencoded({ limit: "10mb", extended: true }));
+
+server.use(
+  cors({
+    origin: "*",
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  })
+);
+
+server.use("/images", express.static("images"));
+server.use("/uploads", express.static("uploads"));
+
+/** ENDPOINTS  */
+
+server.post("/upload", async (req, res, next) => {
+  const { image, token } = req.body;
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: "Verkeerd token" });
+    return;
+  }
+
+  try {
+    // to declare some path to store your converted image
+    const path = "./uploads/" + Date.now() + ".png";
+    // to convert base64 format into random filename
+    const base64Data = image.replace(/^data:([A-Za-z-+/]+);base64,/, "");
+
+    fs.writeFileSync(path, base64Data, { encoding: "base64" });
+
+    Jimp.read(path, (err, image) => {
+      if (err) throw err;
+      image
+        .scaleToFit(512, 512) // resize
+        .write(path); // save
+    });
+
+    Image.create({ image: path, uid: user.id });
+
+    return res.json({ path, response: "Gelukt" });
+  } catch (e) {
+    next(e);
+  }
+});
+
+server.get("/listimages", async (req, res) => {
+  const { token, uid } = req.query;
+
+  if (!token) {
+    res.json({ response: "Geen token" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: "Ongeldige user" });
+    return;
+  }
+
+  const images = await Image.findAll({ where: { uid } });
+
+  res.json({
+    images: images,
+  });
+});
+
+server.post("/deleteimage", async (req, res) => {
+  const { token, id } = req.body;
+
+  if (!token) {
+    res.json({ response: "Geen token" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: "Ongeldige user" });
+    return;
+  }
+
+  const image = await Image.findOne({ where: { id: id, uid: user.id } });
+
+  if (image) {
+    image.destroy();
+  }
+
+  res.json({
+    reponse: "success",
+  });
+});
+
+server.get("/garage", (req, res) =>
+  require("./garage").garage(req, res, User, Garage)
+);
+
+server.post("/sellcar", (req, res) =>
+  require("./garage").sellcar(req, res, User, Garage)
+);
+
+server.post("/crushcar", (req, res) =>
+  require("./garage").crushcar(req, res, User, Garage)
+);
+
+server.post("/upgradecar", (req, res) =>
+  require("./garage").upgradecar(req, res, User, Garage)
+);
+
+server.post("/stealcar", (req, res) =>
+  require("./stealcar").stealcar(req, res, User, Garage)
+);
+
+server.post("/crime", (req, res) => require("./crime").crime(req, res, User));
+
+server.post("/gym", (req, res) => require("./gym").gym(req, res, User));
+
+server.post("/hoeren", (req, res) =>
+  require("./hoeren").hoeren(req, res, User)
+);
+
+server.post("/wiet", (req, res) => require("./wiet").wiet(req, res, User));
+
+server.post("/junkies", (req, res) =>
+  require("./junkies").junkies(req, res, User)
+);
+
+server.get("/showroom", (req, res) =>
+  require("./showroom").showroom(req, res, User, Garage)
+);
+
+server.post("/buycar", (req, res) =>
+  require("./showroom").buycar(req, res, User, Garage)
+);
+
+server.post("/donate", (req, res) =>
+  require("./donate").donate(req, res, User, Message)
+);
+
+server.post("/bunker", (req, res) =>
+  require("./bunker").bunker(req, res, User)
+);
+
+server.post("/bank", (req, res) => require("./bank").bank(req, res, User));
+
+server.post("/airport", (req, res) =>
+  require("./airport").airport(req, res, User)
+);
+
+server.post("/income", (req, res) =>
+  require("./income").income(req, res, User)
+);
+
+server.post("/rob", (req, res) =>
+  require("./rob").rob(req, res, User, Message)
+);
+
+server.post("/hospital", (req, res) =>
+  require("./hospital").hospital(req, res, User, Message)
+);
+
+server.post("/kill", (req, res) =>
+  require("./kill").kill(req, res, User, Message, Garage)
+);
+
+server.post("/getalive", (req, res) =>
+  require("./kill").getalive(req, res, User, Message, Garage)
+);
+
+server.post("/admin/email", (req, res) =>
+  require("./admin_email").email(req, res, User)
+);
+
+//messages
+server.post("/message", (req, res) =>
+  require("./message").message(req, res, User, Message)
+);
+server.get("/messages", (req, res) =>
+  require("./message").messages(req, res, User, Message)
+);
+server.post("/readMessage", (req, res) =>
+  require("./message").readMessage(req, res, User, Message)
+);
+server.post("/deleteMessage", (req, res) =>
+  require("./message").deleteMessage(req, res, User, Message)
+);
+
+//forum
+server.post("/topic", (req, res) =>
+  require("./forum").newTopic(req, res, User, ForumTopic)
+);
+server.post("/response", (req, res) =>
+  require("./forum").response(req, res, User, ForumTopic, ForumResponse)
+);
+server.get("/topics", (req, res) =>
+  require("./forum").topics(req, res, User, ForumTopic, ForumResponse)
+);
+server.get("/topic", (req, res) =>
+  require("./forum").getTopic(req, res, User, ForumTopic, ForumResponse)
+);
+//
+
+server.post("/crimehelp", (req, res) =>
+  require("./crimehelp").crimehelp(req, res, User, CrimeHelp)
+);
+
+server.get("/shop", (req, res) => require("./shop").shop(req, res, User));
+
+server.post("/buy", (req, res) => require("./shop").buy(req, res, User));
+
+server.get("/chat", (req, res) => {
+  Chat.findAll({ order: [["id", "DESC"]], limit: 10 }).then((chat) => {
+    res.json(chat);
+  });
+});
+
+server.post("/chat", async (req, res) => {
+  const { message, token } = req.body;
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (user) {
+    Chat.create({ name: user.name, message }).then((chat) => {
+      res.json(chat);
+    });
+  } else {
+    res.json({ response: "invalid token" });
+  }
+});
+
+server.get("/profile", (req, res) => {
+  User.findOne({
+    attributes: publicUserFields,
+    where: {
+      $and: Sequelize.where(
+        Sequelize.fn("lower", Sequelize.col("name")),
+        Sequelize.fn("lower", req.query.name)
+      ),
+    },
+  }).then(async (user) => {
+    res.json(user);
+  });
+});
+
+server.get("/members", (req, res) => {
+  //return coordinatesets that are located in a square of lat/lng
+
+  const { order } = req.query;
+  const validOrders = [
+    "onlineAt",
+    "bank",
+    "cash",
+    "name",
+    "hoeren",
+    "junkies",
+    "wiet",
+    "rank",
+    "strength",
+  ];
+  const validOrder = validOrders.includes(order) ? order : validOrders[0];
+
+  User.findAll({
+    attributes: publicUserFields,
+    order: [[validOrder, "DESC"]],
+    limit: 100,
+    where: { health: { [Op.gt]: 0 } },
+  }).then((user) => {
+    res.json(user);
+  });
+});
+
+server.get("/stats", async (req, res) => {
+  //return coordinatesets that are located in a square of lat/lng
+
+  const stats = [
+    "createdAt",
+    "bank",
+    "hoeren",
+    "junkies",
+    "wiet",
+    "rank",
+    "strength",
+    "gamepoints",
+  ];
+
+  const allStats = await Promise.all(
+    stats.map(async (stat) => ({
+      [stat]: await User.findAll({
+        attributes: ["name", stat],
+        order: [[stat, "DESC"]],
+        limit: 10,
+        where: { health: { [Op.gt]: 0 } },
+      }),
+    }))
+  );
+
+  const newMembers = await User.count({
+    where: { createdAt: { [Op.gt]: Date.now() - 86400000 } },
+  });
+
+  const onlineToday = await User.count({
+    where: { onlineAt: { [Op.gt]: Date.now() - 86400000 } },
+  });
+
+  allStats.push({ newMembers });
+  allStats.push({ onlineToday });
+
+  res.json(allStats);
+});
+
+server.get("/me", (req, res) => {
+  User.findOne({
+    attributes: publicUserFields,
+    where: { loginToken: req.query.token },
+  })
+    .then(async (user) => {
+      if (user) {
+        const messages = await Message.findAll({
+          where: { to: user.id, read: false },
+        });
+
+        const userWithMessages = user.dataValues;
+        userWithMessages.messages = messages.length;
+
+        res.json(userWithMessages);
+
+        User.update(
+          { onlineAt: Date.now() },
+          { where: { loginToken: req.query.token } }
+        );
+      } else {
+        const name = await getAvailableName();
+        const user = await User.create({
+          loginToken: req.query.token,
+          name,
+        });
+
+        const newuser = await User.findOne({
+          attributes: publicUserFields,
+          where: { loginToken: req.query.token },
+        });
+
+        const messages = await Message.findAll({
+          where: { to: newuser.id, read: false },
+        });
+
+        const userWithMessages = newuser.dataValues;
+        userWithMessages.messages = messages.length;
+
+        res.json(userWithMessages);
+      }
+    })
+    .catch((e) => console.log(e));
+});
+
+server.post("/forgotPassword", async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ where: { email } });
+
+  if (user) {
+    const forgotPasswordToken = Math.round(Math.random() * 999999999);
+
+    const msg = {
+      to: email,
+      from: EMAIL_FROM,
+      subject: "Wachtwoord resetten mastercrimez.nl",
+      text: `Klik op de link om je wachtwoord te resetten: https://mastercrimez.nl/#/RecoverPassword/${forgotPasswordToken}`,
+    };
+
+    //ES6
+    sgMail.send(msg).then(() => {
+      res.json({ success: "Check je mail om je wachtwoord te resetten" });
+    }, console.error);
+  } else {
+    res.json({ error: "Email niet gevonden" });
+  }
+});
+
+server.post("/forgotPassword2", async (req, res) => {
+  const { token, password } = req.body;
+
+  const updated = await Users.update(
+    { password },
+    { where: { forgotPasswordToken: token } }
+  );
+
+  if (updated === 1) {
+    res.json({ success: "Wachtwoord gereset" });
+  } else {
+    res.json({ error: "Email/token niet gevonden" });
+  }
+});
+
+function isEmail(email) {
+  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
+
+function randomEntry(array) {
+  return array[Math.floor(array.length * Math.random())];
+}
+
+const getAvailableName = async () => {
+  const names = [
+    "butje",
+    "sukkel",
+    "gozer",
+    "gappie",
+    "gabber",
+    "gastje",
+    "gast",
+    "gemenerik",
+    "gek",
+    "crimert",
+    "gangster",
+  ];
+  const name = randomEntry(names);
+  const number = Math.round(Math.random() * 1000);
+
+  const fullname = name + number;
+
+  const already = await User.findOne({ where: { name: fullname } });
+
+  if (already) {
+    return getAvailableName();
+  }
+  return fullname;
+};
+
+server.post("/signupEmail", async (req, res) => {
+  const { email, loginToken } = req.body;
+
+  if (!loginToken || !email) {
+    res.json({ error: "Ongeldige invoer" });
+    return;
+  }
+
+  const emailAlready = await User.findOne({
+    where: { email, loginToken: { [Op.ne]: loginToken } },
+  });
+
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    res.json({ error: "Ongeldig token" });
+    return;
+  }
+
+  if (emailAlready) {
+    res.json({ error: "Email is al in gebruik" });
+  } else if (!isEmail(email)) {
+    res.json({ error: "Dat is geen geldig emailadres" });
+  } else {
+    const activationToken = Math.round(Math.random() * 999999999);
+
+    User.update(
+      { email, activationToken, activated: false },
+      { where: { loginToken } }
+    );
+    const msg = {
+      to: email,
+      from: EMAIL_FROM,
+      subject: "Email bevestigen mastercrimez.nl",
+      text: `Klik op de link om je aanmelding te voltooien: https://mastercrimez.nl/#/SignupEmail2/${activationToken}`,
+    };
+
+    //ES6
+    sgMail.send(msg).then(() => {
+      res.json({ success: "Check je mail om je account te activeren" });
+    }, console.error);
+  }
+});
+
+/**
+ *  just activates an account if activationtoken given is correct
+ */
+server.post("/activate", async (req, res) => {
+  const { activationToken } = req.body;
+
+  if (activationToken) {
+    const user = await User.update(
+      { activated: true },
+      { where: { activationToken, activated: false } }
+    );
+
+    console.log(user);
+
+    if (user[0] === 1) {
+      res.json({ response: "Gelukt" });
+    } else {
+      res.json({ response: "Deze link is ongeldig" });
+    }
+  }
+});
+
+server.post("/updateProfile", async (req, res) => {
+  const {
+    loginToken,
+    phone,
+    image,
+    age,
+    gender,
+    single,
+    bio,
+    kmph,
+    location,
+  } = req.body;
+
+  console.log("body", req.body);
+
+  let update = {};
+
+  if (phone) {
+    update.phone = phone;
+  }
+
+  if (image) {
+    update.image = image;
+  }
+
+  if (age) {
+    update.age = age;
+  }
+
+  if (gender) {
+    update.gender = gender;
+  }
+
+  if (single !== undefined) {
+    update.single = single;
+  }
+
+  if (bio) {
+    update.bio = bio;
+  }
+
+  if (kmph) {
+    update.kmph = kmph;
+  }
+
+  if (location) {
+    update.lat = location.lat;
+    update.lng = location.lng;
+    update.city = location.city;
+    update.address = location.address;
+  }
+
+  if (loginToken) {
+    const user = await User.update(update, { where: { loginToken } });
+    res.json({ user });
+  }
+});
+
+server.post("/updateName", async (req, res) => {
+  const { loginToken, name } = req.body;
+
+  if (!name) {
+    res.json({ response: "Deze naam is te kort" });
+    return;
+  }
+  var realname = name.replace(/[^a-z0-9]/gi, "");
+
+  if (realname.length < 6) {
+    res.json({ response: "Deze naam is te kort" });
+    return;
+  }
+
+  if (realname.length > 20) {
+    res.json({ response: "Deze naam is te lang" });
+    return;
+  }
+
+  const already = await User.findOne({
+    where: {
+      $and: Sequelize.where(
+        Sequelize.fn("lower", Sequelize.col("name")),
+        Sequelize.fn("lower", realname)
+      ),
+    },
+  });
+
+  if (already) {
+    res.json({ response: "Deze naam is al bezet." });
+    return;
+  }
+
+  if (loginToken) {
+    const user = await User.update(
+      { name: realname },
+      { where: { loginToken } }
+    );
+    res.json({ response: "Naam veranderd" });
+  }
+});
+
+server.post("/changePassword", async (req, res) => {
+  const { token, password } = req.body;
+
+  if (token) {
+    const user = await User.update(
+      { password },
+      { where: { loginToken: token } }
+    );
+    if (user[0] === 1) {
+      res.json({ success: "Wachtwoord veranderd" });
+    } else {
+      res.json({ error: "No correct token" });
+    }
+  } else {
+    res.json({ error: "No correct token" });
+  }
+});
+
+server.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({
+    where: {
+      email,
+      password,
+    },
+  });
+
+  if (user) {
+    res.json({
+      loginToken: user.loginToken,
+      success: `Je bent ingelogd op ${user.name}`,
+    });
+  } else {
+    res.json({ error: "Email/wachtwoord komen niet overeen" });
+  }
+});
+
+const port = process.env.PORT || 4001;
+
+server.listen(port, () => {
+  console.log(`Server listening at ${port}`);
+});

@@ -1,0 +1,36 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node lib/index",
+    "dev": "nodemon lib/index",
+    "deploy": "git add . && git commit -m \"Improvements\" && git push",
+    "build": "babel lib -d dist",
+    "serve": "NODE_ENV=production pm2 start dist/index.js",
+    "restart": "pm2 restart dist/index.js",
+    "cluster": "NODE_ENV=production pm2 start dist/index.js -i 0 --name mcz",
+    "clusterReload": "NODE_ENV=production pm2 reload mcz",
+    "reloadAll": "git pull && yarn && yarn build && yarn clusterReload"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^6.5.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "expo-image-manipulator": "^8.1.0",
+    "express": "^4.17.1",
+    "isomorphic-fetch": "^2.2.1",
+    "jimp": "^0.10.1",
+    "multer": "^1.4.2",
+    "sequelize": "^5.21.5",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "nodemon": "^2.0.2"
+  }
+}

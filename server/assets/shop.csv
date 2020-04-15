@@ -1,0 +1,36 @@
+type,name,image,price
+weapon,Waterpistool,images/shop/waterpistool.jpg,10000
+weapon,Handpistool,images/shop/handpistool.gif,50000
+weapon,Bibigun,images/shop/bibigun.gif,100000
+weapon,Geweer,images/shop/geweer.jpg,200000
+weapon,bazooka,images/shop/bazooka.jpg,500000
+weapon,Tank,images/shop/tank.jpg,1000000
+airplane,Fokker,images/shop/fokker.jpg,50000
+airplane,Cessna,images/shop/cessna.jpg,100000
+airplane,Douglas,images/shop/douglas.jpg,200000
+airplane,Fleet,images/shop/fleet.jpg,500000
+airplane,Havilland,images/shop/havilland.jpg,1000000
+airplane,Lear jet,images/shop/learjet.jpg,2000000
+airplane,Raket,images/shop/raket.jpg,5000000
+protection,Mes,images/shop/mes.gif,10000
+protection,Kogelvrij vest,images/shop/kogelvrijvest.jpg,50000
+protection,Politiehond,images/shop/politiehond.jpg,100000
+protection,Ninjagastjes,images/shop/ninjagastjes.jpg,200000
+protection,Gepanserde Heli,images/shop/gepanserdeheli.jpg,500000
+protection,Krachtveld,images/shop/krachtveld.jpg,1000000
+home,Boomhut,images/shop/woning_1.jpg,10000
+home,Schuurtje,images/shop/woning_2.jpg,50000
+home,Rijtjeshuis,images/shop/woning_3.jpg,200000
+home,2 onder 1 kap woning,images/shop/woning_4.jpg,300000
+home,Herehuis,images/shop/woning_5.jpg,600000
+home,Boshuis,images/shop/woning_6.jpg,1000000
+home,Bunker,images/shop/woning_7.jpg,2000000
+home,Villa,images/shop/woning_8.jpg,3000000
+home,Luxe villa,images/shop/woning_9.jpg,4000000
+home,Zeer luxe villa,images/shop/woning_10.jpg,5000000
+home,Ultra super de luxe villa,images/shop/woning_11.jpg,8000000
+home,Pool paradise,images/shop/woning_12.jpg,12000000
+home,Flat,images/shop/woning_13.jpg,15000000
+home,Kerk,images/shop/woning_14.jpg,20000000
+home,Palleis,images/shop/woning_15.jpg,25000000
+home,Goddelijke woning,images/shop/woning_16.jpg,33000000
