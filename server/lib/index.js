@@ -19,12 +19,11 @@ const publicUserFields = [
   "email",
   "name",
   "image",
-
   "bio",
-
   "cash",
   "bank",
   "bullets",
+  "backfire",
   "rank",
   "health",
   "city",
@@ -174,6 +173,11 @@ User.init(
 
     bullets: {
       type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    backfire: {
+      type: DataTypes.FLOAT,
       defaultValue: 0,
     },
 

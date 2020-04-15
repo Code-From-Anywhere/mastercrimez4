@@ -94,29 +94,81 @@ const kill = async (req, res, User, Message, Garage) => {
     Math.sqrt(heRank / meRank) * 10000 * getRank(user2.rank, "number")
   );
 
+  const backfireBulletsNeeded = Math.round(
+    Math.sqrt(meRank / heRank) * 10000 * getRank(user.rank, "number")
+  );
+
+  const bulletsBackfire = Math.round(user2.backfire * user2.bullets);
+
   const damage = Math.round((Number(bullets) / bulletsNeeded) * 100);
+  let damageBackfire = Math.round(
+    (Number(bulletsBackfire) / backfireBulletsNeeded) * 100
+  );
+  damageBackfire = damageBackfire > user.health ? user.health : damageBackfire;
+
+  let responseBackfire;
+  let responseMessageBackfire;
+  if (damageBackfire >= user.health) {
+    responseBackfire = `${user2.name} schoot terug met ${user2.bullets} kogels. Jij ging dood van de schoten.`;
+    responseMessageBackfire = `Met je backfire van ${user2.bullets} kogels heb je ${user.name} doodgeschoten!`;
+  } else {
+    responseBackfire = `${user2.name} schoot terug met ${user2.bullets} kogels. Dit heeft jou ${damageBackfire}% schade toegebracht.`;
+    responseMessageBackfire = `Met je backfire heb je ${user2.name} ${damageBackfire}% schade toegebracht.`;
+  }
+
+  if (damageBackfire === 0) {
+    responseBackfire = "";
+    responseMessageBackfire = "";
+  }
 
   User.update(
     { bullets: user.bullets - Number(bullets) },
     { where: { id: user.id } }
   );
-  User.update({ attackedAt: Date.now() }, { where: { id: user2.id } });
+  User.update(
+    { attackedAt: Date.now(), bullets: user2.bullets - bulletsBackfire },
+    { where: { id: user2.id } }
+  );
 
   if (damage >= user2.health) {
-    res.json({ response: `Je hebt ${user2.name} vermoord.` });
+    const gamepoints = Math.round(user2.gamepoints * 0.1);
+    const money = user2.bank + user2.cash;
+
+    res.json({
+      response: `Je schoot met ${bullets} kogels op ${user2.name}. Je hebt ${user2.name} vermoord. Je hebt ${money},- gestolen en ${gamepoints} gamepoints. ${responseBackfire}`,
+    });
 
     User.update(
-      { cash: user.cash + user2.cash, bank: user.bank + user2.bank },
+      {
+        cash: user.cash + user2.cash,
+        bank: user.bank + user2.bank,
+        health: user.health - damageBackfire,
+        gamepoints: user.gamepoints + gamepoints,
+      },
       { where: { id: user.id } }
     );
 
-    User.update({ cash: 0, health: 0, bank: 0 }, { where: { id: user2.id } });
+    User.update(
+      {
+        cash: 0,
+        health: 0,
+        bank: 0,
+        bullets: 0,
+        rank: Math.round(user2.rank / 2),
+        strength: Math.round(user2.strength / 2),
+        hoeren: Math.round(user2.hoeren / 2),
+        junkies: Math.round(user2.junkies / 2),
+        wiet: Math.round(user2.wiet / 2),
+        gamepoints: user2.gamepoints - gamepoints,
+      },
+      { where: { id: user2.id } }
+    );
 
     Message.create({
       from: user.id,
       to: user2.id,
       fromName: "(System)",
-      message: `${user.name} heeft je vermoord!`,
+      message: `${user.name} schoot op jou met ${bullets} kogels. ${user.name} heeft je vermoord! ${responseMessageBackfire}`,
     });
   } else {
     const stolenCash = Math.round((user2.cash * damage) / 100);
@@ -127,6 +179,7 @@ const kill = async (req, res, User, Message, Garage) => {
       {
         cash: user2.cash - stolenCash,
         health: user2.health - damage,
+
         bank: user2.bank - stolenBank,
       },
       { where: { id: user2.id } }
@@ -136,6 +189,7 @@ const kill = async (req, res, User, Message, Garage) => {
       {
         cash: user.cash + stolenCash,
         bank: user.bank + stolenBank,
+        health: user.health - damageBackfire,
       },
       { where: { id: user.id } }
     );
@@ -144,11 +198,11 @@ const kill = async (req, res, User, Message, Garage) => {
       from: user.id,
       to: user2.id,
       fromName: "(System)",
-      message: `${user.name} heeft je aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- van je gejat!`,
+      message: `${user.name} heeft je aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- van je gejat! ${responseBackfire}`,
     });
 
     res.json({
-      response: `Je hebt ${damage}% schade toegebracht aan ${user2.name}. Je hebt ${stolenTotal},- gestolen`,
+      response: `Je hebt ${damage}% schade toegebracht aan ${user2.name}. Je hebt ${stolenTotal},- gestolen. ${responseMessageBackfire}`,
     });
   }
 };
