@@ -36,7 +36,7 @@ const email = async (req, res, User) => {
   const realEmails = emails.filter((item) => isEmail(item.email));
 
   //   emails.forEach((item, index) => {
-  //     if (item.email === "wijnandworld@hotmail.com") {
+  //     if (item.email === "") {
   //       const msg = {
   //         to: item.email,
   //         from: EMAIL_FROM,
