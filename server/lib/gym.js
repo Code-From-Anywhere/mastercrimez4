@@ -21,7 +21,7 @@ const gym = async (req, res, User) => {
     return;
   }
 
-  if (option < 0 || option > 3 || Number.isNaN(option)) {
+  if (option < 1 || option > 3 || Number.isNaN(option)) {
     res.json({ response: "Ongeldige keuze" });
     return;
   }
