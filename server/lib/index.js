@@ -5,6 +5,7 @@ const multer = require("multer");
 const sgMail = require("@sendgrid/mail");
 const fs = require("fs");
 const Jimp = require("jimp");
+const { Sequelize, Model, DataTypes, Op } = require("sequelize");
 
 require("dotenv").config();
 
@@ -56,8 +57,6 @@ const publicUserFields = [
   "robAt",
   "attackAt",
 ];
-
-const { Sequelize, Model, DataTypes, Op } = require("sequelize");
 
 function me(token) {
   return User.findOne({
@@ -446,6 +445,11 @@ server.post("/donate", (req, res) =>
 
 server.post("/bunker", (req, res) =>
   require("./bunker").bunker(req, res, User)
+);
+
+server.get("/jail", (req, res) => require("./jail").jail(req, res, User));
+server.post("/breakout", (req, res) =>
+  require("./jail").breakout(req, res, User)
 );
 
 server.post("/bank", (req, res) => require("./bank").bank(req, res, User));
