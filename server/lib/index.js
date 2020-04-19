@@ -627,11 +627,24 @@ server.get("/me", (req, res) => {
     .then(async (user) => {
       if (user) {
         const messages = await Message.findAll({
+          attributes: ["id"],
           where: { to: user.id, read: false },
+        });
+
+        const jail = await User.findAll({
+          attributes: ["id"],
+          where: { jailAt: { [Op.gt]: Date.now() } },
+        });
+
+        const online = await User.findAll({
+          attributes: ["id"],
+          where: { onlineAt: { [Op.gt]: Date.now() - 300000 } },
         });
 
         const userWithMessages = user.dataValues;
         userWithMessages.messages = messages.length;
+        userWithMessages.jail = jail.length;
+        userWithMessages.online = online.length;
 
         res.json(userWithMessages);
 
@@ -655,8 +668,20 @@ server.get("/me", (req, res) => {
           where: { to: newuser.id, read: false },
         });
 
+        const jail = await User.findAll({
+          attributes: ["id"],
+          where: { jailAt: { [Op.gt]: Date.now() } },
+        });
+
+        const online = await User.findAll({
+          attributes: ["id"],
+          where: { onlineAt: { [Op.gt]: Date.now() - 300000 } },
+        });
+
         const userWithMessages = newuser.dataValues;
         userWithMessages.messages = messages.length;
+        userWithMessages.jail = jail.length;
+        userWithMessages.online = online.length;
 
         res.json(userWithMessages);
       }
