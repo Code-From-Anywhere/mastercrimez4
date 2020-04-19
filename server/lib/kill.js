@@ -161,6 +161,10 @@ const kill = async (req, res, User, Message, Garage) => {
         hoeren: Math.round(user2.hoeren / 2),
         junkies: Math.round(user2.junkies / 2),
         wiet: Math.round(user2.wiet / 2),
+        home: 0,
+        weapon: 0,
+        protection: 0,
+        airplane: 0,
         gamepoints: user2.gamepoints - gamepoints,
       },
       { where: { id: user2.id } }
