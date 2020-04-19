@@ -831,55 +831,22 @@ server.post("/activate", async (req, res) => {
 });
 
 server.post("/updateProfile", async (req, res) => {
-  const {
-    loginToken,
-    phone,
-    image,
-    age,
-    gender,
-    single,
-    bio,
-    kmph,
-    location,
-  } = req.body;
+  const { loginToken, image, backfire, bio } = req.body;
 
   console.log("body", req.body);
 
   let update = {};
 
-  if (phone) {
-    update.phone = phone;
-  }
-
   if (image) {
     update.image = image;
-  }
-
-  if (age) {
-    update.age = age;
-  }
-
-  if (gender) {
-    update.gender = gender;
-  }
-
-  if (single !== undefined) {
-    update.single = single;
   }
 
   if (bio) {
     update.bio = bio;
   }
 
-  if (kmph) {
-    update.kmph = kmph;
-  }
-
-  if (location) {
-    update.lat = location.lat;
-    update.lng = location.lng;
-    update.city = location.city;
-    update.address = location.address;
+  if (backfire !== undefined && backfire >= 0 && backfire <= 1) {
+    update.backfire = backfire;
   }
 
   if (loginToken) {
