@@ -19,7 +19,7 @@ const donate = async (req, res, User, Message) => {
     gamepoints: "gamepoints",
   };
 
-  if (amount <= 0 || Number.isNaN(amount)) {
+  if (amount <= 0 || isNaN(amount)) {
     res.json({ response: "Ongeldige hoeveelheid" });
     return;
   }

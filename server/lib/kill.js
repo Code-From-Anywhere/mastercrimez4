@@ -11,7 +11,7 @@ const kill = async (req, res, User, Message, Garage) => {
     return;
   }
 
-  if (bullets < 0 || Number.isNaN(bullets)) {
+  if (bullets < 0 || isNaN(bullets)) {
     res.json({ response: "Ongeldig aantal kogels" });
     return;
   }

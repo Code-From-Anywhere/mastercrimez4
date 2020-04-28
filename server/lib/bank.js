@@ -7,7 +7,7 @@ const bank = async (req, res, User) => {
     return;
   }
 
-  if (amount <= 0 || Number.isNaN(amount)) {
+  if (amount <= 0 || isNaN(amount)) {
     res.json({ response: "Ongeldig bedrag" });
     return;
   }

@@ -1,7 +1,7 @@
 const bunker = async (req, res, User) => {
   const { token, option } = req.body;
 
-  if (option < 0 || option > 3 || Number.isNaN(option)) {
+  if (option < 0 || option > 3 || isNaN(option)) {
     res.json({ response: "Ongeldige keuze" });
     return;
   }
@@ -22,20 +22,20 @@ const bunker = async (req, res, User) => {
         User.update(
           {
             bunkerAt: Date.now() + seconds * 1000,
-            cash: user.cash - cost
+            cash: user.cash - cost,
           },
           { where: { loginToken: token } }
         );
 
         res.json({
-          response: `Je bent ondergedoken.`
+          response: `Je bent ondergedoken.`,
         });
       } else {
         res.json({ response: "Je hebt niet genoeg geld contant" });
       }
     } else {
       res.json({
-        response: "Je zit al in de schuilkelder."
+        response: "Je zit al in de schuilkelder.",
       });
     }
   } else {
