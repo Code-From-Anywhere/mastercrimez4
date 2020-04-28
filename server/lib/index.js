@@ -17,14 +17,12 @@ const EMAIL_FROM = "info@mastercrimez.nl";
 
 const publicUserFields = [
   "id",
-  "email",
   "name",
   "image",
   "bio",
+  "accomplice",
   "cash",
   "bank",
-  "bullets",
-  "backfire",
   "rank",
   "health",
   "city",
@@ -34,13 +32,7 @@ const publicUserFields = [
   "strength",
   "gamepoints",
 
-  "weapon",
-  "protection",
-  "airplane",
-  "home",
-
   "level",
-  "activated",
 
   "onlineAt",
   "autostelenAt",
@@ -57,6 +49,18 @@ const publicUserFields = [
   "robAt",
   "attackAt",
 ];
+
+const allUserFields = publicUserFields.concat([
+  "activated",
+  "email",
+  "bullets",
+  "city",
+  "backfire",
+  "weapon",
+  "protection",
+  "airplane",
+  "home",
+]);
 
 function me(token) {
   return User.findOne({
@@ -103,6 +107,7 @@ User.init(
     name: DataTypes.STRING,
     image: DataTypes.STRING,
     bio: DataTypes.STRING,
+    accomplice: DataTypes.STRING,
 
     onlineAt: DataTypes.INTEGER,
     autostelenAt: DataTypes.INTEGER,
@@ -279,23 +284,6 @@ ForumResponse.init(
   { sequelize, modelName: "forum_response" }
 );
 
-class CrimeHelp extends Model {}
-
-CrimeHelp.init(
-  {
-    name: DataTypes.STRING,
-    name2: DataTypes.STRING,
-    date: DataTypes.INTEGER,
-  },
-  { sequelize, modelName: "crimehelp" }
-);
-
-/*
-just make an endpoint crimehelp 
-anyone activating that endpoint with any user that is not the same will give {name} a boost for 15 minutes
-the boost translates into hightened probability for car stealing and crimes
-this inspires people to share mcz with their friends
-*/
 try {
   sequelize.sync({ alter: true });
 } catch (e) {
@@ -511,10 +499,6 @@ server.get("/topic", (req, res) =>
 );
 //
 
-server.post("/crimehelp", (req, res) =>
-  require("./crimehelp").crimehelp(req, res, User, CrimeHelp)
-);
-
 server.get("/shop", (req, res) => require("./shop").shop(req, res, User));
 
 server.post("/buy", (req, res) => require("./shop").buy(req, res, User));
@@ -621,7 +605,7 @@ server.get("/stats", async (req, res) => {
 
 server.get("/me", (req, res) => {
   User.findOne({
-    attributes: publicUserFields,
+    attributes: allUserFields,
     where: { loginToken: req.query.token },
   })
     .then(async (user) => {
@@ -660,7 +644,7 @@ server.get("/me", (req, res) => {
         });
 
         const newuser = await User.findOne({
-          attributes: publicUserFields,
+          attributes: allUserFields,
           where: { loginToken: req.query.token },
         });
 
@@ -831,9 +815,19 @@ server.post("/activate", async (req, res) => {
 });
 
 server.post("/updateProfile", async (req, res) => {
-  const { loginToken, image, backfire, bio } = req.body;
+  const { loginToken, image, backfire, accomplice, bio } = req.body;
 
-  console.log("body", req.body);
+  if (!loginToken) {
+    res.json({ response: "Geen token" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    res.json({ response: "Ongeldige user" });
+    return;
+  }
 
   let update = {};
 
@@ -847,6 +841,21 @@ server.post("/updateProfile", async (req, res) => {
 
   if (backfire !== undefined && backfire >= 0 && backfire <= 1) {
     update.backfire = backfire;
+  }
+
+  if (accomplice !== undefined) {
+    const accompliceUser = await User.findOne({
+      where: {
+        $and: Sequelize.where(
+          Sequelize.fn("lower", Sequelize.col("name")),
+          Sequelize.fn("lower", accomplice)
+        ),
+      },
+    });
+
+    if (accompliceUser && accompliceUser.name !== user.name) {
+      update.accomplice = accompliceUser.name;
+    }
   }
 
   if (loginToken) {

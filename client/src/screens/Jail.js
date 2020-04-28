@@ -1,10 +1,10 @@
-import React from "react";
-import { View, FlatList } from "react-native";
-import T from "./T";
+import React, { Component } from "react";
+import { Text, FlatList, View } from "react-native";
 import CountDown from "react-native-countdown-component";
-import Button from "./Button";
+import Button from "../components/Button";
+import T from "../components/T";
 import Constants from "../Constants";
-class Jail extends React.Component {
+class Jail extends Component {
   state = {
     jail: [],
   };
@@ -31,7 +31,7 @@ class Jail extends React.Component {
 
   renderItem = ({ item, index }) => {
     const {
-      screenProps: { device },
+      screenProps: { device, reloadMe },
     } = this.props;
 
     const seconds = Math.floor((item.jailAt - Date.now()) / 1000);
@@ -49,42 +49,51 @@ class Jail extends React.Component {
           timeToShow={["M", "S"]}
           timeLabels={{ m: null, s: null }}
         />
+        <Button
+          title="Breek uit"
+          onPress={() => {
+            fetch(`${Constants.SERVER_ADDR}/breakout`, {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                token: device.loginToken,
+                name: item.name,
+              }),
+            })
+              .then((response) => response.json())
+              .then(async ({ response }) => {
+                this.setState({ response });
+                this.fetchMembers();
+                reloadMe(device.loginToken);
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }}
+        />
       </View>
     );
+  };
+  renderHeader = () => {
+    return <T>{this.state.response}</T>;
   };
 
   render() {
     const {
-      screenProps: { me, device, reloadMe },
       navigation,
+      screenProps: { me },
     } = this.props;
-    const sec = Math.round((me.jailAt - Date.now()) / 1000);
+
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
-        <T>Je zit in de gevangenis</T>
-
-        <CountDown
-          until={sec}
-          size={20}
-          timeToShow={["M", "S"]}
-          timeLabels={{ m: "Minuten", s: "Seconden" }}
-        />
-
-        <View style={{ flexDirection: "row" }}>
-          <View />
-          <Button
-            title="Vernieuw"
-            onPress={() => {
-              reloadMe(device.loginToken);
-              this.fetchMembers();
-            }}
-          />
-          <View />
-        </View>
         <FlatList
           data={this.state.jail}
           renderItem={this.renderItem}
           ListHeaderComponent={this.renderHeader}
+          ListEmptyComponent={<T>Er zit niemand in de gevangenis</T>}
         />
       </View>
     );

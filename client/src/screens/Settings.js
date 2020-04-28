@@ -32,6 +32,12 @@ class Status extends Component {
           title="Mijn profiel aanpassen"
           to="MyProfile"
         />
+        <Menu
+          navigation={navigation}
+          title="Backfire aanpassen"
+          to="Backfire"
+        />
+        <Menu navigation={navigation} title="Handlanger" to="Accomplice" />
       </View>
     );
   }

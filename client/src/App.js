@@ -40,6 +40,7 @@ import Messages from "./screens/Messages";
 import StealCar from "./screens/StealCar";
 import Crimes from "./screens/Crimes";
 import Kill from "./screens/Kill";
+import JailScreen from "./screens/Jail";
 import Rob from "./screens/Rob";
 import Bank from "./screens/Bank";
 import Shop from "./screens/Shop";
@@ -51,10 +52,12 @@ import Airport from "./screens/Airport";
 import Gym from "./screens/Gym";
 import Wiet from "./screens/Wiet";
 import Junkies from "./screens/Junkies";
+import Backfire from "./screens/Backfire";
 import Hoeren from "./screens/Hoeren";
 import Bunker from "./screens/Bunker";
 import Income from "./screens/Income";
 import Donate from "./screens/Donate";
+import Accomplice from "./screens/Accomplice";
 import AdminEmail from "./screens/AdminEmail";
 import Forum from "./screens/Forum";
 import Hospital from "./screens/Hospital";
@@ -348,6 +351,11 @@ const leftMenu = (me) => {
     },
 
     {
+      text: `Gevangenis (${me?.jail})`,
+      to: "Jail",
+    },
+
+    {
       isHeader: true,
       text: "Uitgeven",
     },
@@ -450,7 +458,7 @@ const rightMenu = (me) => [
   },
 
   {
-    text: "Leden",
+    text: `Leden (${me?.online} online)`,
     to: "Members",
   },
 
@@ -606,12 +614,15 @@ const Container = rightContainer(
       },
       StealCar: withLayout(StealCar),
       Crimes: withLayout(Crimes),
+      Jail: withLayout(JailScreen),
       Kill: withLayout(Kill),
       Rob: withLayout(Rob),
       Showroom: withLayout(Showroom),
       Bank: withLayout(Bank),
       Shop: withLayout(Shop),
       Garage: withLayout(Garage),
+      Backfire: withLayout(Backfire),
+      Accomplice: withLayout(Accomplice),
       Streetrace: withLayout(Streetrace),
       Bulletfactory: withLayout(Bulletfactory),
       Casino: withLayout(Casino),

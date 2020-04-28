@@ -973,6 +973,11 @@ cli-boxes@^1.0.0:
   resolved "https://registry.yarnpkg.com/cli-boxes/-/cli-boxes-1.0.0.tgz#4fa917c3e59c94a004cd61f8ee509da651687143"
   integrity sha1-T6kXw+WclKAEzWH47lCdplFocUM=
 
+cloc@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/cloc/-/cloc-2.5.1.tgz#d62d077f6a5f3f3c22482f47e00c213de1bb899e"
+  integrity sha512-ZHJ592HbnHAshQ7gtnrgeZaVyvou+a+7TM/E/oTZth2c9Mycp4Ymp3/npQ/Qhxgq9ksf8GjTLB9bEyCMTf42BA==
+
 cls-bluebird@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/cls-bluebird/-/cls-bluebird-2.1.0.tgz#37ef1e080a8ffb55c2f4164f536f1919e7968aee"
