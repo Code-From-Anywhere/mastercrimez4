@@ -1,4 +1,5 @@
 const fetch = require("isomorphic-fetch");
+const { Sequelize, Op } = require("sequelize");
 
 const crime = async (req, res, User) => {
   const { token, option, captcha } = req.body;

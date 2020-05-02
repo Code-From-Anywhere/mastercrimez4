@@ -1,5 +1,6 @@
 const { getRank } = require("./util");
 const fetch = require("isomorphic-fetch");
+const { Sequelize, Op } = require("sequelize");
 
 const junkies = async (req, res, User) => {
   const { token, captcha } = req.body;
