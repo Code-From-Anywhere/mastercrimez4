@@ -53,7 +53,7 @@ const setAccomplice = async (req, res, User) => {
     }
   }
 
-  if (accomplice2 !== undefined) {
+  if (accomplice2) {
     if (rank < RANK_GODFATHER) {
       res.json({ response: "Je rang is niet hoog genoeg" });
       return;
@@ -82,7 +82,7 @@ const setAccomplice = async (req, res, User) => {
     }
   }
 
-  if (accomplice3 !== undefined) {
+  if (accomplice3) {
     if (rank < RANK_UNLIMITED_DON) {
       res.json({ response: "Je rang is niet hoog genoeg" });
       return;
@@ -110,7 +110,7 @@ const setAccomplice = async (req, res, User) => {
     }
   }
 
-  if (accomplice4 !== undefined) {
+  if (accomplice4) {
     if (rank < RANK_UNLIMITED_DON) {
       res.json({ response: "Je rang is niet hoog genoeg" });
       return;
