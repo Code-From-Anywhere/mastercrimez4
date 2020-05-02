@@ -87,28 +87,33 @@ class Gym extends Component {
           disabled={!this.state.captcha}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Train"
-          onPress={() => {
-            fetch(`${Constants.SERVER_ADDR}/gym`, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                token: device.loginToken,
-                option: this.state.selected,
-                captcha: this.state.captcha,
-              }),
-            })
-              .then((response) => response.json())
-              .then(async (response) => {
-                this.setState({ response });
-                this.props.screenProps.reloadMe(device.loginToken);
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          }}
+          onPress={
+            this.state.loading
+              ? () => null
+              : () => {
+                  this.setState({ loading: true });
+                  fetch(`${Constants.SERVER_ADDR}/gym`, {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      token: device.loginToken,
+                      option: this.state.selected,
+                      captcha: this.state.captcha,
+                    }),
+                  })
+                    .then((response) => response.json())
+                    .then(async (response) => {
+                      this.setState({ response, loading: false });
+                      this.props.screenProps.reloadMe(device.loginToken);
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
+                }
+          }
         />
         <ReCaptcha
           sitekey={Constants.CAPTCHA}

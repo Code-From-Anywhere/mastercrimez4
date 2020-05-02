@@ -103,6 +103,12 @@ class ProfileScreen extends React.Component {
     }
 
     const isOnline = Date.now() - profile?.onlineAt < 300000;
+
+    const points = profile.accomplices?.reduce(
+      (total, accomplice) => total + accomplice.rank,
+      0
+    );
+
     return (
       <ScrollView style={{ margin: 20 }}>
         <View style={{ justifyContent: "center" }}>
@@ -126,6 +132,19 @@ class ProfileScreen extends React.Component {
             {this.keyValue("Junkies", profile?.junkies)}
             {this.keyValue("Hoeren", profile?.hoeren)}
 
+            {profile?.accomplices?.length > 0 ? (
+              <>
+                <Text>
+                  Gang van {profile?.name}: {points} punten
+                </Text>
+                {profile.accomplices.map((accomplice) => {
+                  return this.keyValue(
+                    accomplice.name,
+                    getRank(accomplice.rank, "both")
+                  );
+                })}
+              </>
+            ) : null}
             <View style={styles.row}>
               <Button
                 title="Stuur bericht"

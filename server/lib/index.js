@@ -108,6 +108,9 @@ User.init(
     image: DataTypes.STRING,
     bio: DataTypes.STRING,
     accomplice: DataTypes.STRING,
+    accomplice2: DataTypes.STRING,
+    accomplice3: DataTypes.STRING,
+    accomplice4: DataTypes.STRING,
 
     onlineAt: DataTypes.INTEGER,
     autostelenAt: DataTypes.INTEGER,
@@ -497,7 +500,10 @@ server.get("/topics", (req, res) =>
 server.get("/topic", (req, res) =>
   require("./forum").getTopic(req, res, User, ForumTopic, ForumResponse)
 );
-//
+
+server.post("/setAccomplice", (req, res) =>
+  require("./accomplice").setAccomplice(req, res, User)
+);
 
 server.get("/shop", (req, res) => require("./shop").shop(req, res, User));
 
@@ -533,7 +539,32 @@ server.get("/profile", (req, res) => {
       ),
     },
   }).then(async (user) => {
-    res.json(user);
+    if (user) {
+      const accomplices = await User.findAll({
+        attributes: ["name", "rank"],
+        where: Sequelize.or(
+          {
+            accomplice: user.name,
+          },
+          {
+            accomplice2: user.name,
+          },
+          {
+            accomplice3: user.name,
+          },
+          {
+            accomplice4: user.name,
+          }
+        ),
+      });
+
+      let extended = user;
+      extended.dataValues.accomplices = accomplices;
+
+      res.json(extended);
+    } else {
+      res.json(null);
+    }
   });
 });
 
@@ -688,6 +719,8 @@ server.post("/forgotPassword", async (req, res) => {
       text: `Klik op de link om je wachtwoord te resetten: https://mastercrimez.nl/#/RecoverPassword/${forgotPasswordToken}`,
     };
 
+    User.update({ forgotPasswordToken }, { where: { email: user.email } });
+
     //ES6
     sgMail.send(msg).then(() => {
       res.json({ success: "Check je mail om je wachtwoord te resetten" });
@@ -700,12 +733,12 @@ server.post("/forgotPassword", async (req, res) => {
 server.post("/forgotPassword2", async (req, res) => {
   const { token, password } = req.body;
 
-  const updated = await Users.update(
+  const updated = await User.update(
     { password },
     { where: { forgotPasswordToken: token } }
   );
 
-  if (updated === 1) {
+  if (updated[0] === 1) {
     res.json({ success: "Wachtwoord gereset" });
   } else {
     res.json({ error: "Email/token niet gevonden" });
@@ -815,7 +848,7 @@ server.post("/activate", async (req, res) => {
 });
 
 server.post("/updateProfile", async (req, res) => {
-  const { loginToken, image, backfire, accomplice, bio } = req.body;
+  const { loginToken, image, backfire, bio } = req.body;
 
   if (!loginToken) {
     res.json({ response: "Geen token" });
@@ -841,21 +874,6 @@ server.post("/updateProfile", async (req, res) => {
 
   if (backfire !== undefined && backfire >= 0 && backfire <= 1) {
     update.backfire = backfire;
-  }
-
-  if (accomplice !== undefined) {
-    const accompliceUser = await User.findOne({
-      where: {
-        $and: Sequelize.where(
-          Sequelize.fn("lower", Sequelize.col("name")),
-          Sequelize.fn("lower", accomplice)
-        ),
-      },
-    });
-
-    if (accompliceUser && accompliceUser.name !== user.name) {
-      update.accomplice = accompliceUser.name;
-    }
   }
 
   if (loginToken) {

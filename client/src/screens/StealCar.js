@@ -138,29 +138,35 @@ class StealCar extends Component {
           disabled={!this.state.captcha}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Steel"
-          onPress={() => {
-            fetch(`${Constants.SERVER_ADDR}/stealcar`, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                token: device.loginToken,
-                option: this.state.selected,
-                captcha: this.state.captcha,
-              }),
-            })
-              .then((response) => response.json())
-              .then(async (response) => {
-                this.props.screenProps.reloadMe(device.loginToken);
+          onPress={
+            this.state.loading
+              ? () => null
+              : () => {
+                  this.setState({ loading: true }, () => {
+                    fetch(`${Constants.SERVER_ADDR}/stealcar`, {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        token: device.loginToken,
+                        option: this.state.selected,
+                        captcha: this.state.captcha,
+                      }),
+                    })
+                      .then((response) => response.json())
+                      .then(async (response) => {
+                        this.props.screenProps.reloadMe(device.loginToken);
 
-                this.setState({ response });
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          }}
+                        this.setState({ response, loading: false });
+                      })
+                      .catch((error) => {
+                        console.error(error);
+                      });
+                  });
+                }
+          }
         />
 
         <ReCaptcha
@@ -184,16 +190,22 @@ class StealCar extends Component {
       <View>
         {response ? (
           <View style={{ flex: 1, minHeight: 400 }}>
-            {response.car ? (
-              <Image
-                style={{
-                  width: isSmall ? width : 400,
-                  height: 300,
-                  resizeMode: "contain",
-                }}
-                source={{ uri: Constants.SERVER_ADDR + "/" + response.car.url }}
-              />
-            ) : null}
+            {response.cars
+              ? response.cars.map((car) => {
+                  return (
+                    <Image
+                      style={{
+                        width: isSmall ? width : 400,
+                        height: 300,
+                        resizeMode: "contain",
+                      }}
+                      source={{
+                        uri: Constants.SERVER_ADDR + "/" + car.url,
+                      }}
+                    />
+                  );
+                })
+              : null}
             <Text style={{ color: "white" }}>{response.response}</Text>
 
             <Button

@@ -20,27 +20,32 @@ class Junkies extends Component {
           disabled={!this.state.captcha}
           style={{ marginTop: 20 }}
           title="Train junkies"
-          onPress={() => {
-            fetch(`${Constants.SERVER_ADDR}/junkies`, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                token: device.loginToken,
-                captcha: this.state.captcha,
-              }),
-            })
-              .then((response) => response.json())
-              .then(async (response) => {
-                this.setState({ response });
-                this.props.screenProps.reloadMe(device.loginToken);
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          }}
+          onPress={
+            this.state.loading
+              ? () => null
+              : () => {
+                  this.setState({ loading: true });
+                  fetch(`${Constants.SERVER_ADDR}/junkies`, {
+                    method: "POST",
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      token: device.loginToken,
+                      captcha: this.state.captcha,
+                    }),
+                  })
+                    .then((response) => response.json())
+                    .then(async (response) => {
+                      this.setState({ response, loading: false });
+                      this.props.screenProps.reloadMe(device.loginToken);
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
+                }
+          }
         />
 
         <ReCaptcha

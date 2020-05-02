@@ -76,7 +76,7 @@ const stealcar = async (req, res, User, Garage) => {
 
         res.json({
           response: "Gelukt",
-          car,
+          cars: [car],
         });
       } else {
         const random2 = Math.ceil(Math.random() * 100);
