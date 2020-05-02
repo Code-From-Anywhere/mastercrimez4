@@ -543,18 +543,10 @@ server.get("/profile", (req, res) => {
       const accomplices = await User.findAll({
         attributes: ["name", "rank"],
         where: Sequelize.or(
-          {
-            accomplice: user.name,
-          },
-          {
-            accomplice2: user.name,
-          },
-          {
-            accomplice3: user.name,
-          },
-          {
-            accomplice4: user.name,
-          }
+          { accomplice: user.name },
+          { accomplice2: user.name },
+          { accomplice3: user.name },
+          { accomplice4: user.name }
         ),
       });
 

@@ -42,7 +42,22 @@ const crime = async (req, res, User) => {
       User.update({ crimeAt: Date.now() }, { where: { loginToken: token } });
 
       if (kans2 >= random) {
-        const stolen = Math.ceil(Math.random() * option * 10000);
+        const accomplices = await User.findAll({
+          attributes: ["name"],
+          where: Sequelize.and(
+            { onlineAt: { [Op.gt]: Date.now() - 300000 } },
+            Sequelize.or(
+              { accomplice: user.name },
+              { accomplice2: user.name },
+              { accomplice3: user.name },
+              { accomplice4: user.name }
+            )
+          ),
+        });
+
+        const stolen = Math.ceil(
+          Math.random() * option * 10000 * (accomplices.length + 1)
+        );
         User.update(
           {
             rank: user.rank + option,

@@ -176,6 +176,25 @@ const kill = async (req, res, User, Message, Garage) => {
       fromName: "(System)",
       message: `${user.name} schoot op jou met ${bullets} kogels. ${user.name} heeft je vermoord! ${responseMessageBackfire}`,
     });
+
+    const accomplices = await User.findAll({
+      attributes: ["id"],
+      where: Sequelize.or(
+        { accomplice: user2.name },
+        { accomplice2: user2.name },
+        { accomplice3: user2.name },
+        { accomplice4: user2.name }
+      ),
+    });
+
+    accomplices.forEach((accomplice) => {
+      Message.create({
+        from: user.id,
+        to: accomplice.id,
+        fromName: "(System)",
+        message: `${user.name} schoot op ${user2.name} met ${bullets} kogels. ${user.name} heeft ${user2.name} vermoord!`,
+      });
+    });
   } else {
     const stolenCash = Math.round((user2.cash * damage) / 100);
     const stolenBank = Math.round((user2.cash * damage) / 100);
@@ -199,6 +218,25 @@ const kill = async (req, res, User, Message, Garage) => {
       },
       { where: { id: user.id } }
     );
+
+    const accomplices = await User.findAll({
+      attributes: ["id"],
+      where: Sequelize.or(
+        { accomplice: user2.name },
+        { accomplice2: user2.name },
+        { accomplice3: user2.name },
+        { accomplice4: user2.name }
+      ),
+    });
+
+    accomplices.forEach((accomplice) => {
+      Message.create({
+        from: user.id,
+        to: accomplice.id,
+        fromName: "(System)",
+        message: `${user.name} heeft ${user2.name} aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- gejat!`,
+      });
+    });
 
     Message.create({
       from: user.id,

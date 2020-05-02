@@ -1,4 +1,5 @@
 const fetch = require("isomorphic-fetch");
+const { Sequelize, Op } = require("sequelize");
 
 const cars = require("../assets/cars.json");
 const texts = require("../assets/carsTexts.json");
@@ -52,31 +53,48 @@ const stealcar = async (req, res, User, Garage) => {
         { where: { loginToken: token } }
       );
       if (kans2 >= random) {
-        const car = randomEntry(
-          cars.filter(
-            (car) =>
-              Number(car.id) > option * 7 - 7 && Number(car.id) < option * 7
-          )
-        );
-
-        const created = await Garage.create({
-          userId: user.id,
-          date: Date.now(),
-          auto: car.naam,
-          image: car.url,
-          cash: car.waarde,
-          power: 0,
-          kogels: car.kogels,
+        const accomplices = await User.findAll({
+          attributes: ["name"],
+          where: Sequelize.and(
+            { onlineAt: { [Op.gt]: Date.now() - 300000 } },
+            Sequelize.or(
+              { accomplice: user.name },
+              { accomplice2: user.name },
+              { accomplice3: user.name },
+              { accomplice4: user.name }
+            )
+          ),
         });
 
-        User.update(
-          { rank: user.rank + option, gamepoints: user.gamepoints + 1 },
-          { where: { loginToken: token } }
-        );
+        const allCars = accomplices.concat([{ name: user.name }]).map((a) => {
+          const car = randomEntry(
+            cars.filter(
+              (car) =>
+                Number(car.id) > option * 7 - 7 && Number(car.id) < option * 7
+            )
+          );
+
+          const created = Garage.create({
+            userId: user.id,
+            date: Date.now(),
+            auto: car.naam,
+            image: car.url,
+            cash: car.waarde,
+            power: 0,
+            kogels: car.kogels,
+          });
+
+          User.update(
+            { rank: user.rank + option, gamepoints: user.gamepoints + 1 },
+            { where: { loginToken: token } }
+          );
+
+          return car;
+        });
 
         res.json({
           response: "Gelukt",
-          cars: [car],
+          cars: allCars,
         });
       } else {
         const random2 = Math.ceil(Math.random() * 100);

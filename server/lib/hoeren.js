@@ -36,7 +36,22 @@ const hoeren = async (req, res, User) => {
     const rang = getRank(user.rank, "number");
 
     if (user[timeKey] + timeNeeded < Date.now()) {
-      const random = Math.ceil(Math.random() * 10 * rang);
+      const accomplices = await User.findAll({
+        attributes: ["name"],
+        where: Sequelize.and(
+          { onlineAt: { [Op.gt]: Date.now() - 300000 } },
+          Sequelize.or(
+            { accomplice: user.name },
+            { accomplice2: user.name },
+            { accomplice3: user.name },
+            { accomplice4: user.name }
+          )
+        ),
+      });
+
+      const random = Math.ceil(
+        Math.random() * 10 * rang * (accomplices.length + 1)
+      );
 
       User.update(
         {
