@@ -51,6 +51,7 @@ const publicUserFields = [
   "incomeAt",
   "robAt",
   "attackAt",
+  "protectionAt",
 ];
 
 const allUserFields = publicUserFields.concat([
@@ -132,6 +133,8 @@ User.init(
     attackedAt: DataTypes.INTEGER, //wanneer je bent aangevallen
     robbedAt: DataTypes.INTEGER, //wanneer je bent berooft
     robAt: DataTypes.INTEGER, //wanneer je HEBT beroofd
+
+    protectionAt: DataTypes.INTEGER,
 
     home: {
       type: DataTypes.INTEGER,
