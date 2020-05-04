@@ -85,7 +85,7 @@ const stealcar = async (req, res, User, Garage) => {
           });
 
           User.update(
-            { rank: user.rank + option, gamepoints: user.gamepoints + 1 },
+            { rank: user.rank + option * 3, gamepoints: user.gamepoints + 1 },
             { where: { loginToken: token } }
           );
 

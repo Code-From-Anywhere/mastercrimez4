@@ -35,7 +35,7 @@ const gym = async (req, res, User) => {
   if (user) {
     if (user.gymAt + user.gymTime < Date.now()) {
       const random = Math.ceil(
-        Math.random() * 3 * option * getRank(user.rank, "number")
+        Math.random() * 10 * option * getRank(user.rank, "number")
       );
 
       User.update(

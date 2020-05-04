@@ -61,7 +61,7 @@ const crime = async (req, res, User) => {
         );
         User.update(
           {
-            rank: user.rank + option,
+            rank: user.rank + option * 3,
             cash: user.cash + stolen,
             gamepoints: user.gamepoints + 1,
           },
