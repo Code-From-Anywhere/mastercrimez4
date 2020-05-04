@@ -43,7 +43,6 @@ const buy = async (req, res, User) => {
       { where: { id: user.id, cash: { [Op.gte]: item.price } } }
     );
 
-    console.log("updated", updated);
     if (updated[0] === 1) {
       res.json({ response: "Gekocht" });
     } else {

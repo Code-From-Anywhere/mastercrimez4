@@ -832,8 +832,6 @@ server.post("/activate", async (req, res) => {
       { where: { activationToken, activated: false } }
     );
 
-    console.log(user);
-
     if (user[0] === 1) {
       res.json({ response: "Gelukt" });
     } else {

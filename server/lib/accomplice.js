@@ -139,7 +139,6 @@ const setAccomplice = async (req, res, User) => {
   }
 
   const updated = await User.update(update, { where: { loginToken } });
-  console.log(updated);
   res.json({ response: "Gelukt" });
 };
 

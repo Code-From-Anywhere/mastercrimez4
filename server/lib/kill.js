@@ -64,6 +64,16 @@ const kill = async (req, res, User, Message, Garage) => {
     return;
   }
 
+  if (user.protectionAt > Date.now()) {
+    res.json({ response: "Je staat onder bescherming" });
+    return;
+  }
+
+  if (user2.protectionAt > Date.now()) {
+    res.json({ response: "Deze persoon staat onder bescherming" });
+    return;
+  }
+
   if (user2.bunkerAt > Date.now()) {
     res.json({ response: "Deze persoon zit in de schuilkelder" });
     return;
@@ -110,12 +120,34 @@ const kill = async (req, res, User, Message, Garage) => {
 
   let responseBackfire;
   let responseMessageBackfire;
+
   if (damageBackfire >= user.health) {
     responseBackfire = `${user2.name} schoot terug met ${user2.bullets} kogels. Jij ging dood van de schoten.`;
     responseMessageBackfire = `Met je backfire van ${user2.bullets} kogels heb je ${user.name} doodgeschoten!`;
+
+    User.update(
+      {
+        cash: 0,
+        health: 0,
+        bank: 0,
+        bullets: 0,
+        rank: Math.round(user.rank / 2),
+        strength: Math.round(user.strength / 2),
+        hoeren: Math.round(user.hoeren / 2),
+        junkies: Math.round(user.junkies / 2),
+        wiet: Math.round(user.wiet / 2),
+        home: 0,
+        weapon: 0,
+        protection: 0,
+        airplane: 0,
+      },
+      { where: { id: user.id } }
+    );
   } else {
     responseBackfire = `${user2.name} schoot terug met ${user2.bullets} kogels. Dit heeft jou ${damageBackfire}% schade toegebracht.`;
     responseMessageBackfire = `Met je backfire heb je ${user2.name} ${damageBackfire}% schade toegebracht.`;
+
+    User.update({ health: user.health - damage }, { where: { id: user.id } });
   }
 
   if (damageBackfire === 0) {
@@ -144,7 +176,6 @@ const kill = async (req, res, User, Message, Garage) => {
       {
         cash: user.cash + user2.cash,
         bank: user.bank + user2.bank,
-        health: user.health - damageBackfire,
         gamepoints: user.gamepoints + gamepoints,
       },
       { where: { id: user.id } }
@@ -204,7 +235,6 @@ const kill = async (req, res, User, Message, Garage) => {
       {
         cash: user2.cash - stolenCash,
         health: user2.health - damage,
-
         bank: user2.bank - stolenBank,
       },
       { where: { id: user2.id } }
@@ -214,7 +244,6 @@ const kill = async (req, res, User, Message, Garage) => {
       {
         cash: user.cash + stolenCash,
         bank: user.bank + stolenBank,
-        health: user.health - damageBackfire,
       },
       { where: { id: user.id } }
     );
@@ -272,7 +301,10 @@ const getalive = async (req, res, User, Message, Garage) => {
     return;
   }
 
-  User.update({ health: 100 }, { where: { id: user.id } });
+  User.update(
+    { health: 100, protectionAt: Date.now() + 86400000 },
+    { where: { id: user.id } }
+  );
   res.json({ response: "Je bent levend" });
 };
 
