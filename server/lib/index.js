@@ -92,8 +92,14 @@ function earthDistance(lat1, long1, lat2, long2, response) {
 }
 
 const sequelize = new Sequelize({
-  dialect: "sqlite",
-  storage: "database/db3.sqlite",
+  dialect: "mysql",
+  database: process.env.DB_DB,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  dialectOptions: {
+    host: process.env.DB_HOST,
+    port: "3306",
+  },
   logging: null,
 });
 
@@ -110,31 +116,30 @@ User.init(
     email: DataTypes.STRING,
     name: DataTypes.STRING,
     image: DataTypes.STRING,
-    bio: DataTypes.STRING,
+    bio: DataTypes.TEXT,
     accomplice: DataTypes.STRING,
     accomplice2: DataTypes.STRING,
     accomplice3: DataTypes.STRING,
     accomplice4: DataTypes.STRING,
 
-    onlineAt: DataTypes.INTEGER,
-    autostelenAt: DataTypes.INTEGER,
-    crimeAt: DataTypes.INTEGER,
-    reizenAt: DataTypes.INTEGER,
-    jailAt: DataTypes.INTEGER,
-    wietAt: DataTypes.INTEGER,
-    junkiesAt: DataTypes.INTEGER,
-    hoerenAt: DataTypes.INTEGER,
-    gymAt: DataTypes.INTEGER,
-    gymTime: DataTypes.INTEGER,
-    bunkerAt: DataTypes.INTEGER,
-    incomeAt: DataTypes.INTEGER,
+    onlineAt: DataTypes.BIGINT,
+    autostelenAt: DataTypes.BIGINT,
+    crimeAt: DataTypes.BIGINT,
+    reizenAt: DataTypes.BIGINT,
+    jailAt: DataTypes.BIGINT,
+    wietAt: DataTypes.BIGINT,
+    junkiesAt: DataTypes.BIGINT,
+    hoerenAt: DataTypes.BIGINT,
+    gymAt: DataTypes.BIGINT,
+    gymTime: DataTypes.BIGINT,
+    bunkerAt: DataTypes.BIGINT,
+    incomeAt: DataTypes.BIGINT,
 
-    attackAt: DataTypes.INTEGER, //wanneer je HEBT aangevallen
-    attackedAt: DataTypes.INTEGER, //wanneer je bent aangevallen
-    robbedAt: DataTypes.INTEGER, //wanneer je bent berooft
-    robAt: DataTypes.INTEGER, //wanneer je HEBT beroofd
-
-    protectionAt: DataTypes.INTEGER,
+    attackAt: DataTypes.BIGINT, //wanneer je HEBT aangevallen
+    attackedAt: DataTypes.BIGINT, //wanneer je bent aangevallen
+    robbedAt: DataTypes.BIGINT, //wanneer je bent berooft
+    robAt: DataTypes.BIGINT, //wanneer je HEBT beroofd
+    protectionAt: DataTypes.BIGINT,
 
     home: {
       type: DataTypes.INTEGER,
@@ -294,7 +299,7 @@ ForumResponse.init(
 );
 
 try {
-  sequelize.sync({ alter: true });
+  sequelize.sync({ alter: true }); //{alter:true}
 } catch (e) {
   console.log("e", e);
 }

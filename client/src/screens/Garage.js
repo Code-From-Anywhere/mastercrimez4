@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Image, Text, View, FlatList, TouchableOpacity } from "react-native";
 import Button from "../components/Button";
-
+import T from "../components/T";
 import Constants from "../Constants";
+
 class Garage extends Component {
   state = {
     selected: null,
     response: null,
+    cars: [],
     id: null,
   };
 
@@ -41,7 +43,18 @@ class Garage extends Component {
     })
       .then((response) => response.json())
       .then(async (cars) => {
-        this.setState({ cars });
+        const carGroups = cars
+          ?.map((car, index) =>
+            cars.findIndex((c) => c.auto === car.auto) < index
+              ? null
+              : {
+                  car: car.auto,
+                  amount: cars.filter((c) => c.auto === car.auto).length,
+                }
+          )
+          .filter((x) => x !== null);
+
+        this.setState({ cars, carGroups });
       })
       .catch((error) => {
         console.error(error);
@@ -128,22 +141,65 @@ class Garage extends Component {
     );
   };
 
+  renderHeader = () => {
+    return (
+      <View style={{ flexDirection: "row" }}>
+        <Button
+          onPress={() => this.setState({ view: "groups" })}
+          title="Groepeer"
+        />
+        <Button
+          onPress={() => this.setState({ view: "all", filter: null })}
+          title="Alles"
+        />
+      </View>
+    );
+  };
+
+  renderGroup = ({ item }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => this.setState({ view: "all", filter: item.car })}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 20,
+          }}
+        >
+          <T>{item.car}</T>
+          <T>{item.amount}</T>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   render() {
     const {
       navigation,
       screenProps: { me },
     } = this.props;
-    const { cars, id } = this.state;
+    const { cars, carGroups, id, view, filter } = this.state;
 
     return (
       <View style={{ flex: 1 }}>
-        <FlatList
-          keyExtractor={(item, index) => `item${index}`}
-          data={cars}
-          extraData={id}
-          renderItem={this.renderItem}
-          ListFooterComponent={this.renderFooter}
-        />
+        {view === "groups" ? (
+          <FlatList
+            keyExtractor={(item, index) => `item${index}`}
+            data={carGroups}
+            renderItem={this.renderGroup}
+            ListHeaderComponent={this.renderHeader}
+          />
+        ) : (
+          <FlatList
+            keyExtractor={(item, index) => `item${index}`}
+            data={cars?.filter((car) => car.auto === filter || !filter)}
+            extraData={id}
+            renderItem={this.renderItem}
+            ListHeaderComponent={this.renderHeader}
+          />
+        )}
       </View>
     );
   }
