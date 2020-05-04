@@ -61,8 +61,6 @@ const breakout = async (req, res, User) => {
 
     User.update({ jailAt: null }, { where: { id: user2.id } });
   }
-
-  res.json({ jail });
 };
 
 module.exports = { jail, breakout };
