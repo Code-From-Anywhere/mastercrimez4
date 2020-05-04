@@ -15,7 +15,7 @@ const income = async (req, res, User) => {
     })
     .catch((error) => res.json({ error }));
 
-  if (!robot.success || robot.score < 0.5) {
+  if (!robot.success || robot.score < 0.3) {
     res.json({ response: "Je bent helaas gepakt door de robot-detectie!" });
     return;
   }
