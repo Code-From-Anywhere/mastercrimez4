@@ -47,7 +47,7 @@ const kill = async (req, res, User, Message, Garage) => {
     return;
   }
 
-  if (user2.health === 0) {
+  if (user2.health <= 0) {
     res.json({ response: `${user2.name} is al dood` });
     return;
   }
@@ -147,7 +147,10 @@ const kill = async (req, res, User, Message, Garage) => {
     responseBackfire = `${user2.name} schoot terug met ${user2.bullets} kogels. Dit heeft jou ${damageBackfire}% schade toegebracht.`;
     responseMessageBackfire = `Met je backfire heb je ${user2.name} ${damageBackfire}% schade toegebracht.`;
 
-    User.update({ health: user.health - damage }, { where: { id: user.id } });
+    User.update(
+      { health: user.health - damageBackfire },
+      { where: { id: user.id } }
+    );
   }
 
   if (damageBackfire === 0) {
