@@ -299,7 +299,7 @@ ForumResponse.init(
 );
 
 try {
-  sequelize.sync({ alter: true }); //{alter:true}
+  sequelize.sync(); //{alter:true}
 } catch (e) {
   console.log("e", e);
 }
