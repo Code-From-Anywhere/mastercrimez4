@@ -403,6 +403,14 @@ server.get("/garage", (req, res) =>
   require("./garage").garage(req, res, User, Garage)
 );
 
+server.get("/racecars", (req, res) =>
+  require("./garage").racecars(req, res, User, Garage)
+);
+
+server.get("/garageGrouped", (req, res) =>
+  require("./garage").garageGrouped(req, res, User, Garage, sequelize)
+);
+
 server.post("/sellcar", (req, res) =>
   require("./garage").sellcar(req, res, User, Garage)
 );
