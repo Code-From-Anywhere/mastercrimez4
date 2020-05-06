@@ -34,31 +34,35 @@ const donate = async (req, res, User, Message) => {
       const user2 = await User.findOne({ where: { name: to } });
 
       if (user2) {
-        if (user2.health > 0) {
-          const amount2 = Math.round(amount * 0.95);
+        if (user2.id !== user.id) {
+          if (user2.health > 0) {
+            const amount2 = Math.round(amount * 0.95);
 
-          const typeName = typeNames[type];
+            const typeName = typeNames[type];
 
-          User.update(
-            { [type]: user[type] - amount },
-            { where: { id: user.id } }
-          );
-          User.update(
-            { [type]: user2[type] + amount2 },
-            { where: { id: user2.id } }
-          );
-          const message = `${user.name} heeft jou ${amount2} ${typeName} overgemaakt`;
-          Message.create({
-            from: 0,
-            fromName: "(System)",
-            to: user2.id,
-            message,
-            read: false,
-          });
+            User.update(
+              { [type]: user[type] - amount },
+              { where: { id: user.id } }
+            );
+            User.update(
+              { [type]: user2[type] + amount2 },
+              { where: { id: user2.id } }
+            );
+            const message = `${user.name} heeft jou ${amount2} ${typeName} overgemaakt`;
+            Message.create({
+              from: 0,
+              fromName: "(System)",
+              to: user2.id,
+              message,
+              read: false,
+            });
 
-          res.json({ response: "Overgemaakt" });
+            res.json({ response: "Overgemaakt" });
+          } else {
+            res.json({ response: "Deze speler is dood" });
+          }
         } else {
-          res.json({ response: "Deze speler is dood" });
+          res.json({ response: "Je kan niet naar jezelf overmaken" });
         }
       } else {
         res.json({ response: "Deze speler bestaat niet" });
