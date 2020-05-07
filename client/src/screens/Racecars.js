@@ -1,26 +1,28 @@
 import React, { Component } from "react";
-import { Image, TextInput, Text, View, FlatList } from "react-native";
+import { Image, Text, View, FlatList, TouchableOpacity } from "react-native";
 import Button from "../components/Button";
+import T from "../components/T";
 import Constants from "../Constants";
-import STYLE from "../Style";
+
 class Garage extends Component {
   state = {
     selected: null,
     response: null,
     cars: [],
-    amount: {},
+    id: null,
   };
 
   componentDidMount() {
     const { navigation } = this.props;
     const { device } = this.props.screenProps;
 
-    this.fetchGroups();
+    this.fetchGarage();
 
     this.focusListener = navigation.addListener("didFocus", () => {
       // The screen is focused
       // Call any action
-      this.fetchGroups();
+      console.log("FETCH GARAGE");
+      this.fetchGarage();
     });
   }
 
@@ -29,10 +31,10 @@ class Garage extends Component {
     this.focusListener.remove();
   }
 
-  fetchGroups = () => {
+  fetchGarage = () => {
     const { device } = this.props.screenProps;
 
-    fetch(`${Constants.SERVER_ADDR}/garageGrouped?token=${device.loginToken}`, {
+    fetch(`${Constants.SERVER_ADDR}/racecars?token=${device.loginToken}`, {
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -40,29 +42,50 @@ class Garage extends Component {
       },
     })
       .then((response) => response.json())
-      .then(async (carGroups) => {
-        this.setState({ carGroups });
+      .then(async (cars) => {
+        this.setState({ cars });
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  bulkAction = (action, auto, amount) => {
+  sellCar = (id) => {
     const { loginToken } = this.props.screenProps.device;
-    fetch(`${Constants.SERVER_ADDR}/bulkaction`, {
+    fetch(`${Constants.SERVER_ADDR}/sellcar`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ amount, action, auto, loginToken }),
+      body: JSON.stringify({ id, loginToken }),
     })
       .then((response) => response.json())
       .then(async (response) => {
-        this.setState({ response, auto, amount: {} });
+        this.setState({ response, id });
         this.props.screenProps.reloadMe(loginToken);
-        this.fetchGroups();
+        this.fetchGarage();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  crushCar = (id) => {
+    const { loginToken } = this.props.screenProps.device;
+    fetch(`${Constants.SERVER_ADDR}/crushcar`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, loginToken }),
+    })
+      .then((response) => response.json())
+      .then(async (response) => {
+        this.setState({ response, id });
+        this.props.screenProps.reloadMe(loginToken);
+        this.fetchGarage();
       })
       .catch((error) => {
         console.error(error);
@@ -83,14 +106,14 @@ class Garage extends Component {
       .then(async (response) => {
         this.setState({ response, id });
         this.props.screenProps.reloadMe(loginToken);
-        this.fetchGroups();
+        this.fetchGarage();
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  renderGroup = ({ item, index }) => {
+  renderItem = ({ item, index }) => {
     return (
       <View
         key={`item${index}`}
@@ -114,39 +137,16 @@ class Garage extends Component {
         />
 
         <View style={{ marginLeft: 20 }}>
-          {(this.state.response && this.state.auto === item.auto) ||
-          this.state.id === item.id ? (
+          {this.state.response && this.state.id === item.id ? (
             <Text>{this.state.response.response}</Text>
           ) : null}
 
           <Text style={{ color: "white" }}>{item.auto}</Text>
-          <Text style={{ color: "white" }}>In bezit: {item.amount}</Text>
           <Text style={{ color: "white" }}>&euro;{item.cash}</Text>
           <Text style={{ color: "white" }}>{item.kogels} kogels</Text>
           <Text style={{ color: "white" }}>{item.power} power</Text>
-
-          <TextInput
-            key={`amount${item.id}`}
-            style={STYLE.textInput}
-            value={this.state.amount[item.id]}
-            onChangeText={(x) =>
-              this.setState({ amount: { ...this.state.amount, [item.id]: x } })
-            }
-            placeholder="Aantal"
-          />
-          <Button
-            title="Verkoop"
-            onPress={() =>
-              this.bulkAction("sell", item.auto, this.state.amount[item.id])
-            }
-          />
-
-          <Button
-            title="Crush"
-            onPress={() =>
-              this.bulkAction("crush", item.auto, this.state.amount[item.id])
-            }
-          />
+          <Button title="Verkoop" onPress={() => this.sellCar(item.id)} />
+          <Button title="Crush" onPress={() => this.crushCar(item.id)} />
           <Button title="Upgrade" onPress={() => this.upgradeCar(item.id)} />
         </View>
       </View>
@@ -164,8 +164,9 @@ class Garage extends Component {
       <View style={{ flex: 1 }}>
         <FlatList
           keyExtractor={(item, index) => `item${index}`}
-          data={carGroups}
-          renderItem={this.renderGroup}
+          data={cars?.filter((car) => car.auto === filter || !filter)}
+          extraData={id}
+          renderItem={this.renderItem}
         />
       </View>
     );

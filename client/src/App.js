@@ -45,6 +45,7 @@ import Rob from "./screens/Rob";
 import Bank from "./screens/Bank";
 import Shop from "./screens/Shop";
 import Garage from "./screens/Garage";
+import Racecars from "./screens/Racecars";
 import Streetrace from "./screens/Streetrace";
 import Bulletfactory from "./screens/Bulletfactory";
 import Casino from "./screens/Casino";
@@ -144,7 +145,7 @@ export const renderDrawerMenu = (item, index, navigation) => {
   const isHeaderStyle = item.isHeader
     ? {
         marginTop: 20,
-        backgroundColor: "darkblue",
+        backgroundColor: "#CCC",
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderTopWidth: 1,
@@ -387,6 +388,10 @@ const leftMenu = (me) => {
       to: "Garage",
     },
     {
+      text: "Racecars",
+      to: "Racecars",
+    },
+    {
       text: "Streetrace",
       to: "Streetrace",
     },
@@ -549,7 +554,7 @@ class Layout extends React.Component {
           <Header navigation={navigation} device={device} />
           {me?.reizenAt > Date.now() ? (
             <Fly screenProps={screenProps} navigation={navigation} />
-          ) : me?.health === 0 || me?.health === null ? (
+          ) : me?.health <= 0 || me?.health === null ? (
             <Dead screenProps={screenProps} navigation={navigation} />
           ) : me?.jailAt > Date.now() ? (
             <Jail screenProps={screenProps} navigation={navigation} />
@@ -621,6 +626,7 @@ const Container = rightContainer(
       Bank: withLayout(Bank),
       Shop: withLayout(Shop),
       Garage: withLayout(Garage),
+      Racecars: withLayout(Racecars),
       Backfire: withLayout(Backfire),
       Accomplice: withLayout(Accomplice),
       Streetrace: withLayout(Streetrace),
