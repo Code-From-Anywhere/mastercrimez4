@@ -241,7 +241,7 @@ class Chat extends Model {}
 Chat.init(
   {
     name: DataTypes.STRING,
-    message: DataTypes.STRING,
+    message: DataTypes.TEXT,
   },
   { sequelize, modelName: "chat" }
 );
@@ -278,7 +278,7 @@ ForumTopic.init(
   {
     name: DataTypes.STRING,
     title: DataTypes.STRING,
-    message: DataTypes.STRING,
+    message: DataTypes.TEXT,
     responses: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -293,7 +293,7 @@ ForumResponse.init(
   {
     name: DataTypes.STRING,
     topicId: DataTypes.INTEGER,
-    message: DataTypes.STRING,
+    message: DataTypes.TEXT,
   },
   { sequelize, modelName: "forum_response" }
 );
@@ -421,6 +421,10 @@ server.post("/crushcar", (req, res) =>
 
 server.post("/upgradecar", (req, res) =>
   require("./garage").upgradecar(req, res, User, Garage)
+);
+
+server.post("/bulkaction", (req, res) =>
+  require("./garage").bulkaction(req, res, User, Garage)
 );
 
 server.post("/stealcar", (req, res) =>

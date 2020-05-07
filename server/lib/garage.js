@@ -62,7 +62,7 @@ const garageGrouped = async (req, res, User, Garage, sequelize) => {
   if (user) {
     //find all future activities within square, add distance, filter distance, add its user
     const [grouped, meta] = await sequelize.query(
-      `SELECT auto, COUNT(*) as amount from garages WHERE userId='${user.id}' GROUP BY auto`
+      `SELECT id, auto, COUNT(*) as amount, image, cash, power, kogels from garages WHERE userId='${user.id}' AND power=0 GROUP BY auto ORDER BY amount DESC`
     );
 
     res.json(grouped);
@@ -99,6 +99,72 @@ const sellcar = async (req, res, User, Garage) => {
     }
   } else {
     res.json({ response: "Kan deze gebruiker niet vinden" });
+  }
+};
+
+const bulkaction = async (req, res, User, Garage) => {
+  const { auto, loginToken, amount, action } = req.body;
+
+  if (!action) {
+    res.json({ response: "No action given" });
+    return;
+  }
+
+  if (!loginToken) {
+    res.json({ response: "No token given" });
+    return;
+  }
+
+  if (!amount || amount < 1) {
+    res.json({ response: "Geef een aantal op" });
+    return;
+  }
+
+  if (!auto) {
+    res.json({ response: "Ongeldige auto" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken } });
+  if (!user) {
+    res.json({ response: "User niet gevonden" });
+    return;
+  }
+
+  const cars = await Garage.findAll({
+    where: { auto, userId: user.id, power: 0 },
+  });
+  if (!cars) {
+    res.json({ response: "Ongeldige auto" });
+    return;
+  }
+
+  if (amount > cars.length || amount < 0 || isNaN(amount)) {
+    res.json({ response: "Zoveel heb je er niet!" });
+    return;
+  }
+
+  let profit = 0;
+
+  cars.forEach(async (car, index) => {
+    if (index < amount) {
+      const what = action === "sell" ? "cash" : "kogels";
+      profit += Number(car[what]);
+      const destroy = await car.destroy();
+    }
+  });
+
+  const what = action === "sell" ? "cash" : "bullets";
+
+  const [updated] = await User.update(
+    { [what]: user[what] + profit },
+    { where: { id: user.id } }
+  );
+
+  if (updated) {
+    res.json({ response: "Gelukt" });
+  } else {
+    res.json({ response: "Er ging iets fout" });
   }
 };
 
@@ -186,4 +252,5 @@ module.exports = {
   garageGrouped,
   sellcar,
   crushcar,
+  bulkaction,
 };
