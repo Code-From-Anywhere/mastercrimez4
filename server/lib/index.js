@@ -431,6 +431,10 @@ server.post("/stealcar", (req, res) =>
   require("./stealcar").stealcar(req, res, User, Garage)
 );
 
+server.post("/removeprotection", (req, res) =>
+  require("./removeprotection").removeprotection(req, res, User)
+);
+
 server.post("/crime", (req, res) => require("./crime").crime(req, res, User));
 
 server.post("/gym", (req, res) => require("./gym").gym(req, res, User));

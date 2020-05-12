@@ -101,11 +101,11 @@ const kill = async (req, res, User, Message, Garage) => {
     user2.protection;
 
   const bulletsNeeded = Math.round(
-    Math.sqrt(heRank / meRank) * 10000 * getRank(user2.rank, "number")
+    Math.sqrt(heRank / meRank) * 50000 * getRank(user2.rank, "number")
   );
 
   const backfireBulletsNeeded = Math.round(
-    Math.sqrt(meRank / heRank) * 10000 * getRank(user.rank, "number")
+    Math.sqrt(meRank / heRank) * 50000 * getRank(user.rank, "number")
   );
 
   let bulletsBackfire = Math.round(user2.backfire * user2.bullets);

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Image, Text, View, FlatList, TouchableOpacity } from "react-native";
 import Button from "../components/Button";
 import { ReCaptcha } from "react-recaptcha-v3";
+import _ from "lodash";
 
 import Constants from "../Constants";
 
@@ -32,10 +33,17 @@ const options = [
 ];
 
 class Crimes extends Component {
-  state = {
-    selected: null,
-    response: null,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selected: null,
+      response: null,
+    };
+
+    this.debouncedSubmit = _.debounce(this.submit, 1000);
+  }
+
   renderItem = ({ item, index }) => {
     const { me } = this.props.screenProps;
 
@@ -67,41 +75,40 @@ class Crimes extends Component {
     );
   };
 
-  renderFooter = () => {
+  submit = () => {
     const { device } = this.props.screenProps;
+
+    this.setState({ loading: true });
+    fetch(`${Constants.SERVER_ADDR}/crime`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: device.loginToken,
+        option: this.state.selected,
+        captcha: this.state.captcha,
+      }),
+    })
+      .then((response) => response.json())
+      .then(async (response) => {
+        this.setState({ response, loading: false });
+        this.props.screenProps.reloadMe(device.loginToken);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  renderFooter = () => {
     return (
       <View>
         <Button
-          disabled={!this.state.captcha}
+          disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Steel"
-          onPress={
-            this.state.loading
-              ? () => null
-              : () => {
-                  this.setState({ loading: true });
-                  fetch(`${Constants.SERVER_ADDR}/crime`, {
-                    method: "POST",
-                    headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      token: device.loginToken,
-                      option: this.state.selected,
-                      captcha: this.state.captcha,
-                    }),
-                  })
-                    .then((response) => response.json())
-                    .then(async (response) => {
-                      this.setState({ response, loading: false });
-                      this.props.screenProps.reloadMe(device.loginToken);
-                    })
-                    .catch((error) => {
-                      console.error(error);
-                    });
-                }
-          }
+          onPress={this.debouncedSubmit}
         />
 
         <ReCaptcha

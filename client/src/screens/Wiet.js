@@ -6,9 +6,15 @@ import T from "../components/T";
 import { ReCaptcha } from "react-recaptcha-v3";
 
 class Wiet extends Component {
-  state = {
-    response: null,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      response: null,
+    };
+
+    this.debouncedSubmit = _.debounce(this.submit, 1000);
+  }
 
   keyValue(key, value) {
     return (
@@ -25,6 +31,31 @@ class Wiet extends Component {
       </View>
     );
   }
+
+  submit = () => {
+    const { device } = this.props.screenProps;
+
+    this.setState({ loading: true });
+    fetch(`${Constants.SERVER_ADDR}/wiet`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: device.loginToken,
+        captcha: this.state.captcha,
+      }),
+    })
+      .then((response) => response.json())
+      .then(async (response) => {
+        this.setState({ response, loading: false });
+        this.props.screenProps.reloadMe(device.loginToken);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   renderFooter = () => {
     const { device, me } = this.props.screenProps;
     return (
@@ -32,35 +63,10 @@ class Wiet extends Component {
         {this.keyValue("Wiet in bezit", me?.wiet)}
 
         <Button
-          disabled={!this.state.captcha}
+          disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
           title="Teel wietplanten"
-          onPress={
-            this.state.loading
-              ? () => null
-              : () => {
-                  this.setState({ loading: true });
-                  fetch(`${Constants.SERVER_ADDR}/wiet`, {
-                    method: "POST",
-                    headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      token: device.loginToken,
-                      captcha: this.state.captcha,
-                    }),
-                  })
-                    .then((response) => response.json())
-                    .then(async (response) => {
-                      this.setState({ response, loading: false });
-                      this.props.screenProps.reloadMe(device.loginToken);
-                    })
-                    .catch((error) => {
-                      console.error(error);
-                    });
-                }
-          }
+          onPress={this.debouncedSubmit}
         />
 
         <ReCaptcha

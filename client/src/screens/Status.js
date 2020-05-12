@@ -3,8 +3,12 @@ import { View, StyleSheet } from "react-native";
 import T from "../components/T";
 import { getRank, getStrength } from "../Util";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Constants from "../Constants";
 
 class Status extends Component {
+  state = {
+    response: null,
+  };
   keyValue(key, value) {
     return (
       <View style={styles.row}>
@@ -14,9 +18,11 @@ class Status extends Component {
     );
   }
   render() {
+    const { response } = this.state;
+
     const {
       navigation,
-      screenProps: { me },
+      screenProps: { me, reloadMe, device },
     } = this.props;
 
     return (
@@ -31,6 +37,40 @@ class Status extends Component {
             </View>
           </TouchableOpacity>
         ) : null}
+
+        {response ? <T>{response}</T> : null}
+        {me?.protectionAt > Date.now() ? (
+          <TouchableOpacity
+            onPress={() => {
+              //haalweg
+              fetch(`${Constants.SERVER_ADDR}/removeprotection`, {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token: device.loginToken }),
+              })
+                .then((response) => response.json())
+                .then(async ({ response }) => {
+                  this.setState({ response });
+                  reloadMe(device.loginToken);
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            }}
+          >
+            <View>
+              <T>
+                Je staat nog{" "}
+                {Math.round((me?.protectionAt - Date.now()) / 3600000)} uur
+                onder bescherming. Klik hier om het weg te halen
+              </T>
+            </View>
+          </TouchableOpacity>
+        ) : null}
+
         <View style={{ width: 200 }}>
           {this.keyValue("Contant", `€${me?.cash}`)}
           {this.keyValue("Bank", `€${me?.bank}`)}
