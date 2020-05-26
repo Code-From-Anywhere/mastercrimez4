@@ -40,7 +40,7 @@ const hoeren = async (req, res, User) => {
       const accomplices = await User.findAll({
         attributes: ["name"],
         where: Sequelize.and(
-          { onlineAt: { [Op.gt]: Date.now() - 300000 } },
+          { ocAt: { [Op.gt]: Date.now() - 120000 } },
           Sequelize.or(
             { accomplice: user.name },
             { accomplice2: user.name },

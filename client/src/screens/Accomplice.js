@@ -1,20 +1,9 @@
 import React from "react";
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  Dimensions,
-  Platform,
-  TextInput,
-  Clipboard,
-} from "react-native";
-
-import T from "../components/T";
+import { Clipboard, Dimensions, TextInput, View } from "react-native";
 import Button from "../components/Button";
+import T from "../components/T";
 import Constants from "../Constants";
 import styles from "../Style";
-
 import { getRank } from "../Util";
 
 const { width } = Dimensions.get("window");
@@ -86,7 +75,7 @@ class Accomplice extends React.Component {
           <T>
             Wiens handlanger wil je zijn? Vul hieronder de naam in van de
             gangster wiens handlanger jij wilt zijn, en hij zal bij alles wat
-            hij doet hulp van je krijgen als jullie beide online zijn.
+            hij doet hulp van je krijgen als jullie beide organised crime doen.
           </T>
 
           <View style={{ marginVertical: 20 }}>

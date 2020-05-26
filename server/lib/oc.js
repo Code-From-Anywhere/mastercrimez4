@@ -1,5 +1,6 @@
 const { getRank, getStrength } = require("./util");
 const { Sequelize, Op } = require("sequelize");
+const fetch = require("isomorphic-fetch");
 
 const SECONDS = 120;
 
@@ -46,7 +47,7 @@ const oc = async (req, res, User, Message) => {
     const accomplices = await User.findAll({
       attributes: ["name"],
       where: Sequelize.and(
-        { onlineAt: { [Op.gt]: Date.now() - 300000 } },
+        { ocAt: { [Op.gt]: Date.now() - 120000 } },
         Sequelize.or(
           { accomplice: user.name },
           { accomplice2: user.name },
