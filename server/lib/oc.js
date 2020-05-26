@@ -58,7 +58,7 @@ const oc = async (req, res, User, Message) => {
     });
 
     const random = Math.ceil(
-      Math.random() * 10 * rang * (accomplices.length + 1)
+      Math.random() * 100000 * rang * (accomplices.length + 1)
     );
 
     User.update(
@@ -71,7 +71,7 @@ const oc = async (req, res, User, Message) => {
     );
 
     res.json({
-      response: `Je hebt ${random} ${name} verdiend`,
+      response: `De OC is gelukt! Je hebt ${random} ${name} verdiend. De komende 2 minuten zal jij je handlangers helpen met alle andere misdaden!`,
     });
   } else {
     res.json({
