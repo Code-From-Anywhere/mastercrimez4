@@ -50,6 +50,7 @@ const publicUserFields = [
   "bunkerAt",
   "incomeAt",
   "robAt",
+  "ocAt",
   "attackAt",
   "protectionAt",
 ];
@@ -139,6 +140,7 @@ User.init(
     attackedAt: DataTypes.BIGINT, //wanneer je bent aangevallen
     robbedAt: DataTypes.BIGINT, //wanneer je bent berooft
     robAt: DataTypes.BIGINT, //wanneer je HEBT beroofd
+    ocAt: DataTypes.BIGINT,
     protectionAt: DataTypes.BIGINT,
 
     home: {
@@ -491,6 +493,8 @@ server.post("/hospital", (req, res) =>
 server.post("/kill", (req, res) =>
   require("./kill").kill(req, res, User, Message, Garage)
 );
+
+server.post("/oc", (req, res) => require("./oc").oc(req, res, User, Message));
 
 server.post("/getalive", (req, res) =>
   require("./kill").getalive(req, res, User, Message, Garage)

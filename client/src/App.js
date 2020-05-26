@@ -1,86 +1,79 @@
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import { createBrowserApp } from "@react-navigation/web";
+import { screens } from "expo-inputs";
 import * as React from "react";
 import {
-  Platform,
   Dimensions,
+  Platform,
+  SafeAreaView,
   ScrollView,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   View,
 } from "react-native";
-import { screens } from "expo-inputs";
 import CountDown from "react-native-countdown-component";
-import { loadReCaptcha } from "react-recaptcha-v3";
-
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
-import { createDrawerNavigator, DrawerItems } from "react-navigation-drawer";
-import { createBrowserApp } from "@react-navigation/web";
-
-import { PersistGate } from "redux-persist/es/integration/react";
+import { createDrawerNavigator } from "react-navigation-drawer";
+import { loadReCaptcha } from "react-recaptcha-v3";
 import { connect, Provider } from "react-redux";
-
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-
-import { persistor, store } from "./Store";
-import { getRank } from "./Util";
-import Constants from "./Constants";
-
-import Fly from "./components/Fly";
+import { PersistGate } from "redux-persist/es/integration/react";
 import Dead from "./components/Dead";
+import Fly from "./components/Fly";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 import Jail from "./components/Jail";
-
-//screens
-import Showroom from "./screens/Showroom";
-import Status from "./screens/Status";
-import Members from "./screens/Members";
-import Stats from "./screens/Stats";
-import Messages from "./screens/Messages";
-import StealCar from "./screens/StealCar";
-import Crimes from "./screens/Crimes";
-import Kill from "./screens/Kill";
-import JailScreen from "./screens/Jail";
-import Rob from "./screens/Rob";
-import Bank from "./screens/Bank";
-import Shop from "./screens/Shop";
-import Garage from "./screens/Garage";
-import Racecars from "./screens/Racecars";
-import Streetrace from "./screens/Streetrace";
-import Bulletfactory from "./screens/Bulletfactory";
-import Casino from "./screens/Casino";
-import Airport from "./screens/Airport";
-import Gym from "./screens/Gym";
-import Wiet from "./screens/Wiet";
-import Junkies from "./screens/Junkies";
-import Backfire from "./screens/Backfire";
-import Hoeren from "./screens/Hoeren";
-import Bunker from "./screens/Bunker";
-import Income from "./screens/Income";
-import Donate from "./screens/Donate";
+import Constants from "./Constants";
 import Accomplice from "./screens/Accomplice";
 import AdminEmail from "./screens/AdminEmail";
-import Forum from "./screens/Forum";
-import Hospital from "./screens/Hospital";
-
-import Privacy from "./screens/Privacy";
-import Login from "./screens/Login";
-import SignupEmail from "./screens/SignupEmail";
-import SignupEmail2 from "./screens/SignupEmail2";
-import RecoverPassword from "./screens/RecoverPassword";
-import ChangePassword from "./screens/ChangePassword";
-import ForgotPassword from "./screens/ForgotPassword";
+import Airport from "./screens/Airport";
+import Backfire from "./screens/Backfire";
+import Bank from "./screens/Bank";
+import Bulletfactory from "./screens/Bulletfactory";
+import Bunker from "./screens/Bunker";
+import Casino from "./screens/Casino";
 import ChangeName from "./screens/ChangeName";
-import Contribute from "./screens/Contribute";
+import ChangePassword from "./screens/ChangePassword";
 import Chat from "./screens/Chat";
-import Settings from "./screens/Settings";
+import Contribute from "./screens/Contribute";
+import Crimes from "./screens/Crimes";
+import Donate from "./screens/Donate";
+import ForgotPassword from "./screens/ForgotPassword";
+import Forum from "./screens/Forum";
+import Garage from "./screens/Garage";
+import Gym from "./screens/Gym";
+import Hoeren from "./screens/Hoeren";
+import Hospital from "./screens/Hospital";
+import Income from "./screens/Income";
 import Info from "./screens/Info";
 import InfoGame from "./screens/InfoGame";
 import InfoRules from "./screens/InfoRules";
-import Prizes from "./screens/Prizes";
-
+import JailScreen from "./screens/Jail";
+import Junkies from "./screens/Junkies";
+import Kill from "./screens/Kill";
+import Login from "./screens/Login";
+import Members from "./screens/Members";
+import Messages from "./screens/Messages";
 import MyProfile from "./screens/MyProfile";
+import OrganisedCrime from "./screens/OrganisedCrime";
+import Privacy from "./screens/Privacy";
+import Prizes from "./screens/Prizes";
 import Profile from "./screens/Profile";
+import Racecars from "./screens/Racecars";
+import RecoverPassword from "./screens/RecoverPassword";
+import Rob from "./screens/Rob";
+import Settings from "./screens/Settings";
+import Shop from "./screens/Shop";
+//screens
+import Showroom from "./screens/Showroom";
+import SignupEmail from "./screens/SignupEmail";
+import SignupEmail2 from "./screens/SignupEmail2";
+import Stats from "./screens/Stats";
+import Status from "./screens/Status";
+import StealCar from "./screens/StealCar";
+import Streetrace from "./screens/Streetrace";
+import Wiet from "./screens/Wiet";
+import { persistor, store } from "./Store";
+import { getRank } from "./Util";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -197,6 +190,7 @@ const leftMenu = (me) => {
   const attackSeconds = Math.ceil((me?.attackAt + 120000 - Date.now()) / 1000);
 
   const robSeconds = Math.ceil((me?.robAt + 30000 - Date.now()) / 1000);
+  const ocSeconds = Math.ceil((me?.ocAt + 120000 - Date.now()) / 1000);
 
   const gymSeconds = Math.ceil((me?.gymAt + me?.gymTime - Date.now()) / 1000);
   const wietSeconds = Math.ceil((me?.wietAt + 120000 - Date.now()) / 1000);
@@ -270,6 +264,23 @@ const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={robSeconds}
+            digitStyle={{ backgroundColor: "#404040" }}
+            digitTxtStyle={{ color: "white" }}
+            onFinish={() => {}}
+            size={8}
+            timeToShow={["M", "S"]}
+            timeLabels={{ m: null, s: null }}
+          />
+        ) : null,
+    },
+    {
+      text: "Georganiseerde Misdaad",
+      to: "OrganisedCrime",
+      component:
+        ocSeconds > 0 ? (
+          <CountDown
+            style={{ marginLeft: 10 }}
+            until={ocSeconds}
             digitStyle={{ backgroundColor: "#404040" }}
             digitTxtStyle={{ color: "white" }}
             onFinish={() => {}}
@@ -639,6 +650,7 @@ const Container = rightContainer(
       Chat: withLayout(Chat),
       Gym: withLayout(Gym),
       Wiet: withLayout(Wiet),
+      OrganisedCrime: withLayout(OrganisedCrime),
       Junkies: withLayout(Junkies),
       Hoeren: withLayout(Hoeren),
       Bunker: withLayout(Bunker),
