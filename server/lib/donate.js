@@ -63,7 +63,7 @@ const donate = async (req, res, User, Message) => {
               read: false,
             });
 
-            res.json({ response: "Overgemaakt" });
+            res.json({ response: "Overgemaakt." });
           } else {
             res.json({ response: "Deze speler is dood" });
           }
