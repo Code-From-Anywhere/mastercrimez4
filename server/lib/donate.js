@@ -1,3 +1,6 @@
+const { Op } = require("sequelize");
+
+
 const donate = async (req, res, User, Message) => {
   const { loginToken, to, amount, type } = req.body;
   const user = await User.findOne({ where: { loginToken } });
@@ -40,14 +43,17 @@ const donate = async (req, res, User, Message) => {
 
             const typeName = typeNames[type];
 
-            User.update(
+            const gelukt = await User.update(
               { [type]: user[type] - amount },
-              { where: { id: user.id } }
+              { where: { id: user.id, [type]: {[Op.gte]: amount } } }
             );
-            User.update(
-              { [type]: user2[type] + amount2 },
-              { where: { id: user2.id } }
-            );
+            if(gelukt[0] === 1){
+              User.update(
+                { [type]: user2[type] + amount2 },
+                { where: { id: user2.id } }
+              );
+
+            }
             const message = `${user.name} heeft jou ${amount2} ${typeName} overgemaakt`;
             Message.create({
               from: 0,
