@@ -1,6 +1,5 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { createBrowserApp } from "@react-navigation/web";
-import { screens } from "expo-inputs";
 import * as React from "react";
 import {
   Dimensions,
@@ -17,6 +16,7 @@ import { createStackNavigator } from "react-navigation-stack";
 // import { loadReCaptcha } from "react-recaptcha-v3";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
+import { Colors } from "./Colors";
 import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Footer from "./components/Footer";
@@ -72,8 +72,11 @@ import Stats from "./screens/Stats";
 import Status from "./screens/Status";
 import StealCar from "./screens/StealCar";
 import Streetrace from "./screens/Streetrace";
+import VerifyPhone from "./screens/VerifyPhone";
+import VerifyPhoneCode from "./screens/VerifyPhoneCode";
 import Wiet from "./screens/Wiet";
 import { persistor, store } from "./Store";
+import { useExpoUpdate } from "./updateHook";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -180,54 +183,83 @@ export const renderDrawerMenu = (item, index, navigation) => {
   );
 };
 
-class Layout extends React.Component {
-  render() {
-    const { screenProps, navigation, children } = this.props;
+const Layout = ({ screenProps, navigation, children }) => {
+  const { me, device } = screenProps;
 
-    const { me, device } = screenProps;
-
-    return (
-      <SafeAreaView
-        style={{
-          flexDirection: "row",
-          height: "100%",
-          backgroundColor: "#555",
-        }}
-      >
-        {isSmallDevice ? null : (
-          <View style={{ width: 200 }}>
-            {leftMenu(me).map((item, index) =>
-              renderMenu(item, index, navigation)
-            )}
-          </View>
-        )}
-
-        <View style={{ flex: 1 }}>
-          <Header navigation={navigation} device={device} me={me} />
-
-          {me?.reizenAt > Date.now() ? (
-            <Fly screenProps={screenProps} navigation={navigation} />
-          ) : me?.health <= 0 || me?.health === null ? (
-            <Dead screenProps={screenProps} navigation={navigation} />
-          ) : me?.jailAt > Date.now() ? (
-            <Jail screenProps={screenProps} navigation={navigation} />
-          ) : (
-            <ScrollView style={{ flex: 1 }}>{children}</ScrollView>
+  const updateAvailable = useExpoUpdate();
+  return (
+    <SafeAreaView
+      style={{
+        flexDirection: "row",
+        height: "100%",
+        backgroundColor: Colors.secondary,
+      }}
+    >
+      {isSmallDevice ? null : (
+        <View style={{ width: 200 }}>
+          {leftMenu(me).map((item, index) =>
+            renderMenu(item, index, navigation)
           )}
-          <Footer />
         </View>
-        {isSmallDevice ? null : (
-          <View style={{ width: 200 }}>
-            {rightMenu(me).map((item, index) =>
-              renderMenu(item, index, navigation)
-            )}
-          </View>
-        )}
-      </SafeAreaView>
-    );
-  }
-}
+      )}
 
+      <View style={{ flex: 1 }}>
+        <Header navigation={navigation} device={device} me={me} />
+
+        {me?.phoneVerified === false && (
+          <TouchableOpacity
+            style={{
+              margin: 15,
+              padding: 15,
+              backgroundColor: Colors.primary,
+              borderRadius: 5,
+            }}
+            onPress={() => navigation.navigate("VerifyPhone")}
+          >
+            <Text>
+              Je account is nog niet geverifieerd! Klik hier om dat te doen
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {updateAvailable && (
+          <TouchableOpacity
+            onPress={() => Updates.reloadAsync()}
+            style={{
+              margin: 15,
+              padding: 15,
+              backgroundColor: Colors.primary,
+              borderRadius: 5,
+            }}
+          >
+            <Text>
+              Er is een nieuwe update beschikbaar. Klik hier om de app te
+              verversen.
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {me?.reizenAt > Date.now() ? (
+          <Fly screenProps={screenProps} navigation={navigation} />
+        ) : me?.health <= 0 || me?.health === null ? (
+          <Dead screenProps={screenProps} navigation={navigation} />
+        ) : me?.jailAt > Date.now() ? (
+          <Jail screenProps={screenProps} navigation={navigation} />
+        ) : (
+          <ScrollView style={{ flex: 1 }}>{children}</ScrollView>
+        )}
+        {Platform.OS === "web" && <Footer />}
+      </View>
+      {isSmallDevice ? null : (
+        <View style={{ width: 200 }}>
+          {rightMenu(me).map((item, index) =>
+            renderMenu(item, index, navigation)
+          )}
+        </View>
+      )}
+    </SafeAreaView>
+  );
+};
 export const withLayout = (Component) => (props) => (
   <Layout {...props}>
     <Component {...props} />
@@ -321,6 +353,7 @@ const Container = rightContainer(
       },
 
       ChangeName: withLayout(ChangeName),
+      VerifyPhoneCode: withLayout(VerifyPhoneCode),
       ForgotPassword: withLayout(ForgotPassword),
       RecoverPassword: {
         screen: withLayout(RecoverPassword),
@@ -329,6 +362,7 @@ const Container = rightContainer(
       ChangePassword: {
         screen: withLayout(ChangePassword),
       },
+      VerifyPhone: withLayout(VerifyPhone),
       MyProfile: withLayout(MyProfile),
       Login: withLayout(Login),
 
@@ -339,7 +373,6 @@ const Container = rightContainer(
       Privacy: withLayout(Privacy),
       Contribute: withLayout(Contribute),
       Prizes: withLayout(Prizes),
-      ...screens,
     },
     {
       drawerPosition: "right",
@@ -351,7 +384,10 @@ const Container = rightContainer(
       },
       defaultNavigationOptions: {
         headerHideShadow: true,
-        headerStyle: { shadowOffset: { height: 0, width: 0 } },
+        headerStyle: {
+          backgroundColor: Colors.primary,
+          shadowOffset: { height: 0, width: 0 },
+        },
       },
     }
   ),

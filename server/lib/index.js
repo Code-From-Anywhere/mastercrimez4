@@ -13,6 +13,13 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 var cors = require("cors");
 
+const twilio = require("twilio");
+
+var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
+var authToken = process.env.TWILIO_AUTH_SECRET; // Your Auth Token from www.twilio.com/console
+
+var twilioClient = new twilio(accountSid, authToken);
+
 const EMAIL_FROM = "info@mastercrimez.nl";
 
 const publicUserFields = [
@@ -62,6 +69,7 @@ const allUserFields = publicUserFields.concat([
   "protection",
   "airplane",
   "home",
+  "phoneVerified",
 ]);
 
 function me(token) {
@@ -110,6 +118,13 @@ User.init(
     forgotPasswordToken: DataTypes.STRING,
     activated: DataTypes.BOOLEAN,
     level: DataTypes.INTEGER,
+
+    phone: DataTypes.STRING,
+    phoneVerified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    phoneVerificationCode: DataTypes.INTEGER,
 
     email: DataTypes.STRING,
     name: DataTypes.STRING,
@@ -898,6 +913,101 @@ server.post("/updateProfile", async (req, res) => {
     const user = await User.update(update, { where: { loginToken } });
     res.json({ user });
   }
+});
+
+server.post("/setPhone", async (req, res) => {
+  const { phone, token } = req.body;
+
+  if (!token) {
+    res.json({ response: "Geen token" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: "Ongeldige user" });
+    return;
+  }
+
+  if (!phone) {
+    res.json({ response: "Geef een telefoonnummer op" });
+    return;
+  }
+
+  const validNumber = /([+]?\d{1,2}[.-\s]?)?(\d{3}[.-]?){2}\d{4}/g;
+
+  if (phone.length < 12 || !phone.match(validNumber)) {
+    res.json({
+      response: "Geef een valide telefoonnummer op, inclusief landcode",
+    });
+    return;
+  }
+
+  const already = await User.findOne({ where: { phone, phoneVerified: true } });
+
+  if (already) {
+    return res.json({ response: "Er is al iemand met dit telefoonnummer" });
+  }
+
+  const phoneVerificationCode = Math.round(Math.random() * 999999);
+  let update = { phone, phoneVerified: false, phoneVerificationCode };
+
+  twilioClient.messages
+    .create({
+      body: `Your verification code is ${phoneVerificationCode}`,
+      to: phone,
+      from: process.env.TWILIO_PHONE_FROM,
+    })
+    .then((message) => console.log(message.sid));
+
+  const user2 = await User.update(update, { where: { loginToken: token } });
+  res.json({ success: true });
+});
+
+server.post("/verifyPhone", async (req, res) => {
+  const { code, token } = req.body;
+
+  if (!token) {
+    res.json({ response: "Geen token" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: "Ongeldige user" });
+    return;
+  }
+
+  if (!code) {
+    res.json({ response: "Geef een code op" });
+    return;
+  }
+
+  const verifiedUser = await User.findOne({
+    where: {
+      phoneVerificationCode: code,
+      loginToken: token,
+      phoneVerified: false,
+    },
+  });
+
+  if (verifiedUser) {
+    const updated = await User.update(
+      { phoneVerified: true },
+      { where: { id: verifiedUser.id } }
+    );
+
+    console.log("updated", updated);
+
+    return res.json({
+      success: true,
+      response: "Gelukt.",
+    });
+  }
+
+  return res.json({ success: false, response: "Verkeerde code" });
 });
 
 server.post("/updateName", async (req, res) => {

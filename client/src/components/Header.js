@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Colors } from "../Colors";
 import Chat from "../components/Chat";
 import Constants from "../Constants";
 import { getRank, getStrength } from "../Util";
@@ -62,7 +63,7 @@ function Header({ navigation, device, me }) {
           style={{
             flexDirection: "row",
             flexWrap: "wrap",
-            backgroundColor: "#FFF",
+            backgroundColor: Colors.primary,
             justifyContent: "center",
             paddingBottom: 10,
             shadowColor: "#000",

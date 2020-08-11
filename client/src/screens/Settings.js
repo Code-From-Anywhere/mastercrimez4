@@ -13,6 +13,11 @@ class Status extends Component {
       <View>
         <Menu
           navigation={navigation}
+          title="Telefoonnummer verifiëren"
+          to="VerifyPhone"
+        />
+        <Menu
+          navigation={navigation}
           title="Wachtwoord veranderen"
           to="ChangePassword"
         />

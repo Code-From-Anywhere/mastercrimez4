@@ -23,6 +23,13 @@ const kill = async (req, res, User, Message, Garage) => {
     return;
   }
 
+  const isNotVerified = await User.findOne({
+    where: { loginToken: token, phoneVerified: false },
+  });
+  if (isNotVerified) {
+    return res.json({ response: "Je moet je account eerst verifiëren!" });
+  }
+
   if (user.bullets < Number(bullets)) {
     res.json({ response: "Je hebt niet genoeg kogels" });
     return;

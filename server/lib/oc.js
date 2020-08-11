@@ -19,6 +19,13 @@ const oc = async (req, res, User, Message) => {
     return;
   }
 
+  const isNotVerified = await User.findOne({
+    where: { loginToken: token, phoneVerified: false },
+  });
+  if (isNotVerified) {
+    return res.json({ response: "Je moet je account eerst verifiëren!" });
+  }
+
   // const secret_key = process.env.GOOGLE_CAPTCHA_KEY;
   // const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${captcha}`;
 

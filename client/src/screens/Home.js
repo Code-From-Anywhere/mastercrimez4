@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
+import { Colors } from "../Colors";
 import { leftMenu, rightMenu } from "../Menus";
 const { width } = Dimensions.get("window");
 
@@ -36,7 +37,7 @@ class Status extends Component {
                 style={{
                   borderWidth: 1,
                   borderColor: "#000",
-                  backgroundColor: "#FFF",
+                  backgroundColor: Colors.primary,
                   borderRadius: 10,
                   width: 80,
                   height: 80,

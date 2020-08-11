@@ -1,17 +1,6 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  AsyncStorage,
-  ScrollView,
-  View,
-  Text,
-  Image,
-  ActivityIndicator,
-} from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 import T from "../components/T";
-import { DataForm, Field } from "../wrappers/DataForms";
-import Constants from "../Constants";
 
 class MyProfile extends React.Component {
   state = {
@@ -31,6 +20,9 @@ class MyProfile extends React.Component {
       <ScrollView>
         <View style={{ margin: 20 }}>
           {this.state.response ? <T>{this.state.response.response}</T> : null}
+          {/* 
+          coming soon
+          
           <DataForm
             navigation={navigation}
             fields={[
@@ -69,7 +61,7 @@ class MyProfile extends React.Component {
             values={{
               ...me,
             }}
-          />
+          /> */}
         </View>
       </ScrollView>
     );

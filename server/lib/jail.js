@@ -24,6 +24,13 @@ const breakout = async (req, res, User) => {
     return;
   }
 
+  const isNotVerified = await User.findOne({
+    where: { loginToken: token, phoneVerified: false },
+  });
+  if (isNotVerified) {
+    return res.json({ response: "Je moet je account eerst verifiëren!" });
+  }
+
   const user2 = await User.findOne({ where: { name } });
 
   if (!user2) {

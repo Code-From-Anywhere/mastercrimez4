@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Text, TextInput, View } from "react-native";
+import { Colors } from "../Colors";
 import Constants from "../Constants";
+import { KeyboardAvoidingSpace } from "../KeyboardAvoidingSpace";
 class Chat extends Component {
   state = {
     chat: [],
@@ -41,7 +43,7 @@ class Chat extends Component {
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, padding: 10 }}>
           {chat.map((item, index) => (
-            <Text>
+            <Text style={{ color: Colors.secondaryText }}>
               {item.name}: {item.message}{" "}
             </Text>
           ))}
@@ -79,6 +81,7 @@ class Chat extends Component {
               });
           }}
         />
+        <KeyboardAvoidingSpace />
       </View>
     );
   }

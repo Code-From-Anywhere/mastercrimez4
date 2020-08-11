@@ -31,6 +31,14 @@ const income = async (req, res, User) => {
     res.json({ response: "Ongeldige user" });
     return;
   }
+
+  const isNotVerified = await User.findOne({
+    where: { loginToken: token, phoneVerified: false },
+  });
+  if (isNotVerified) {
+    return res.json({ response: "Je moet je account eerst verifiëren!" });
+  }
+
   const incomeAt = user.incomeAt ? user.incomeAt : 0;
   const uren = Math.round((Date.now() - incomeAt) / 3600000);
   const uren2 = uren > 24 ? 24 : uren;

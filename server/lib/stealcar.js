@@ -34,6 +34,13 @@ const stealcar = async (req, res, User, Garage) => {
     return;
   }
 
+  const isNotVerified = await User.findOne({
+    where: { loginToken: token, phoneVerified: false },
+  });
+  if (isNotVerified) {
+    return res.json({ response: "Je moet je account eerst verifiëren!" });
+  }
+
   if (!option || option <= 0 || option > 15) {
     res.json({ response: "Ongeldige invoer" + option });
     return;
