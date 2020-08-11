@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
-import { ReCaptcha } from "react-recaptcha-v3";
+// import { ReCaptcha } from "react-recaptcha-v3";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -13,7 +13,6 @@ class Wiet extends Component {
       response: null,
     };
 
-    this.debouncedSubmit = _.debounce(this.submit, 1000);
   }
 
   keyValue(key, value) {
@@ -61,17 +60,17 @@ class Wiet extends Component {
     return (
       <View>
         <Button
-          disabled={!this.state.captcha || this.state.loading}
+          // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
           title="Doe een OC met je handlangers"
-          onPress={this.debouncedSubmit}
+          onPress={this.submit}
         />
 
-        <ReCaptcha
+        {/* <ReCaptcha
           sitekey={Constants.CAPTCHA}
           action="oc"
           verifyCallback={(token) => this.setState({ captcha: token })}
-        />
+        /> */}
       </View>
     );
   };

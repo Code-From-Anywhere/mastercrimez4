@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import Constants from "../Constants";
+import { Text, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import { ReCaptcha } from "react-recaptcha-v3";
+import Constants from "../Constants";
+// import { ReCaptcha } from "react-recaptcha-v3";
 
 class Junkies extends Component {
   constructor(props) {
@@ -13,7 +13,6 @@ class Junkies extends Component {
       response: null,
     };
 
-    this.debouncedSubmit = _.debounce(this.submit, 1000);
   }
 
   submit = () => {
@@ -48,17 +47,17 @@ class Junkies extends Component {
         {this.keyValue("Junkies in bezit", me?.junkies)}
 
         <Button
-          disabled={!this.state.captcha || this.state.loading}
+          // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
           title="Train junkies"
-          onPress={this.debouncedSubmit}
+          onPress={this.submit}
         />
 
-        <ReCaptcha
+        {/* <ReCaptcha
           sitekey={Constants.CAPTCHA}
           action="junkies"
           verifyCallback={(token) => this.setState({ captcha: token })}
-        />
+        /> */}
       </View>
     );
   };

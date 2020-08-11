@@ -1,20 +1,18 @@
 import React, { Component } from "react";
 import {
-  Image,
+  Dimensions, FlatList, Image,
   Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Dimensions,
+
+
+  TouchableOpacity, View
 } from "react-native";
 import CountDown from "react-native-countdown-component";
-import { ReCaptcha } from "react-recaptcha-v3";
-
+// import { ReCaptcha } from "react-recaptcha-v3";
 import Button from "../components/Button";
+import Constants from "../Constants";
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
 
-import Constants from "../Constants";
 
 const options = [
   {
@@ -102,7 +100,6 @@ class StealCar extends Component {
       response: null,
     };
 
-    this.debouncedSubmit = _.debounce(this.submit, 1000);
   }
 
   renderItem = ({ item, index }) => {
@@ -169,17 +166,17 @@ class StealCar extends Component {
     return (
       <View>
         <Button
-          disabled={!this.state.captcha || this.state.loading}
+          // disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Steel"
-          onPress={this.debouncedSubmit}
+          onPress={this.submit}
         />
 
-        <ReCaptcha
+        {/* <ReCaptcha
           sitekey={Constants.CAPTCHA}
           action="stealcar"
           verifyCallback={(token) => this.setState({ captcha: token })}
-        />
+        /> */}
       </View>
     );
   };

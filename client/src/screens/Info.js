@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Linking } from "react-native";
+import { Linking, View } from "react-native";
 import Menu from "../components/Menu";
 
 class Status extends Component {
@@ -18,6 +18,8 @@ class Status extends Component {
         <Menu navigation={navigation} title="Spel info" to="InfoGame" />
         <Menu navigation={navigation} title="Privacy Policy" to="Privacy" />
         <Menu navigation={navigation} title="Regels" to="InfoRules" />
+        <Menu navigation={navigation} title="Draag bij" to="Contribute" />
+        <Menu navigation={navigation} title="Prijzen" to="Prizes" />
       </View>
     );
   }

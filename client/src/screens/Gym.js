@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Image, Text, View, FlatList, TouchableOpacity } from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import { getStrength } from "../Util";
 import Constants from "../Constants";
-import { ReCaptcha } from "react-recaptcha-v3";
+import { getStrength } from "../Util";
+// import { ReCaptcha } from "react-recaptcha-v3";
 
 const options = [
   {
@@ -29,8 +29,6 @@ class Gym extends Component {
       selected: null,
       response: null,
     };
-
-    this.debouncedSubmit = _.debounce(this.submit, 1000);
   }
 
   keyValue(key, value) {
@@ -114,16 +112,16 @@ class Gym extends Component {
     return (
       <View>
         <Button
-          disabled={!this.state.captcha || this.state.loading}
+          // disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Train"
-          onPress={this.debouncedSubmit}
+          onPress={this.submit}
         />
-        <ReCaptcha
+        {/* <ReCaptcha
           sitekey={Constants.CAPTCHA}
           action="gym"
           verifyCallback={(token) => this.setState({ captcha: token })}
-        />
+        /> */}
       </View>
     );
   };

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { Text, View, Image } from "react-native";
-import Constants from "../Constants";
-import T from "../components/T";
+import { Image, Text, View } from "react-native";
 import Button from "../components/Button";
-import { ReCaptcha } from "react-recaptcha-v3";
+import T from "../components/T";
+import Constants from "../Constants";
+// import { ReCaptcha } from "react-recaptcha-v3";
 
 class Hoeren extends Component {
   constructor(props) {
@@ -12,8 +12,6 @@ class Hoeren extends Component {
     this.state = {
       response: null,
     };
-
-    this.debouncedSubmit = _.debounce(this.submit, 1000);
   }
 
   keyValue(key, value) {
@@ -64,17 +62,17 @@ class Hoeren extends Component {
         {this.keyValue("Hoeren in bezit", me?.hoeren)}
 
         <Button
-          disabled={!this.state.captcha || this.state.loading}
+          // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
           title="Pimp hoeren"
-          onPress={this.debouncedSubmit}
+          onPress={this.submit}
         />
 
-        <ReCaptcha
+        {/* <ReCaptcha
           sitekey={Constants.CAPTCHA}
           action="hoeren"
           verifyCallback={(token) => this.setState({ captcha: token })}
-        />
+        /> */}
       </View>
     );
   };

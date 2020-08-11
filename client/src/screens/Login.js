@@ -1,14 +1,8 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  AsyncStorage,
-} from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import md5 from "react-native-md5";
-
 import Constants from "../Constants";
+
 class Login extends React.Component {
   state = {
     email: "",
@@ -63,7 +57,6 @@ class Login extends React.Component {
           style={{
             margin: 20,
             padding: 20,
-            minWidth: 200,
             backgroundColor: "#CCC",
             borderRadius: 20,
           }}
@@ -89,7 +82,11 @@ class Login extends React.Component {
                   placeholder="Email"
                   onChangeText={(email) => this.setState({ email })}
                   value={this.state.email}
-                  style={{ backgroundColor: "white", fontSize: 20 }}
+                  style={{
+                    backgroundColor: "white",
+                    fontSize: 20,
+                    minWidth: 200,
+                  }}
                 />
               </View>
 
@@ -106,7 +103,11 @@ class Login extends React.Component {
                   secureTextEntry
                   onChangeText={(password) => this.setState({ password })}
                   value={this.state.password}
-                  style={{ backgroundColor: "white", fontSize: 20 }}
+                  style={{
+                    backgroundColor: "white",
+                    fontSize: 20,
+                    minWidth: 200,
+                  }}
                 />
               </View>
 

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
-import Constants from "../Constants";
 import Button from "../components/Button";
 import T from "../components/T";
-import { ReCaptcha } from "react-recaptcha-v3";
+import Constants from "../Constants";
+// import { ReCaptcha } from "react-recaptcha-v3";
 
 class Wiet extends Component {
   constructor(props) {
@@ -13,7 +13,6 @@ class Wiet extends Component {
       response: null,
     };
 
-    this.debouncedSubmit = _.debounce(this.submit, 1000);
   }
 
   keyValue(key, value) {
@@ -63,17 +62,17 @@ class Wiet extends Component {
         {this.keyValue("Wiet in bezit", me?.wiet)}
 
         <Button
-          disabled={!this.state.captcha || this.state.loading}
+          // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
           title="Teel wietplanten"
-          onPress={this.debouncedSubmit}
+          onPress={this.submit}
         />
 
-        <ReCaptcha
+        {/* <ReCaptcha
           sitekey={Constants.CAPTCHA}
           action="wiet"
           verifyCallback={(token) => this.setState({ captcha: token })}
-        />
+        /> */}
       </View>
     );
   };

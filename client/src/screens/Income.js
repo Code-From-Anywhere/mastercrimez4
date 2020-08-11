@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
-import Constants from "../Constants";
+import { StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import { ReCaptcha } from "react-recaptcha-v3";
-
+import Constants from "../Constants";
+// import { ReCaptcha } from "react-recaptcha-v3";
 import style from "../Style";
 class Income extends Component {
   state = {
@@ -26,7 +25,7 @@ class Income extends Component {
     return (
       <View>
         <Button
-          disabled={!this.state.captcha}
+          // disabled={!this.state.captcha}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Haal op"
           onPress={() => {
@@ -52,11 +51,11 @@ class Income extends Component {
           }}
         />
 
-        <ReCaptcha
+        {/* <ReCaptcha
           sitekey={Constants.CAPTCHA}
           action="income"
           verifyCallback={(token) => this.setState({ captcha: token })}
-        />
+        /> */}
       </View>
     );
   };

@@ -1,15 +1,15 @@
 import React, { Component, Fragment } from "react";
 import {
-  Text,
-  FlatList,
+  Platform, Text,
+
   TextInput,
-  View,
-  Platform,
-  TouchableOpacity,
+
+
+  TouchableOpacity, View
 } from "react-native";
-import Constants from "../Constants";
 import MarqueeText from "react-native-marquee";
 import Ticker from "react-ticker";
+import Constants from "../Constants";
 
 class Chat extends Component {
   state = {

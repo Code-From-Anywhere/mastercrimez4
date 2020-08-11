@@ -11,22 +11,22 @@ function randomEntry(array) {
 const stealcar = async (req, res, User, Garage) => {
   const { token, option, captcha } = req.body;
 
-  const secret_key = process.env.GOOGLE_CAPTCHA_KEY;
-  const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${captcha}`;
+  // const secret_key = process.env.GOOGLE_CAPTCHA_KEY;
+  // const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${captcha}`;
 
-  const robot = await fetch(url, {
-    method: "post",
-  })
-    .then((response) => response.json())
-    .then((google_response) => {
-      return google_response;
-    })
-    .catch((error) => res.json({ error }));
+  // const robot = await fetch(url, {
+  //   method: "post",
+  // })
+  //   .then((response) => response.json())
+  //   .then((google_response) => {
+  //     return google_response;
+  //   })
+  //   .catch((error) => res.json({ error }));
 
-  if (!robot.success || robot.score < 0.3) {
-    res.json({ response: "Je bent helaas gepakt door de robot-detectie!" });
-    return;
-  }
+  // if (!robot.success || robot.score < 0.3) {
+  //   res.json({ response: "Je bent helaas gepakt door de robot-detectie!" });
+  //   return;
+  // }
 
   if (!token) {
     console.log("token", req);

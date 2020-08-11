@@ -28,15 +28,12 @@ const publicUserFields = [
   "bank",
   "rank",
   "health",
-  "city",
   "wiet",
   "junkies",
   "hoeren",
   "strength",
   "gamepoints",
-
   "level",
-
   "onlineAt",
   "autostelenAt",
   "crimeAt",

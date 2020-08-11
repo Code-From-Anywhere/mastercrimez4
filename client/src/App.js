@@ -11,10 +11,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import CountDown from "react-native-countdown-component";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
-import { loadReCaptcha } from "react-recaptcha-v3";
+import { createStackNavigator } from "react-navigation-stack";
+// import { loadReCaptcha } from "react-recaptcha-v3";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
 import Dead from "./components/Dead";
@@ -22,7 +22,7 @@ import Fly from "./components/Fly";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Jail from "./components/Jail";
-import Constants from "./Constants";
+import { leftMenu, rightMenu } from "./Menus";
 import Accomplice from "./screens/Accomplice";
 import AdminEmail from "./screens/AdminEmail";
 import Airport from "./screens/Airport";
@@ -42,6 +42,7 @@ import Forum from "./screens/Forum";
 import Garage from "./screens/Garage";
 import Gym from "./screens/Gym";
 import Hoeren from "./screens/Hoeren";
+import Home from "./screens/Home";
 import Hospital from "./screens/Hospital";
 import Income from "./screens/Income";
 import Info from "./screens/Info";
@@ -73,7 +74,6 @@ import StealCar from "./screens/StealCar";
 import Streetrace from "./screens/Streetrace";
 import Wiet from "./screens/Wiet";
 import { persistor, store } from "./Store";
-import { getRank } from "./Util";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -180,366 +180,7 @@ export const renderDrawerMenu = (item, index, navigation) => {
   );
 };
 
-const leftMenu = (me) => {
-  const stealcarSeconds = Math.ceil(
-    (me?.autostelenAt + 60000 - Date.now()) / 1000
-  );
-
-  const crimeSeconds = Math.ceil((me?.crimeAt + 60000 - Date.now()) / 1000);
-
-  const attackSeconds = Math.ceil((me?.attackAt + 120000 - Date.now()) / 1000);
-
-  const robSeconds = Math.ceil((me?.robAt + 30000 - Date.now()) / 1000);
-  const ocSeconds = Math.ceil((me?.ocAt + 120000 - Date.now()) / 1000);
-
-  const gymSeconds = Math.ceil((me?.gymAt + me?.gymTime - Date.now()) / 1000);
-  const wietSeconds = Math.ceil((me?.wietAt + 120000 - Date.now()) / 1000);
-  const junkiesSeconds = Math.ceil(
-    (me?.junkiesAt + 120000 - Date.now()) / 1000
-  );
-  const hoerenSeconds = Math.ceil((me?.hoerenAt + 120000 - Date.now()) / 1000);
-  return [
-    {
-      isHeader: true,
-      text: "Misdaden",
-    },
-
-    {
-      text: "Auto Stelen",
-      to: "StealCar",
-      component:
-        stealcarSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={stealcarSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-
-    {
-      text: "Misdaden",
-      to: "Crimes",
-      component:
-        crimeSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={crimeSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-    {
-      text: "Aanvallen",
-      to: "Kill",
-      component:
-        attackSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={attackSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-    {
-      text: "Beroven",
-      to: "Rob",
-      component:
-        robSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={robSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-    {
-      text: "Georganiseerde Misdaad",
-      to: "OrganisedCrime",
-      component:
-        ocSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={ocSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-    {
-      text: "Sportschool",
-      to: "Gym",
-      component:
-        gymSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={gymSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-
-    {
-      text: "Wietplantage",
-      to: "Wiet",
-      component:
-        wietSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={wietSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-
-    {
-      text: "Junkies",
-      to: "Junkies",
-      component:
-        junkiesSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={junkiesSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-
-    {
-      text: "Hoeren",
-      to: "Hoeren",
-      component:
-        hoerenSeconds > 0 ? (
-          <CountDown
-            style={{ marginLeft: 10 }}
-            until={hoerenSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
-            onFinish={() => {}}
-            size={8}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: null, s: null }}
-          />
-        ) : null,
-    },
-
-    {
-      text: `Gevangenis (${me?.jail})`,
-      to: "Jail",
-    },
-
-    {
-      isHeader: true,
-      text: "Uitgeven",
-    },
-    {
-      text: "Bank",
-      to: "Bank",
-    },
-
-    {
-      text: "Schuilkelder",
-      to: "Bunker",
-    },
-
-    {
-      text: "Ziekenhuis",
-      to: "Hospital",
-    },
-
-    {
-      text: "Winkel",
-      to: "Shop",
-    },
-    {
-      text: "Showroom",
-      to: "Showroom",
-    },
-    {
-      text: "Garage",
-      to: "Garage",
-    },
-    {
-      text: "Racecars",
-      to: "Racecars",
-    },
-    {
-      text: "Streetrace",
-      to: "Streetrace",
-    },
-    // {
-    //   text: "Kogelfabriek",
-    //   to: "Bulletfactory"
-    // },
-    // {
-    //   text: "Casino",
-    //   to: "Casino"
-    // },
-    {
-      text: "Vliegveld",
-      to: "Airport",
-    },
-  ];
-};
-
-const adminMenu = (me) =>
-  me?.level > 1
-    ? [
-        {
-          isHeader: true,
-          text: "Admin panel",
-        },
-
-        {
-          text: "Emailen",
-          to: "AdminEmail",
-        },
-      ]
-    : [];
-
-const rightMenu = (me) => [
-  {
-    isHeader: true,
-    text: me?.name,
-    to: "Profile",
-    params: { name: me?.name },
-  },
-
-  {
-    text: "Contant: " + me?.cash,
-  },
-
-  {
-    text: "Bank: " + me?.bank,
-  },
-  {
-    text: "Kogels: " + me?.bullets,
-  },
-  {
-    text: "Rank: " + getRank(me?.rank, "both"),
-  },
-  {
-    text: "Health: " + me?.health + "%",
-  },
-  {
-    text: "Stad: " + me?.city,
-  },
-
-  {
-    isHeader: true,
-    text: "Maatschappij",
-  },
-  {
-    text: "Status",
-    to: "Status",
-  },
-
-  {
-    text: `Leden (${me?.online} online)`,
-    to: "Members",
-  },
-
-  {
-    text: "Statistieken",
-    to: "Stats",
-  },
-
-  {
-    text: "Doneren",
-    to: "Donate",
-  },
-
-  {
-    text: "Inkomen",
-    to: "Income",
-  },
-
-  // {
-  //   text: "Statistieken",
-  //   to: "Stats"
-  // },
-
-  {
-    isHeader: true,
-    text: "Algemeen",
-  },
-
-  {
-    text: `Berichten (${me?.messages})`,
-    to: "Messages",
-  },
-
-  {
-    text: "Forum",
-    to: "Forum",
-  },
-
-  {
-    text: "Instellingen",
-    to: "Settings",
-  },
-
-  {
-    text: "Informatie",
-    to: "Info",
-  },
-
-  {
-    text: "Draag bij",
-    to: "Contribute",
-  },
-  {
-    text: "Prijzen",
-    to: "Prizes",
-  },
-
-  ...adminMenu(me),
-];
-
 class Layout extends React.Component {
-  componentDidMount() {
-    loadReCaptcha(Constants.CAPTCHA);
-  }
-
   render() {
     const { screenProps, navigation, children } = this.props;
 
@@ -562,7 +203,8 @@ class Layout extends React.Component {
         )}
 
         <View style={{ flex: 1 }}>
-          <Header navigation={navigation} device={device} />
+          <Header navigation={navigation} device={device} me={me} />
+
           {me?.reizenAt > Date.now() ? (
             <Fly screenProps={screenProps} navigation={navigation} />
           ) : me?.health <= 0 || me?.health === null ? (
@@ -617,17 +259,21 @@ const CustomDrawerContentComponent = (props) => {
 
 const rightContainer =
   Platform.OS === "web" ? createBrowserApp : createAppContainer;
-const rightNavigator = isSmallDevice
-  ? createDrawerNavigator
-  : createSwitchNavigator;
+const rightNavigator =
+  Platform.OS === "web"
+    ? isSmallDevice
+      ? createDrawerNavigator
+      : createSwitchNavigator
+    : createStackNavigator;
 
 const Container = rightContainer(
   rightNavigator(
     {
-      Status: {
-        screen: withLayout(Status),
+      Home: {
+        screen: withLayout(Home),
         path: "",
       },
+      Status: withLayout(Status),
       StealCar: withLayout(StealCar),
       Crimes: withLayout(Crimes),
       Jail: withLayout(JailScreen),
@@ -702,6 +348,10 @@ const Container = rightContainer(
       unmountInactiveRoutes: true,
       navigationOptions: {
         drawerLockMode: "locked-open",
+      },
+      defaultNavigationOptions: {
+        headerHideShadow: true,
+        headerStyle: { shadowOffset: { height: 0, width: 0 } },
       },
     }
   ),
