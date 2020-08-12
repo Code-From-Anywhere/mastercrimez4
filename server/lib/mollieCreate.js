@@ -2,7 +2,7 @@ const { Sequelize, Op } = require("sequelize");
 const { createMollieClient } = require("@mollie/api-client");
 
 const mollieClient = createMollieClient({
-  apiKey: process.env.MOLLIE_API_KEY_TEST,
+  apiKey: process.env.MOLLIE_API_KEY,
 }); //remove _TEST for live api key
 
 const items = [
@@ -12,7 +12,11 @@ const items = [
   },
   {
     eur: "50.00",
-    credits: 5000,
+    credits: 6000,
+  },
+  {
+    eur: "250.00",
+    credits: 40000,
   },
 ];
 const mollieCreate = async (req, res, User, Payment) => {

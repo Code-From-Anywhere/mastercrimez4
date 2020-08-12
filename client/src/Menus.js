@@ -477,8 +477,16 @@ export const rightMenu = (me) => [
     iconType: "FontAwesome5",
     icon: "piggy-bank",
 
-    text: "Creditshop",
+    text: "Credits kopen",
     to: "Mollie",
+  },
+
+  {
+    iconType: "FontAwesome5",
+    icon: "piggy-bank",
+
+    text: "Creditshop",
+    to: "Creditshop",
   },
 
   ...adminMenu(me),

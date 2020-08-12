@@ -35,6 +35,7 @@ import ChangeName from "./screens/ChangeName";
 import ChangePassword from "./screens/ChangePassword";
 import Chat from "./screens/Chat";
 import Contribute from "./screens/Contribute";
+import Creditshop from "./screens/Creditshop";
 import Crimes from "./screens/Crimes";
 import Donate from "./screens/Donate";
 import ForgotPassword from "./screens/ForgotPassword";
@@ -329,6 +330,7 @@ const Container = rightContainer(
       Chat: withLayout(Chat),
       Gym: withLayout(Gym),
       Wiet: withLayout(Wiet),
+      Creditshop: withLayout(Creditshop),
       MollieComplete: withLayout(MollieComplete),
       OrganisedCrime: withLayout(OrganisedCrime),
       Junkies: withLayout(Junkies),

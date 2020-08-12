@@ -3,7 +3,7 @@ import { Linking, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 
-const MollieComplete = ({ screenProps }) => {
+const Mollie = ({ screenProps }) => {
   const [response, setResponse] = useState(null);
 
   const submit = (item) => {
@@ -31,13 +31,24 @@ const MollieComplete = ({ screenProps }) => {
       });
   };
   return (
-    <View style={{ flex: 1 }}>
-      <>
-        <Button title="Kies optie 1" onPress={() => submit(0)} />
-        <Button title="Kies optie 2" onPress={() => submit(1)} />
-      </>
+    <View style={{ flex: 1, justifyContent: "space-around" }}>
+      <Button
+        style={{ marginHorizontal: 20 }}
+        title="Koop 1000 credits voor €10"
+        onPress={() => submit(0)}
+      />
+      <Button
+        style={{ marginHorizontal: 20 }}
+        title="Koop 6000 credits voor €50"
+        onPress={() => submit(1)}
+      />
+      <Button
+        style={{ marginHorizontal: 20 }}
+        title="Koop 40000 credits voor €250"
+        onPress={() => submit(2)}
+      />
     </View>
   );
 };
 
-export default MollieComplete;
+export default Mollie;

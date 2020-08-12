@@ -278,6 +278,7 @@ Payment.init(
     paymentId: DataTypes.STRING,
     userId: DataTypes.INTEGER,
     credits: DataTypes.INTEGER,
+    status: DataTypes.STRING,
   },
   { sequelize, modelName: "payment" }
 );
@@ -499,6 +500,14 @@ server.post("/donate", (req, res) =>
 
 server.post("/bunker", (req, res) =>
   require("./bunker").bunker(req, res, User)
+);
+
+server.get("/creditshop", (req, res) =>
+  require("./creditshop").creditshop(req, res, User)
+);
+
+server.post("/creditshopBuy", (req, res) =>
+  require("./creditshop").creditshopBuy(req, res, User)
 );
 
 server.get("/jail", (req, res) => require("./jail").jail(req, res, User));

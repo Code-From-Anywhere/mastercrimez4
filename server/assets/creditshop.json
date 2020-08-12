@@ -4,80 +4,40 @@
     "kooptext": "koop €7,500,000 euro",
     "gekochttext": "Je hebt er nu 7,5 miljoen bij op de bank!",
     "wat": "bank",
-    "hoeveel": "7500000",
-    "kosten": "300",
-    "gekocht": "6525"
+    "hoeveel": 7500000,
+    "kosten": 300
   },
   {
     "id": "2",
     "kooptext": "Krijg 600 levels moordervaring erbij",
     "gekochttext": "Je moordervaring is nu 600 levels omhoog!",
     "wat": "strength",
-    "hoeveel": "600",
-    "kosten": "300",
-    "gekocht": "1784"
+    "hoeveel": 600,
+    "kosten": 300
   },
   {
     "id": "3",
     "kooptext": "Koop 30.000 kogels",
     "gekochttext": "Je hebt nu 30.000 kogels erbij!",
     "wat": "bullets",
-    "hoeveel": "30000",
-    "kosten": "300",
-    "gekocht": "10200"
+    "hoeveel": 30000,
+    "kosten": 300
   },
-  {
-    "id": "4",
-    "kooptext": "Ga uit de gevangenis",
-    "gekochttext": "Je bent nu uit de gevangenis",
-    "wat": "gevangenistijd",
-    "hoeveel": "-1000",
-    "kosten": "5",
-    "gekocht": "62001"
-  },
-  {
-    "id": "5",
-    "kooptext": "Krijg meer kans op autostelen!",
-    "gekochttext": "Je hebt nu meer kans op autostelen!",
-    "wat": "auto1",
-    "hoeveel": "3000",
-    "kosten": "1000",
-    "gekocht": "728"
-  },
+
   {
     "id": "6",
     "kooptext": "Krijg 3000 gamepoints",
     "gekochttext": "Je hebt nu 3000 gamepoints erbij!",
-    "wat": "honourpoints",
-    "hoeveel": "3000",
-    "kosten": "1000",
-    "gekocht": "2133"
+    "wat": "gamepoints",
+    "hoeveel": 3000,
+    "kosten": 1000
   },
   {
     "id": "7",
     "kooptext": "Ga wat rang omhoog!",
     "gekochttext": "Je bent heel wat rang omhoog gegaan!",
-    "wat": "rankpoint",
-    "hoeveel": "1000",
-    "kosten": "500",
-    "gekocht": "985"
-  },
-  {
-    "id": "8",
-    "kooptext": "Meer kans op misdaden + overvallen",
-    "gekochttext": "Je hebt nu meer kans op misdaden en territoriums overvallen. Letop, als de moeilijkste misdaad niet meer beter wordt, heeft dit geen nut meer!",
-    "wat": "misdaadl",
-    "hoeveel": "45",
-    "kosten": "300",
-    "gekocht": "292"
-  },
-  {
-    "id": "9",
-    "kooptext": "Reis meteen waar je heen wilt",
-    "gekochttext": "Je bent er nu!",
-    "wat": "reis2",
-    "hoeveel": "-10000",
-    "kosten": "10",
-    "gekocht": "29276"
+    "wat": "rank",
+    "hoeveel": 1000,
+    "kosten": 500
   }
 ]
