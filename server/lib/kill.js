@@ -91,7 +91,7 @@ const kill = async (req, res, User, Message, Garage) => {
     return;
   }
 
-  const [canAttack] = User.update(
+  const [canAttack] = await User.update(
     { attackAt: Date.now() },
     {
       where: {

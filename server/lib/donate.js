@@ -1,6 +1,5 @@
 const { Op } = require("sequelize");
 
-
 const donate = async (req, res, User, Message) => {
   const { loginToken, to, amount, type } = req.body;
   const user = await User.findOne({ where: { loginToken } });
@@ -28,7 +27,7 @@ const donate = async (req, res, User, Message) => {
   }
 
   if (!validTypes.includes(type)) {
-    response.json({ response: "Ongeldig type" });
+    res.json({ response: "Ongeldig type" });
     return;
   }
 
@@ -45,14 +44,13 @@ const donate = async (req, res, User, Message) => {
 
             const gelukt = await User.update(
               { [type]: user[type] - amount },
-              { where: { id: user.id, [type]: {[Op.gte]: amount } } }
+              { where: { id: user.id, [type]: { [Op.gte]: amount } } }
             );
-            if(gelukt[0] === 1){
+            if (gelukt[0] === 1) {
               User.update(
                 { [type]: user2[type] + amount2 },
                 { where: { id: user2.id } }
               );
-
             }
             const message = `${user.name} heeft jou ${amount2} ${typeName} overgemaakt`;
             Message.create({
