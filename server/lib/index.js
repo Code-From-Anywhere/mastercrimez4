@@ -71,6 +71,7 @@ const allUserFields = publicUserFields.concat([
   "home",
   "phoneVerified",
   "pushtoken",
+  "credits",
 ]);
 
 function me(token) {
@@ -120,6 +121,9 @@ User.init(
     activated: DataTypes.BOOLEAN,
     level: DataTypes.INTEGER,
     pushtoken: DataTypes.STRING,
+
+    credits: DataTypes.INTEGER,
+    creditsTotal: DataTypes.INTEGER,
 
     phone: DataTypes.STRING,
     phoneVerified: {
@@ -260,6 +264,17 @@ Chat.init(
     message: DataTypes.TEXT,
   },
   { sequelize, modelName: "chat" }
+);
+
+class Payment extends Model {}
+
+Payment.init(
+  {
+    paymentId: DataTypes.STRING,
+    userId: DataTypes.INTEGER,
+    credits: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "payment" }
 );
 
 class Image extends Model {}
@@ -551,10 +566,10 @@ server.post("/setAccomplice", (req, res) =>
 );
 
 server.post("/mollieCreate", (req, res) =>
-  require("./mollieCreate").mollieCreate(req, res, User)
+  require("./mollieCreate").mollieCreate(req, res, User, Payment)
 );
 server.post("/mollieWebhook", (req, res) =>
-  require("./mollieWebhook").mollieWebhook(req, res, User)
+  require("./mollieWebhook").mollieWebhook(req, res, User, Payment)
 );
 server.get("/shop", (req, res) => require("./shop").shop(req, res, User));
 

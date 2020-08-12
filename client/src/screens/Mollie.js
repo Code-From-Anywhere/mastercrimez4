@@ -22,8 +22,9 @@ const MollieComplete = ({ screenProps }) => {
     })
       .then((response) => response.json())
       .then(async (response) => {
-        console.log("respons", response);
-        setResponse(response);
+        if (response.url) {
+          Linking.openURL(response.url);
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -31,14 +32,10 @@ const MollieComplete = ({ screenProps }) => {
   };
   return (
     <View style={{ flex: 1 }}>
-      {response ? (
-        <Button title="Betaal" onPress={() => Linking.openURL(response.url)} />
-      ) : (
-        <>
-          <Button title="Kies optie 1" onPress={() => submit(0)} />
-          <Button title="Kies optie 2" onPress={() => submit(1)} />
-        </>
-      )}
+      <>
+        <Button title="Kies optie 1" onPress={() => submit(0)} />
+        <Button title="Kies optie 2" onPress={() => submit(1)} />
+      </>
     </View>
   );
 };
