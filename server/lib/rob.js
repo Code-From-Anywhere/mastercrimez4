@@ -75,23 +75,42 @@ const rob = async (req, res, User, Message) => {
   const probability = (meRank / heRank) * 30;
   const random = Math.round(Math.random() * 100);
 
-  User.update({ robAt: Date.now() }, { where: { id: user.id } });
-  User.update({ robbedAt: Date.now() }, { where: { id: user2.id } });
+  const now = Date.now();
+  User.update({ robbedAt: now }, { where: { id: user2.id } });
 
   if (probability < random) {
     res.json({ response: "Het is mislukt" });
+    User.update({ robAt: now }, { where: { id: user.id } });
+
     return;
   }
 
-  User.update({ cash: user.cash + stealAmount }, { where: { id: user.id } });
-  User.update({ cash: user2.cash - stealAmount }, { where: { id: user2.id } });
-  Message.create({
-    from: user.id,
-    to: user2.id,
-    fromName: "(System)",
-    message: `${user.name} heeft je beroofd en heeft ${stealAmount} van je gejat.`,
-  });
-  res.json({ response: `Het is gelukt! Je hebt ${stealAmount},- gejat.` });
+  const [gelukt] = await User.update(
+    { cash: user2.cash - stealAmount },
+    { where: { id: user2.id, cash: { [Op.gte]: stealAmount } } }
+  );
+
+  if (gelukt) {
+    const [gelukt2] = await User.update(
+      { cash: user.cash + stealAmount, robAt: now },
+      { where: { id: user.id, robAt: { [Op.lte]: now - SECONDS * 1000 } } }
+    );
+
+    if (gelukt2) {
+      Message.create({
+        from: user.id,
+        to: user2.id,
+        fromName: "(System)",
+        message: `${user.name} heeft je beroofd en heeft ${stealAmount} van je gejat.`,
+      });
+      return res.json({
+        response: `Het is gelukt! Je hebt ${stealAmount},- gejat.`,
+      });
+    }
+
+    // console.log("gelukt", gelukt, "gelukt2", gelukt2);
+  }
+  return res.json({ response: "Er ging iets mis" });
 };
 
 module.exports = { rob };

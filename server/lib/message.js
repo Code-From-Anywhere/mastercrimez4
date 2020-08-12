@@ -1,5 +1,5 @@
 const { Sequelize, Model, DataTypes, Op } = require("sequelize");
-
+const fetch = require("node-fetch");
 const message = async (req, res, User, Message) => {
   const { token, to, message } = req.body;
 
@@ -27,6 +27,23 @@ const message = async (req, res, User, Message) => {
   if (!user2) {
     res.json({ response: "Die persoon bestaat niet" });
     return;
+  }
+
+  if (user2.pushtoken) {
+    fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: user2.pushtoken,
+        title: "Nieuw bericht",
+        body: message,
+      }),
+    })
+      .then((result) => console.log("result", result.status))
+      .catch((e) => console.log("err", e));
   }
 
   Message.create({

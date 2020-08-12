@@ -70,6 +70,7 @@ const allUserFields = publicUserFields.concat([
   "airplane",
   "home",
   "phoneVerified",
+  "pushtoken",
 ]);
 
 function me(token) {
@@ -118,6 +119,7 @@ User.init(
     forgotPasswordToken: DataTypes.STRING,
     activated: DataTypes.BOOLEAN,
     level: DataTypes.INTEGER,
+    pushtoken: DataTypes.STRING,
 
     phone: DataTypes.STRING,
     phoneVerified: {
@@ -313,7 +315,7 @@ ForumResponse.init(
 );
 
 try {
-  sequelize.sync(); //{alter:true}
+  sequelize.sync(); //{alter}:true}
 } catch (e) {
   console.log("e", e);
 }
@@ -881,7 +883,7 @@ server.post("/activate", async (req, res) => {
 });
 
 server.post("/updateProfile", async (req, res) => {
-  const { loginToken, image, backfire, bio } = req.body;
+  const { loginToken, image, backfire, bio, pushtoken } = req.body;
 
   if (!loginToken) {
     res.json({ response: "Geen token" });
@@ -903,6 +905,10 @@ server.post("/updateProfile", async (req, res) => {
 
   if (bio) {
     update.bio = bio;
+  }
+
+  if (pushtoken !== undefined) {
+    update.pushtoken = pushtoken;
   }
 
   if (backfire !== undefined && backfire >= 0 && backfire <= 1) {

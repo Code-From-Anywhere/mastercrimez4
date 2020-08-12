@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import Menu from "../components/Menu";
 
 class Status extends Component {
@@ -11,6 +11,14 @@ class Status extends Component {
 
     return (
       <View>
+        {Platform.OS !== "web" && (
+          <Menu
+            navigation={navigation}
+            title="Notificaties"
+            to="Notifications"
+          />
+        )}
+
         <Menu
           navigation={navigation}
           title="Telefoonnummer verifiëren"
@@ -37,11 +45,7 @@ class Status extends Component {
           title="Mijn profiel aanpassen"
           to="MyProfile"
         />
-        <Menu
-          navigation={navigation}
-          title="Backfire aanpassen"
-          to="Backfire"
-        />
+        <Menu navigation={navigation} title="Backfire" to="Backfire" />
         <Menu navigation={navigation} title="Handlanger" to="Accomplice" />
       </View>
     );

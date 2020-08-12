@@ -48,7 +48,7 @@ const income = async (req, res, User) => {
 
   User.update(
     { incomeAt: Date.now(), cash: user.cash + amount },
-    { where: { id: user.id } }
+    { where: { id: user.id, incomeAt: user.incomeAt } }
   );
 
   res.json({

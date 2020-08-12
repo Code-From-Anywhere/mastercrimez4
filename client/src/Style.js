@@ -3,7 +3,7 @@ import { Colors } from "./Colors";
 
 const style = StyleSheet.create({
   textInput: {
-    color: "white",
+    color: Colors.primaryText,
     backgroundColor: Colors.primary,
     padding: 10,
     justifyContent: "center",

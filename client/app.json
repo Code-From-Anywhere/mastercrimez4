@@ -3,11 +3,7 @@
     "name": "MasterCrimeZ",
     "slug": "mastercrimez",
     "privacy": "public",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,14 +15,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.wwoessi.mastercrimez"
     },
     "android": {
-      "package": "com.wwoessi.mastercrimez"
+      "package": "com.wwoessi.mastercrimez",
+      "useNextNotificationsApi": true
     }
   }
 }

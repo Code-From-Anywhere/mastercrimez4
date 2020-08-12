@@ -55,6 +55,7 @@ import Login from "./screens/Login";
 import Members from "./screens/Members";
 import Messages from "./screens/Messages";
 import MyProfile from "./screens/MyProfile";
+import Notifications from "./screens/Notifications";
 import OrganisedCrime from "./screens/OrganisedCrime";
 import Privacy from "./screens/Privacy";
 import Prizes from "./screens/Prizes";
@@ -352,6 +353,7 @@ const Container = rightContainer(
 
       ChangeName: withLayout(ChangeName),
       VerifyPhoneCode: withLayout(VerifyPhoneCode),
+      Notifications: withLayout(Notifications),
       ForgotPassword: withLayout(ForgotPassword),
       RecoverPassword: {
         screen: withLayout(RecoverPassword),

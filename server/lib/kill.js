@@ -91,7 +91,22 @@ const kill = async (req, res, User, Message, Garage) => {
     return;
   }
 
-  User.update({ attackAt: Date.now() }, { where: { id: user.id } });
+  const [canAttack] = User.update(
+    { attackAt: Date.now() },
+    {
+      where: {
+        id: user.id,
+        attackAt: [{ [Op.lte]: Date.now() - SECONDS * 1000 }],
+      },
+    }
+  );
+
+  if (!canAttack) {
+    // NB: this prevents the spam bug!
+    return res.json({
+      response: "Je moet nog even wachten voor je weer iemand kan aanvallen",
+    });
+  }
 
   if (user2.city !== user.city) {
     res.json({ response: `${user2.name} is in een andere stad` });

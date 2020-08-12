@@ -1,17 +1,17 @@
-import { AsyncStorage, Platform } from "react-native";
-import { createStore, compose, applyMiddleware } from "redux";
-import { persistStore, persistCombineReducers } from "redux-persist";
+import { AsyncStorage } from "react-native";
+import { applyMiddleware, compose, createStore } from "redux";
+import { persistCombineReducers, persistStore } from "redux-persist";
 import createSagaMiddleware from "redux-saga";
 import mySaga from "./Sagas";
 
 type Device = {
   loginToken: string,
-  logged: boolean
+  logged: boolean,
 };
 
 const initDevice = {
   loginToken: "",
-  logged: false
+  logged: false,
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
@@ -46,14 +46,14 @@ const meReducer = (state = initMe, action) => {
 const config = {
   key: "v1",
   storage: AsyncStorage,
-  whitelist: ["device", "me"]
+  whitelist: ["device", "me"],
 };
 
 const sagaMiddleware = createSagaMiddleware();
 
 const reducers = {
   device: deviceReducer,
-  me: meReducer
+  me: meReducer,
 };
 
 const rootReducer = persistCombineReducers(config, reducers);
