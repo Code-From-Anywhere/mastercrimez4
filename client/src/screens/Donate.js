@@ -1,10 +1,9 @@
-import React, { Component } from "react";
-import { Image, Text, View, TextInput } from "react-native";
-import Button from "../components/Button";
-import style from "../Style";
 import { connectActionSheet } from "@expo/react-native-action-sheet";
-
+import React, { Component } from "react";
+import { Text, TextInput, View } from "react-native";
+import Button from "../components/Button";
 import Constants from "../Constants";
+import style from "../Style";
 
 class Donate extends Component {
   state = {
@@ -67,8 +66,8 @@ class Donate extends Component {
     this.props.showActionSheetWithOptions(
       {
         options,
-        cancelButtonIndex: null,
-        destructiveButtonIndex: null,
+        // cancelButtonIndex: null,
+        // destructiveButtonIndex: null,
       },
       (buttonIndex) => {
         this.setState({ type: keys[buttonIndex] });

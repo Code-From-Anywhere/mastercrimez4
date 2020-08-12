@@ -1,9 +1,18 @@
+import moment from "moment";
 import React, { Component } from "react";
-import { TouchableOpacity, TextInput, View, FlatList } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Button from "../components/Button";
-import style from "../Style";
-import Constants from "../Constants";
 import T from "../components/T";
+import Constants from "../Constants";
+import style from "../Style";
+
+const { width } = Dimensions.get("window");
 class Messages extends Component {
   state = {
     messages: null,
@@ -137,22 +146,36 @@ class Messages extends Component {
   renderMessages() {
     return (
       <FlatList
+        style={{ width: "100%" }}
         data={this.state.messages?.messages}
         renderItem={({ item, index }) => {
           return (
             <TouchableOpacity
+              style={{ paddingVertical: 15 }}
               onPress={() => {
                 this.fetchReadMessage(item.id);
                 this.setState({ readMessage: item.id });
               }}
             >
-              <View style={{ borderWidth: 1, borderColor: "black" }}>
-                <T>Van: {item.fromName}</T>
-                <T>Verstuurd: {new Date(item.createdAt).toString()}</T>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <T style={{ fontWeight: item.read ? undefined : "bold" }}>
+                  {item.fromName}
+                </T>
+                <T style={{ fontWeight: item.read ? undefined : "bold" }}>
+                  ({moment(item.createdAt).format("DD-MM-YYYY HH:mm")})
+                </T>
               </View>
             </TouchableOpacity>
           );
         }}
+        ItemSeparatorComponent={() => (
+          <View style={{ height: 1, width: "100%", backgroundColor: "#000" }} />
+        )}
         keyExtractor={(item, index) => `item${index}`}
       />
     );
@@ -165,7 +188,7 @@ class Messages extends Component {
     return item ? (
       <View style={{ borderWidth: 1, borderColor: "black" }}>
         <T>Van: {item.fromName}</T>
-        <T>Verstuurd: {new Date(item.createdAt).toString()}</T>
+        <T>Verstuurd: {moment(item.createdAt).format("DD-MM-YYYY HH:mm")}</T>
         <T>{item.message}</T>
         <View style={{ flexDirection: "row" }}>
           <Button

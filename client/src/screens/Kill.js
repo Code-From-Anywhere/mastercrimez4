@@ -1,12 +1,6 @@
 import React, { Component } from "react";
-import {
-  Image,
-  Text,
-  View,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { Text, TextInput, View } from "react-native";
+import { Colors } from "../Colors";
 import Button from "../components/Button";
 import Constants from "../Constants";
 
@@ -52,9 +46,10 @@ class Kill extends Component {
       <View>
         <TextInput
           style={{
-            backgroundColor: "#222",
+            backgroundColor: Colors.primary,
             fontSize: 24,
             borderRadius: 10,
+            padding: 5,
             color: "white",
             marginBottom: 20,
           }}
@@ -64,8 +59,9 @@ class Kill extends Component {
         />
         <TextInput
           style={{
-            backgroundColor: "#222",
+            backgroundColor: Colors.primary,
             fontSize: 24,
+            padding: 5,
             borderRadius: 10,
             color: "white",
           }}

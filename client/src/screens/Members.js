@@ -1,20 +1,19 @@
+import { connectActionSheet } from "@expo/react-native-action-sheet";
 import React, { Component } from "react";
 import {
-  Image,
-  View,
-  TextInput,
-  FlatList,
   Dimensions,
+  FlatList,
+  Platform,
+  TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
-import { connectActionSheet } from "@expo/react-native-action-sheet";
-
 import * as Icon from "react-native-vector-icons";
-import T from "../components/T";
+import { Colors } from "../Colors";
 import Button from "../components/Button";
-import { getRank, getStrength } from "../Util";
+import T from "../components/T";
 import Constants from "../Constants";
-
+import { getRank, getStrength } from "../Util";
 const { height } = Dimensions.get("window");
 const orders = [
   {
@@ -177,7 +176,7 @@ class Members extends Component {
           style={{
             flexDirection: "row",
             borderRadius: 20,
-            backgroundColor: "#202020",
+            backgroundColor: Colors.primary,
             marginVertical: 20,
             marginHorizontal: 10,
             paddingHorizontal: 20,
@@ -192,7 +191,11 @@ class Members extends Component {
             onChangeText={(search) => this.setState({ search })}
           />
 
-          <Icon.FontAwesome name="search" size={20} color="white" />
+          <Icon.FontAwesome
+            name="search"
+            size={20}
+            color={Colors.primaryText}
+          />
         </View>
 
         <View
@@ -224,14 +227,14 @@ class Members extends Component {
     return (
       <View
         style={{
-          height: height - 200,
-          alignItems: "center",
+          flex: 1,
         }}
       >
         <FlatList
           contentContainerStyle={{
             borderColor: "black",
             borderWidth: 1,
+            height: Platform.OS === "web" ? height - 200 : undefined,
           }}
           ListHeaderComponent={this.renderHeader}
           data={searchedMembers}

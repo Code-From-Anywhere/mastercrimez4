@@ -463,9 +463,9 @@ server.post("/junkies", (req, res) =>
   require("./junkies").junkies(req, res, User)
 );
 
-server.get("/showroom", (req, res) =>
-  require("./showroom").showroom(req, res, User, Garage)
-);
+// server.get("/showroom", (req, res) =>
+//   require("./showroom").showroom(req, res, User, Garage)
+// );
 
 server.post("/buycar", (req, res) =>
   require("./showroom").buycar(req, res, User, Garage)
@@ -959,7 +959,7 @@ server.post("/setPhone", async (req, res) => {
       to: phone,
       from: process.env.TWILIO_PHONE_FROM,
     })
-    .then((message) => console.log(message.sid));
+    .then((message) => console.log(message));
 
   const user2 = await User.update(update, { where: { loginToken: token } });
   res.json({ success: true });

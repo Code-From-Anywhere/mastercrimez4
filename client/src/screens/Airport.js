@@ -1,14 +1,6 @@
-import React, { Component } from "react";
-import {
-  Image,
-  Text,
-  View,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
 import { connectActionSheet } from "@expo/react-native-action-sheet";
-
+import React, { Component } from "react";
+import { Text, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 
@@ -69,8 +61,8 @@ class Airport extends Component {
     this.props.showActionSheetWithOptions(
       {
         options,
-        cancelButtonIndex: null,
-        destructiveButtonIndex: null,
+        // cancelButtonIndex: null,
+        // destructiveButtonIndex: null,
       },
       (buttonIndex) => {
         this.setState({ to: options[buttonIndex] });

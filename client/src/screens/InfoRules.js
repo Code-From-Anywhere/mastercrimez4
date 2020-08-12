@@ -1,6 +1,6 @@
 import React from "react";
 // import MarkdownView from "react-native-markdown-renderer";
-import { View, Text, Linking } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import T from "../components/T";
 
 const H1 = ({ children }) => (
@@ -13,7 +13,7 @@ const H1 = ({ children }) => (
  */
 const PrivacyPage = ({ navigation }) => {
   return (
-    <View style={{ alignItems: "center" }}>
+    <ScrollView style={{ alignItems: "center" }}>
       <View style={{ margin: 20 }}>
         <H1>Verboden spelgedrag</H1>
         <T>
@@ -72,7 +72,7 @@ Regels/Bans voor MasterCrimeZ: BANTIJDEN,
 - Streetrace-Evenementen doen met subaccounts: 1 maand\n`}
         </T>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 export default PrivacyPage;

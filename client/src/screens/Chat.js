@@ -43,7 +43,7 @@ class Chat extends Component {
       <View style={{ flex: 1 }}>
         <View style={{ flex: 1, padding: 10 }}>
           {chat.map((item, index) => (
-            <Text style={{ color: Colors.secondaryText }}>
+            <Text key={`i${index}`} style={{ color: Colors.secondaryText }}>
               {item.name}: {item.message}{" "}
             </Text>
           ))}

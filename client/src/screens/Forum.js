@@ -1,10 +1,16 @@
-import React, { Component } from "react";
-import { TouchableOpacity, TextInput, View, FlatList } from "react-native";
-import Button from "../components/Button";
-import style from "../Style";
-import Constants from "../Constants";
-import T from "../components/T";
 import moment from "moment";
+import React, { Component } from "react";
+import {
+  FlatList,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Button from "../components/Button";
+import T from "../components/T";
+import Constants from "../Constants";
+import style from "../Style";
 class Messages extends Component {
   state = {
     messages: null,
@@ -180,7 +186,7 @@ class Messages extends Component {
   readTopic() {
     const item = this.state.topic;
     return item ? (
-      <View style={{ borderWidth: 1, borderColor: "black" }}>
+      <ScrollView style={{ borderWidth: 1, borderColor: "black" }}>
         <View
           style={{
             flex: 1,
@@ -245,7 +251,7 @@ class Messages extends Component {
             onPress={this.createMessage}
           />
         </View>
-      </View>
+      </ScrollView>
     ) : (
       <T>Topic niet gevonden</T>
     );

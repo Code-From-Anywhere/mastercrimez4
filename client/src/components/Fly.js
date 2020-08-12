@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
-import T from "./T";
 import CountDown from "react-native-countdown-component";
+import T from "./T";
 
 class Fly extends React.Component {
   render() {
@@ -15,7 +15,9 @@ class Fly extends React.Component {
         <T>Je bent aan het reizen naar {me.city}.</T>
         <CountDown
           until={sec}
-          onFinish={() => this.setState({ finished: true })}
+          onFinish={() => {
+            reloadMe(device.loginToken);
+          }}
           size={20}
           timeToShow={["M", "S"]}
           timeLabels={{ m: "Minuten", s: "Seconden" }}

@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import { Colors } from "./Colors";
 
 const style = StyleSheet.create({
   textInput: {
     color: "white",
-    backgroundColor: "#222",
+    backgroundColor: Colors.primary,
     padding: 10,
     justifyContent: "center",
     paddingHorizontal: 20,

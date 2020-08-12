@@ -64,8 +64,6 @@ import RecoverPassword from "./screens/RecoverPassword";
 import Rob from "./screens/Rob";
 import Settings from "./screens/Settings";
 import Shop from "./screens/Shop";
-//screens
-import Showroom from "./screens/Showroom";
 import SignupEmail from "./screens/SignupEmail";
 import SignupEmail2 from "./screens/SignupEmail2";
 import Stats from "./screens/Stats";
@@ -246,7 +244,7 @@ const Layout = ({ screenProps, navigation, children }) => {
         ) : me?.jailAt > Date.now() ? (
           <Jail screenProps={screenProps} navigation={navigation} />
         ) : (
-          <ScrollView style={{ flex: 1 }}>{children}</ScrollView>
+          <View style={{ flex: 1 }}>{children}</View>
         )}
         {Platform.OS === "web" && <Footer />}
       </View>
@@ -311,7 +309,7 @@ const Container = rightContainer(
       Jail: withLayout(JailScreen),
       Kill: withLayout(Kill),
       Rob: withLayout(Rob),
-      Showroom: withLayout(Showroom),
+      // Showroom: withLayout(Showroom),
       Bank: withLayout(Bank),
       Shop: withLayout(Shop),
       Garage: withLayout(Garage),

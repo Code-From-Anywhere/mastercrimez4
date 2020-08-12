@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import {
-  Image,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
   ActivityIndicator,
+  Dimensions,
+  Image,
+  ScrollView,
+  View,
 } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
@@ -55,7 +54,7 @@ class Shop extends Component {
 */
 
     return (
-      <View>
+      <ScrollView>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
           <Button title="Wapens" onPress={() => this.fetchShop("weapon")} />
           <Button
@@ -133,7 +132,7 @@ class Shop extends Component {
         ) : (
           <ActivityIndicator />
         )}
-      </View>
+      </ScrollView>
     );
   }
 }

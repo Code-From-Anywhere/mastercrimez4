@@ -1,13 +1,6 @@
 import React, { Component } from "react";
-import {
-  Image,
-  Text,
-  StyleSheet,
-  View,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Colors } from "../Colors";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -81,7 +74,7 @@ class Bank extends Component {
       <View>
         <TextInput
           style={{
-            backgroundColor: "#222",
+            backgroundColor: Colors.primary,
             fontSize: 24,
             borderRadius: 10,
             color: "white",

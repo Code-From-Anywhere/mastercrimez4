@@ -12,7 +12,6 @@ class Junkies extends Component {
     this.state = {
       response: null,
     };
-
   }
 
   submit = () => {
@@ -32,6 +31,7 @@ class Junkies extends Component {
     })
       .then((response) => response.json())
       .then(async (response) => {
+        console.log("response", response);
         this.setState({ response, loading: false });
         this.props.screenProps.reloadMe(device.loginToken);
       })
@@ -89,7 +89,7 @@ class Junkies extends Component {
               <Text style={{ color: "white" }}>{response.response}</Text>
 
               <Button
-                title="OK"
+                title="Oke"
                 onPress={() => this.setState({ response: null })}
               />
             </View>

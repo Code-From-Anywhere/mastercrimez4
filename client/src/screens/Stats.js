@@ -1,7 +1,8 @@
+import moment from "moment";
 import React, { Component } from "react";
-import { Text, View } from "react-native";
-import Constants from "../Constants";
+import { ScrollView, View } from "react-native";
 import T from "../components/T";
+import Constants from "../Constants";
 const keyNames = {
   createdAt: "Nieuwe leden",
   bank: "Bankgeld",
@@ -47,7 +48,7 @@ class Status extends Component {
     } = this.props;
 
     return (
-      <View style={{ flex: 1, jusitfyContent: "center", alignItems: "center" }}>
+      <ScrollView style={{ flex: 1 }}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           {this.state.stats?.map((stat, index) => {
             const key = Object.keys(stat)[0];
@@ -57,10 +58,21 @@ class Status extends Component {
                 <T style={{ fontWeight: "bold" }}>{keyNames[key]}</T>
                 {values instanceof Array ? (
                   values.map((value, i) => {
+                    let v = value[key];
+                    if (key === "bank") v = `€${v},-`;
+                    if (key === "createdAt")
+                      v = moment(v).format("DD-MM-YYYY HH:mm");
                     return (
-                      <T key={`stat${key}-${i}`}>
-                        {value.name}: {value[key]}
-                      </T>
+                      <View
+                        key={`stat${key}-${i}`}
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <T>{value.name}: </T>
+                        <T key={`stat${key}-${i}`}>{v}</T>
+                      </View>
                     );
                   })
                 ) : (
@@ -70,7 +82,7 @@ class Status extends Component {
             );
           })}
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

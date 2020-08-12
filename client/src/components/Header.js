@@ -1,4 +1,5 @@
 import * as Icon from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import React from "react";
 import {
   Dimensions,
@@ -51,7 +52,12 @@ function Header({ navigation, device, me }) {
                 }}
                 style={{ margin: 10 }}
               >
-                <Icon.Feather name="menu" size={32} color="white" />
+                <Feather
+                  name="menu"
+                  size={32}
+                  color="#FFF"
+                  style={{ color: "#FFF" }}
+                />
               </TouchableOpacity>
             ) : null}
           </View>

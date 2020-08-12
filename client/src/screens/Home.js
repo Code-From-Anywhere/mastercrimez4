@@ -29,10 +29,10 @@ class Status extends Component {
           marginVertical: 15,
         }}
       >
-        {item.map((menu) => {
+        {item.map((menu, index) => {
           const TheIcon = Icon[menu.iconType];
           return (
-            <View style={{ width: 90, alignItems: "center" }}>
+            <View key={`i${index}`} style={{ width: 90, alignItems: "center" }}>
               <TouchableOpacity
                 style={{
                   borderWidth: 1,

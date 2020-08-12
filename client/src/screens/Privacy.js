@@ -1,7 +1,6 @@
 import React from "react";
 // import MarkdownView from "react-native-markdown-renderer";
-import { View, Text, Linking } from "react-native";
-import Header from "../components/Header";
+import { Linking, ScrollView, Text, View } from "react-native";
 
 const Config = { name: "MasterCrimeZ" };
 
@@ -10,7 +9,7 @@ const Config = { name: "MasterCrimeZ" };
  */
 const PrivacyPage = ({ navigation }) => {
   return (
-    <View style={{ alignItems: "center" }}>
+    <ScrollView style={{ alignItems: "center" }}>
       <View style={{ margin: 20 }}>
         <Text
           style={{ color: "white" }}
@@ -100,7 +99,7 @@ hesitate to contact me
 \n\n`}
         </Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 export default PrivacyPage;
