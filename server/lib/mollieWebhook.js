@@ -15,7 +15,7 @@ const mollieWebhook = async (req, res, User, Payment) => {
       if (payment.isPaid()) {
         //maak credits over naar user
         console.log("isPaid", payment.isPaid());
-        const paymentLog = await Payment.findOne({ paymentId: id });
+        const paymentLog = await Payment.findOne({ where: { paymentId: id } });
         if (paymentLog) {
           const user = await User.findOne({ where: { id: paymentLog.userId } });
 
