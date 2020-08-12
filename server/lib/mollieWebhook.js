@@ -15,21 +15,21 @@ const mollieWebhook = async (req, res, User, Payment) => {
       if (payment.isPaid()) {
         //maak credits over naar user
         console.log("isPaid", payment.isPaid());
-        const payment = await Payment.findOne({ paymentId: id });
-        if (payment) {
-          const user = await User.findOne({ where: { id: payment.userId } });
+        const paymentLog = await Payment.findOne({ paymentId: id });
+        if (paymentLog) {
+          const user = await User.findOne({ where: { id: paymentLog.userId } });
 
           const [updated] = await User.update(
             {
-              credits: user.credits + payment.credits,
-              creditsTotal: user.creditsTotal + payment.credits,
+              credits: user.credits + paymentLog.credits,
+              creditsTotal: user.creditsTotal + paymentLog.credits,
             },
             { where: { id: user.id } }
           );
 
           if (updated) {
             console.log(
-              `Gelukt! ${user.name} heeft ${payment.credits} ontvangen`
+              `Gelukt! ${user.name} heeft ${paymentLog.credits} ontvangen`
             );
           }
         }
