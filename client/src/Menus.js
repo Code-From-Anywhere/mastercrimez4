@@ -473,5 +473,13 @@ export const rightMenu = (me) => [
     to: "Info",
   },
 
+  {
+    iconType: "FontAwesome5",
+    icon: "piggy-bank",
+
+    text: "Creditshop",
+    to: "Mollie",
+  },
+
   ...adminMenu(me),
 ];

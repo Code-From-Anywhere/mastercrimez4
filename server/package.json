@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mollie/api-client": "^3.2.3",
     "@sendgrid/mail": "^6.5.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",

@@ -54,6 +54,8 @@ import Kill from "./screens/Kill";
 import Login from "./screens/Login";
 import Members from "./screens/Members";
 import Messages from "./screens/Messages";
+import Mollie from "./screens/Mollie";
+import MollieComplete from "./screens/MollieComplete";
 import MyProfile from "./screens/MyProfile";
 import Notifications from "./screens/Notifications";
 import OrganisedCrime from "./screens/OrganisedCrime";
@@ -327,6 +329,7 @@ const Container = rightContainer(
       Chat: withLayout(Chat),
       Gym: withLayout(Gym),
       Wiet: withLayout(Wiet),
+      MollieComplete: withLayout(MollieComplete),
       OrganisedCrime: withLayout(OrganisedCrime),
       Junkies: withLayout(Junkies),
       Hoeren: withLayout(Hoeren),
@@ -373,6 +376,7 @@ const Container = rightContainer(
       Privacy: withLayout(Privacy),
       Contribute: withLayout(Contribute),
       Prizes: withLayout(Prizes),
+      Mollie: withLayout(Mollie),
     },
     {
       drawerPosition: "right",

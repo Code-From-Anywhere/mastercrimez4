@@ -550,6 +550,12 @@ server.post("/setAccomplice", (req, res) =>
   require("./accomplice").setAccomplice(req, res, User)
 );
 
+server.post("/mollieCreate", (req, res) =>
+  require("./mollieCreate").mollieCreate(req, res, User)
+);
+server.post("/mollieWebhook", (req, res) =>
+  require("./mollieWebhook").mollieWebhook(req, res, User)
+);
 server.get("/shop", (req, res) => require("./shop").shop(req, res, User));
 
 server.post("/buy", (req, res) => require("./shop").buy(req, res, User));
