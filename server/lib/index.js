@@ -122,9 +122,14 @@ User.init(
     level: DataTypes.INTEGER,
     pushtoken: DataTypes.STRING,
 
-    credits: DataTypes.INTEGER,
-    creditsTotal: DataTypes.INTEGER,
-
+    credits: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    creditsTotal: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     phone: DataTypes.STRING,
     phoneVerified: {
       type: DataTypes.BOOLEAN,
@@ -330,7 +335,7 @@ ForumResponse.init(
 );
 
 try {
-  sequelize.sync(); //{alter}:true}
+  sequelize.sync({ alter: true }); //{alter}:true}
 } catch (e) {
   console.log("e", e);
 }
