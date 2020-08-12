@@ -96,15 +96,17 @@ const kill = async (req, res, User, Message, Garage) => {
     {
       where: {
         id: user.id,
-        attackAt: [{ [Op.lte]: Date.now() - SECONDS * 1000 }],
+        attackAt: [{ [Op.lt]: Date.now() - SECONDS * 1000 }],
       },
     }
   );
 
+  console.log("ddddd", Date.now() - SECONDS * 1000, canAttack);
+
   if (!canAttack) {
     // NB: this prevents the spam bug!
     return res.json({
-      response: "Je moet nog even wachten voor je weer iemand kan aanvallen",
+      response: "Je moet nog even wachten voor je weer iemand kan aanvallen.",
     });
   }
 
