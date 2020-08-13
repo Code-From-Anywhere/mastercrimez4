@@ -27,7 +27,7 @@ function Header({ navigation, device, me }) {
     <View
       style={{
         justifyContent: "center",
-        backgroundColor: device.theme.secondary,
+        backgroundColor: "#555",
       }}
     >
       {Platform.OS === "web" ? (
@@ -48,7 +48,7 @@ function Header({ navigation, device, me }) {
                 }}
               />
             </View>
-            <Text>v{Constants.VERSION}</Text>
+            <Text style={{ color: "white" }}>v{Constants.VERSION}</Text>
 
             {isSmallDevice ? (
               <TouchableOpacity

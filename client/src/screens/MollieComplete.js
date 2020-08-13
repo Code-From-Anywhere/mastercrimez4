@@ -1,9 +1,13 @@
 import React from "react";
 import { Text, View } from "react-native";
-const MollieComplete = () => {
+const MollieComplete = ({
+  screenProps: {
+    device: { theme },
+  },
+}) => {
   return (
     <View style={{ flex: 1 }}>
-      <Text>Bedankt voor je betaling</Text>
+      <Text style={{ color: theme.primaryText }}>Bedankt voor je betaling</Text>
     </View>
   );
 };

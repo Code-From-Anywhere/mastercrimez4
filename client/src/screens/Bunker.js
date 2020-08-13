@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
-import Constants from "../Constants";
+import { post } from "../Util";
 
 const options = [
   {
@@ -28,6 +28,12 @@ class Bunker extends Component {
     response: null,
   };
   renderItem = ({ item, index }) => {
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
+
     const backgroundColor =
       this.state.selected === item.id ? "#2c98f0" : undefined;
     return (
@@ -46,8 +52,8 @@ class Bunker extends Component {
             backgroundColor,
           }}
         >
-          <Text style={{ color: "white" }}>{item.option}</Text>
-          <Text style={{ color: "white" }}>&euro;{item.price}</Text>
+          <Text style={{ color: theme.primaryText }}>{item.option}</Text>
+          <Text style={{ color: theme.primaryText }}>&euro;{item.price}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -60,26 +66,13 @@ class Bunker extends Component {
         theme={this.props.screenProps.device.theme}
         style={{ borderRadius: 10, marginTop: 20 }}
         title="Duik onder"
-        onPress={() => {
-          fetch(`${Constants.SERVER_ADDR}/bunker`, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              token: device.loginToken,
-              option: this.state.selected,
-            }),
-          })
-            .then((response) => response.json())
-            .then(async (response) => {
-              this.setState({ response });
-              this.props.screenProps.reloadMe(device.loginToken);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
+        onPress={async () => {
+          const response = await post("bunker", {
+            token: device.loginToken,
+            option: this.state.selected,
+          });
+          this.setState({ response });
+          this.props.screenProps.reloadMe(device.loginToken);
         }}
       />
     );
@@ -87,7 +80,10 @@ class Bunker extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
     const { response, selected } = this.state;
 
@@ -95,10 +91,12 @@ class Bunker extends Component {
       <View style={{ margin: 20 }}>
         {response ? (
           <View style={{ flex: 1, minHeight: 400 }}>
-            <Text style={{ color: "white" }}>{response.response}</Text>
+            <Text style={{ color: theme.primaryText }}>
+              {response.response}
+            </Text>
 
             <Button
-              theme={this.props.screenProps.device.theme}
+              theme={theme}
               title="OK"
               onPress={() => this.setState({ response: null })}
             />

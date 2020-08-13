@@ -137,13 +137,15 @@ class Garage extends Component {
 
         <View style={{ marginLeft: 20 }}>
           {this.state.response && this.state.id === item.id ? (
-            <Text>{this.state.response.response}</Text>
+            <Text style={{ color: theme.primaryText }}>
+              {this.state.response.response}
+            </Text>
           ) : null}
 
-          <Text style={{ color: "white" }}>{item.auto}</Text>
-          <Text style={{ color: "white" }}>&euro;{item.cash}</Text>
-          <Text style={{ color: "white" }}>{item.kogels} kogels</Text>
-          <Text style={{ color: "white" }}>{item.power} power</Text>
+          <Text style={{ color: theme.primaryText }}>{item.auto}</Text>
+          <Text style={{ color: theme.primaryText }}>&euro;{item.cash}</Text>
+          <Text style={{ color: theme.primaryText }}>{item.kogels} kogels</Text>
+          <Text style={{ color: theme.primaryText }}>{item.power} power</Text>
           <Button
             theme={this.props.screenProps.device.theme}
             title="Verkoop"

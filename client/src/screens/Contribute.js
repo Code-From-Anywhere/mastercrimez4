@@ -12,7 +12,7 @@ class Status extends Component {
 
     return (
       <View style={style(device.theme).container}>
-        <Text style={{ color: "white" }}>
+        <Text style={{ color: device.theme.primaryText }}>
           MasterCrimeZ is open source. Dit betekent dat je kan helpen om meer
           functionaliteit te creëren of een andere versie van MasterCrimeZ
           online kan zetten. MasterCrimeZ is geschreven in React Native en Node

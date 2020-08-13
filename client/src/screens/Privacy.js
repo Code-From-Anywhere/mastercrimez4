@@ -7,12 +7,17 @@ const Config = { name: "MasterCrimeZ" };
 /**
  * A Privacy page
  */
-const PrivacyPage = ({ navigation }) => {
+const PrivacyPage = ({
+  navigation,
+  screenProps: {
+    device: { theme },
+  },
+}) => {
   return (
     <ScrollView style={{ alignItems: "center" }}>
       <View style={{ margin: 20 }}>
         <Text
-          style={{ color: "white" }}
+          style={{ color: theme.primaryText }}
           onLinkPress={(link) => {
             console.log("presslink", link);
             Linking.openURL(link);

@@ -28,13 +28,6 @@ export const leftMenu = (me, theme) => {
     },
 
     {
-      iconType: "Ionicons",
-      icon: "ios-chatbubbles",
-      text: "Chat",
-      to: "Chat",
-    },
-
-    {
       iconType: "FontAwesome",
       icon: "car",
       text: "Auto Stelen",
@@ -453,6 +446,13 @@ export const rightMenu = (me, theme) => [
 
     isHeader: true,
     text: "Algemeen",
+  },
+
+  {
+    iconType: "Ionicons",
+    icon: "ios-chatbubbles",
+    text: "Chat",
+    to: "Chat",
   },
 
   {

@@ -49,6 +49,11 @@ class Showroom extends Component {
   };
 
   renderItem = ({ item, index }) => {
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     return (
       <View
         key={`item${index}`}
@@ -76,8 +81,8 @@ class Showroom extends Component {
             <Text>{this.state.response.response}</Text>
           ) : null}
 
-          <Text style={{ color: "white" }}>{item.naam}</Text>
-          <Text style={{ color: "white" }}>&euro;{item.waarde}</Text>
+          <Text style={{ color: theme.primaryText }}>{item.naam}</Text>
+          <Text style={{ color: theme.primaryText }}>&euro;{item.waarde}</Text>
           <Button
             theme={this.props.screenProps.device.theme}
             title="Koop"

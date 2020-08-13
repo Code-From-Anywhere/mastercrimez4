@@ -87,7 +87,10 @@ class Airport extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
     const { response } = this.state;
 
@@ -95,7 +98,9 @@ class Airport extends Component {
       <View style={{ flex: 1, alignItems: "center" }}>
         <View style={{ margin: 20, width: 200 }}>
           {response ? (
-            <Text style={{ color: "white" }}>{response.response}</Text>
+            <Text style={{ color: theme.primaryText }}>
+              {response.response}
+            </Text>
           ) : null}
 
           {this.renderForm()}

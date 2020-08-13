@@ -2,6 +2,7 @@ import React from "react";
 import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
+import style from "../Style";
 class Login extends React.Component {
   state = {
     email: "",
@@ -42,7 +43,11 @@ class Login extends React.Component {
 
   render() {
     const { navigation } = this.props;
-
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
@@ -73,7 +78,7 @@ class Login extends React.Component {
               placeholder="Email"
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
-              style={{ backgroundColor: "white", fontSize: 20 }}
+              style={style(theme).textInput}
             />
           </View>
 

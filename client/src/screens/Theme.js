@@ -40,6 +40,13 @@ const themes = [
     primaryText: "#000",
     secondaryText: "#000",
   },
+  {
+    name: "Zwart",
+    primary: "#000",
+    secondary: "#222",
+    primaryText: "#FFF",
+    secondaryText: "#FFF",
+  },
 ];
 const ThemeScreen = ({ navigation, screenProps: { dispatch, me, device } }) => {
   const currentTheme = device.theme;

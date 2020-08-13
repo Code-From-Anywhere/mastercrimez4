@@ -58,6 +58,11 @@ class Gym extends Component {
     );
   };
   renderItem = ({ item, index }) => {
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     const backgroundColor =
       this.state.selected === item.id ? "#2c98f0" : undefined;
     return (
@@ -76,7 +81,7 @@ class Gym extends Component {
             backgroundColor,
           }}
         >
-          <Text style={{ color: "white" }}>{item.option}</Text>
+          <Text style={{ color: theme.primaryText }}>{item.option}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -129,7 +134,10 @@ class Gym extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
     const { response, selected } = this.state;
 
@@ -138,7 +146,9 @@ class Gym extends Component {
         <View style={{ margin: 20, width: 300 }}>
           {response ? (
             <View style={{ flex: 1, minHeight: 400 }}>
-              <Text style={{ color: "white" }}>{response.response}</Text>
+              <Text style={{ color: theme.primaryText }}>
+                {response.response}
+              </Text>
 
               <Button
                 theme={this.props.screenProps.device.theme}

@@ -40,7 +40,13 @@ async function registerForPushNotificationsAsync() {
 }
 
 const NotificationsScreen = ({ navigation, screenProps }) => {
-  const { dispatch, me, device, reloadMe } = screenProps;
+  const {
+    dispatch,
+    me,
+    device,
+    device: { theme },
+    reloadMe,
+  } = screenProps;
 
   const [response, setResponse] = useState("");
 
@@ -95,14 +101,16 @@ const NotificationsScreen = ({ navigation, screenProps }) => {
           borderRadius: 20,
         }}
       >
-        {response ? <Text>{response}</Text> : null}
+        {response ? (
+          <Text style={{ color: theme.primaryText }}>{response}</Text>
+        ) : null}
 
         <View
           style={{
             padding: 10,
           }}
         >
-          <Text style={{ fontSize: 20 }}>Notificaties aan</Text>
+          <Text style={{ color: theme.primaryText }}>Notificaties aan</Text>
 
           <Switch
             value={notificationsOn}

@@ -1,13 +1,9 @@
 import React from "react";
 // import MarkdownView from "react-native-markdown-renderer";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import H1 from "../components/H1";
 import T from "../components/T";
 
-const H1 = ({ children }) => (
-  <Text style={{ fontSize: 30, fontWeight: "bold", color: "white" }}>
-    {children}
-  </Text>
-);
 /**
  * A Privacy page
  */

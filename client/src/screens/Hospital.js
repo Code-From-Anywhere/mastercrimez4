@@ -71,15 +71,20 @@ class Hospital extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me, device },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
     const { response } = this.state;
 
     return (
-      <View style={style(device.theme).container}>
+      <View style={style(theme).container}>
         <View style={{ margin: 20, width: 200 }}>
           {response ? (
-            <Text style={{ color: "white" }}>{response.response}</Text>
+            <Text style={{ color: theme.primaryText }}>
+              {response.response}
+            </Text>
           ) : null}
 
           {this.renderForm()}

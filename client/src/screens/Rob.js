@@ -3,6 +3,7 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
+import style from "../Style";
 
 class Bank extends Component {
   componentDidMount() {
@@ -40,16 +41,15 @@ class Bank extends Component {
   };
 
   renderForm() {
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     return (
       <View>
         <TextInput
-          style={{
-            backgroundColor: this.props.screenProps.device.theme.secondary,
-            padding: 5,
-            fontSize: 24,
-            borderRadius: 10,
-            color: "white",
-          }}
+          style={style(theme).textInput}
           placeholder="Naam"
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
@@ -72,7 +72,10 @@ class Bank extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
     const { response } = this.state;
 
@@ -80,7 +83,9 @@ class Bank extends Component {
       <View style={{ flex: 1, margin: 20, alignItems: "center" }}>
         <View style={{ width: 200 }}>
           {response ? (
-            <Text style={{ color: "white" }}>{response.response}</Text>
+            <Text style={{ color: theme.primaryText }}>
+              {response.response}
+            </Text>
           ) : null}
 
           {this.renderForm()}

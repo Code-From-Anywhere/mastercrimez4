@@ -97,7 +97,9 @@ class Income extends Component {
       <View style={style(device.theme).container}>
         <View style={{ margin: 20, width: 200 }}>
           {response ? (
-            <Text style={{ color: "white" }}>{response.response}</Text>
+            <Text style={{ color: device.theme.primaryText }}>
+              {response.response}
+            </Text>
           ) : (
             this.renderForm()
           )}

@@ -1,8 +1,17 @@
 import React, { Component } from "react";
-import { FlatList, Image, Text, TextInput, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import Button from "../components/Button";
+import Separator from "../components/Separator";
 import Constants from "../Constants";
 import style from "../Style";
+const { width } = Dimensions.get("window");
 class Garage extends Component {
   state = {
     selected: null,
@@ -92,20 +101,17 @@ class Garage extends Component {
 
   renderGroup = ({ item, index }) => {
     const {
-      screenProps: { device },
+      screenProps: {
+        device,
+        device: { theme },
+      },
     } = this.props;
 
     return (
       <View
         key={`item${index}`}
         style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
           justifyContent: "center",
-          alignItems: "center",
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: "black",
         }}
       >
         <Image
@@ -113,51 +119,81 @@ class Garage extends Component {
             width: 350,
             height: 300,
             resizeMode: "contain",
+            alignSelf: "center",
           }}
           source={{ uri: Constants.SERVER_ADDR + "/" + item.image }}
         />
 
-        <View style={{ marginLeft: 20 }}>
-          {(this.state.response && this.state.auto === item.auto) ||
-          this.state.id === item.id ? (
-            <Text>{this.state.response.response}</Text>
-          ) : null}
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "space-around",
+            }}
+          >
+            <View>
+              {(this.state.response && this.state.auto === item.auto) ||
+              this.state.id === item.id ? (
+                <Text style={{ color: theme.primaryText }}>
+                  {this.state.response.response}
+                </Text>
+              ) : null}
 
-          <Text style={{ color: "white" }}>{item.auto}</Text>
-          <Text style={{ color: "white" }}>In bezit: {item.amount}</Text>
-          <Text style={{ color: "white" }}>&euro;{item.cash}</Text>
-          <Text style={{ color: "white" }}>{item.kogels} kogels</Text>
-          <Text style={{ color: "white" }}>{item.power} power</Text>
+              <Text style={{ color: theme.primaryText }}>{item.auto}</Text>
+              <Text style={{ color: theme.primaryText }}>
+                In bezit: {item.amount}
+              </Text>
+              <Text style={{ color: theme.primaryText }}>
+                &euro;{item.cash}
+              </Text>
+              <Text style={{ color: theme.primaryText }}>
+                {item.kogels} kogels
+              </Text>
+              <Text style={{ color: theme.primaryText }}>
+                {item.power} power
+              </Text>
 
-          <TextInput
-            key={`amount${item.id}`}
-            style={style(device.theme).textInput}
-            value={this.state.amount[item.id]}
-            onChangeText={(x) =>
-              this.setState({ amount: { ...this.state.amount, [item.id]: x } })
-            }
-            placeholder="Aantal"
-          />
-          <Button
-            theme={this.props.screenProps.device.theme}
-            title="Verkoop"
-            onPress={() =>
-              this.bulkAction("sell", item.auto, this.state.amount[item.id])
-            }
-          />
+              <TextInput
+                key={`amount${item.id}`}
+                style={style(device.theme).textInput}
+                value={this.state.amount[item.id]}
+                onChangeText={(x) =>
+                  this.setState({
+                    amount: { ...this.state.amount, [item.id]: x },
+                  })
+                }
+                placeholder="Aantal"
+              />
+            </View>
 
-          <Button
-            theme={this.props.screenProps.device.theme}
-            title="Crush"
-            onPress={() =>
-              this.bulkAction("crush", item.auto, this.state.amount[item.id])
-            }
-          />
-          <Button
-            theme={this.props.screenProps.device.theme}
-            title="Upgrade"
-            onPress={() => this.upgradeCar(item.id)}
-          />
+            <View style={{ justifyContent: "space-between", marginBottom: 15 }}>
+              <Button
+                theme={this.props.screenProps.device.theme}
+                title="Verkoop"
+                onPress={() =>
+                  this.bulkAction("sell", item.auto, this.state.amount[item.id])
+                }
+              />
+
+              <Button
+                theme={this.props.screenProps.device.theme}
+                title="Crush"
+                onPress={() =>
+                  this.bulkAction(
+                    "crush",
+                    item.auto,
+                    this.state.amount[item.id]
+                  )
+                }
+              />
+              <Button
+                theme={this.props.screenProps.device.theme}
+                title="Upgrade"
+                onPress={() => this.upgradeCar(item.id)}
+              />
+            </View>
+          </View>
         </View>
       </View>
     );
@@ -171,13 +207,14 @@ class Garage extends Component {
     const { cars, carGroups, id, view, filter } = this.state;
 
     return (
-      <View style={{ flex: 1 }}>
-        <FlatList
-          keyExtractor={(item, index) => `item${index}`}
-          data={carGroups}
-          renderItem={this.renderGroup}
-        />
-      </View>
+      <FlatList
+        numColumns={width > 1000 ? 2 : 1}
+        contentContainerStyle={{ alignItems: "center" }}
+        keyExtractor={(item, index) => `item${index}`}
+        data={carGroups}
+        renderItem={this.renderGroup}
+        ItemSeparatorComponent={Separator}
+      />
     );
   }
 }

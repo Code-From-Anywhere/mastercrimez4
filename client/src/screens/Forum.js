@@ -91,6 +91,7 @@ class Messages extends Component {
       .then((response) => response.json())
       .then((response) => {
         console.log("response", response);
+        this.setState({ message: null });
         this.fetchReadTopic(this.state.readTopic);
       })
       .catch((error) => {
@@ -136,7 +137,7 @@ class Messages extends Component {
         <TextInput
           multiline
           numberOfLines={4}
-          style={style(device.theme).textInput}
+          style={{ ...style(device.theme).textInput, height: 150 }}
           placeholder="Bericht"
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}
@@ -155,6 +156,11 @@ class Messages extends Component {
     return (
       <FlatList
         data={this.state.topics?.topics}
+        ItemSeparatorComponent={() => (
+          <View
+            style={{ height: 0.5, backgroundColor: "#000", width: "100%" }}
+          />
+        )}
         renderItem={({ item, index }) => {
           return (
             <TouchableOpacity
@@ -165,11 +171,7 @@ class Messages extends Component {
             >
               <View
                 style={{
-                  flex: 1,
-                  margin: 20,
                   padding: 20,
-                  borderWidth: 1,
-                  borderColor: "black",
                 }}
               >
                 <T>Auteur: {item.name}</T>
@@ -195,7 +197,7 @@ class Messages extends Component {
 
     const item = this.state.topic;
     return item ? (
-      <ScrollView style={{ borderWidth: 1, borderColor: "black" }}>
+      <ScrollView>
         <View
           style={{
             flex: 1,
@@ -227,7 +229,7 @@ class Messages extends Component {
                 <View
                   style={{
                     position: "absolute",
-                    backgroundColor: "black",
+                    backgroundColor: device.theme.secondary,
                     top: -10,
                     borderRadius: 10,
                     paddingHorizontal: 20,

@@ -41,7 +41,10 @@ class Crimes extends Component {
   }
 
   renderItem = ({ item, index }) => {
-    const { me } = this.props.screenProps;
+    const {
+      me,
+      device: { theme },
+    } = this.props.screenProps;
 
     const kans = Math.round((me?.rank + 30) / (item.id * item.id));
     const kans2 = kans > 75 ? 75 : kans;
@@ -64,8 +67,8 @@ class Crimes extends Component {
             backgroundColor,
           }}
         >
-          <Text style={{ color: "white" }}>{item.option}</Text>
-          <Text style={{ color: "white" }}>{kans2}%</Text>
+          <Text style={{ color: theme.primaryText }}>{item.option}</Text>
+          <Text style={{ color: theme.primaryText }}>{kans2}%</Text>
         </View>
       </TouchableOpacity>
     );
@@ -119,7 +122,10 @@ class Crimes extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
     const { response, selected } = this.state;
 
@@ -127,10 +133,12 @@ class Crimes extends Component {
       <View style={{ margin: 20 }}>
         {response ? (
           <View style={{ flex: 1, minHeight: 400 }}>
-            <Text style={{ color: "white" }}>{response.response}</Text>
+            <Text style={{ color: theme.primaryText }}>
+              {response.response}
+            </Text>
 
             <Button
-              theme={this.props.screenProps.device.theme}
+              theme={theme}
               title="OK"
               onPress={() => this.setState({ response: null })}
             />

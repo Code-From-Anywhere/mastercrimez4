@@ -15,7 +15,7 @@ export const apiCall = (endpoint, method, body) => {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: method === "POST" && JSON.stringify(body),
+    body: method === "POST" ? JSON.stringify(body) : undefined,
   })
     .then((response) => response.json())
     .then(async (response) => {

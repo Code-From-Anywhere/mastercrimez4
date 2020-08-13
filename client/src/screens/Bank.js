@@ -91,7 +91,10 @@ class Bank extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
     const { response } = this.state;
 
@@ -99,7 +102,9 @@ class Bank extends Component {
       <View style={{ flex: 1, margin: 20, alignItems: "center" }}>
         <View style={{ width: 200 }}>
           {response ? (
-            <Text style={{ color: "white" }}>{response.response}</Text>
+            <Text style={{ color: theme.primaryText }}>
+              {response.response}
+            </Text>
           ) : null}
           {this.keyValue("Contant", me?.cash)}
           {this.keyValue("Bank", me?.bank)}

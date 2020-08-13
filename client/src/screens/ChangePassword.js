@@ -3,6 +3,7 @@ import { Text, TextInput, View } from "react-native";
 import md5 from "react-native-md5";
 import Button from "../components/Button";
 import Constants from "../Constants";
+import style from "../Style";
 
 class Login extends React.Component {
   state = {
@@ -51,16 +52,19 @@ class Login extends React.Component {
   }
 
   render() {
-    const { navigation } = this.props;
+    const {
+      navigation,
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
           style={{
-            margin: 20,
             padding: 20,
             minWidth: 200,
-            backgroundColor: "#CCC",
             borderRadius: 20,
           }}
         >
@@ -72,35 +76,35 @@ class Login extends React.Component {
 
           <View
             style={{
-              flexDirection: "row",
               padding: 10,
-              justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 20 }}>Nieuw wachtwoord</Text>
+            <Text style={{ fontSize: 20, color: theme.primaryText }}>
+              Nieuw wachtwoord
+            </Text>
 
             <TextInput
               secureTextEntry
               onChangeText={(password1) => this.setState({ password1 })}
               value={this.state.password1}
-              style={{ backgroundColor: "white", fontSize: 20 }}
+              style={style(theme).textInput}
             />
           </View>
 
           <View
             style={{
-              flexDirection: "row",
               padding: 10,
-              justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 20 }}>Herhaal</Text>
+            <Text style={{ fontSize: 20, color: theme.primaryText }}>
+              Herhaal
+            </Text>
 
             <TextInput
               secureTextEntry
               onChangeText={(password2) => this.setState({ password2 })}
               value={this.state.password2}
-              style={{ backgroundColor: "white", fontSize: 20 }}
+              style={style(theme).textInput}
             />
           </View>
 

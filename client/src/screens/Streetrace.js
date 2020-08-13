@@ -5,10 +5,13 @@ class Status extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me }
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
 
-    return <Text>Coming soon</Text>;
+    return <Text style={{ color: theme.primaryText }}>Coming soon</Text>;
   }
 }
 

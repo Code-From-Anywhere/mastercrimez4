@@ -152,7 +152,7 @@ export const renderDrawerMenu = (item, index, navigation, theme) => {
         borderTopColor: "black",
         padding: 10,
       }
-    : {};
+    : { backgroundColor: theme.primary };
   return (
     <TouchableOpacity
       key={`item${index}`}
@@ -220,7 +220,9 @@ const Layout = ({ screenProps, navigation, children }) => {
               borderRadius: 5,
             }}
           >
-            <Text>Je account is nog niet geverifieerd!</Text>
+            <Text style={{ color: device.theme.secondaryText }}>
+              Je account is nog niet geverifieerd!
+            </Text>
             <View
               style={{
                 marginTop: 10,
@@ -252,7 +254,7 @@ const Layout = ({ screenProps, navigation, children }) => {
               borderRadius: 5,
             }}
           >
-            <Text>
+            <Text style={{ color: device.theme.secondaryText }}>
               Er is een nieuwe update beschikbaar. Klik hier om de app te
               verversen.
             </Text>

@@ -80,6 +80,11 @@ class Hoeren extends Component {
   render() {
     const { response } = this.state;
 
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     const number = Math.ceil(Math.random() * 60);
 
     return (
@@ -94,7 +99,9 @@ class Hoeren extends Component {
                     Constants.SERVER_ADDR + "/images/female/" + number + ".gif",
                 }}
               />
-              <Text style={{ color: "white" }}>{response.response}</Text>
+              <Text style={{ color: theme.primaryText }}>
+                {response.response}
+              </Text>
 
               <Button
                 theme={this.props.screenProps.device.theme}

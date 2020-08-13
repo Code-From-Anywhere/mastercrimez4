@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
-
+import style from "../Style";
 class Kill extends Component {
   componentDidMount() {
     const name = this.props.navigation.state.params?.name;
@@ -41,29 +41,21 @@ class Kill extends Component {
   };
 
   renderForm() {
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     return (
       <View>
         <TextInput
-          style={{
-            backgroundColor: this.props.screenProps.device.theme.secondary,
-            fontSize: 24,
-            borderRadius: 10,
-            padding: 5,
-            color: "white",
-            marginBottom: 20,
-          }}
+          style={style(theme).textInput}
           placeholder="Naam"
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
         />
         <TextInput
-          style={{
-            backgroundColor: this.props.screenProps.device.theme.secondary,
-            fontSize: 24,
-            padding: 5,
-            borderRadius: 10,
-            color: "white",
-          }}
+          style={style(theme).textInput}
           placeholder="Kogels"
           value={this.state.bullets}
           onChangeText={(bullets) => this.setState({ bullets })}
@@ -86,7 +78,10 @@ class Kill extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
     const { response } = this.state;
 
@@ -94,7 +89,9 @@ class Kill extends Component {
       <View style={{ flex: 1, margin: 20, alignItems: "center" }}>
         <View style={{ width: 200 }}>
           {response ? (
-            <Text style={{ color: "white" }}>{response.response}</Text>
+            <Text style={{ color: theme.primaryText }}>
+              {response.response}
+            </Text>
           ) : null}
 
           {this.renderForm()}

@@ -2,6 +2,7 @@ import React from "react";
 import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
+import style from "../Style";
 
 class Login extends React.Component {
   state = {
@@ -42,20 +43,26 @@ class Login extends React.Component {
   }
 
   render() {
-    const { navigation } = this.props;
+    const {
+      navigation,
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
           style={{
             flex: 1,
-            margin: 20,
             padding: 20,
-            backgroundColor: "#CCC",
-            borderRadius: 20,
           }}
         >
-          {this.state.response ? <Text>{this.state.response}</Text> : null}
+          {this.state.response ? (
+            <Text style={{ color: theme.primaryText }}>
+              {this.state.response}
+            </Text>
+          ) : null}
 
           <View
             style={{
@@ -69,7 +76,7 @@ class Login extends React.Component {
               placeholder="+31"
               onChangeText={(phone) => this.setState({ phone })}
               value={this.state.phone}
-              style={{ backgroundColor: "white", fontSize: 20, minWidth: 150 }}
+              style={style(theme).textInput}
             />
           </View>
 
