@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import CountDown from "react-native-countdown-component";
 
 class Fly extends React.Component {

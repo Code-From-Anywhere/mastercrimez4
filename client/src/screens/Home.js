@@ -43,8 +43,8 @@ class Home extends Component {
                   borderColor: "#000",
                   backgroundColor: theme.secondary,
                   borderRadius: 10,
-                  width: 80,
-                  height: 80,
+                  width: 70,
+                  height: 70,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -71,10 +71,13 @@ class Home extends Component {
 
   renderCarousel() {
     const {
-      screenProps: { me },
+      screenProps: { me, device },
     } = this.props;
 
-    const menus = [...leftMenu(me), ...rightMenu(me)];
+    const menus = [
+      ...leftMenu(me, device.theme),
+      ...rightMenu(me, device.theme),
+    ];
     const filtered = menus.filter((menu) => !menu.isHeader && !menu.isStats);
 
     return (
@@ -82,7 +85,11 @@ class Home extends Component {
         ref={(c) => {
           this._carousel = c;
         }}
-        data={[filtered.slice(0, 16), filtered.slice(16, filtered.length)]}
+        data={[
+          filtered.slice(0, 16),
+          filtered.slice(16, 32),
+          filtered.slice(32, filtered.length),
+        ]}
         renderItem={this._renderItem}
         sliderWidth={width}
         itemWidth={width}
@@ -90,8 +97,9 @@ class Home extends Component {
     );
   }
   render() {
+    const { theme } = this.props.screenProps.device;
     if (Platform.OS === "web") {
-      return <Text>Welkom terug</Text>;
+      return <Text style={{ color: theme.primaryText }}>Welkom terug</Text>;
     }
     return this.renderCarousel();
   }

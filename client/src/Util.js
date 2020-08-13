@@ -1,4 +1,33 @@
+import { useEffect } from "react";
 import { Dimensions, Platform, ScaledSize } from "react-native";
+import Constants from "./Constants";
+
+export const doOnce = (cb, cleanup) => {
+  useEffect(() => {
+    cb();
+    return cleanup?.();
+  }, []);
+};
+export const apiCall = (endpoint, method, body) => {
+  return fetch(`${Constants.SERVER_ADDR}/${endpoint}`, {
+    method,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: method === "POST" && JSON.stringify(body),
+  })
+    .then((response) => response.json())
+    .then(async (response) => {
+      return response;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+
+export const get = (endpoint) => apiCall(endpoint, "GET");
+export const post = (endpoint, body) => apiCall(endpoint, "POST", body);
 
 const isIPhoneXSize = (dim: ScaledSize) => {
   return dim.height == 812 || dim.width == 812;

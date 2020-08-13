@@ -22,11 +22,12 @@ function Header({ navigation, device, me }) {
     marginBottom: 10,
     color: device.theme.secondaryText,
   };
+
   return (
     <View
       style={{
         justifyContent: "center",
-        backgroundColor: "#555555",
+        backgroundColor: device.theme.secondary,
       }}
     >
       {Platform.OS === "web" ? (
@@ -73,16 +74,20 @@ function Header({ navigation, device, me }) {
           <View
             style={{ justifyContent: "space-between", flexDirection: "row" }}
           >
-            <TouchableOpacity
-              hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
-              onPress={() => navigation.goBack()}
-            >
-              <AntDesign
-                name="arrowleft"
-                size={32}
-                color={device.theme.secondaryText}
-              />
-            </TouchableOpacity>
+            {navigation.state.routeName !== "Home" ? (
+              <TouchableOpacity
+                hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
+                onPress={() => navigation.goBack()}
+              >
+                <AntDesign
+                  name="arrowleft"
+                  size={32}
+                  color={device.theme.secondaryText}
+                />
+              </TouchableOpacity>
+            ) : (
+              <View style={{ height: 20 }} />
+            )}
           </View>
           <View
             style={{

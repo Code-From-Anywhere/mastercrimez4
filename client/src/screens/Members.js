@@ -164,7 +164,9 @@ class Members extends Component {
     const { members, search } = this.state;
 
     return (
-      <View style={{ backgroundColor: "#444" }}>
+      <View
+        style={{ backgroundColor: this.props.screenProps.device.theme.primary }}
+      >
         <Button
           theme={this.props.screenProps.device.theme}
           title="Sorteer"
@@ -209,7 +211,7 @@ class Members extends Component {
             flexDirection: "row",
             justifyContent: "space-between",
             height: 40,
-            backgroundColor: "#444",
+            backgroundColor: this.props.screenProps.device.theme.secondary,
             alignItems: "center",
             paddingHorizontal: 20,
           }}
@@ -231,15 +233,9 @@ class Members extends Component {
       search ? m.name?.toLowerCase().includes(search.toLowerCase()) : true
     );
     return (
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
+      <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={{
-            borderColor: "black",
-            borderWidth: 1,
             height: Platform.OS === "web" ? height - 200 : undefined,
           }}
           ListHeaderComponent={this.renderHeader}

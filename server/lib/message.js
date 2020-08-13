@@ -1,4 +1,5 @@
 const { Sequelize, Model, DataTypes, Op } = require("sequelize");
+const { sendMessageAndPush } = require("./util");
 const message = async (req, res, User, Message) => {
   const { token, to, message } = req.body;
 

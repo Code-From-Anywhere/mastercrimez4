@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 
 const Creditshop = ({ screenProps }) => {
   const [items, setItems] = useState(null);
+  const [response, setResponse] = useState(null);
+
   const { device, reloadMe, me } = screenProps;
 
   useEffect(() => {
@@ -38,7 +40,7 @@ const Creditshop = ({ screenProps }) => {
     })
       .then((response) => response.json())
       .then(({ response }) => {
-        Alert.alert(response);
+        setResponse(response);
         reloadMe(device.loginToken);
       })
       .catch((error) => {
@@ -50,6 +52,13 @@ const Creditshop = ({ screenProps }) => {
       <Text style={{ color: device.theme.primaryText, alignSelf: "center" }}>
         Je hebt nog {me?.credits} credits
       </Text>
+
+      {response && (
+        <Text style={{ color: device.theme.primaryText, alignSelf: "center" }}>
+          {response}
+        </Text>
+      )}
+
       {items?.map((item) => (
         <Button
           theme={this.props.screenProps.device.theme}

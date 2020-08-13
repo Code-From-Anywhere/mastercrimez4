@@ -6,6 +6,7 @@ const sgMail = require("@sendgrid/mail");
 const fs = require("fs");
 const Jimp = require("jimp");
 const { Sequelize, Model, DataTypes, Op } = require("sequelize");
+const cron = require("node-cron");
 
 require("dotenv").config();
 
@@ -245,6 +246,24 @@ User.init(
   { sequelize, modelName: "user" }
 );
 
+class City extends Model {}
+
+City.init(
+  {
+    city: DataTypes.STRING,
+    bullets: DataTypes.INTEGER,
+    bulletFactoryOwner: DataTypes.STRING,
+    bulletPrice: {
+      type: DataTypes.INTEGER,
+      defaultValue: 100,
+    },
+    bulletFactoryProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+  },
+  { sequelize, modelName: "city" }
+);
 class Garage extends Model {}
 
 Garage.init(
@@ -452,6 +471,12 @@ server.get("/garageGrouped", (req, res) =>
 server.post("/sellcar", (req, res) =>
   require("./garage").sellcar(req, res, User, Garage)
 );
+
+server.post("/buyBullets", (req, res) =>
+  require("./buyBullets").buyBullets(req, res, User, City)
+);
+
+server.get("/cities", (req, res) => require("./cities").cities(req, res, City));
 
 server.post("/crushcar", (req, res) =>
   require("./garage").crushcar(req, res, User, Garage)
@@ -1146,6 +1171,44 @@ server.post("/login", async (req, res) => {
   } else {
     res.json({ error: "Email/wachtwoord komen niet overeen" });
   }
+});
+
+/*
+* * * * * *
+| | | | | |
+| | | | | day of week
+| | | | month
+| | | day of month
+| | hour
+| minute
+second ( optional )
+*/
+
+//elk uur
+
+const putBulletsInBulletFactories = async () => {
+  const online = await User.findAll({
+    where: { onlineAt: { [Op.gt]: Date.now() - 300000 } },
+  });
+
+  const newBullets = online.length * 2000;
+
+  sequelize.query(`UPDATE cities SET bullets=bullets+${newBullets}`);
+};
+
+const giveInterest = () => {
+  console.log("rente");
+  sequelize.query(`UPDATE users SET bank=bank*1.05 WHERE health > 0`);
+};
+
+//elk uur
+cron.schedule("0 * * * *", async () => {
+  putBulletsInBulletFactories();
+});
+
+//8 uur savonds
+cron.schedule("* 20 * * *", function () {
+  giveInterest();
 });
 
 const port = process.env.PORT || 4001;

@@ -227,16 +227,21 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "FontAwesome",
       icon: "font",
-
       isHeader: true,
       text: "Uitgeven",
     },
+
     {
       iconType: "MaterialCommunityIcons",
       icon: "cash-100",
-
       text: "Bank",
       to: "Bank",
+    },
+    {
+      iconType: "MaterialCommunityIcons",
+      icon: "pistol",
+      text: "Kogelfabriek",
+      to: "Bulletfactory",
     },
 
     {
