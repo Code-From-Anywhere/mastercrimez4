@@ -1197,8 +1197,8 @@ const putBulletsInBulletFactories = async () => {
 };
 
 const giveInterest = () => {
-  console.log("rente");
-  // sequelize.query(`UPDATE users SET bank=bank*1.05 WHERE health > 0`);
+  console.log("rente", new Date());
+  sequelize.query(`UPDATE users SET bank=bank*1.05 WHERE health > 0`);
 };
 
 //elk uur
@@ -1207,7 +1207,7 @@ cron.schedule("0 * * * *", async () => {
 });
 
 //8 uur savonds
-cron.schedule("* 20 * * *", function () {
+cron.schedule("0 20 * * *", function () {
   giveInterest();
 });
 
