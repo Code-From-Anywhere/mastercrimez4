@@ -408,7 +408,7 @@ class _RootContainer extends React.Component {
 
     let token = device.loginToken;
     if (!token) {
-      token = Math.round(Math.random() * 1000000000);
+      token = Math.round(Math.random() * Number.MAX_SAFE_INTEGER);
       dispatch({ type: "SET_LOGIN_TOKEN", value: token });
     }
 

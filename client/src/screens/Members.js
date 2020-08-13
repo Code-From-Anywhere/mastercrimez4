@@ -187,7 +187,7 @@ class Members extends Component {
           <TextInput
             placeholder="Zoeken"
             value={search}
-            style={{ flex: 1, fontSize: 16, color: "white" }}
+            style={{ flex: 1, fontSize: 16, color: Colors.primaryText }}
             onChangeText={(search) => this.setState({ search })}
           />
 

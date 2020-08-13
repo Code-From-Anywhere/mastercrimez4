@@ -55,8 +55,6 @@ const publicUserFields = [
   "incomeAt",
   "robAt",
   "ocAt",
-  "attackAt",
-  "protectionAt",
 ];
 
 const allUserFields = publicUserFields.concat([
@@ -72,6 +70,8 @@ const allUserFields = publicUserFields.concat([
   "phoneVerified",
   "pushtoken",
   "credits",
+  "attackAt",
+  "protectionAt",
 ]);
 
 function me(token) {
@@ -300,7 +300,7 @@ Message.init(
     from: DataTypes.INTEGER,
     fromName: DataTypes.STRING,
     to: DataTypes.INTEGER,
-    message: DataTypes.STRING,
+    message: DataTypes.TEXT,
     read: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
@@ -336,7 +336,7 @@ ForumResponse.init(
 );
 
 try {
-  sequelize.sync(); //{alter}:true}
+  sequelize.sync({ alter: true }); //{alter}:true}
 } catch (e) {
   console.log("e", e);
 }

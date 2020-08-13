@@ -38,7 +38,7 @@ const message = async (req, res, User, Message) => {
       },
       body: JSON.stringify({
         to: user2.pushtoken,
-        title: "Nieuw bericht",
+        title: `Nieuw bericht van ${user.name}`,
         body: message,
       }),
     })
