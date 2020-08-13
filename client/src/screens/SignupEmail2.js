@@ -1,8 +1,8 @@
 //activated to 1 if activationtoken is correct
 import React from "react";
 import { View } from "react-native";
-import Constants from "../Constants";
 import T from "../components/T";
+import Constants from "../Constants";
 class Login extends React.Component {
   state = {
     respones: null,

@@ -101,6 +101,7 @@ class Crimes extends Component {
     return (
       <View>
         <Button
+          theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Steel"
@@ -129,6 +130,7 @@ class Crimes extends Component {
             <Text style={{ color: "white" }}>{response.response}</Text>
 
             <Button
+              theme={this.props.screenProps.device.theme}
               title="OK"
               onPress={() => this.setState({ response: null })}
             />

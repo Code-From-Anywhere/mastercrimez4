@@ -1,5 +1,5 @@
 import * as Icon from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import React from "react";
 import {
   Dimensions,
@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Colors } from "../Colors";
 import Chat from "../components/Chat";
 import Constants from "../Constants";
 import { getRank, getStrength } from "../Util";
@@ -18,6 +17,11 @@ const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
 function Header({ navigation, device, me }) {
+  const textStyle = {
+    marginRight: 10,
+    marginBottom: 10,
+    color: device.theme.secondaryText,
+  };
   return (
     <View
       style={{
@@ -65,53 +69,67 @@ function Header({ navigation, device, me }) {
           <Chat device={device} navigation={navigation} />
         </View>
       ) : (
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            backgroundColor: Colors.primary,
-            justifyContent: "center",
-            paddingBottom: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-
-            elevation: 5,
-          }}
-        >
-          <Text style={{ marginRight: 10, marginBottom: 10 }}>
-            😎 {me?.name}
-          </Text>
-          <Text style={{ marginRight: 10, marginBottom: 10 }}>
-            💰 €{me?.cash},-
-          </Text>
-          <Text style={{ marginRight: 10 }}>💵 €{me?.bank},-</Text>
-          <View style={{ flexDirection: "row", marginRight: 10 }}>
-            <Icon.MaterialCommunityIcons name="pistol" size={18} />
-            <Text>{me?.bullets}</Text>
-          </View>
-          <Text style={{ marginRight: 10 }}>🔥 {me?.gamepoints}</Text>
-          <Text style={{ marginRight: 10 }}>🌍 {me?.city}</Text>
-          <Text style={{ marginRight: 10 }}>❤️ {me?.health}%</Text>
-          <Text style={{ marginRight: 10, marginBottom: 10 }}>
-            ⭐️ {getRank(me?.rank, "both")}
-          </Text>
-          <Text style={{ marginRight: 10 }}>
-            💪 {getStrength(me?.strength, "both")}
-          </Text>
-          <Text style={{ marginRight: 10 }}>🌱 {me?.wiet}</Text>
-          <Text style={{ marginRight: 10 }}>🤨 {me?.junkies}</Text>
-          <Text style={{ marginRight: 10 }}>💃 {me?.hoeren}</Text>
-          <Text
-            style={{ marginRight: 10 }}
-            onPress={() => navigation.navigate("Messages")}
+        <View style={{ backgroundColor: device.theme.secondary }}>
+          <View
+            style={{ justifyContent: "space-between", flexDirection: "row" }}
           >
-            💬 {me?.messages}
-          </Text>
+            <TouchableOpacity
+              hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
+              onPress={() => navigation.goBack()}
+            >
+              <AntDesign
+                name="arrowleft"
+                size={32}
+                color={device.theme.secondaryText}
+              />
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              paddingBottom: 10,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+
+              elevation: 5,
+            }}
+          >
+            <Text style={textStyle}>😎 {me?.name}</Text>
+            <Text style={textStyle}>💰 €{me?.cash},-</Text>
+            <Text style={textStyle}>💵 €{me?.bank},-</Text>
+            <View style={{ flexDirection: "row" }}>
+              <Icon.MaterialCommunityIcons
+                name="pistol"
+                size={18}
+                color={device.theme.secondaryText}
+                style={{ marginRight: 5 }}
+              />
+              <Text style={textStyle}>{me?.bullets}</Text>
+            </View>
+            <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
+            <Text style={textStyle}>🌍 {me?.city}</Text>
+            <Text style={textStyle}>❤️ {me?.health}%</Text>
+            <Text style={textStyle}>⭐️ {getRank(me?.rank, "both")}</Text>
+            <Text style={textStyle}>
+              💪 {getStrength(me?.strength, "both")}
+            </Text>
+            <Text style={textStyle}>🌱 {me?.wiet}</Text>
+            <Text style={textStyle}>🤨 {me?.junkies}</Text>
+            <Text style={textStyle}>💃 {me?.hoeren}</Text>
+            <Text
+              style={textStyle}
+              onPress={() => navigation.navigate("Messages")}
+            >
+              💬 {me?.messages}
+            </Text>
+          </View>
         </View>
       )}
     </View>

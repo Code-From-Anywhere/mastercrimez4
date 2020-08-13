@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Image, Text, View, FlatList, TouchableOpacity } from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
-
 import Constants from "../Constants";
 
 const options = [
@@ -58,6 +57,7 @@ class Bunker extends Component {
     const { device } = this.props.screenProps;
     return (
       <Button
+        theme={this.props.screenProps.device.theme}
         style={{ borderRadius: 10, marginTop: 20 }}
         title="Duik onder"
         onPress={() => {
@@ -98,6 +98,7 @@ class Bunker extends Component {
             <Text style={{ color: "white" }}>{response.response}</Text>
 
             <Button
+              theme={this.props.screenProps.device.theme}
               title="OK"
               onPress={() => this.setState({ response: null })}
             />

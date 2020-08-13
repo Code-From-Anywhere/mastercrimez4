@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Image, Text, View, FlatList, TouchableOpacity } from "react-native";
+import { FlatList, Image, Text, View } from "react-native";
 import Button from "../components/Button";
-import T from "../components/T";
 import Constants from "../Constants";
 
 class Garage extends Component {
@@ -145,9 +144,21 @@ class Garage extends Component {
           <Text style={{ color: "white" }}>&euro;{item.cash}</Text>
           <Text style={{ color: "white" }}>{item.kogels} kogels</Text>
           <Text style={{ color: "white" }}>{item.power} power</Text>
-          <Button title="Verkoop" onPress={() => this.sellCar(item.id)} />
-          <Button title="Crush" onPress={() => this.crushCar(item.id)} />
-          <Button title="Upgrade" onPress={() => this.upgradeCar(item.id)} />
+          <Button
+            theme={this.props.screenProps.device.theme}
+            title="Verkoop"
+            onPress={() => this.sellCar(item.id)}
+          />
+          <Button
+            theme={this.props.screenProps.device.theme}
+            title="Crush"
+            onPress={() => this.crushCar(item.id)}
+          />
+          <Button
+            theme={this.props.screenProps.device.theme}
+            title="Upgrade"
+            onPress={() => this.upgradeCar(item.id)}
+          />
         </View>
       </View>
     );

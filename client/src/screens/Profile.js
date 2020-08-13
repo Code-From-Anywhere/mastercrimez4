@@ -1,17 +1,16 @@
 import React from "react";
 import {
   ActivityIndicator,
-  ScrollView,
-  View,
-  Text,
   Image,
+  ScrollView,
   StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import { getRank, getStrength } from "../Util";
 import Button from "../components/Button";
 import T from "../components/T";
-
 import Constants from "../Constants";
+import { getRank, getStrength, getUserColor } from "../Util";
 
 class ProfileScreen extends React.Component {
   state = {
@@ -109,8 +108,10 @@ class ProfileScreen extends React.Component {
       0
     );
 
+    const color = getUserColor(profile, this.props.screenProps.device.theme);
+
     return (
-      <ScrollView style={{ margin: 20 }}>
+      <ScrollView>
         <View style={{ justifyContent: "center" }}>
           <View
             style={{
@@ -120,7 +121,7 @@ class ProfileScreen extends React.Component {
               padding: 20,
             }}
           >
-            <Text style={{ fontWeight: "bold" }}>{profile?.name}</Text>
+            <Text style={{ fontWeight: "bold", color }}>{profile?.name}</Text>
 
             {this.keyValue("Online", isOnline ? "✅" : "🛑")}
             {this.keyValue("Contant", `€${profile?.cash}`)}
@@ -134,9 +135,9 @@ class ProfileScreen extends React.Component {
 
             {profile?.accomplices?.length > 0 ? (
               <>
-                <Text>
+                <T style={{ fontWeight: "bold", marginBottom: 15 }}>
                   Gang van {profile?.name}: {points} punten
-                </Text>
+                </T>
                 {profile.accomplices.map((accomplice) => {
                   return this.keyValue(
                     accomplice.name,
@@ -147,6 +148,7 @@ class ProfileScreen extends React.Component {
             ) : null}
             <View style={styles.row}>
               <Button
+                theme={this.props.screenProps.device.theme}
                 title="Stuur bericht"
                 onPress={() =>
                   navigation.navigate("Messages", {
@@ -155,6 +157,7 @@ class ProfileScreen extends React.Component {
                 }
               />
               <Button
+                theme={this.props.screenProps.device.theme}
                 title="Beroof"
                 onPress={() =>
                   navigation.navigate("Rob", {
@@ -163,6 +166,7 @@ class ProfileScreen extends React.Component {
                 }
               />
               <Button
+                theme={this.props.screenProps.device.theme}
                 title="Aanvallen"
                 onPress={() =>
                   navigation.navigate("Kill", {
@@ -171,6 +175,7 @@ class ProfileScreen extends React.Component {
                 }
               />
               <Button
+                theme={this.props.screenProps.device.theme}
                 title="Doneren"
                 onPress={() =>
                   navigation.navigate("Donate", {

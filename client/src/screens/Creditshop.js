@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Text, View } from "react-native";
-import { Colors } from "../Colors";
 import Button from "../components/Button";
 import Constants from "../Constants";
 
@@ -48,11 +47,12 @@ const Creditshop = ({ screenProps }) => {
   };
   return (
     <View style={{ flex: 1, justifyContent: "space-around" }}>
-      <Text style={{ color: Colors.secondaryText, alignSelf: "center" }}>
+      <Text style={{ color: device.theme.primaryText, alignSelf: "center" }}>
         Je hebt nog {me?.credits} credits
       </Text>
       {items?.map((item) => (
         <Button
+          theme={this.props.screenProps.device.theme}
           style={{ marginHorizontal: 20 }}
           title={`${item.kooptext} voor ${item.kosten} credits`}
           onPress={() => {

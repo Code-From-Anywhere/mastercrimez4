@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
-import T from "../components/T";
-import { getRank, getStrength } from "../Util";
+import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import T from "../components/T";
 import Constants from "../Constants";
+import { getRank, getStrength } from "../Util";
 
 class Status extends Component {
   state = {

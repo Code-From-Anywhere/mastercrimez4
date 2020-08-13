@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Image, TextInput, Text, View, FlatList } from "react-native";
+import { FlatList, Image, Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
-import STYLE from "../Style";
+import style from "../Style";
 class Garage extends Component {
   state = {
     selected: null,
@@ -91,6 +91,10 @@ class Garage extends Component {
   };
 
   renderGroup = ({ item, index }) => {
+    const {
+      screenProps: { device },
+    } = this.props;
+
     return (
       <View
         key={`item${index}`}
@@ -127,7 +131,7 @@ class Garage extends Component {
 
           <TextInput
             key={`amount${item.id}`}
-            style={STYLE.textInput}
+            style={style(device.theme).textInput}
             value={this.state.amount[item.id]}
             onChangeText={(x) =>
               this.setState({ amount: { ...this.state.amount, [item.id]: x } })
@@ -135,6 +139,7 @@ class Garage extends Component {
             placeholder="Aantal"
           />
           <Button
+            theme={this.props.screenProps.device.theme}
             title="Verkoop"
             onPress={() =>
               this.bulkAction("sell", item.auto, this.state.amount[item.id])
@@ -142,12 +147,17 @@ class Garage extends Component {
           />
 
           <Button
+            theme={this.props.screenProps.device.theme}
             title="Crush"
             onPress={() =>
               this.bulkAction("crush", item.auto, this.state.amount[item.id])
             }
           />
-          <Button title="Upgrade" onPress={() => this.upgradeCar(item.id)} />
+          <Button
+            theme={this.props.screenProps.device.theme}
+            title="Upgrade"
+            onPress={() => this.upgradeCar(item.id)}
+          />
         </View>
       </View>
     );

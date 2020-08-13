@@ -3,15 +3,18 @@ import { applyMiddleware, compose, createStore } from "redux";
 import { persistCombineReducers, persistStore } from "redux-persist";
 import createSagaMiddleware from "redux-saga";
 import mySaga from "./Sagas";
+import { DEFAULT_THEME, Theme } from "./screens/Theme";
 
 type Device = {
   loginToken: string,
   logged: boolean,
+  theme: Theme,
 };
 
 const initDevice = {
   loginToken: "",
   logged: false,
+  theme: DEFAULT_THEME,
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
@@ -23,6 +26,11 @@ const deviceReducer = (state: Device = initDevice, action) => {
     case "SET_LOGGED": {
       return { ...state, logged: action.value };
     }
+
+    case "SET_THEME": {
+      return { ...state, theme: action.value };
+    }
+
     default:
       return state;
   }

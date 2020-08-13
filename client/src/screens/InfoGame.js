@@ -1,6 +1,6 @@
 import React from "react";
 // import MarkdownView from "react-native-markdown-renderer";
-import { View, Text, Linking } from "react-native";
+import { Text, View } from "react-native";
 import T from "../components/T";
 
 const H1 = ({ children }) => (

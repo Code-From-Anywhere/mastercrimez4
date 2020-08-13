@@ -31,7 +31,6 @@ class Junkies extends Component {
     })
       .then((response) => response.json())
       .then(async (response) => {
-        console.log("response", response);
         this.setState({ response, loading: false });
         this.props.screenProps.reloadMe(device.loginToken);
       })
@@ -47,6 +46,7 @@ class Junkies extends Component {
         {this.keyValue("Junkies in bezit", me?.junkies)}
 
         <Button
+          theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
           title="Train junkies"
@@ -72,7 +72,7 @@ class Junkies extends Component {
           alignItems: "center",
         }}
       >
-        <T>{key}</T>
+        <T style={{ marginRight: 20 }}>{key}</T>
         <T>{value}</T>
       </View>
     );
@@ -83,12 +83,13 @@ class Junkies extends Component {
 
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
-        <View style={{ margin: 20, width: 200 }}>
+        <View style={{ margin: 20 }}>
           {response ? (
             <View style={{ flex: 1 }}>
               <Text style={{ color: "white" }}>{response.response}</Text>
 
               <Button
+                theme={this.props.screenProps.device.theme}
                 title="Oke"
                 onPress={() => this.setState({ response: null })}
               />

@@ -1,7 +1,7 @@
 import React from "react";
 import CountDown from "react-native-countdown-component";
 import { getRank } from "./Util";
-export const leftMenu = (me) => {
+export const leftMenu = (me, theme) => {
   const stealcarSeconds = Math.ceil(
     (me?.autostelenAt + 60000 - Date.now()) / 1000
   );
@@ -44,8 +44,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={stealcarSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -65,8 +65,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={crimeSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -84,8 +84,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={attackSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -103,8 +103,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={robSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -123,8 +123,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={ocSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -143,8 +143,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={gymSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -164,8 +164,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={wietSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -185,8 +185,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={junkiesSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -206,8 +206,8 @@ export const leftMenu = (me) => {
           <CountDown
             style={{ marginLeft: 10 }}
             until={hoerenSeconds}
-            digitStyle={{ backgroundColor: "#404040" }}
-            digitTxtStyle={{ color: "white" }}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
             onFinish={() => {}}
             size={8}
             timeToShow={["M", "S"]}
@@ -300,28 +300,37 @@ export const leftMenu = (me) => {
   ];
 };
 
-const adminMenu = (me) =>
-  me?.level > 1
-    ? [
-        {
-          iconType: "FontAwesome",
-          icon: "font",
+const adminMenu = (me) => {
+  const gameMod =
+    me?.level > 1
+      ? [
+          {
+            iconType: "FontAwesome",
+            icon: "font",
 
-          isHeader: true,
-          text: "Admin panel",
-        },
+            isHeader: true,
+            text: "Admin panel",
+          },
+        ]
+      : [];
 
-        {
-          iconType: "FontAwesome",
-          icon: "font",
+  const admin =
+    me?.level >= 10
+      ? [
+          {
+            iconType: "FontAwesome",
+            icon: "font",
 
-          text: "Emailen",
-          to: "AdminEmail",
-        },
-      ]
-    : [];
+            text: "Emailen",
+            to: "AdminEmail",
+          },
+        ]
+      : [];
 
-export const rightMenu = (me) => [
+  return [...gameMod, ...admin];
+};
+
+export const rightMenu = (me, theme) => [
   {
     iconType: "FontAwesome",
     icon: "font",
@@ -474,8 +483,8 @@ export const rightMenu = (me) => [
   },
 
   {
-    iconType: "FontAwesome5",
-    icon: "piggy-bank",
+    iconType: "FontAwesome",
+    icon: "bank",
 
     text: "Credits kopen",
     to: "Mollie",
@@ -487,6 +496,14 @@ export const rightMenu = (me) => [
 
     text: "Creditshop",
     to: "Creditshop",
+  },
+
+  {
+    iconType: "AntDesign",
+    icon: "message1",
+
+    text: "Super bericht",
+    to: "SuperMessage",
   },
 
   ...adminMenu(me),

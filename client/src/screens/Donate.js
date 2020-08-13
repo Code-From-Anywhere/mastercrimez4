@@ -23,6 +23,7 @@ class Donate extends Component {
 
     return (
       <Button
+        theme={this.props.screenProps.device.theme}
         style={{ marginTop: 20 }}
         title="Doneer"
         onPress={() => {
@@ -76,6 +77,10 @@ class Donate extends Component {
   };
 
   renderForm() {
+    const {
+      screenProps: { device },
+    } = this.props;
+
     const names = {
       bullets: "Kogels",
       cash: "Geld",
@@ -87,18 +92,19 @@ class Donate extends Component {
     return (
       <View>
         <TextInput
-          style={style.textInput}
+          style={style(device.theme).textInput}
           placeholder="Aan"
           value={this.state.to}
           onChangeText={(to) => this.setState({ to })}
         />
         <TextInput
-          style={style.textInput}
+          style={style(device.theme).textInput}
           placeholder="Hoeveelheid"
           value={this.state.amount}
           onChangeText={(amount) => this.setState({ amount })}
         />
         <Button
+          theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
           title={
             this.state.type ? names[this.state.type] : "Wat wil je doneren?"
@@ -112,12 +118,12 @@ class Donate extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: { me, device },
     } = this.props;
     const { response } = this.state;
 
     return (
-      <View style={style.container}>
+      <View style={style(device.theme).container}>
         <View style={{ margin: 20, width: 200 }}>
           {response ? (
             <Text style={{ color: "white" }}>{response.response}</Text>

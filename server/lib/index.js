@@ -55,6 +55,7 @@ const publicUserFields = [
   "incomeAt",
   "robAt",
   "ocAt",
+  "creditsTotal",
 ];
 
 const allUserFields = publicUserFields.concat([
@@ -586,6 +587,10 @@ server.post("/mollieWebhook", (req, res) =>
   require("./mollieWebhook").mollieWebhook(req, res, User, Payment)
 );
 server.get("/shop", (req, res) => require("./shop").shop(req, res, User));
+
+server.post("/superMessage", (req, res) =>
+  require("./superMessage").superMessage(req, res, User, Message)
+);
 
 server.post("/buy", (req, res) => require("./shop").buy(req, res, User));
 

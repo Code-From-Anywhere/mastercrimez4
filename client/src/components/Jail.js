@@ -1,9 +1,9 @@
 import React from "react";
-import { View, FlatList } from "react-native";
-import T from "./T";
+import { FlatList, View } from "react-native";
 import CountDown from "react-native-countdown-component";
-import Button from "./Button";
 import Constants from "../Constants";
+import Button from "./Button";
+import T from "./T";
 class Jail extends React.Component {
   state = {
     jail: [],
@@ -73,6 +73,7 @@ class Jail extends React.Component {
         <View style={{ flexDirection: "row" }}>
           <View />
           <Button
+            theme={device.theme}
             title="Vernieuw"
             onPress={() => {
               reloadMe(device.loginToken);

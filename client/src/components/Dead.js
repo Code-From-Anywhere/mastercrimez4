@@ -1,8 +1,7 @@
 import React from "react";
-import { View, Image } from "react-native";
-import Button from "./Button";
-import T from "./T";
+import { Image, View } from "react-native";
 import Constants from "../Constants";
+import Button from "./Button";
 class Dead extends React.Component {
   state = {
     selected: null,
@@ -21,8 +20,13 @@ class Dead extends React.Component {
             source={require("../../assets/dood.jpg")}
             style={{ width: 402, height: 424 }}
           />
-          {this.state.response ? <T>{this.state.response.response}</T> : null}
+          {this.state.response ? (
+            <Text style={{ color: device.theme.primaryText }}>
+              {this.state.response.response}
+            </Text>
+          ) : null}
           <Button
+            theme={device.theme}
             title="Word levend"
             onPress={() => {
               fetch(`${Constants.SERVER_ADDR}/getalive`, {

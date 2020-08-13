@@ -88,7 +88,11 @@ class Login extends React.Component {
           >
             <View />
 
-            <Button title="Valideer" onPress={() => this.save()} />
+            <Button
+              theme={this.props.screenProps.device.theme}
+              title="Valideer"
+              onPress={() => this.save()}
+            />
           </View>
         </View>
       </View>

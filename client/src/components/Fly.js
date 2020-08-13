@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 import CountDown from "react-native-countdown-component";
-import T from "./T";
 
 class Fly extends React.Component {
   render() {
@@ -12,7 +11,9 @@ class Fly extends React.Component {
     const sec = Math.round((me.reizenAt - Date.now()) / 1000);
     return (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <T>Je bent aan het reizen naar {me.city}.</T>
+        <Text style={{ color: device.theme.primaryText }}>
+          Je bent aan het reizen naar {me.city}.
+        </Text>
         <CountDown
           until={sec}
           onFinish={() => {

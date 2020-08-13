@@ -63,7 +63,7 @@ class Messages extends Component {
     })
       .then((response) => response.json())
       .then((response) => {
-        this.setState({ response });
+        this.setState({ response, message: null, to: null });
       })
       .catch((error) => {
         console.error(error);
@@ -117,11 +117,20 @@ class Messages extends Component {
   };
 
   renderNew() {
+    const {
+      screenProps: { device },
+    } = this.props;
+
     return (
-      <View>
-        {this.state.response ? <T>{this.state.response.response}</T> : null}
+      <View style={{ flex: 1 }}>
+        {this.state.response ? (
+          <View style={{ height: 100 }}>
+            <T>{this.state.response.response}</T>
+          </View>
+        ) : null}
+
         <TextInput
-          style={style.textInput}
+          style={style(device.theme).textInput}
           placeholder="Aan"
           value={this.state.to}
           onChangeText={(to) => this.setState({ to })}
@@ -129,12 +138,17 @@ class Messages extends Component {
         <TextInput
           multiline
           numberOfLines={4}
-          style={style.textInput}
+          style={{
+            ...style(device.theme).textInput,
+            height: 200,
+            width: "100%",
+          }}
           placeholder="Bericht"
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}
         />
         <Button
+          theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
           title="Verzenden"
           onPress={this.sendMessage}
@@ -181,23 +195,34 @@ class Messages extends Component {
     );
   }
 
-  readMessage() {
+  readMessage = () => {
     const item = this.state.messages?.messages.find(
       (m) => m.id === this.state.readMessage
     );
     return item ? (
-      <View style={{ borderWidth: 1, borderColor: "black" }}>
+      <View style={{ marginVertical: 20 }}>
         <T>Van: {item.fromName}</T>
         <T>Verstuurd: {moment(item.createdAt).format("DD-MM-YYYY HH:mm")}</T>
-        <T>{item.message}</T>
-        <View style={{ flexDirection: "row" }}>
+        <T style={{ marginTop: 10 }}>{item.message}</T>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 20,
+          }}
+        >
           <Button
+            theme={this.props.screenProps.device.theme}
             title="Terug"
             icon="arrow-back"
             font="MaterialIcons"
-            onPress={() => this.setState({ readMessage: null })}
+            onPress={() => {
+              this.setState({ readMessage: null });
+              this.getMessages();
+            }}
           />
           <Button
+            theme={this.props.screenProps.device.theme}
             title="Antwoord"
             icon="reply"
             font="FontAwesome"
@@ -206,6 +231,7 @@ class Messages extends Component {
             }
           />
           <Button
+            theme={this.props.screenProps.device.theme}
             title="Verwijder"
             icon="delete"
             font="MaterialIcons"
@@ -216,13 +242,18 @@ class Messages extends Component {
     ) : (
       <T>Bericht niet gevonden</T>
     );
-  }
+  };
 
   render() {
+    const {
+      screenProps: { device },
+    } = this.props;
+
     const { newMessage, readMessage } = this.state;
     return (
-      <View style={style.container}>
+      <View style={style(device.theme).container}>
         <Button
+          theme={this.props.screenProps.device.theme}
           title={newMessage ? "Berichten" : "Nieuw bericht"}
           onPress={() => this.setState({ newMessage: !newMessage })}
         />

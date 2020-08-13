@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Text, TextInput, View } from "react-native";
-import { Colors } from "../Colors";
 import Button from "../components/Button";
 import Constants from "../Constants";
 
@@ -46,7 +45,7 @@ class Kill extends Component {
       <View>
         <TextInput
           style={{
-            backgroundColor: Colors.primary,
+            backgroundColor: this.props.screenProps.device.theme.secondary,
             fontSize: 24,
             borderRadius: 10,
             padding: 5,
@@ -59,7 +58,7 @@ class Kill extends Component {
         />
         <TextInput
           style={{
-            backgroundColor: Colors.primary,
+            backgroundColor: this.props.screenProps.device.theme.secondary,
             fontSize: 24,
             padding: 5,
             borderRadius: 10,
@@ -75,7 +74,11 @@ class Kill extends Component {
             marginTop: 20,
           }}
         >
-          <Button title="Vermoord" onPress={() => this.kill()} />
+          <Button
+            theme={this.props.screenProps.device.theme}
+            title="Vermoord"
+            onPress={() => this.kill()}
+          />
         </View>
       </View>
     );

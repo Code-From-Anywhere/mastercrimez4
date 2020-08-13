@@ -12,7 +12,6 @@ class Wiet extends Component {
     this.state = {
       response: null,
     };
-
   }
 
   keyValue(key, value) {
@@ -60,6 +59,7 @@ class Wiet extends Component {
     return (
       <View>
         <Button
+          theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
           title="Doe een OC met je handlangers"
@@ -85,6 +85,7 @@ class Wiet extends Component {
               <Text style={{ color: "white" }}>{response.response}</Text>
 
               <Button
+                theme={this.props.screenProps.device.theme}
                 title="OK"
                 onPress={() => this.setState({ response: null })}
               />

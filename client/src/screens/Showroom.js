@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Image, Text, View, FlatList, TouchableOpacity } from "react-native";
+import { FlatList, Image, Text, View } from "react-native";
 import Button from "../components/Button";
-
 import Constants from "../Constants";
+
 class Showroom extends Component {
   state = {
     selected: null,
@@ -78,7 +78,11 @@ class Showroom extends Component {
 
           <Text style={{ color: "white" }}>{item.naam}</Text>
           <Text style={{ color: "white" }}>&euro;{item.waarde}</Text>
-          <Button title="Koop" onPress={() => this.buyCar(item.id)} />
+          <Button
+            theme={this.props.screenProps.device.theme}
+            title="Koop"
+            onPress={() => this.buyCar(item.id)}
+          />
         </View>
       </View>
     );

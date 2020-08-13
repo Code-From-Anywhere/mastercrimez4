@@ -9,11 +9,10 @@ import {
   View,
 } from "react-native";
 import * as Icon from "react-native-vector-icons";
-import { Colors } from "../Colors";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getRank, getStrength } from "../Util";
+import { getRank, getStrength, getUserColor } from "../Util";
 const { height } = Dimensions.get("window");
 const orders = [
   {
@@ -115,6 +114,8 @@ class Members extends Component {
         ? `${getStrength(item.strength, "both")}`
         : `€${item.bank},-`;
 
+    const color = getUserColor(item, this.props.screenProps.device.theme);
+
     return (
       <View
         key={`item${index}`}
@@ -131,7 +132,7 @@ class Members extends Component {
             navigation.navigate("Profile", { name: item.name });
           }}
         >
-          <T>{item.name}</T>
+          <T style={{ color }}>{item.name}</T>
         </TouchableOpacity>
         <T>{secondKey}</T>
       </View>
@@ -165,6 +166,7 @@ class Members extends Component {
     return (
       <View style={{ backgroundColor: "#444" }}>
         <Button
+          theme={this.props.screenProps.device.theme}
           title="Sorteer"
           onPress={() => this.openActionSheet()}
           icon="filter"
@@ -176,7 +178,7 @@ class Members extends Component {
           style={{
             flexDirection: "row",
             borderRadius: 20,
-            backgroundColor: Colors.primary,
+            backgroundColor: this.props.screenProps.device.theme.secondary,
             marginVertical: 20,
             marginHorizontal: 10,
             paddingHorizontal: 20,
@@ -187,14 +189,18 @@ class Members extends Component {
           <TextInput
             placeholder="Zoeken"
             value={search}
-            style={{ flex: 1, fontSize: 16, color: Colors.primaryText }}
+            style={{
+              flex: 1,
+              fontSize: 16,
+              color: this.props.screenProps.device.theme.secondaryText,
+            }}
             onChangeText={(search) => this.setState({ search })}
           />
 
           <Icon.FontAwesome
             name="search"
             size={20}
-            color={Colors.primaryText}
+            color={this.props.screenProps.device.theme.secondaryText}
           />
         </View>
 

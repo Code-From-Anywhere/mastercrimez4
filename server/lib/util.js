@@ -1,3 +1,32 @@
+const fetch = require("node-fetch");
+
+const sendMessageAndPush = (user, user2, message, Message) => {
+  if (user2.pushtoken) {
+    fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        to: user2.pushtoken,
+        title: `Nieuw bericht van ${user.name}`,
+        body: message,
+      }),
+    })
+      .then((result) => console.log("result", result.status))
+      .catch((e) => console.log("err", e));
+  }
+
+  Message.create({
+    from: user.id,
+    fromName: user.name,
+    to: user2.id,
+    message,
+    read: false,
+  });
+};
+
 const ranks = [
   {
     rank: "Nietsnut",
@@ -191,4 +220,4 @@ const getRank = (rank, returntype) => getRankThing(rank, returntype, ranks);
 const getStrength = (rank, returntype) =>
   getRankThing(rank, returntype, strengthRanks);
 
-module.exports = { getRank, getStrength };
+module.exports = { getRank, getStrength, sendMessageAndPush };

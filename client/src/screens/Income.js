@@ -25,6 +25,7 @@ class Income extends Component {
     return (
       <View>
         <Button
+          theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Haal op"
@@ -88,12 +89,12 @@ class Income extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: { me, device },
     } = this.props;
     const { response } = this.state;
 
     return (
-      <View style={style.container}>
+      <View style={style(device.theme).container}>
         <View style={{ margin: 20, width: 200 }}>
           {response ? (
             <Text style={{ color: "white" }}>{response.response}</Text>

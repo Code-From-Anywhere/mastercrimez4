@@ -5,34 +5,33 @@ import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
 
-class Status extends Component {
+class SuperMessage extends Component {
   state = {
     response: null,
-    subject: null,
     message: null,
   };
   renderForm() {
-    const {
-      screenProps: { device },
-    } = this.props;
+    const { me, device } = this.props.screenProps;
 
     return (
-      <View>
+      <View style={{ flex: 1, margin: 15 }}>
+        <T>
+          Je hebt {me?.credits} credits. Een superbericht kost 500 credits. Een
+          superbericht word naar alle geverifieerde spelers gestuurd, dood of
+          levend.
+        </T>
         {this.state.response ? <T>{this.state.response.response}</T> : null}
+
         <TextInput
-          style={style(device.theme).textInput}
-          placeholder="Onderwerp"
-          value={this.state.subject}
-          onChangeText={(subject) => this.setState({ subject })}
-        />
-        <TextInput
-          style={style(device.theme).textInput}
+          style={{ ...style(device.theme).textInput, height: 200 }}
           placeholder="Bericht"
+          multiline
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}
         />
+
         <Button
-          theme={device.theme}
+          theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
           title="Verzenden"
           onPress={this.sendMessage}
@@ -44,7 +43,7 @@ class Status extends Component {
   sendMessage = () => {
     const { device } = this.props.screenProps;
     const { message, subject } = this.state;
-    fetch(`${Constants.SERVER_ADDR}/admin/email`, {
+    fetch(`${Constants.SERVER_ADDR}/superMessage`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -66,13 +65,8 @@ class Status extends Component {
   };
 
   render() {
-    const {
-      navigation,
-      screenProps: { me },
-    } = this.props;
-
-    return me.level < 10 ? <T>Geen toegang</T> : this.renderForm();
+    return this.renderForm();
   }
 }
 
-export default Status;
+export default SuperMessage;

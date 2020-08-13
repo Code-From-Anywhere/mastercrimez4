@@ -16,7 +16,7 @@ import { createStackNavigator } from "react-navigation-stack";
 // import { loadReCaptcha } from "react-recaptcha-v3";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
-import { Colors } from "./Colors";
+import Button from "./components/Button";
 import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Footer from "./components/Footer";
@@ -74,6 +74,8 @@ import Stats from "./screens/Stats";
 import Status from "./screens/Status";
 import StealCar from "./screens/StealCar";
 import Streetrace from "./screens/Streetrace";
+import SuperMessage from "./screens/SuperMessage";
+import Theme from "./screens/Theme";
 import VerifyPhone from "./screens/VerifyPhone";
 import VerifyPhoneCode from "./screens/VerifyPhoneCode";
 import Wiet from "./screens/Wiet";
@@ -83,11 +85,11 @@ import { useExpoUpdate } from "./updateHook";
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
-export const renderMenu = (item, index, navigation) => {
+export const renderMenu = (item, index, navigation, theme: Theme) => {
   const isHeaderStyle = item.isHeader
     ? {
         marginTop: 20,
-        backgroundColor: "#444",
+        backgroundColor: theme.secondary,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderTopWidth: 1,
@@ -127,7 +129,7 @@ export const renderMenu = (item, index, navigation) => {
       >
         <Text
           style={{
-            color: "white",
+            color: item.isHeader ? theme.secondaryText : theme.primaryText,
             textAlign: item.isHeader ? "center" : undefined,
           }}
         >
@@ -139,11 +141,11 @@ export const renderMenu = (item, index, navigation) => {
   );
 };
 
-export const renderDrawerMenu = (item, index, navigation) => {
+export const renderDrawerMenu = (item, index, navigation, theme) => {
   const isHeaderStyle = item.isHeader
     ? {
         marginTop: 20,
-        backgroundColor: "#CCC",
+        backgroundColor: theme.secondary,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         borderTopWidth: 1,
@@ -175,6 +177,7 @@ export const renderDrawerMenu = (item, index, navigation) => {
         <Text
           style={{
             textAlign: item.isHeader ? "center" : undefined,
+            color: item.isHeader ? theme.secondaryText : theme.primaryText,
           }}
         >
           {item.text}
@@ -194,13 +197,13 @@ const Layout = ({ screenProps, navigation, children }) => {
       style={{
         flexDirection: "row",
         height: "100%",
-        backgroundColor: Colors.secondary,
+        backgroundColor: device.theme.primary,
       }}
     >
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
-          {leftMenu(me).map((item, index) =>
-            renderMenu(item, index, navigation)
+          {leftMenu(me, device.theme).map((item, index) =>
+            renderMenu(item, index, navigation, device.theme)
           )}
         </View>
       )}
@@ -209,19 +212,34 @@ const Layout = ({ screenProps, navigation, children }) => {
         <Header navigation={navigation} device={device} me={me} />
 
         {me?.phoneVerified === false && (
-          <TouchableOpacity
+          <View
             style={{
               margin: 15,
               padding: 15,
-              backgroundColor: Colors.primary,
+              backgroundColor: device.theme.secondary,
               borderRadius: 5,
             }}
-            onPress={() => navigation.navigate("VerifyPhone")}
           >
-            <Text>
-              Je account is nog niet geverifieerd! Klik hier om dat te doen
-            </Text>
-          </TouchableOpacity>
+            <Text>Je account is nog niet geverifieerd!</Text>
+            <View
+              style={{
+                marginTop: 10,
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button
+                theme={device.theme}
+                title="Verifiëer"
+                onPress={() => navigation.navigate("VerifyPhone")}
+              />
+              <Button
+                theme={device.theme}
+                title="Login op een ander account"
+                onPress={() => navigation.navigate("Login")}
+              />
+            </View>
+          </View>
         )}
 
         {updateAvailable && (
@@ -230,7 +248,7 @@ const Layout = ({ screenProps, navigation, children }) => {
             style={{
               margin: 15,
               padding: 15,
-              backgroundColor: Colors.primary,
+              backgroundColor: device.theme.secondary,
               borderRadius: 5,
             }}
           >
@@ -254,8 +272,8 @@ const Layout = ({ screenProps, navigation, children }) => {
       </View>
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
-          {rightMenu(me).map((item, index) =>
-            renderMenu(item, index, navigation)
+          {rightMenu(me, device.theme).map((item, index) =>
+            renderMenu(item, index, navigation, device.theme)
           )}
         </View>
       )}
@@ -271,7 +289,7 @@ export const withLayout = (Component) => (props) => (
 const CustomDrawerContentComponent = (props) => {
   const {
     navigation,
-    screenProps: { me },
+    screenProps: { me, device },
   } = props;
 
   return (
@@ -280,11 +298,11 @@ const CustomDrawerContentComponent = (props) => {
         style={{ flex: 1 }}
         forceInset={{ top: "always", horizontal: "never" }}
       >
-        {leftMenu(me).map((item, index) =>
-          renderDrawerMenu(item, index, navigation)
+        {leftMenu(me, device.theme).map((item, index) =>
+          renderDrawerMenu(item, index, navigation, device.theme)
         )}
-        {rightMenu(me).map((item, index) =>
-          renderDrawerMenu(item, index, navigation)
+        {rightMenu(me, device.theme).map((item, index) =>
+          renderDrawerMenu(item, index, navigation, device.theme)
         )}
       </SafeAreaView>
     </ScrollView>
@@ -341,6 +359,7 @@ const Container = rightContainer(
       Income: withLayout(Income),
       AdminEmail: withLayout(AdminEmail),
       Forum: withLayout(Forum),
+      Theme: withLayout(Theme),
 
       Profile: {
         screen: withLayout(Profile),
@@ -358,6 +377,7 @@ const Container = rightContainer(
 
       ChangeName: withLayout(ChangeName),
       VerifyPhoneCode: withLayout(VerifyPhoneCode),
+      SuperMessage: withLayout(SuperMessage),
       Notifications: withLayout(Notifications),
       ForgotPassword: withLayout(ForgotPassword),
       RecoverPassword: {
@@ -389,11 +409,7 @@ const Container = rightContainer(
         drawerLockMode: "locked-open",
       },
       defaultNavigationOptions: {
-        headerHideShadow: true,
-        headerStyle: {
-          backgroundColor: Colors.primary,
-          shadowOffset: { height: 0, width: 0 },
-        },
+        headerShown: false,
       },
     }
   ),

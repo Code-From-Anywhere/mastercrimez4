@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  AsyncStorage,
-} from "react-native";
+import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 class Login extends React.Component {
@@ -92,7 +86,11 @@ class Login extends React.Component {
           >
             <View />
 
-            <Button title="Bevestig email" onPress={() => this.login()} />
+            <Button
+              theme={this.props.screenProps.device.theme}
+              title="Bevestig email"
+              onPress={() => this.login()}
+            />
           </View>
         </View>
       </View>

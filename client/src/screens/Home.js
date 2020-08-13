@@ -8,17 +8,21 @@ import {
   View,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
-import { Colors } from "../Colors";
 import { leftMenu, rightMenu } from "../Menus";
 const { width } = Dimensions.get("window");
 
-class Status extends Component {
+class Home extends Component {
   state = {
     response: null,
   };
 
   _renderItem = ({ item, index }) => {
     const { navigation } = this.props;
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     return (
       <View
         style={{
@@ -37,7 +41,7 @@ class Status extends Component {
                 style={{
                   borderWidth: 1,
                   borderColor: "#000",
-                  backgroundColor: Colors.primary,
+                  backgroundColor: theme.secondary,
                   borderRadius: 10,
                   width: 80,
                   height: 80,
@@ -46,10 +50,16 @@ class Status extends Component {
                 }}
                 onPress={() => navigation.navigate(menu.to)}
               >
-                {TheIcon && <TheIcon name={menu.icon} size={40} />}
+                {TheIcon && (
+                  <TheIcon
+                    name={menu.icon}
+                    size={40}
+                    color={theme.secondaryText}
+                  />
+                )}
               </TouchableOpacity>
               <View>
-                <Text style={{ color: "#FFF" }}>{menu.text}</Text>
+                <Text style={{ color: theme.primaryText }}>{menu.text}</Text>
                 {menu.component}
               </View>
             </View>
@@ -87,4 +97,4 @@ class Status extends Component {
   }
 }
 
-export default Status;
+export default Home;

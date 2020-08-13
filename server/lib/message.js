@@ -1,5 +1,4 @@
 const { Sequelize, Model, DataTypes, Op } = require("sequelize");
-const fetch = require("node-fetch");
 const message = async (req, res, User, Message) => {
   const { token, to, message } = req.body;
 
@@ -29,30 +28,8 @@ const message = async (req, res, User, Message) => {
     return;
   }
 
-  if (user2.pushtoken) {
-    fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        to: user2.pushtoken,
-        title: `Nieuw bericht van ${user.name}`,
-        body: message,
-      }),
-    })
-      .then((result) => console.log("result", result.status))
-      .catch((e) => console.log("err", e));
-  }
+  sendMessageAndPush(user, user2, message, Message);
 
-  Message.create({
-    from: user.id,
-    fromName: user.name,
-    to: user2.id,
-    message,
-    read: false,
-  });
   res.json({ response: "Bericht verzonden" });
 };
 

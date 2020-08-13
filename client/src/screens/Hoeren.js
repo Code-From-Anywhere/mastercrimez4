@@ -62,6 +62,7 @@ class Hoeren extends Component {
         {this.keyValue("Hoeren in bezit", me?.hoeren)}
 
         <Button
+          theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
           title="Pimp hoeren"
@@ -96,6 +97,7 @@ class Hoeren extends Component {
               <Text style={{ color: "white" }}>{response.response}</Text>
 
               <Button
+                theme={this.props.screenProps.device.theme}
                 title="OK"
                 onPress={() => this.setState({ response: null })}
               />

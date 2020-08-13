@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, FlatList, View } from "react-native";
+import { FlatList, View } from "react-native";
 import CountDown from "react-native-countdown-component";
 import Button from "../components/Button";
 import T from "../components/T";
@@ -50,6 +50,7 @@ class Jail extends Component {
           timeLabels={{ m: null, s: null }}
         />
         <Button
+          theme={this.props.screenProps.device.theme}
           title="Breek uit"
           onPress={() => {
             fetch(`${Constants.SERVER_ADDR}/breakout`, {

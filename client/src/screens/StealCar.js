@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import {
-  Dimensions, FlatList, Image,
+  Dimensions,
+  FlatList,
+  Image,
   Text,
-
-
-  TouchableOpacity, View
+  TouchableOpacity,
+  View,
 } from "react-native";
 import CountDown from "react-native-countdown-component";
 // import { ReCaptcha } from "react-recaptcha-v3";
@@ -12,7 +13,6 @@ import Button from "../components/Button";
 import Constants from "../Constants";
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
-
 
 const options = [
   {
@@ -99,7 +99,6 @@ class StealCar extends Component {
       selected: null,
       response: null,
     };
-
   }
 
   renderItem = ({ item, index }) => {
@@ -166,6 +165,7 @@ class StealCar extends Component {
     return (
       <View>
         <Button
+          theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Steel"
@@ -212,6 +212,7 @@ class StealCar extends Component {
             <Text style={{ color: "white" }}>{response.response}</Text>
 
             <Button
+              theme={this.props.screenProps.device.theme}
               title="OK"
               onPress={() => this.setState({ response: null })}
             />

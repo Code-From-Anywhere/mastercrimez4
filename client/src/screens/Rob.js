@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import { Colors } from "../Colors";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -45,7 +44,7 @@ class Bank extends Component {
       <View>
         <TextInput
           style={{
-            backgroundColor: Colors.primary,
+            backgroundColor: this.props.screenProps.device.theme.secondary,
             padding: 5,
             fontSize: 24,
             borderRadius: 10,
@@ -61,7 +60,11 @@ class Bank extends Component {
             marginTop: 20,
           }}
         >
-          <Button title="Beroof" onPress={() => this.rob()} />
+          <Button
+            theme={this.props.screenProps.device.theme}
+            title="Beroof"
+            onPress={() => this.rob()}
+          />
         </View>
       </View>
     );

@@ -6,20 +6,61 @@ class Status extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { theme },
+      },
     } = this.props;
 
     return (
       <View>
         <Menu
+          theme={theme}
           title="Feedback & Contact"
           onPress={() => Linking.openURL("mailto:mastercrimez@karsens.com")}
+          IconFont="AntDesign"
+          icon="heart"
         />
-        <Menu navigation={navigation} title="Spel info" to="InfoGame" />
-        <Menu navigation={navigation} title="Privacy Policy" to="Privacy" />
-        <Menu navigation={navigation} title="Regels" to="InfoRules" />
-        <Menu navigation={navigation} title="Draag bij" to="Contribute" />
-        <Menu navigation={navigation} title="Prijzen" to="Prizes" />
+        <Menu
+          theme={theme}
+          navigation={navigation}
+          title="Spel info"
+          to="InfoGame"
+          IconFont="AntDesign"
+          icon="infocirlce"
+        />
+        <Menu
+          theme={theme}
+          navigation={navigation}
+          title="Privacy Policy"
+          to="Privacy"
+          IconFont="AntDesign"
+          icon="infocirlce"
+        />
+        <Menu
+          theme={theme}
+          navigation={navigation}
+          title="Regels"
+          to="InfoRules"
+          IconFont="AntDesign"
+          icon="infocirlce"
+        />
+        <Menu
+          theme={theme}
+          navigation={navigation}
+          title="Draag bij"
+          to="Contribute"
+          IconFont="Entypo"
+          icon="network"
+        />
+        <Menu
+          theme={theme}
+          navigation={navigation}
+          title="Prijzen"
+          to="Prizes"
+          IconFont="AntDesign"
+          icon="star"
+        />
       </View>
     );
   }

@@ -60,7 +60,7 @@ class Accomplice extends React.Component {
 
   render() {
     const { response } = this.state;
-    const { me } = this.props.screenProps;
+    const { me, device } = this.props.screenProps;
     const rank = getRank(me?.rank, "number");
     const url = `https://mastercrimez.nl/#/Accomplice?accomplice=${me?.name}`;
     return (
@@ -133,7 +133,11 @@ class Accomplice extends React.Component {
             </>
           ) : null}
 
-          <Button title="Opslaan" onPress={this.setAccomplice} />
+          <Button
+            theme={device.theme}
+            title="Opslaan"
+            onPress={this.setAccomplice}
+          />
         </View>
       </View>
     );

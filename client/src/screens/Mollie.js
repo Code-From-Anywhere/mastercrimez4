@@ -33,16 +33,19 @@ const Mollie = ({ screenProps }) => {
   return (
     <View style={{ flex: 1, justifyContent: "space-around" }}>
       <Button
+        theme={this.props.screenProps.device.theme}
         style={{ marginHorizontal: 20 }}
         title="Koop 1000 credits voor €10"
         onPress={() => submit(0)}
       />
       <Button
+        theme={this.props.screenProps.device.theme}
         style={{ marginHorizontal: 20 }}
         title="Koop 6000 credits voor €50"
         onPress={() => submit(1)}
       />
       <Button
+        theme={this.props.screenProps.device.theme}
         style={{ marginHorizontal: 20 }}
         title="Koop 40000 credits voor €250"
         onPress={() => submit(2)}

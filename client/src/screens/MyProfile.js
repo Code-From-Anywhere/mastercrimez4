@@ -1,19 +1,17 @@
-import React from "react";
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  Dimensions,
-  Platform,
-} from "react-native";
-
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
-import T from "../components/T";
+import React from "react";
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Platform,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 import Button from "../components/Button";
 import Constants from "../Constants";
-import { TextInput } from "react-native-gesture-handler";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -137,6 +135,7 @@ class MyProfile extends React.Component {
 
     return (
       <Button
+        theme={this.props.screenProps.device.theme}
         title="Verwijder"
         onPress={() => {
           if (this.state.selectedImage) {
@@ -180,6 +179,7 @@ class MyProfile extends React.Component {
           onChangeText={(bio) => this.setState({ bio })}
         />
         <Button
+          theme={this.props.screenProps.device.theme}
           title="Opslaan"
           onPress={() => {
             fetch(`${Constants.SERVER_ADDR}/updateProfile`, {
@@ -204,7 +204,11 @@ class MyProfile extends React.Component {
           }}
         />
 
-        <Button title="Kies afbeelding" onPress={this.handleChoosePhoto} />
+        <Button
+          theme={this.props.screenProps.device.theme}
+          title="Kies afbeelding"
+          onPress={this.handleChoosePhoto}
+        />
 
         <FlatList
           data={images}

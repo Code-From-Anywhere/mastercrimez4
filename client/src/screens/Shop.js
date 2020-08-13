@@ -56,22 +56,36 @@ class Shop extends Component {
     return (
       <ScrollView>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-          <Button title="Wapens" onPress={() => this.fetchShop("weapon")} />
           <Button
+            theme={this.props.screenProps.device.theme}
+            title="Wapens"
+            onPress={() => this.fetchShop("weapon")}
+          />
+          <Button
+            theme={this.props.screenProps.device.theme}
             title="Bescherming"
             onPress={() => this.fetchShop("protection")}
           />
           <Button
+            theme={this.props.screenProps.device.theme}
             title="Vliegtuigen"
             onPress={() => this.fetchShop("airplane")}
           />
-          <Button title="Woningen" onPress={() => this.fetchShop("home")} />
+          <Button
+            theme={this.props.screenProps.device.theme}
+            title="Woningen"
+            onPress={() => this.fetchShop("home")}
+          />
         </View>
 
         {buy ? (
           <View>
             <T>{buy}</T>
-            <Button title="OK" onPress={() => this.setState({ buy: null })} />
+            <Button
+              theme={this.props.screenProps.device.theme}
+              title="OK"
+              onPress={() => this.setState({ buy: null })}
+            />
           </View>
         ) : response ? (
           <View>
@@ -102,6 +116,7 @@ class Shop extends Component {
                 <T>Koop: {response?.next?.name}</T>
                 <T>Voor: &euro;{response?.next?.price},-</T>
                 <Button
+                  theme={this.props.screenProps.device.theme}
                   title="Koop"
                   onPress={() => {
                     fetch(`${Constants.SERVER_ADDR}/buy`, {

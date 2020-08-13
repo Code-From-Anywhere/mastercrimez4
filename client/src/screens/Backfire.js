@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  Dimensions,
-  Platform,
-} from "react-native";
-
-import T from "../components/T";
+import { Dimensions, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
+import T from "../components/T";
 import Constants from "../Constants";
 
 const { width } = Dimensions.get("window");
@@ -46,6 +38,7 @@ class MyProfile extends React.Component {
           );
         })}
         <Button
+          theme={this.props.screenProps.device.theme}
           title="Opslaan"
           onPress={() => {
             fetch(`${Constants.SERVER_ADDR}/updateProfile`, {

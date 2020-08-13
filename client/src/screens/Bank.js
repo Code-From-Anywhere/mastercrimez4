@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { Colors } from "../Colors";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -56,11 +55,13 @@ class Bank extends Component {
         }}
       >
         <Button
+          theme={this.props.screenProps.device.theme}
           title="In"
           onPress={() => this.deposit(true)}
           style={{ width: 80 }}
         />
         <Button
+          theme={this.props.screenProps.device.theme}
           title="Uit"
           onPress={() => this.deposit(false)}
           style={{ width: 80 }}
@@ -74,10 +75,10 @@ class Bank extends Component {
       <View>
         <TextInput
           style={{
-            backgroundColor: Colors.primary,
+            backgroundColor: this.props.screenProps.device.theme.secondary,
             fontSize: 24,
             borderRadius: 10,
-            color: "white",
+            color: this.props.screenProps.device.theme.secondaryText,
           }}
           placeholder="Hoeveelheid"
           value={this.state.amount}

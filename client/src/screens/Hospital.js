@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Image, Text, View, TextInput } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
-import style from "../Style";
-import { connectActionSheet } from "@expo/react-native-action-sheet";
-
 import Constants from "../Constants";
+import style from "../Style";
 
 class Hospital extends Component {
   state = {
@@ -24,6 +22,7 @@ class Hospital extends Component {
 
     return (
       <Button
+        theme={this.props.screenProps.device.theme}
         style={{ marginTop: 20 }}
         title="Maak beter"
         onPress={() => {
@@ -52,10 +51,14 @@ class Hospital extends Component {
   };
 
   renderForm() {
+    const {
+      screenProps: { device },
+    } = this.props;
+
     return (
       <View>
         <TextInput
-          style={style.textInput}
+          style={style(device.theme).textInput}
           placeholder="Naam"
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
@@ -68,12 +71,12 @@ class Hospital extends Component {
   render() {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: { me, device },
     } = this.props;
     const { response } = this.state;
 
     return (
-      <View style={style.container}>
+      <View style={style(device.theme).container}>
         <View style={{ margin: 20, width: 200 }}>
           {response ? (
             <Text style={{ color: "white" }}>{response.response}</Text>

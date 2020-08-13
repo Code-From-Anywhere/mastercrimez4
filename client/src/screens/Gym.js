@@ -112,6 +112,7 @@ class Gym extends Component {
     return (
       <View>
         <Button
+          theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Train"
@@ -140,6 +141,7 @@ class Gym extends Component {
               <Text style={{ color: "white" }}>{response.response}</Text>
 
               <Button
+                theme={this.props.screenProps.device.theme}
                 title="OK"
                 onPress={() => this.setState({ response: null })}
               />

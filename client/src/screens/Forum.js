@@ -120,11 +120,15 @@ class Messages extends Component {
   };
 
   renderNew() {
+    const {
+      screenProps: { device },
+    } = this.props;
+
     return (
       <View>
         {this.state.response ? <T>{this.state.response.response}</T> : null}
         <TextInput
-          style={style.textInput}
+          style={style(device.theme).textInput}
           placeholder="Titel"
           value={this.state.title}
           onChangeText={(title) => this.setState({ title })}
@@ -132,12 +136,13 @@ class Messages extends Component {
         <TextInput
           multiline
           numberOfLines={4}
-          style={style.textInput}
+          style={style(device.theme).textInput}
           placeholder="Bericht"
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}
         />
         <Button
+          theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
           title="Verzenden"
           onPress={this.createTopic}
@@ -184,6 +189,10 @@ class Messages extends Component {
   }
 
   readTopic() {
+    const {
+      screenProps: { device },
+    } = this.props;
+
     const item = this.state.topic;
     return item ? (
       <ScrollView style={{ borderWidth: 1, borderColor: "black" }}>
@@ -240,12 +249,13 @@ class Messages extends Component {
           <TextInput
             multiline
             numberOfLines={4}
-            style={style.textInput}
+            style={style(device.theme).textInput}
             placeholder="Reageer"
             value={this.state.message}
             onChangeText={(message) => this.setState({ message })}
           />
           <Button
+            theme={this.props.screenProps.device.theme}
             style={{ marginVertical: 10 }}
             title="Verzenden"
             onPress={this.createMessage}
@@ -258,15 +268,21 @@ class Messages extends Component {
   }
 
   render() {
+    const {
+      screenProps: { device },
+    } = this.props;
+
     const { newTopic, readTopic } = this.state;
     return (
-      <View style={style.container}>
+      <View style={style(device.theme).container}>
         <View style={{ flexDirection: "row" }}>
           <Button
+            theme={this.props.screenProps.device.theme}
             title={"Nieuw topic"}
             onPress={() => this.setState({ newTopic: true, readTopic: false })}
           />
           <Button
+            theme={this.props.screenProps.device.theme}
             title={"Topics"}
             onPress={() => this.setState({ newTopic: false, readTopic: false })}
           />

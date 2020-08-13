@@ -19,6 +19,15 @@ export const isIphoneX = () => {
   );
 };
 
+export const getUserColor = (item, theme) =>
+  item.level > 1
+    ? "blue"
+    : item.creditsTotal >= 10000
+    ? "red"
+    : item.creditsTotal >= 1000
+    ? "yellow"
+    : theme.primaryText;
+
 const ranks = [
   {
     rank: "Nietsnut",
