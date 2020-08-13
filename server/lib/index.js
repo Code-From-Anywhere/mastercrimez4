@@ -1191,14 +1191,14 @@ const putBulletsInBulletFactories = async () => {
     where: { onlineAt: { [Op.gt]: Date.now() - 300000 } },
   });
 
-  const newBullets = online.length * 2000;
+  const newBullets = online.length * 1000;
 
   sequelize.query(`UPDATE cities SET bullets=bullets+${newBullets}`);
 };
 
 const giveInterest = () => {
   console.log("rente");
-  sequelize.query(`UPDATE users SET bank=bank*1.05 WHERE health > 0`);
+  // sequelize.query(`UPDATE users SET bank=bank*1.05 WHERE health > 0`);
 };
 
 //elk uur

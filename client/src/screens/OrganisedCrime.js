@@ -76,13 +76,19 @@ class Wiet extends Component {
   };
   render() {
     const { response } = this.state;
-
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
         <View style={{ margin: 20 }}>
           {response ? (
             <View style={{ flex: 1, minHeight: 400 }}>
-              <Text style={{ color: "white" }}>{response.response}</Text>
+              <Text style={{ color: theme.primaryText }}>
+                {response.response}
+              </Text>
 
               <Button
                 theme={this.props.screenProps.device.theme}
