@@ -1206,7 +1206,12 @@ cron.schedule("0 * * * *", async () => {
   putBulletsInBulletFactories();
 });
 
+cron.schedule("0 19 * * *", function () {
+  //send push notification that happy hour is started
+});
+
 //8 uur savonds
+
 cron.schedule("0 20 * * *", function () {
   giveInterest();
 });
