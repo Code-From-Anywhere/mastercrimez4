@@ -957,6 +957,7 @@ server.post("/updateProfile", async (req, res) => {
 });
 
 server.post("/setPhone", async (req, res) => {
+  console.log("SET PHOEN");
   const { phone, token } = req.body;
 
   if (!token) {
@@ -996,14 +997,23 @@ server.post("/setPhone", async (req, res) => {
 
   twilioClient.messages
     .create({
-      body: `Your verification code is ${phoneVerificationCode}`,
+      body: `Je MasterCrimeZ verificatiecode is ${phoneVerificationCode}`,
       to: phone,
       from: process.env.TWILIO_PHONE_FROM,
     })
-    .then((message) => console.log(message));
+    .then(async (message) => {
+      const [updated] = await User.update(update, {
+        where: { loginToken: token },
+      });
+      res.json({ success: true });
 
-  const user2 = await User.update(update, { where: { loginToken: token } });
-  res.json({ success: true });
+      console.log(message);
+    })
+    .catch((e) => {
+      console.log("error", e);
+
+      res.json({ success: false, response: "Ongeldig telefoonnummer" });
+    });
 });
 
 server.post("/verifyPhone", async (req, res) => {
@@ -1026,6 +1036,8 @@ server.post("/verifyPhone", async (req, res) => {
     return;
   }
 
+  //NB: je kan nu gewoon 1mil keer proberen, dit kan binnen een dag. en dan is je account geverifieerd. dit mot anders
+
   const verifiedUser = await User.findOne({
     where: {
       phoneVerificationCode: code,
@@ -1046,9 +1058,9 @@ server.post("/verifyPhone", async (req, res) => {
       success: true,
       response: "Gelukt.",
     });
+  } else {
+    return res.json({ success: false, response: "Verkeerde code" });
   }
-
-  return res.json({ success: false, response: "Verkeerde code" });
 });
 
 server.post("/updateName", async (req, res) => {
