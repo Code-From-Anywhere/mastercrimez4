@@ -107,8 +107,12 @@ function Header({ navigation, device, me }) {
             }}
           >
             <Text style={textStyle}>😎 {me?.name}</Text>
-            <Text style={textStyle}>💰 €{me?.cash},-</Text>
-            <Text style={textStyle}>💵 €{me?.bank},-</Text>
+            <Text style={textStyle}>
+              💰 €{Intl.NumberFormat().format(me?.cash)},-
+            </Text>
+            <Text style={textStyle}>
+              💵 €{Intl.NumberFormat().format(me?.bank)},-
+            </Text>
             <View style={{ flexDirection: "row" }}>
               <Icon.MaterialCommunityIcons
                 name="pistol"
@@ -116,7 +120,9 @@ function Header({ navigation, device, me }) {
                 color={device.theme.secondaryText}
                 style={{ marginRight: 5 }}
               />
-              <Text style={textStyle}>{me?.bullets}</Text>
+              <Text style={textStyle}>
+                {Intl.NumberFormat().format(me?.bullets)}
+              </Text>
             </View>
             <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
             <Text style={textStyle}>🌍 {me?.city}</Text>
@@ -125,9 +131,6 @@ function Header({ navigation, device, me }) {
             <Text style={textStyle}>
               💪 {getStrength(me?.strength, "both")}
             </Text>
-            <Text style={textStyle}>🌱 {me?.wiet}</Text>
-            <Text style={textStyle}>🤨 {me?.junkies}</Text>
-            <Text style={textStyle}>💃 {me?.hoeren}</Text>
             <Text
               style={textStyle}
               onPress={() => navigation.navigate("Messages")}

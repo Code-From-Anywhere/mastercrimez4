@@ -235,7 +235,7 @@ const getRankThing = (rank, returntype, type) => {
   if (returntype === "rankname") {
     return nowRank;
   } else if (returntype === "number") {
-    return now !== undefined ? now + 1 : type.length;
+    return now !== -1 ? now + 1 : type.length;
   } else if (returntype === "percentage") {
     return percentage;
   } else if (returntype === "both") {

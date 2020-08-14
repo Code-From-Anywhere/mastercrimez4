@@ -106,8 +106,8 @@ class Bank extends Component {
               {response.response}
             </Text>
           ) : null}
-          {this.keyValue("Contant", me?.cash)}
-          {this.keyValue("Bank", me?.bank)}
+          {this.keyValue("Contant", Intl.NumberFormat().format(me?.cash))}
+          {this.keyValue("Bank", Intl.NumberFormat().format(me?.bank))}
 
           {this.renderForm()}
         </View>

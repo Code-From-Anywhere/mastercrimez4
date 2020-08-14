@@ -344,7 +344,7 @@ export const rightMenu = (me, theme) => [
     iconType: "FontAwesome",
     icon: "font",
 
-    text: "Contant: " + me?.cash,
+    text: "Contant: " + Intl.NumberFormat().format(me?.cash),
   },
 
   {
@@ -353,7 +353,7 @@ export const rightMenu = (me, theme) => [
     iconType: "FontAwesome",
     icon: "font",
 
-    text: "Bank: " + me?.bank,
+    text: "Bank: " + Intl.NumberFormat().format(me?.bank),
   },
   {
     isStats: true,
@@ -361,7 +361,7 @@ export const rightMenu = (me, theme) => [
     iconType: "FontAwesome",
     icon: "font",
 
-    text: "Kogels: " + me?.bullets,
+    text: "Kogels: " + Intl.NumberFormat().format(me?.bullets),
   },
   {
     isStats: true,
