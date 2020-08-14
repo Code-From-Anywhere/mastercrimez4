@@ -1213,7 +1213,7 @@ server.post("/updateName", async (req, res) => {
   }
 
   if (loginToken) {
-    const user = await User.update(
+    const updatedUser = await User.update(
       { name: realname },
       { where: { loginToken } }
     );
