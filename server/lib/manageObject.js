@@ -1,6 +1,20 @@
 const { Op, Sequelize } = require("sequelize");
 const { sendMessageAndPush } = require("./util");
 
+const typeStrings = {
+  bulletFactory: "Kogelfabriek",
+  casino: "Casino",
+  landlord: "Huisjesmelker",
+  junkies: "Leger des Heils",
+  weaponShop: "Wapenwinkel",
+  rld: "Red light district",
+  airport: "Vliegveld",
+  estateAgent: "Makelaar",
+  bank: "Bank",
+  jail: "Gevangenis",
+  garage: "Garage",
+};
+
 const properties = [
   {
     name: "bulletFactory",
@@ -126,6 +140,7 @@ const giveAway = async (req, res, User, City, Message) => {
     return res.json({ response: "Je kan deze bezitting niet weggeven." });
   }
 
+  const typeString = typeStrings[type];
   sendMessageAndPush(
     user,
     user2,

@@ -1172,6 +1172,16 @@ server.post("/verifyPhone", async (req, res) => {
 server.post("/updateName", async (req, res) => {
   const { loginToken, name } = req.body;
 
+  if (!loginToken) {
+    return res.json({ response: "Geen token gegeven" });
+  }
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    res.json({ response: "Ongeldige user" });
+    return;
+  }
+
   if (!name) {
     res.json({ response: "Deze naam is te kort" });
     return;
@@ -1207,6 +1217,32 @@ server.post("/updateName", async (req, res) => {
       { name: realname },
       { where: { loginToken } }
     );
+
+    const properties = [
+      "bulletFactory",
+      "casino",
+      "rld",
+      "landlord",
+      "junkies",
+      "weaponShop",
+      "airport",
+      "estateAgent",
+      "garage",
+      "jail",
+      "bank",
+    ];
+
+    //properties
+    properties
+      .map((p) => `${p}Owner`)
+      .map(async (x) => {
+        const [updated] = await City.update(
+          { [x]: realname },
+          { where: { [x]: user.name } }
+        );
+        return updated;
+      });
+
     res.json({ response: "Naam veranderd" });
   }
 });
