@@ -8,6 +8,7 @@ const Jimp = require("jimp");
 const { Sequelize, Model, DataTypes, Op } = require("sequelize");
 const cron = require("node-cron");
 
+const cities = require("../assets/airport.json");
 require("dotenv").config();
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -74,6 +75,8 @@ const allUserFields = publicUserFields.concat([
   "credits",
   "attackAt",
   "protectionAt",
+  "swissBank",
+  "swissBullets",
 ]);
 
 function me(token) {
@@ -219,6 +222,16 @@ User.init(
     },
 
     bank: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    swissBank: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    swissBullets: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
@@ -1317,6 +1330,30 @@ const giveInterest = () => {
   sequelize.query(`UPDATE users SET bank=bank*1.05 WHERE health > 0`);
 };
 
+const swissBankTax = async () => {
+  const TAX = 0.02; //NB profit is 50% of this
+  await Promise.all(
+    cities.map(async (city) => {
+      const [[totals]] = await sequelize.query(
+        `SELECT SUM(swissBank) AS swissBank, SUM(swissBullets) AS swissBullets FROM users WHERE city= '${city}'`
+      );
+
+      const bankProfit = Math.round(totals.swissBank * TAX * 0.5);
+
+      City.update(
+        {
+          bankProfit: Sequelize.literal(`bankProfit + ${bankProfit}`),
+        },
+        { where: { city } }
+      );
+    })
+  );
+
+  sequelize.query(
+    `UPDATE users SET swissBank=ROUND(swissBank*0.98), swissBullets=ROUND(swissBullets*0.98)`
+  );
+};
+
 //elk uur
 cron.schedule("0 * * * *", async () => {
   putBulletsInBulletFactories();
@@ -1330,6 +1367,7 @@ cron.schedule("0 19 * * *", function () {
 
 cron.schedule("0 20 * * *", function () {
   giveInterest();
+  swissBankTax();
 });
 
 const port = process.env.PORT || 4001;

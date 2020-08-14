@@ -39,7 +39,7 @@ const swissBank = async (req, res, User) => {
       const updated = await User.update(
         {
           [key]: Math.round(Number(user[key]) - Number(amount)),
-          [key2]: Math.round(Number(user[key2]) + Number(amount)),
+          [key2]: Math.round(Number(user[key2]) + Number(amount * 0.95)),
         },
         { where: { id: user.id, [key]: { [Op.gte]: amount } } }
       );

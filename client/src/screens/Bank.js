@@ -44,52 +44,6 @@ class Bank extends Component {
     );
   }
 
-  renderFooter = () => {
-    const { to, amount, type } = this.state;
-
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginTop: 20,
-        }}
-      >
-        <Button
-          theme={this.props.screenProps.device.theme}
-          title="In"
-          onPress={() => this.deposit(true)}
-          style={{ width: 80 }}
-        />
-        <Button
-          theme={this.props.screenProps.device.theme}
-          title="Uit"
-          onPress={() => this.deposit(false)}
-          style={{ width: 80 }}
-        />
-      </View>
-    );
-  };
-
-  renderForm() {
-    const {
-      screenProps: {
-        device: { theme },
-      },
-    } = this.props;
-
-    return (
-      <View>
-        <TextInput
-          style={style(theme).textInput}
-          placeholder="Hoeveelheid"
-          value={this.state.amount}
-          onChangeText={(amount) => this.setState({ amount })}
-        />
-        {this.renderFooter()}
-      </View>
-    );
-  }
   render() {
     const {
       navigation,
@@ -98,11 +52,12 @@ class Bank extends Component {
         device: { theme },
       },
     } = this.props;
-    const { response } = this.state;
+
+    const { to, amount, type, response } = this.state;
 
     return (
-      <View style={{ flex: 1, margin: 20, alignItems: "center" }}>
-        <View style={{ width: 200 }}>
+      <View style={{ flex: 1, margin: 20 }}>
+        <View>
           {response ? (
             <Text style={{ color: theme.primaryText }}>
               {response.response}
@@ -114,10 +69,36 @@ class Bank extends Component {
           {this.keyValue("Bank", Intl.NumberFormat().format(me?.bank), () =>
             this.setState({ amount: String(me.bank) })
           )}
-
           {this.keyValue("Rente", "5% per dag")}
+          <View>
+            <TextInput
+              style={style(theme).textInput}
+              placeholder="Hoeveelheid"
+              value={this.state.amount}
+              onChangeText={(amount) => this.setState({ amount })}
+            />
 
-          {this.renderForm()}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 20,
+              }}
+            >
+              <Button
+                theme={this.props.screenProps.device.theme}
+                title="In"
+                onPress={() => this.deposit(true)}
+                style={{ width: 80 }}
+              />
+              <Button
+                theme={this.props.screenProps.device.theme}
+                title="Uit"
+                onPress={() => this.deposit(false)}
+                style={{ width: 80 }}
+              />
+            </View>
+          </View>
         </View>
       </View>
     );

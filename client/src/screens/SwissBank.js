@@ -1,9 +1,16 @@
 import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Button from "../components/Button";
-import H1 from "../components/H1";
 import T from "../components/T";
+import style from "../Style";
 import { doOnce, get, post } from "../Util";
 const SwissBank = ({
   navigation,
@@ -17,7 +24,8 @@ const SwissBank = ({
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
   const [cities, setCities] = useState(null);
-
+  const [amount, setAmount] = useState("");
+  const [type, setType] = useState("bank");
   doOnce(async () => {
     fetchCities();
   });
@@ -33,15 +41,112 @@ const SwissBank = ({
     setBecomeOwnerResponse(response);
   };
 
+  const deposit = async (deposit) => {
+    const { response } = await post("swissBank", {
+      token: device.loginToken,
+      amount,
+      deposit,
+      type,
+    });
+
+    setResponse(response);
+    reloadMe(device.loginToken);
+  };
+
   const fetchCities = async () => {
     const { cities } = await get("cities");
     setCities(cities);
   };
 
+  const keyValue = (key, value, onPress) => {
+    return (
+      <View style={styles.row}>
+        <T hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>{key}</T>
+        <TouchableOpacity
+          disabled={!onPress}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          onPress={onPress}
+        >
+          <T>{value}</T>
+        </TouchableOpacity>
+      </View>
+    );
+  };
   const city = cities?.find((x) => x.city === me?.city);
 
   return (
     <ScrollView style={{ flex: 1, padding: 15 }}>
+      <View style={{ flex: 1, margin: 20 }}>
+        <View>
+          {response ? <T>{response}</T> : null}
+          {keyValue("Bank", Intl.NumberFormat().format(me?.bank), () =>
+            setAmount(String(me.bank))
+          )}
+          {keyValue(
+            "Zwitserse bank",
+            Intl.NumberFormat().format(me?.swissBank),
+            () => setAmount(String(me.swissBank))
+          )}
+
+          {keyValue("Kosten", "2% per dag")}
+
+          {keyValue("Kogels", Intl.NumberFormat().format(me?.bullets), () =>
+            setAmount(String(me.bullets))
+          )}
+          {keyValue(
+            "Zwitserse kogelbank",
+            Intl.NumberFormat().format(me?.swissBullets),
+            () => setAmount(String(me.swissBullets))
+          )}
+
+          {keyValue("Kosten", "2% per dag")}
+
+          <View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <TextInput
+                style={{ ...style(theme).textInput, flex: 1 }}
+                placeholder="Hoeveelheid"
+                value={amount}
+                onChangeText={(amount) => setAmount(amount)}
+              />
+
+              <TouchableOpacity
+                style={{
+                  backgroundColor: theme.secondary,
+                  padding: 10,
+                  borderRadius: 5,
+                  marginLeft: 10,
+                }}
+                onPress={() => setType(type === "bank" ? "bullets" : "bank")}
+              >
+                <T>{type === "bank" ? "Bankgeld" : "Kogels"}</T>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 20,
+              }}
+            >
+              <Button
+                theme={theme}
+                title="In"
+                onPress={() => deposit(true)}
+                style={{ width: 80 }}
+              />
+              <Button
+                theme={theme}
+                title="Uit"
+                onPress={() => deposit(false)}
+                style={{ width: 80 }}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+
       {!city?.bankOwner ? (
         <View>
           <Text style={{ color: theme.primaryText }}>
@@ -62,10 +167,9 @@ const SwissBank = ({
             <Text style={{ fontWeight: "bold" }}>
               {city?.bankOwner || "(Niemand)"}
             </Text>
-            . De winst is {city?.bankProfit}
+            . De eigenaar krijgt 50% van de kosten van de zwitserse bank. Er
+            zijn 5% transactiekosten. De winst is {city?.bankProfit}
           </Text>
-
-          <H1>Zwitserse bank is nog in ontwikkeling! Coming soon</H1>
 
           {response && (
             <Text style={{ color: theme.primaryText, marginVertical: 20 }}>
@@ -156,4 +260,12 @@ const SwissBank = ({
   );
 };
 
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    height: 40,
+    alignItems: "center",
+  },
+});
 export default SwissBank;
