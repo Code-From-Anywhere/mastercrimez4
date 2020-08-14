@@ -17,10 +17,10 @@
   },
   {
     "id": "3",
-    "kooptext": "Koop 30.000 kogels",
-    "gekochttext": "Je hebt nu 30.000 kogels erbij!",
+    "kooptext": "Koop 100.000 kogels",
+    "gekochttext": "Je hebt nu 100.000 kogels erbij!",
     "wat": "bullets",
-    "hoeveel": 30000,
+    "hoeveel": 100000,
     "kosten": 300
   },
 
@@ -37,7 +37,7 @@
     "kooptext": "Ga wat rang omhoog!",
     "gekochttext": "Je bent heel wat rang omhoog gegaan!",
     "wat": "rank",
-    "hoeveel": 1000,
+    "hoeveel": 20000,
     "kosten": 500
   }
 ]
