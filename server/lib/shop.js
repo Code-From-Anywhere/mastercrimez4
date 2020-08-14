@@ -1,5 +1,6 @@
 const items = require("../assets/shop.json");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
+const PERCENTAGE_FOR_OWNER = 0.2;
 
 const current = (type, user) =>
   items.filter((item) => item.type === type)[user[type] - 1];
@@ -18,7 +19,7 @@ const shop = async (req, res, User) => {
   }
 };
 
-const buy = async (req, res, User) => {
+const buy = async (req, res, User, City) => {
   const { loginToken, type } = req.body;
   const user = await User.findOne({ where: { loginToken } });
   if (user) {
@@ -44,6 +45,31 @@ const buy = async (req, res, User) => {
     );
 
     if (updated[0] === 1) {
+      const weaponShopProfit =
+        type === "weapon" || type === "protection"
+          ? Math.round(item.price * PERCENTAGE_FOR_OWNER)
+          : 0;
+      const airportProfit =
+        type === "airplane" ? Math.round(item.price * PERCENTAGE_FOR_OWNER) : 0;
+      const estateAgentProfit =
+        type === "home" ? Math.round(item.price * PERCENTAGE_FOR_OWNER) : 0;
+      const garageProfit =
+        type === "garage" ? Math.round(item.price * PERCENTAGE_FOR_OWNER) : 0;
+
+      City.update(
+        {
+          weaponShopProfit: Sequelize.literal(
+            `weaponShopProfit + ${weaponShopProfit}`
+          ),
+          airportProfit: Sequelize.literal(`airportProfit + ${airportProfit}`),
+          estateAgentProfit: Sequelize.literal(
+            `estateAgentProfit + ${estateAgentProfit}`
+          ),
+          garageProfit: Sequelize.literal(`garageProfit + ${garageProfit}`),
+        },
+        { where: { city: user.city } }
+      );
+
       res.json({ response: "Gekocht" });
     } else {
       res.json({ response: "Er ging iets fout" });

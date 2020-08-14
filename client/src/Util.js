@@ -1,6 +1,23 @@
 import { useEffect } from "react";
-import { Dimensions, Platform, ScaledSize } from "react-native";
+import { Alert, Dimensions, Platform, ScaledSize } from "react-native";
 import Constants from "./Constants";
+
+export const areYouSure = (callback, message: string) => {
+  Alert.alert(
+    "Are you sure?",
+    message || "Are you sure you want to do this?",
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+
+      { text: "Yes", style: "destructive", onPress: () => callback() },
+    ],
+    { cancelable: true }
+  );
+};
 
 export const doOnce = (cb, cleanup) => {
   useEffect(() => {

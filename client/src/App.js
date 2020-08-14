@@ -53,10 +53,12 @@ import JailScreen from "./screens/Jail";
 import Junkies from "./screens/Junkies";
 import Kill from "./screens/Kill";
 import Login from "./screens/Login";
+import ManageObject from "./screens/ManageObject";
 import Members from "./screens/Members";
 import Messages from "./screens/Messages";
 import Mollie from "./screens/Mollie";
 import MollieComplete from "./screens/MollieComplete";
+import MyObjects from "./screens/MyObjects";
 import MyProfile from "./screens/MyProfile";
 import Notifications from "./screens/Notifications";
 import OrganisedCrime from "./screens/OrganisedCrime";
@@ -75,6 +77,7 @@ import Status from "./screens/Status";
 import StealCar from "./screens/StealCar";
 import Streetrace from "./screens/Streetrace";
 import SuperMessage from "./screens/SuperMessage";
+import SwissBank from "./screens/SwissBank";
 import Theme from "./screens/Theme";
 import VerifyPhone from "./screens/VerifyPhone";
 import VerifyPhoneCode from "./screens/VerifyPhoneCode";
@@ -329,6 +332,8 @@ const Container = rightContainer(
       },
       Status: withLayout(Status),
       StealCar: withLayout(StealCar),
+      SwissBank: withLayout(SwissBank),
+
       Crimes: withLayout(Crimes),
       Jail: withLayout(JailScreen),
       Kill: withLayout(Kill),
@@ -337,6 +342,8 @@ const Container = rightContainer(
       Bank: withLayout(Bank),
       Shop: withLayout(Shop),
       Garage: withLayout(Garage),
+      ManageObject: withLayout(ManageObject),
+      MyObjects: withLayout(MyObjects),
       Racecars: withLayout(Racecars),
       Backfire: withLayout(Backfire),
       Accomplice: withLayout(Accomplice),

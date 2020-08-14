@@ -1,71 +1,54 @@
-import React from "react";
-import { ActivityIndicator, ScrollView, View } from "react-native";
+import React, { useState } from "react";
+import { ScrollView, TextInput, View } from "react-native";
+import Button from "../components/Button";
 import T from "../components/T";
+import style from "../Style";
+import { post } from "../Util";
 
-class MyProfile extends React.Component {
-  state = {
-    response: null,
+const ChangeName = ({
+  navigation,
+  screenProps: {
+    device,
+    reloadMe,
+    me,
+    device: { theme },
+  },
+}) => {
+  const [name, setName] = useState(me?.name);
+  const [response, setResponse] = useState(null);
+
+  const changeName = async () => {
+    const { response } = await post("updateName", {
+      loginToken: device.loginToken,
+      name,
+    });
+    reloadMe(device.loginToken);
+    setResponse(response);
   };
-  render() {
-    const {
-      navigation,
-      screenProps: { device, me, dispatch },
-    } = this.props;
 
-    if (!me) {
-      return <ActivityIndicator />;
-    }
+  return (
+    <ScrollView>
+      <View style={{ margin: 20 }}>
+        {response ? <T>{response}</T> : null}
 
-    return (
-      <ScrollView>
-        <View style={{ margin: 20 }}>
-          {this.state.response ? <T>{this.state.response.response}</T> : null}
-          {/* 
-          coming soon
-          
-          <DataForm
-            navigation={navigation}
-            fields={[
-              {
-                field: "name",
-                title: "Je naam",
-                type: "text",
-              },
-            ]}
-            onComplete={(data) => {
-              console.log("data", data);
-            }}
-            //here you can put a graphql or redux mutation
-            mutate={(vars) => {
-              return fetch(`${Constants.SERVER_ADDR}/updateName`, {
-                method: "POST",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  ...vars,
-                  loginToken: device.loginToken,
-                }),
-              })
-                .then((response) => response.json())
-                .then(async (responseJson) => {
-                  this.props.screenProps.reloadMe(device.loginToken);
-                  this.setState({ response: responseJson });
-                  return responseJson;
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
-            }}
-            values={{
-              ...me,
-            }}
-          /> */}
+        <View
+          style={{
+            marginVertical: 15,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <TextInput
+            style={{ ...style(theme).textInput, flex: 1 }}
+            placeholder="Naam"
+            value={name}
+            onChangeText={(x) => setName(x)}
+          />
+          <Button onPress={changeName} theme={theme} title="Verander" />
         </View>
-      </ScrollView>
-    );
-  }
-}
+      </View>
+    </ScrollView>
+  );
+};
 
-export default MyProfile;
+export default ChangeName;

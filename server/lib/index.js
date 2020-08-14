@@ -161,7 +161,10 @@ User.init(
     bunkerAt: DataTypes.BIGINT,
     incomeAt: DataTypes.BIGINT,
 
-    attackAt: DataTypes.BIGINT, //wanneer je HEBT aangevallen
+    attackAt: {
+      type: DataTypes.BIGINT, //wanneer je HEBT aangevallen
+      defaultValue: 0,
+    },
     attackedAt: DataTypes.BIGINT, //wanneer je bent aangevallen
     robbedAt: DataTypes.BIGINT, //wanneer je bent berooft
     robAt: DataTypes.BIGINT, //wanneer je HEBT beroofd
@@ -174,6 +177,10 @@ User.init(
     },
 
     airplane: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    garage: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
@@ -253,11 +260,61 @@ City.init(
     city: DataTypes.STRING,
     bullets: DataTypes.INTEGER,
     bulletFactoryOwner: DataTypes.STRING,
-    bulletPrice: {
+    bulletFactoryPrice: {
       type: DataTypes.INTEGER,
       defaultValue: 100,
     },
     bulletFactoryProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    casinoOwner: DataTypes.STRING,
+    casinoProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    rldOwner: DataTypes.STRING,
+    rldProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    landlordOwner: DataTypes.STRING,
+    landlordProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    junkiesOwner: DataTypes.STRING,
+    junkiesProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    weaponShopOwner: DataTypes.STRING,
+    weaponShopProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    estateAgentOwner: DataTypes.STRING,
+    estateAgentProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    garageOwner: DataTypes.STRING,
+    garageProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    airportOwner: DataTypes.STRING,
+    airportProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    jailOwner: DataTypes.STRING,
+    jailProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    bankOwner: DataTypes.STRING,
+    bankProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
@@ -473,7 +530,7 @@ server.post("/sellcar", (req, res) =>
 );
 
 server.post("/buyBullets", (req, res) =>
-  require("./buyBullets").buyBullets(req, res, User, City)
+  require("./buyBullets").buyBullets(req, res, sequelize, User, City)
 );
 
 server.get("/cities", (req, res) => require("./cities").cities(req, res, City));
@@ -504,6 +561,25 @@ server.post("/gym", (req, res) => require("./gym").gym(req, res, User));
 
 server.post("/hoeren", (req, res) =>
   require("./hoeren").hoeren(req, res, User)
+);
+
+server.post("/becomeOwner", (req, res) =>
+  require("./manageObject").becomeOwner(req, res, User, City)
+);
+server.post("/giveAway", (req, res) =>
+  require("./manageObject").giveAway(req, res, User, City)
+);
+server.post("/changePrice", (req, res) =>
+  require("./manageObject").changePrice(req, res, User, City)
+);
+server.post("/switchStatus", (req, res) =>
+  require("./manageObject").switchStatus(req, res, User, City)
+);
+server.post("/getProfit", (req, res) =>
+  require("./manageObject").getProfit(req, res, sequelize, User, City)
+);
+server.post("/putInJail", (req, res) =>
+  require("./manageObject").putInJail(req, res, User, City)
 );
 
 server.post("/wiet", (req, res) => require("./wiet").wiet(req, res, User));
@@ -548,7 +624,7 @@ server.post("/airport", (req, res) =>
 );
 
 server.post("/income", (req, res) =>
-  require("./income").income(req, res, User)
+  require("./income").income(req, res, sequelize, User, City)
 );
 
 server.post("/rob", (req, res) =>
@@ -617,7 +693,7 @@ server.post("/superMessage", (req, res) =>
   require("./superMessage").superMessage(req, res, User, Message)
 );
 
-server.post("/buy", (req, res) => require("./shop").buy(req, res, User));
+server.post("/buy", (req, res) => require("./shop").buy(req, res, User, City));
 
 server.get("/chat", (req, res) => {
   Chat.findAll({ order: [["id", "DESC"]], limit: 10 }).then((chat) => {

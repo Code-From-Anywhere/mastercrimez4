@@ -4,7 +4,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import { doOnce, get, post } from "../Util";
-const Casino = ({
+const SwissBank = ({
   navigation,
   screenProps: {
     device,
@@ -24,7 +24,7 @@ const Casino = ({
   const becomeOwner = async (city) => {
     const { response } = await post("becomeOwner", {
       city,
-      type: "casino",
+      type: "bank",
       token: device.loginToken,
     });
     fetchCities();
@@ -41,10 +41,10 @@ const Casino = ({
 
   return (
     <ScrollView style={{ flex: 1, padding: 15 }}>
-      {!city?.casinoOwner ? (
+      {!city?.bankOwner ? (
         <View>
           <Text style={{ color: theme.primaryText }}>
-            Dit casino heeft geen eigenaar.
+            Dit zwitserse bank heeft geen eigenaar.
           </Text>
           {becomeOwnerResponse && <T>{becomeOwnerResponse}</T>}
           <Button
@@ -56,15 +56,14 @@ const Casino = ({
       ) : (
         <>
           <Text style={{ color: theme.primaryText }}>
-            De eigenaar van het casino in{" "}
+            De eigenaar van de zwisterse bank in{" "}
             <Text style={{ fontWeight: "bold" }}>{me?.city}</Text> is{" "}
             <Text style={{ fontWeight: "bold" }}>
-              {city?.casinoOwner || "(Niemand)"}
+              {city?.bankOwner || "(Niemand)"}
             </Text>
-            . De winst is {city?.casinoProfit}
+            . De winst is {city?.bankProfit}
           </Text>
 
-          <T>Casino games are coming soon!</T>
           {response && (
             <Text style={{ color: theme.primaryText, marginVertical: 20 }}>
               {response}
@@ -120,18 +119,18 @@ const Casino = ({
               }}
             >
               <View style={{ flexDirection: "row" }}>
-                {city.casinoOwner ? (
-                  <T>{city.casinoOwner}</T>
+                {city.bankOwner ? (
+                  <T>{city.bankOwner}</T>
                 ) : (
                   <TouchableOpacity onPress={() => becomeOwner(city.city)}>
                     <T>(Niemand)</T>
                   </TouchableOpacity>
                 )}
-                {city.casinoOwner === me?.name ? (
+                {city.bankOwner === me?.name ? (
                   <TouchableOpacity
                     onPress={() =>
                       navigation.navigate("ManageObject", {
-                        type: "casino",
+                        type: "bank",
                         city: city.city,
                       })
                     }
@@ -142,7 +141,7 @@ const Casino = ({
               </View>
 
               <Text style={{ color: theme.primaryText }}>
-                {city.casinoProfit}
+                {city.bankProfit}
               </Text>
             </View>
           </View>
@@ -154,4 +153,4 @@ const Casino = ({
   );
 };
 
-export default Casino;
+export default SwissBank;

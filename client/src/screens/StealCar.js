@@ -3,6 +3,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -195,7 +196,7 @@ class StealCar extends Component {
     return (
       <View>
         {response ? (
-          <View style={{ flex: 1, minHeight: 400 }}>
+          <ScrollView style={{ flex: 1, minHeight: 400 }}>
             {response.cars
               ? response.cars.map((car) => {
                   return (
@@ -221,7 +222,7 @@ class StealCar extends Component {
               title="OK"
               onPress={() => this.setState({ response: null })}
             />
-          </View>
+          </ScrollView>
         ) : seconds > 0 ? (
           <CountDown
             until={seconds}

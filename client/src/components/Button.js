@@ -15,7 +15,9 @@ class Button extends React.Component {
         <View
           style={{
             flexDirection: "row",
-            backgroundColor: theme.secondary,
+            backgroundColor: disabled
+              ? `${theme.secondary}55`
+              : theme.secondary,
             padding: 10,
             justifyContent: "center",
             paddingHorizontal: isSmall ? 5 : 20,

@@ -1,9 +1,11 @@
+// import { ReCaptcha } from "react-recaptcha-v3";
+import { Entypo } from "@expo/vector-icons";
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-// import { ReCaptcha } from "react-recaptcha-v3";
+import { get, post } from "../Util";
 
 class Junkies extends Component {
   constructor(props) {
@@ -13,6 +15,15 @@ class Junkies extends Component {
       response: null,
     };
   }
+
+  componentDidMount() {
+    this.fetchCities();
+  }
+
+  fetchCities = async () => {
+    const { cities } = await get("cities");
+    this.setState({ cities });
+  };
 
   submit = () => {
     const { device, me } = this.props.screenProps;
@@ -53,11 +64,7 @@ class Junkies extends Component {
           onPress={this.submit}
         />
 
-        {/* <ReCaptcha
-          sitekey={Constants.CAPTCHA}
-          action="junkies"
-          verifyCallback={(token) => this.setState({ captcha: token })}
-        /> */}
+        {this.renderCities()}
       </View>
     );
   };
@@ -78,15 +85,120 @@ class Junkies extends Component {
     );
   }
 
+  becomeOwner = async (city) => {
+    const { reloadMe, device } = this.props.screenProps;
+    const { response } = await post("becomeOwner", {
+      city,
+      type: "junkies",
+      token: device.loginToken,
+    });
+    this.fetchCities();
+    reloadMe(device.loginToken);
+  };
+
+  renderCities = () => {
+    const {
+      device: { theme },
+      me,
+    } = this.props.screenProps;
+    const { navigation } = this.props;
+
+    const { cities } = this.state;
+
+    return (
+      <>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 30,
+          }}
+        >
+          <View style={{ flex: 2 }}>
+            <Text style={{ fontWeight: "bold" }}>Stad</Text>
+          </View>
+          <View
+            style={{
+              flex: 3,
+              justifyContent: "space-between",
+              flexDirection: "row",
+            }}
+          >
+            <Text style={{ fontWeight: "bold" }}>Leger des Heils</Text>
+            <Text style={{ fontWeight: "bold" }}>Winst</Text>
+          </View>
+        </View>
+        {cities?.map((city, index) => {
+          return (
+            <View
+              key={`i${index}`}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingVertical: 10,
+                borderBottomWidth: 0.5,
+                borderBottomColor: "black",
+              }}
+            >
+              <View style={{ flex: 2 }}>
+                <T>{city.city}</T>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  flex: 3,
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  {city.junkiesOwner ? (
+                    <T>{city.junkiesOwner}</T>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => this.becomeOwner(city.city)}
+                    >
+                      <T>(Niemand)</T>
+                    </TouchableOpacity>
+                  )}
+                  {city.junkiesOwner === me?.name ? (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("ManageObject", {
+                          type: "junkies",
+                          city: city.city,
+                        })
+                      }
+                    >
+                      <Entypo name="edit" color={theme.primaryText} size={12} />
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+              </View>
+
+              <T>{city.junkiesProfit}</T>
+            </View>
+          );
+        })}
+      </>
+    );
+  };
+
   render() {
     const { response } = this.state;
-const {screenProps:{device:{theme}}}=this.props;
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     return (
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={{ flex: 1 }}>
         <View style={{ margin: 20 }}>
           {response ? (
-            <View style={{ flex: 1 }}>
-              <Text style={{ color: theme.primaryText }}>{response.response}</Text>
+            <View>
+              <Text style={{ color: theme.primaryText }}>
+                {response.response}
+              </Text>
 
               <Button
                 theme={this.props.screenProps.device.theme}

@@ -4,9 +4,9 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 export const DEFAULT_THEME = {
   name: "Licht bruin",
   secondary: "#f5e6b4",
-  secondaryText: "#000",
-  primary: "#555",
-  primaryText: "#FFF",
+  secondaryText: "#000000",
+  primary: "#555555",
+  primaryText: "#FFFFFF",
 };
 
 export type Theme = {
@@ -21,31 +21,31 @@ const themes = [
   DEFAULT_THEME,
   {
     name: "Origineel",
-    secondary: "#222",
-    secondaryText: "#FFF",
-    primary: "#555",
-    primaryText: "#FFF",
+    secondary: "#222222",
+    secondaryText: "#FFFFFF",
+    primary: "#555555",
+    primaryText: "#FFFFFF",
   },
   {
     name: "Wit",
-    primary: "#FFF",
-    secondary: "#CCC",
-    primaryText: "#000",
-    secondaryText: "#000",
+    primary: "#FFFFFF",
+    secondary: "#CCCCCC",
+    primaryText: "#000000",
+    secondaryText: "#000000",
   },
   {
     name: "Blauw",
-    primary: "#FFF",
-    secondary: "lightblue",
-    primaryText: "#000",
-    secondaryText: "#000",
+    primary: "#FFFFFF",
+    secondary: "#add8e6",
+    primaryText: "#000000",
+    secondaryText: "#000000",
   },
   {
     name: "Zwart",
-    primary: "#000",
-    secondary: "#222",
-    primaryText: "#FFF",
-    secondaryText: "#FFF",
+    primary: "#000000",
+    secondary: "#222222",
+    primaryText: "#FFFFFF",
+    secondaryText: "#FFFFFF",
   },
 ];
 const ThemeScreen = ({ navigation, screenProps: { dispatch, me, device } }) => {

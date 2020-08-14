@@ -232,9 +232,22 @@ export const leftMenu = (me, theme) => {
     },
     {
       iconType: "MaterialCommunityIcons",
+      icon: "cash-100",
+      text: "Zwitserse bank",
+      to: "SwissBank",
+    },
+    {
+      iconType: "MaterialCommunityIcons",
       icon: "pistol",
       text: "Kogelfabriek",
       to: "Bulletfactory",
+    },
+
+    {
+      iconType: "FontAwesome5",
+      icon: "dice",
+      text: "Casino",
+      to: "Casino",
     },
 
     {
@@ -247,15 +260,15 @@ export const leftMenu = (me, theme) => {
 
     {
       iconType: "FontAwesome5",
-      icon: "house-damage",
+      icon: "hospital",
 
       text: "Ziekenhuis",
       to: "Hospital",
     },
 
     {
-      iconType: "FontAwesome5",
-      icon: "warehouse",
+      iconType: "Entypo",
+      icon: "shop",
       text: "Winkel",
       to: "Shop",
     },
@@ -417,6 +430,14 @@ export const rightMenu = (me, theme) => [
 
     text: "Statistieken",
     to: "Stats",
+  },
+
+  {
+    iconType: "AntDesign",
+    icon: "star",
+
+    text: "Mijn bezittingen",
+    to: "MyObjects",
   },
 
   {

@@ -212,5 +212,47 @@
     "name": "Goddelijke woning",
     "image": "images/shop/woning_16.jpg",
     "price": 33000000
+  },
+
+  {
+    "type": "garage",
+    "name": "Kleine garage",
+    "image": null,
+    "price": 50000
+  },
+
+  {
+    "type": "garage",
+    "name": "Normale garage",
+    "image": null,
+    "price": 200000
+  },
+
+  {
+    "type": "garage",
+    "name": "Grote garage",
+    "image": null,
+    "price": 500000
+  },
+
+  {
+    "type": "garage",
+    "name": "Zeer grote garage",
+    "image": null,
+    "price": 1500000
+  },
+
+  {
+    "type": "garage",
+    "name": "Enorme garage",
+    "image": null,
+    "price": 4000000
+  },
+
+  {
+    "type": "garage",
+    "name": "Wagenpark",
+    "image": null,
+    "price": 10000000
   }
 ]

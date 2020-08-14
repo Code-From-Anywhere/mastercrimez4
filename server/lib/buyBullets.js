@@ -1,7 +1,7 @@
 const items = require("../assets/shop.json");
 const { Op } = require("sequelize");
 
-const buyBullets = async (req, res, User, City) => {
+const buyBullets = async (req, res, sequelize, User, City) => {
   let { loginToken, amount } = req.body;
 
   amount = Math.round(Number(amount));
@@ -24,7 +24,7 @@ const buyBullets = async (req, res, User, City) => {
     return res.json({ response: "Stad niet gevonden" });
   }
 
-  const price = city.bulletPrice * amount;
+  const price = city.bulletFactoryPrice * amount;
 
   if (price > user.cash) {
     res.json({ response: "Je hebt niet genoeg geld contant" });
@@ -56,6 +56,11 @@ const buyBullets = async (req, res, User, City) => {
     return res.json({ response: "Er ging iets fout" });
   }
 
+  const profit = Math.round(price / 2);
+  sequelize.query(
+    `UPDATE cities SET bulletFactoryProfit=bulletFactoryProfit+${profit} WHERE city='${user.city}'`
+  );
+  //
   res.json({ response: "Gekocht" });
 };
 

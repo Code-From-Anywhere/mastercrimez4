@@ -1,8 +1,10 @@
+import { Entypo } from "@expo/vector-icons";
 import React, { Component } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
+import { get, post } from "../Util";
 // import { ReCaptcha } from "react-recaptcha-v3";
 
 class Hoeren extends Component {
@@ -14,6 +16,14 @@ class Hoeren extends Component {
     };
   }
 
+  componentDidMount() {
+    this.fetchCities();
+  }
+
+  fetchCities = async () => {
+    const { cities } = await get("cities");
+    this.setState({ cities });
+  };
   keyValue(key, value) {
     return (
       <View
@@ -69,12 +79,107 @@ class Hoeren extends Component {
           onPress={this.submit}
         />
 
-        {/* <ReCaptcha
-          sitekey={Constants.CAPTCHA}
-          action="hoeren"
-          verifyCallback={(token) => this.setState({ captcha: token })}
-        /> */}
+        {this.renderCities()}
       </View>
+    );
+  };
+
+  becomeOwner = async (city) => {
+    const { reloadMe, device } = this.props.screenProps;
+    const { response } = await post("becomeOwner", {
+      city,
+      type: "rld",
+      token: device.loginToken,
+    });
+    this.fetchCities();
+    reloadMe(device.loginToken);
+  };
+
+  renderCities = () => {
+    const {
+      device: { theme },
+      me,
+    } = this.props.screenProps;
+    const { navigation } = this.props;
+
+    const { cities } = this.state;
+
+    return (
+      <>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 30,
+          }}
+        >
+          <View style={{ flex: 2 }}>
+            <Text style={{ fontWeight: "bold" }}>Stad</Text>
+          </View>
+          <View
+            style={{
+              flex: 3,
+              justifyContent: "space-between",
+              flexDirection: "row",
+            }}
+          >
+            <Text style={{ fontWeight: "bold" }}>RLD</Text>
+            <Text style={{ fontWeight: "bold" }}>Winst</Text>
+          </View>
+        </View>
+        {cities?.map((city, index) => {
+          return (
+            <View
+              key={`i${index}`}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingVertical: 10,
+                borderBottomWidth: 0.5,
+                borderBottomColor: "black",
+              }}
+            >
+              <View style={{ flex: 2 }}>
+                <T>{city.city}</T>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  flex: 3,
+                }}
+              >
+                <View style={{ flexDirection: "row" }}>
+                  {city.rldOwner ? (
+                    <T>{city.rldOwner}</T>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => this.becomeOwner(city.city)}
+                    >
+                      <T>(Niemand)</T>
+                    </TouchableOpacity>
+                  )}
+                  {city.rldOwner === me?.name ? (
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("ManageObject", {
+                          type: "rld",
+                          city: city.city,
+                        })
+                      }
+                    >
+                      <Entypo name="edit" color={theme.primaryText} size={12} />
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+              </View>
+
+              <T>{city.rldProfit}</T>
+            </View>
+          );
+        })}
+      </>
     );
   };
   render() {
@@ -88,8 +193,8 @@ class Hoeren extends Component {
     const number = Math.ceil(Math.random() * 60);
 
     return (
-      <View style={{ flex: 1, alignItems: "center" }}>
-        <View style={{ margin: 20, width: 200 }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ margin: 20 }}>
           {response ? (
             <View style={{ flex: 1, minHeight: 400 }}>
               <Image
