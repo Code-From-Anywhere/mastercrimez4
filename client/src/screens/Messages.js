@@ -49,6 +49,9 @@ class Messages extends Component {
   sendMessage = () => {
     const { device } = this.props.screenProps;
     const { to, message } = this.state;
+    if (!to || !message) {
+      return;
+    }
     fetch(`${Constants.SERVER_ADDR}/message`, {
       method: "POST",
       headers: {

@@ -1,4 +1,4 @@
-const { getRank, getStrength } = require("./util");
+const { getRank, getStrength, sendMessageAndPush } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
 const properties = [
@@ -114,8 +114,6 @@ const kill = async (req, res, User, Message, Garage, City) => {
       },
     }
   );
-
-  console.log("ddddd", Date.now() - SECONDS * 1000, canAttack);
 
   if (!canAttack) {
     // NB: this prevents the spam bug!

@@ -8,37 +8,25 @@ import {
 } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import Constants from "../Constants";
 import style from "../Style";
+import { post } from "../Util";
 
 class Bank extends Component {
   state = {
     response: null,
   };
 
-  deposit = (deposit) => {
+  deposit = async (deposit) => {
     const { device } = this.props.screenProps;
 
-    fetch(`${Constants.SERVER_ADDR}/bank`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        token: device.loginToken,
-        amount: this.state.amount,
-        deposit,
-      }),
-    })
-      .then((response) => response.json())
-      .then(async (response) => {
-        this.setState({ response });
-        this.props.screenProps.reloadMe(device.loginToken);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const response = await post("bank", {
+      token: device.loginToken,
+      amount: this.state.amount,
+      deposit,
+    });
+
+    this.setState({ response });
+    this.props.screenProps.reloadMe(device.loginToken);
   };
 
   keyValue(key, value, onPress) {
@@ -46,6 +34,7 @@ class Bank extends Component {
       <View style={styles.row}>
         <T hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>{key}</T>
         <TouchableOpacity
+          disabled={!onPress}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           onPress={onPress}
         >
@@ -125,6 +114,8 @@ class Bank extends Component {
           {this.keyValue("Bank", Intl.NumberFormat().format(me?.bank), () =>
             this.setState({ amount: String(me.bank) })
           )}
+
+          {this.keyValue("Rente", "5% per dag")}
 
           {this.renderForm()}
         </View>

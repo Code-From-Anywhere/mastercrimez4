@@ -619,6 +619,10 @@ server.post("/breakout", (req, res) =>
 
 server.post("/bank", (req, res) => require("./bank").bank(req, res, User));
 
+server.post("/swissBank", (req, res) =>
+  require("./swissBank").swissBank(req, res, User)
+);
+
 server.post("/airport", (req, res) =>
   require("./airport").airport(req, res, User)
 );
