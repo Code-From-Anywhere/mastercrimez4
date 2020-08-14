@@ -1,5 +1,6 @@
 import * as Icon from "@expo/vector-icons";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import Constants from "expo-constants";
 import React from "react";
 import {
   Dimensions,
@@ -10,7 +11,6 @@ import {
   View,
 } from "react-native";
 import Chat from "../components/Chat";
-import Constants from "../Constants";
 import { getRank, getStrength } from "../Util";
 const { width } = Dimensions.get("window");
 
@@ -48,7 +48,9 @@ function Header({ navigation, device, me }) {
                 }}
               />
             </View>
-            <Text style={{ color: "white" }}>v{Constants.VERSION}</Text>
+            <Text style={{ color: "white" }}>
+              v{Constants.manifest.version}
+            </Text>
 
             {isSmallDevice ? (
               <TouchableOpacity

@@ -182,9 +182,8 @@ class Shop extends Component {
                     </TouchableOpacity>
                   ) : null}
                 </View>
+                <T>{city[profitKey]}</T>
               </View>
-
-              <T>{city[profitKey]}</T>
             </View>
           );
         })}
