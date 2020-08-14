@@ -1,7 +1,7 @@
 // import { ReCaptcha } from "react-recaptcha-v3";
 import { Entypo } from "@expo/vector-icons";
 import React, { Component } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -115,7 +115,7 @@ class Junkies extends Component {
           }}
         >
           <View style={{ flex: 2 }}>
-            <Text style={{ fontWeight: "bold" }}>Stad</Text>
+            <T bold>Stad</T>
           </View>
           <View
             style={{
@@ -124,8 +124,8 @@ class Junkies extends Component {
               flexDirection: "row",
             }}
           >
-            <Text style={{ fontWeight: "bold" }}>Leger des Heils</Text>
-            <Text style={{ fontWeight: "bold" }}>Winst</Text>
+            <T bold>Leger des Heils</T>
+            <T bold>Winst</T>
           </View>
         </View>
         {cities?.map((city, index) => {
@@ -174,9 +174,10 @@ class Junkies extends Component {
                     </TouchableOpacity>
                   ) : null}
                 </View>
+                <View>
+                  <T>{city.junkiesProfit}</T>
+                </View>
               </View>
-
-              <T>{city.junkiesProfit}</T>
             </View>
           );
         })}
@@ -192,7 +193,7 @@ class Junkies extends Component {
       },
     } = this.props;
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         <View style={{ margin: 20 }}>
           {response ? (
             <View>
@@ -210,7 +211,7 @@ class Junkies extends Component {
             this.renderFooter()
           )}
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

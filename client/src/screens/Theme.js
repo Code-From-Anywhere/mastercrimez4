@@ -2,9 +2,9 @@ import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export const DEFAULT_THEME = {
-  name: "Licht bruin",
-  secondary: "#f5e6b4",
-  secondaryText: "#000000",
+  name: "Origineel",
+  secondary: "#222222",
+  secondaryText: "#FFFFFF",
   primary: "#555555",
   primaryText: "#FFFFFF",
 };
@@ -19,10 +19,11 @@ export type Theme = {
 
 const themes = [
   DEFAULT_THEME,
+
   {
-    name: "Origineel",
-    secondary: "#222222",
-    secondaryText: "#FFFFFF",
+    name: "Licht bruin",
+    secondary: "#f5e6b4",
+    secondaryText: "#000000",
     primary: "#555555",
     primaryText: "#FFFFFF",
   },

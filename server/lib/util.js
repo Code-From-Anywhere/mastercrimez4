@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 
-const sendMessageAndPush = (user, user2, message, Message) => {
+const sendMessageAndPush = (user, user2, message, Message, fromSystem) => {
   if (user2.pushtoken) {
     fetch("https://exp.host/--/api/v2/push/send", {
       method: "POST",
@@ -20,7 +20,7 @@ const sendMessageAndPush = (user, user2, message, Message) => {
 
   Message.create({
     from: user.id,
-    fromName: user.name,
+    fromName: fromSystem ? "(System)" : user.name,
     to: user2.id,
     message,
     read: false,

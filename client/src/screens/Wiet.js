@@ -95,7 +95,9 @@ class Wiet extends Component {
           }}
         >
           <View style={{ flex: 2 }}>
-            <Text style={{ fontWeight: "bold" }}>Stad</Text>
+            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
+              Stad
+            </Text>
           </View>
           <View
             style={{
@@ -104,8 +106,12 @@ class Wiet extends Component {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontWeight: "bold" }}>Huisjesmelker</Text>
-            <Text style={{ fontWeight: "bold" }}>Winst</Text>
+            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
+              Huisjesmelker
+            </Text>
+            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
+              Winst
+            </Text>
           </View>
         </View>
         {cities?.map((city, index) => {
@@ -122,7 +128,7 @@ class Wiet extends Component {
               }}
             >
               <View style={{ flex: 2 }}>
-                <Text>{city.city}</Text>
+                <T>{city.city}</T>
               </View>
               <View
                 style={{
@@ -133,7 +139,7 @@ class Wiet extends Component {
               >
                 <View style={{ flexDirection: "row" }}>
                   {city.landlordOwner ? (
-                    <Text>{city.landlordOwner}</Text>
+                    <T>{city.landlordOwner}</T>
                   ) : (
                     <TouchableOpacity
                       onPress={() => this.becomeOwner(city.city)}
@@ -155,7 +161,7 @@ class Wiet extends Component {
                   ) : null}
                 </View>
 
-                <Text>{city.landlordProfit}</Text>
+                <T>{city.landlordProfit}</T>
               </View>
             </View>
           );

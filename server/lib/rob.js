@@ -97,12 +97,14 @@ const rob = async (req, res, User, Message) => {
     );
 
     if (gelukt2) {
-      Message.create({
-        from: user.id,
-        to: user2.id,
-        fromName: "(System)",
-        message: `${user.name} heeft je beroofd en heeft ${stealAmount} van je gejat.`,
-      });
+      sendMessageAndPush(
+        user,
+        user2,
+        `${user.name} heeft je beroofd en heeft ${stealAmount} van je gejat.`,
+        Message,
+        true
+      );
+
       return res.json({
         response: `Het is gelukt! Je hebt ${stealAmount},- gejat.`,
       });

@@ -21,6 +21,15 @@ const PrivacyPage = ({ navigation }) => {
           aanvaller nodig zal hebben. De rang heeft de meeste invloed, daarna
           het wapen, de verdiging en de moordervaring.
         </T>
+
+        <H1>Hoe krijg ik een bezitting?</H1>
+        <T>
+          Een bezitting kan je overnemen als hij geen eigenaar heeft. Klik dan
+          op (Niemand) op het steden overzicht om de bezitting over te nemen.
+          Wil je een bezitting overnemen die al een eigenaar heeft? Vermoord dan
+          de eigenaar om de bezitting te kunnen pakken, want als je dood gaat
+          raak je al je bezittingen kwijt!
+        </T>
       </View>
     </View>
   );

@@ -20,13 +20,7 @@ const hospital = async (req, res, User, Message) => {
         User.update({ cash: user.cash - cost }, { where: { id: user.id } });
         User.update({ health: 100 }, { where: { id: user2.id } });
         const message = `${user.name} heeft jou naar het ziekenhuis gebracht.`;
-        Message.create({
-          from: 0,
-          fromName: "(System)",
-          to: user2.id,
-          message,
-          read: false,
-        });
+        sendMessageAndPush(user, user2, message, Message, true);
 
         res.json({
           response: `Je hebt ${user2.name} naar het ziekenhuis gebracht voor ${cost}`,

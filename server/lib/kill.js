@@ -252,12 +252,13 @@ const kill = async (req, res, User, Message, Garage) => {
       { where: { id: user2.id } }
     );
 
-    Message.create({
-      from: user.id,
-      to: user2.id,
-      fromName: "(System)",
-      message: `${user.name} schoot op jou met ${bullets} kogels. ${user.name} heeft je vermoord! ${responseMessageBackfire}`,
-    });
+    sendMessageAndPush(
+      user,
+      user2,
+      `${user.name} schoot op jou met ${bullets} kogels. ${user.name} heeft je vermoord! ${responseMessageBackfire}`,
+      Message,
+      true
+    );
 
     properties
       .map((p) => `${p}Owner`)
@@ -280,12 +281,13 @@ const kill = async (req, res, User, Message, Garage) => {
     });
 
     accomplices.forEach((accomplice) => {
-      Message.create({
-        from: user.id,
-        to: accomplice.id,
-        fromName: "(System)",
-        message: `${user.name} schoot op ${user2.name} met ${bullets} kogels. ${user.name} heeft ${user2.name} vermoord!`,
-      });
+      sendMessageAndPush(
+        user,
+        accomplice,
+        `${user.name} schoot op ${user2.name} met ${bullets} kogels. ${user.name} heeft ${user2.name} vermoord!`,
+        Message,
+        true
+      );
     });
   } else {
     const stolenCash = Math.round((user2.cash * damage) / 100);
@@ -320,20 +322,22 @@ const kill = async (req, res, User, Message, Garage) => {
     });
 
     accomplices.forEach((accomplice) => {
-      Message.create({
-        from: user.id,
-        to: accomplice.id,
-        fromName: "(System)",
-        message: `${user.name} heeft ${user2.name} aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- gejat!`,
-      });
+      sendMessageAndPush(
+        user,
+        accomplice,
+        `${user.name} heeft ${user2.name} aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- gejat!`,
+        Message,
+        true
+      );
     });
 
-    Message.create({
-      from: user.id,
-      to: user2.id,
-      fromName: "(System)",
-      message: `${user.name} heeft je aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- van je gejat! ${responseBackfire}`,
-    });
+    sendMessageAndPush(
+      user,
+      user2,
+      `${user.name} heeft je aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- van je gejat! ${responseBackfire}`,
+      Message,
+      true
+    );
 
     res.json({
       response: `Je hebt ${damage}% schade toegebracht aan ${user2.name}. Je hebt ${stolenTotal},- gestolen. ${responseMessageBackfire}`,

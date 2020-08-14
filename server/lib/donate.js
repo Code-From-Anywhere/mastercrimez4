@@ -1,4 +1,5 @@
 const { Op } = require("sequelize");
+const { sendMessageAndPush } = require("./util");
 
 const donate = async (req, res, User, Message) => {
   const { loginToken, to, amount, type } = req.body;
@@ -53,13 +54,8 @@ const donate = async (req, res, User, Message) => {
               );
             }
             const message = `${user.name} heeft jou ${amount2} ${typeName} overgemaakt`;
-            Message.create({
-              from: 0,
-              fromName: "(System)",
-              to: user2.id,
-              message,
-              read: false,
-            });
+
+            sendMessageAndPush(user, user2, message, Message, true);
 
             res.json({ response: "Overgemaakt." });
           } else {

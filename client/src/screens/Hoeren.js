@@ -1,6 +1,6 @@
 import { Entypo } from "@expo/vector-icons";
 import React, { Component } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -114,7 +114,7 @@ class Hoeren extends Component {
           }}
         >
           <View style={{ flex: 2 }}>
-            <Text style={{ fontWeight: "bold" }}>Stad</Text>
+            <T bold>Stad</T>
           </View>
           <View
             style={{
@@ -123,8 +123,8 @@ class Hoeren extends Component {
               flexDirection: "row",
             }}
           >
-            <Text style={{ fontWeight: "bold" }}>RLD</Text>
-            <Text style={{ fontWeight: "bold" }}>Winst</Text>
+            <T bold>RLD</T>
+            <T bold>Winst</T>
           </View>
         </View>
         {cities?.map((city, index) => {
@@ -173,9 +173,8 @@ class Hoeren extends Component {
                     </TouchableOpacity>
                   ) : null}
                 </View>
+                <T>{city.rldProfit}</T>
               </View>
-
-              <T>{city.rldProfit}</T>
             </View>
           );
         })}
@@ -193,7 +192,7 @@ class Hoeren extends Component {
     const number = Math.ceil(Math.random() * 60);
 
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         <View style={{ margin: 20 }}>
           {response ? (
             <View style={{ flex: 1, minHeight: 400 }}>
@@ -218,7 +217,7 @@ class Hoeren extends Component {
             this.renderFooter()
           )}
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

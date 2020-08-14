@@ -110,6 +110,9 @@ class ProfileScreen extends React.Component {
 
     const color = getUserColor(profile, this.props.screenProps.device.theme);
 
+    const uri = Constants.SERVER_ADDR + "/" + images?.[0]?.image;
+    const hasImage = !!images?.[0]?.image;
+
     return (
       <ScrollView>
         <View style={{ justifyContent: "center" }}>
@@ -122,6 +125,19 @@ class ProfileScreen extends React.Component {
             }}
           >
             <Text style={{ fontWeight: "bold", color }}>{profile?.name}</Text>
+
+            {hasImage ? (
+              <View>
+                <Image
+                  source={{ uri }}
+                  style={{
+                    width: "100%",
+                    height: 400,
+                  }}
+                  resizeMode="contain"
+                />
+              </View>
+            ) : null}
 
             {this.keyValue("Online", isOnline ? "✅" : "🛑")}
             {this.keyValue("Contant", `€${profile?.cash}`)}
@@ -191,7 +207,7 @@ class ProfileScreen extends React.Component {
           </View>
 
           <View>
-            {images.map((image) => {
+            {images.slice(1, images.length).map((image) => {
               const uri = Constants.SERVER_ADDR + "/" + image.image;
               return (
                 <View>
