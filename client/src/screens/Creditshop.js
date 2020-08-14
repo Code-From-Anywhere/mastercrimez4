@@ -1,51 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Text, View } from "react-native";
 import Button from "../components/Button";
-import Constants from "../Constants";
+import { doOnce, get, post } from "../Util";
 
 const Creditshop = ({ screenProps }) => {
   const [items, setItems] = useState(null);
   const [response, setResponse] = useState(null);
 
-  const { device, reloadMe, me } = screenProps;
+  const {
+    device,
+    device: { theme },
+    reloadMe,
+    me,
+  } = screenProps;
 
-  useEffect(() => {
-    fetch(`${Constants.SERVER_ADDR}/creditshop`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then(async (response) => {
-        setItems(response.items);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
+  doOnce(async () => {
+    const { items } = await get("creditshop");
+    setItems(items);
+  });
 
-  const buy = (type) => {
-    fetch(`${Constants.SERVER_ADDR}/creditshopBuy`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        loginToken: device.loginToken,
-        type,
-      }),
-    })
-      .then((response) => response.json())
-      .then(({ response }) => {
-        setResponse(response);
-        reloadMe(device.loginToken);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const buy = async (type) => {
+    const { response } = await post("creditshopBuy", {
+      loginToken: device.loginToken,
+      type,
+    });
+    setResponse(response);
+    reloadMe(device.loginToken);
   };
   return (
     <View style={{ flex: 1, justifyContent: "space-around" }}>
@@ -61,7 +41,7 @@ const Creditshop = ({ screenProps }) => {
 
       {items?.map((item) => (
         <Button
-          theme={this.props.screenProps.device.theme}
+          theme={theme}
           style={{ marginHorizontal: 20 }}
           title={`${item.kooptext} voor ${item.kosten} credits`}
           onPress={() => {
