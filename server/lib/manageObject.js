@@ -152,7 +152,8 @@ const changePrice = async (req, res, User, City) => {
     .includes(type)
     ? `${type}Price`
     : null;
-  const maxPrice = properties.find((x) => x.name === type)?.maxPrice;
+  const ding = properties.find((x) => x.name === type);
+  const maxPrice = ding ? ding.maxPrice : 0;
 
   if (!key) {
     return res.json({ response: "Ongeldig type" });
