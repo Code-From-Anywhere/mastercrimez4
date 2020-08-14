@@ -2,6 +2,7 @@ import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
+import H1 from "../components/H1";
 import T from "../components/T";
 import { doOnce, get, post } from "../Util";
 const SwissBank = ({
@@ -63,6 +64,8 @@ const SwissBank = ({
             </Text>
             . De winst is {city?.bankProfit}
           </Text>
+
+          <H1>Zwitserse bank is nog in ontwikkeling! Coming soon</H1>
 
           {response && (
             <Text style={{ color: theme.primaryText, marginVertical: 20 }}>

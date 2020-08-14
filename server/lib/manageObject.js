@@ -1,4 +1,5 @@
 const { Op, Sequelize } = require("sequelize");
+const { sendMessageAndPush } = require("./util");
 
 const properties = [
   {
@@ -76,7 +77,7 @@ const becomeOwner = async (req, res, User, City) => {
   res.json({ response: "Je bent nu eigenaar" });
 };
 
-const giveAway = async (req, res, User, City) => {
+const giveAway = async (req, res, User, City, Message) => {
   const { city, type, token, to } = req.body;
 
   if (!token) {
@@ -124,6 +125,14 @@ const giveAway = async (req, res, User, City) => {
   if (!cityUpdated) {
     return res.json({ response: "Je kan deze bezitting niet weggeven." });
   }
+
+  sendMessageAndPush(
+    user,
+    user2,
+    `${user.name} heeft jou een ${typeString} gegeven in ${city}!`,
+    Message,
+    true
+  );
 
   res.json({ response: `De eigenaar is nu ${user2.name}` });
 };

@@ -567,7 +567,7 @@ server.post("/becomeOwner", (req, res) =>
   require("./manageObject").becomeOwner(req, res, User, City)
 );
 server.post("/giveAway", (req, res) =>
-  require("./manageObject").giveAway(req, res, User, City)
+  require("./manageObject").giveAway(req, res, User, City, Message)
 );
 server.post("/changePrice", (req, res) =>
   require("./manageObject").changePrice(req, res, User, City)
