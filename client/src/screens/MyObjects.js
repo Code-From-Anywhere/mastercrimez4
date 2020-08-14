@@ -85,6 +85,7 @@ const MyObjects = ({
             if (city[ownerKey] === me?.name && me?.name) {
               return (
                 <Button
+                  key={`index${index}${property}`}
                   style={{ marginVertical: 15 }}
                   theme={theme}
                   title={`Beheer je ${propertyString} in ${city.city}`}

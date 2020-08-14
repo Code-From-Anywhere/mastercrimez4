@@ -1,6 +1,20 @@
 const { getRank, getStrength } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
+const properties = [
+  "bulletFactory",
+  "casino",
+  "rld",
+  "landlord",
+  "junkies",
+  "weaponShop",
+  "airport",
+  "estateAgent",
+  "garage",
+  "jail",
+  "bank",
+];
+
 const SECONDS = 120;
 
 const kill = async (req, res, User, Message, Garage) => {
@@ -96,7 +110,7 @@ const kill = async (req, res, User, Message, Garage) => {
     {
       where: {
         id: user.id,
-        attackAt: [{ [Op.lt]: Date.now() - SECONDS * 1000 }],
+        attackAt: { [Op.lt]: Date.now() - SECONDS * 1000 },
       },
     }
   );
@@ -167,6 +181,16 @@ const kill = async (req, res, User, Message, Garage) => {
       },
       { where: { id: user.id } }
     );
+
+    properties
+      .map((p) => `${p}Owner`)
+      .map(async (x) => {
+        const [updated] = await City.update(
+          { [x]: null },
+          { where: { [x]: user.name } }
+        );
+        return updated;
+      });
   } else {
     responseBackfire = `${user2.name} schoot terug met ${user2.bullets} kogels. Dit heeft jou ${damageBackfire}% schade toegebracht.`;
     responseMessageBackfire = `Met je backfire heb je ${user2.name} ${damageBackfire}% schade toegebracht.`;
@@ -234,6 +258,16 @@ const kill = async (req, res, User, Message, Garage) => {
       fromName: "(System)",
       message: `${user.name} schoot op jou met ${bullets} kogels. ${user.name} heeft je vermoord! ${responseMessageBackfire}`,
     });
+
+    properties
+      .map((p) => `${p}Owner`)
+      .map(async (x) => {
+        const [updated] = await City.update(
+          { [x]: null },
+          { where: { [x]: user2.name } }
+        );
+        return updated;
+      });
 
     const accomplices = await User.findAll({
       attributes: ["id"],

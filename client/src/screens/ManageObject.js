@@ -38,6 +38,7 @@ const Bulletfactory = ({
   const [giveTo, setGiveTo] = useState("");
   const [cities, setCities] = useState(null);
   const [price, setPrice] = useState("");
+  const [who, setWho] = useState("");
 
   const theCity = cities?.find((c) => c.city === city);
 
@@ -67,6 +68,18 @@ const Bulletfactory = ({
       city,
       type,
       to: giveTo,
+    });
+    reloadMe(device.loginToken);
+    fetchCities();
+    setResponse(response);
+  };
+
+  const putInJail = async () => {
+    const { response } = await post("putInJail", {
+      token: device.loginToken,
+      city,
+      type,
+      who,
     });
     reloadMe(device.loginToken);
     fetchCities();
@@ -163,6 +176,24 @@ const Bulletfactory = ({
                 theme={theme}
                 title="Verander prijs"
               />
+            </View>
+          )}
+
+          {type === "jail" && (
+            <View
+              style={{
+                marginVertical: 15,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <TextInput
+                style={{ ...style(theme).textInput, flex: 1 }}
+                placeholder="Naam"
+                value={who}
+                onChangeText={(x) => setWho(x)}
+              />
+              <Button onPress={putInJail} theme={theme} title="Zet gevangen" />
             </View>
           )}
         </View>

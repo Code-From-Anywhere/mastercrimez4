@@ -195,6 +195,36 @@ const Layout = ({ screenProps, navigation, children }) => {
   const { me, device } = screenProps;
 
   const updateAvailable = useExpoUpdate();
+
+  const allowedRoutes = [
+    "Home",
+    "Settings",
+    "Members",
+    "Profile",
+    "Status",
+    "Stats",
+    "MyObjects",
+    "Chat",
+    "Messages",
+    "Forum",
+    "Info",
+    "InfoGame",
+    "InfoRules",
+    "Privacy",
+    "Contribute",
+    "Prizes",
+    "Notifications",
+    "VerifyPhone",
+    "ChangePassword",
+    "SignupEmail",
+    "ChangeName",
+    "Theme",
+    "Login",
+    "MyProfile",
+    "Backfire",
+    "Accomplice",
+  ];
+  const skip = allowedRoutes.includes(navigation.state.routeName);
   return (
     <SafeAreaView
       style={{
@@ -249,7 +279,7 @@ const Layout = ({ screenProps, navigation, children }) => {
 
         {updateAvailable && (
           <TouchableOpacity
-            onPress={() => Updates.reloadAsync()}
+            onPress={async () => await Updates.reloadAsync()}
             style={{
               margin: 15,
               padding: 15,
@@ -264,11 +294,11 @@ const Layout = ({ screenProps, navigation, children }) => {
           </TouchableOpacity>
         )}
 
-        {me?.reizenAt > Date.now() ? (
+        {me?.reizenAt > Date.now() && !skip ? (
           <Fly screenProps={screenProps} navigation={navigation} />
-        ) : me?.health <= 0 || me?.health === null ? (
+        ) : (me?.health <= 0 || me?.health === null) && !skip ? (
           <Dead screenProps={screenProps} navigation={navigation} />
-        ) : me?.jailAt > Date.now() ? (
+        ) : me?.jailAt > Date.now() && !skip ? (
           <Jail screenProps={screenProps} navigation={navigation} />
         ) : (
           <View style={{ flex: 1 }}>{children}</View>

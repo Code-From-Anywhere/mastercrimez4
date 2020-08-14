@@ -237,4 +237,52 @@ const getProfit = async (req, res, sequelize, User, City) => {
   res.json({ response: `Je hebt €${cityObj[key]},- opgehaald` });
 };
 
-module.exports = { becomeOwner, giveAway, changePrice, getProfit };
+const putInJail = async (req, res, User, City) => {
+  let { city, type, token, who } = req.body;
+
+  if (!token) {
+    return res.json({ response: "Geen logintoken gegeven" });
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+  if (!user) {
+    return res.json({ response: "Geen user gevonden" });
+  }
+
+  const user2 = await User.findOne({
+    where: {
+      $and: Sequelize.where(
+        Sequelize.fn("lower", Sequelize.col("name")),
+        Sequelize.fn("lower", who)
+      ),
+      health: { [Op.gt]: 0 },
+    },
+  });
+
+  if (!user2) {
+    return res.json({ response: "Deze speler bestaat niet of is dood" });
+  }
+
+  const key = ["jail"].includes(type) ? `${type}Profit` : null;
+
+  if (!key) {
+    return res.json({ response: "Ongeldig type" });
+  }
+  const ownerKey = ["jail"].includes(type) ? `${type}Owner` : null;
+
+  const cityObj = await City.findOne({
+    where: { city, [ownerKey]: user.name },
+  });
+
+  if (!cityObj) {
+    return res.json({ response: "Object niet gevonden" });
+  }
+
+  User.update({ jailAt: Date.now() + 300 * 1000 }, { where: { id: user2.id } });
+
+  res.json({
+    response: `Je hebt ${user2.name} in de gevangenis gestopt voor 5 minuten`,
+  });
+};
+
+module.exports = { becomeOwner, giveAway, changePrice, getProfit, putInJail };

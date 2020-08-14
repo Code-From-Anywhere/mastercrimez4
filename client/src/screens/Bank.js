@@ -1,8 +1,15 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
+import style from "../Style";
 
 class Bank extends Component {
   state = {
@@ -34,11 +41,16 @@ class Bank extends Component {
       });
   };
 
-  keyValue(key, value) {
+  keyValue(key, value, onPress) {
     return (
       <View style={styles.row}>
-        <T>{key}</T>
-        <T>{value}</T>
+        <T hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>{key}</T>
+        <TouchableOpacity
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          onPress={onPress}
+        >
+          <T>{value}</T>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -71,15 +83,16 @@ class Bank extends Component {
   };
 
   renderForm() {
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
+
     return (
       <View>
         <TextInput
-          style={{
-            backgroundColor: this.props.screenProps.device.theme.secondary,
-            fontSize: 24,
-            borderRadius: 10,
-            color: this.props.screenProps.device.theme.secondaryText,
-          }}
+          style={style(theme).textInput}
           placeholder="Hoeveelheid"
           value={this.state.amount}
           onChangeText={(amount) => this.setState({ amount })}
@@ -106,8 +119,12 @@ class Bank extends Component {
               {response.response}
             </Text>
           ) : null}
-          {this.keyValue("Contant", Intl.NumberFormat().format(me?.cash))}
-          {this.keyValue("Bank", Intl.NumberFormat().format(me?.bank))}
+          {this.keyValue("Contant", Intl.NumberFormat().format(me?.cash), () =>
+            this.setState({ amount: String(me.cash) })
+          )}
+          {this.keyValue("Bank", Intl.NumberFormat().format(me?.bank), () =>
+            this.setState({ amount: String(me.bank) })
+          )}
 
           {this.renderForm()}
         </View>
