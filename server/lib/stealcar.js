@@ -49,6 +49,26 @@ const stealcar = async (req, res, User, Garage) => {
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    const carsAlready = await Garage.findAll({ where: { userId: user.id } });
+    const amountCarsAlready = carsAlready.length;
+    const maxCars = {
+      0: 0,
+      1: 1,
+      2: 4,
+      3: 10,
+      4: 25,
+      5: 75,
+      6: 250,
+    };
+
+    if (maxCars[user.garage] < amountCarsAlready) {
+      return res.json({
+        response: `Je kan maximaal ${
+          maxCars[user.garage]
+        } auto's in je garage, dus je kunt niet meer stelen! Ga naar garage winkel en koop een betere garage voordat je verder gaat.`,
+      });
+    }
+
     if (user.autostelenAt + 60000 < Date.now()) {
       const kans = Math.round((user.rank + 30) / (option * option));
       const kans2 = kans > 75 ? 75 : kans;

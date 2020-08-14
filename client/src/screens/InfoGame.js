@@ -1,6 +1,6 @@
 import React from "react";
 // import MarkdownView from "react-native-markdown-renderer";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import H1 from "../components/H1";
 import T from "../components/T";
 /**
@@ -8,7 +8,7 @@ import T from "../components/T";
  */
 const PrivacyPage = ({ navigation }) => {
   return (
-    <View style={{ alignItems: "center" }}>
+    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
       <View style={{ margin: 20 }}>
         <H1>Hoe werkt vermoorden?</H1>
         <T>
@@ -30,8 +30,29 @@ const PrivacyPage = ({ navigation }) => {
           de eigenaar om de bezitting te kunnen pakken, want als je dood gaat
           raak je al je bezittingen kwijt!
         </T>
+
+        <H1>Hoe wordt de winst bepaalt van de bezittingen?</H1>
+        <T>
+          - Een kogalfabriek eigenaar zal 50% van het geld van alle verkochte
+          kogels krijgen
+        </T>
+        <T>
+          - Huisjesmelkers, Leger des Heils en het Red Light District krijgen
+          20% van iedereens inkomen bij het ophalen van inkomens.
+        </T>
+        <T>- Gevangenis krijgt uitkoopgeld</T>
+        <T>
+          - Zwitserse bank eigenaren krijgen 50% van de dagelijkse kosten van de
+          zwitserse bank
+        </T>
+        <T>- Casino eigenaren krijgen 50% van de rake van de casino</T>
+        <T>
+          - Wapenwinkel, vliegveld, garage en makelaars krijgen 20% van de
+          totale kosten gemaakt bij het kopen van nieuwe dingen in de
+          respectievelijke winkel.
+        </T>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 export default PrivacyPage;
