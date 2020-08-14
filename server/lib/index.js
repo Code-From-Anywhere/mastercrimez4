@@ -636,7 +636,7 @@ server.post("/hospital", (req, res) =>
 );
 
 server.post("/kill", (req, res) =>
-  require("./kill").kill(req, res, User, Message, Garage)
+  require("./kill").kill(req, res, User, Message, Garage, City)
 );
 
 server.post("/oc", (req, res) => require("./oc").oc(req, res, User, Message));

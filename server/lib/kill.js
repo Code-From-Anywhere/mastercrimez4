@@ -17,7 +17,7 @@ const properties = [
 
 const SECONDS = 120;
 
-const kill = async (req, res, User, Message, Garage) => {
+const kill = async (req, res, User, Message, Garage, City) => {
   const { token, name, bullets } = req.body;
 
   if (!token) {

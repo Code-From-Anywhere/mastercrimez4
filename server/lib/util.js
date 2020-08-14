@@ -11,6 +11,7 @@ const sendMessageAndPush = (user, user2, message, Message, fromSystem) => {
       body: JSON.stringify({
         to: user2.pushtoken,
         title: `Nieuw bericht van ${user.name}`,
+        sound: "default",
         body: message,
       }),
     })
