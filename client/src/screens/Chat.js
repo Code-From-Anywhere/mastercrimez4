@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Text, TextInput, View } from "react-native";
 import Constants from "../Constants";
-import { KeyboardAvoidingSpace } from "../KeyboardAvoidingSpace";
 class Chat extends Component {
   state = {
     chat: [],
@@ -83,7 +82,6 @@ class Chat extends Component {
               });
           }}
         />
-        <KeyboardAvoidingSpace />
       </View>
     );
   }

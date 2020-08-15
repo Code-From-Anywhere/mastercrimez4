@@ -740,7 +740,7 @@ server.post("/chat", async (req, res) => {
 
   const user = await User.findOne({ where: { loginToken: token } });
 
-  if (user) {
+  if (user && message) {
     Chat.create({ name: user.name, message }).then((chat) => {
       res.json(chat);
     });

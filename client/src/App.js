@@ -22,6 +22,7 @@ import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Header from "./components/Header";
 import Jail from "./components/Jail";
+import { KeyboardAvoidingSpace } from "./KeyboardAvoidingSpace";
 import { leftMenu, rightMenu } from "./Menus";
 import Accomplice from "./screens/Accomplice";
 import AdminEmail from "./screens/AdminEmail";
@@ -85,7 +86,6 @@ import VerifyPhoneCode from "./screens/VerifyPhoneCode";
 import Wiet from "./screens/Wiet";
 import { persistor, store } from "./Store";
 import { useExpoUpdate } from "./updateHook";
-
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
@@ -322,6 +322,7 @@ const Layout = ({ screenProps, navigation, children }) => {
         ) : (
           <View style={{ flex: 1 }}>{children}</View>
         )}
+        <KeyboardAvoidingSpace />
       </View>
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
