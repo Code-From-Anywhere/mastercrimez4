@@ -64,6 +64,7 @@ import MyObjects from "./screens/MyObjects";
 import MyProfile from "./screens/MyProfile";
 import Notifications from "./screens/Notifications";
 import OrganisedCrime from "./screens/OrganisedCrime";
+import Poker from "./screens/Poker";
 import Privacy from "./screens/Privacy";
 import Prizes from "./screens/Prizes";
 import Profile from "./screens/Profile";
@@ -298,7 +299,7 @@ const Layout = ({ screenProps, navigation, children }) => {
 
         {updateAvailable && (
           <TouchableOpacity
-            onPress={async () => await Updates.reloadAsync()}
+            onPress={() => Updates.reloadAsync()}
             style={{
               margin: 15,
               padding: 15,
@@ -307,7 +308,7 @@ const Layout = ({ screenProps, navigation, children }) => {
             }}
           >
             <Text style={{ color: device.theme.secondaryText }}>
-              Er is een nieuwe update beschikbaar. Klik hier om de app te
+              Er is een nieuwe update beschikbaar! Klik hier om de app te
               verversen.
             </Text>
           </TouchableOpacity>
@@ -382,6 +383,7 @@ const Container = rightContainer(
       Status: withLayout(Status),
       StealCar: withLayout(StealCar),
       AllBanks: withLayout(AllBanks),
+      Poker: withLayout(Poker),
       SwissBank: withLayout(SwissBank),
 
       Crimes: withLayout(Crimes),

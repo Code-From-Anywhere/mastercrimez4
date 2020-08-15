@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { TextInput, View } from "react-native";
+import { ScrollView, TextInput } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -14,7 +14,7 @@ class SuperMessage extends Component {
     const { me, device } = this.props.screenProps;
 
     return (
-      <View style={{ flex: 1, margin: 15 }}>
+      <ScrollView style={{ flex: 1, padding: 15 }}>
         <T>
           Je hebt {me?.credits} credits. Een superbericht kost 500 credits. Een
           superbericht word naar alle geverifieerde spelers gestuurd, dood of
@@ -37,7 +37,7 @@ class SuperMessage extends Component {
           title="Verzenden"
           onPress={this.sendMessage}
         />
-      </View>
+      </ScrollView>
     );
   }
 

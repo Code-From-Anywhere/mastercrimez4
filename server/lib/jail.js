@@ -1,4 +1,5 @@
 const { Op } = require("sequelize");
+const { sendMessageAndPush } = require("./util");
 
 const jail = async (req, res, User) => {
   const people = await User.findAll({
@@ -9,7 +10,7 @@ const jail = async (req, res, User) => {
   res.json({ jail: people });
 };
 
-const breakout = async (req, res, User) => {
+const breakout = async (req, res, User, Message) => {
   const { token, name } = req.body;
 
   if (!token) {
@@ -65,6 +66,14 @@ const breakout = async (req, res, User) => {
     res.json({
       response: `Je hebt ${user2.name} uitgebroken.`,
     });
+
+    sendMessageAndPush(
+      user,
+      user2,
+      `${user.name} heeft jou uitgebroken`,
+      Message,
+      true
+    );
 
     User.update({ jailAt: null }, { where: { id: user2.id } });
   }

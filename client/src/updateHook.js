@@ -6,6 +6,7 @@ export const useExpoUpdate = () => {
   useEffect(() => {
     if (!__DEV__) {
       setUpdateListener();
+      Updates.addListener(() => checkUpdate());
       checkUpdate();
     }
   }, []);
@@ -16,7 +17,9 @@ export const useExpoUpdate = () => {
   const checkUpdate = () => {
     Updates.checkForUpdateAsync().then((res) => {
       if (res.isAvailable) {
-        setUpdateAvailable(true);
+        Updates.fetchUpdateAsync().then((res) => {
+          setUpdateAvailable(true);
+        });
       }
     });
   };

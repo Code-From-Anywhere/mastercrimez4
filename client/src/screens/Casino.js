@@ -64,7 +64,12 @@ const Casino = ({
             . De winst is {city?.casinoProfit}
           </Text>
 
-          <T>Casino games are coming soon!</T>
+          <Button
+            onPress={() => navigation.navigate("Poker")}
+            theme={theme}
+            title="Poker"
+          />
+
           {response && (
             <Text style={{ color: theme.primaryText, marginVertical: 20 }}>
               {response}
