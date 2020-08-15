@@ -26,9 +26,8 @@ class Accomplice extends React.Component {
 
   componentDidMount() {
     const accomplice = this.props.navigation.state.params?.accomplice;
-    const { me } = this.props.screenProps;
 
-    if (accomplice && me) {
+    if (accomplice) {
       this.setState({ accomplice }, () => {
         this.setAccomplice();
       });

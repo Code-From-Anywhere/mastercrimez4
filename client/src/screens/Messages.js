@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
+import Tabs from "../components/Tabs";
 import Constants from "../Constants";
 import style from "../Style";
 
@@ -127,7 +128,7 @@ class Messages extends Component {
     return (
       <View style={{ flex: 1 }}>
         {this.state.response ? (
-          <View style={{ height: 100 }}>
+          <View>
             <T>{this.state.response.response}</T>
           </View>
         ) : null}
@@ -135,17 +136,21 @@ class Messages extends Component {
         <TextInput
           style={style(device.theme).textInput}
           placeholder="Aan"
+          placeholderTextColor={device.theme.secondaryTextSoft}
           value={this.state.to}
           onChangeText={(to) => this.setState({ to })}
         />
         <TextInput
           multiline
           numberOfLines={4}
-          style={{
-            ...style(device.theme).textInput,
-            height: 200,
-            width: "100%",
-          }}
+          placeholderTextColor={device.theme.secondaryTextSoft}
+          style={[
+            style(device.theme).textInput,
+            {
+              height: 200,
+              width: "100%",
+            },
+          ]}
           placeholder="Bericht"
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}
@@ -254,17 +259,30 @@ class Messages extends Component {
 
     const { newMessage, readMessage } = this.state;
     return (
-      <View style={style(device.theme).container}>
-        <Button
-          theme={this.props.screenProps.device.theme}
-          title={newMessage ? "Berichten" : "Nieuw bericht"}
-          onPress={() => this.setState({ newMessage: !newMessage })}
+      <View style={{ flex: 1 }}>
+        <Tabs
+          tabs={[
+            {
+              title: "Berichten",
+              isActive: this.state.newMessage === false,
+              onPress: () =>
+                this.setState({ newMessage: false, readMessage: false }),
+            },
+            {
+              title: "Nieuw bericht",
+              isActive: this.state.newMessage,
+              onPress: () => this.setState({ newMessage: true }),
+            },
+          ]}
         />
-        {newMessage
-          ? this.renderNew()
-          : readMessage
-          ? this.readMessage()
-          : this.renderMessages()}
+
+        <View style={{ margin: 20, flex: 1 }}>
+          {newMessage
+            ? this.renderNew()
+            : readMessage
+            ? this.readMessage()
+            : this.renderMessages()}
+        </View>
       </View>
     );
   }

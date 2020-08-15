@@ -52,12 +52,14 @@ class Kill extends Component {
         <TextInput
           style={style(theme).textInput}
           placeholder="Naam"
+          placeholderTextColor={theme.secondaryTextSoft}
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
         />
         <TextInput
           style={style(theme).textInput}
           placeholder="Kogels"
+          placeholderTextColor={theme.secondaryTextSoft}
           value={this.state.bullets}
           onChangeText={(bullets) => this.setState({ bullets })}
         />

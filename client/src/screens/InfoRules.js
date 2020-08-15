@@ -6,7 +6,7 @@ import T from "../components/T";
 
 const PrivacyPage = ({ navigation }) => {
   return (
-    <ScrollView style={{ alignItems: "center" }}>
+    <ScrollView>
       <View style={{ margin: 20 }}>
         <H1>Verboden spelgedrag</H1>
         <T>

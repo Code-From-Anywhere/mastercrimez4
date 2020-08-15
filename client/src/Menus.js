@@ -225,16 +225,10 @@ export const leftMenu = (me, theme) => {
     },
 
     {
-      iconType: "MaterialCommunityIcons",
-      icon: "cash-100",
+      iconType: "FontAwesome",
+      icon: "bank",
       text: "Bank",
-      to: "Bank",
-    },
-    {
-      iconType: "MaterialCommunityIcons",
-      icon: "cash-100",
-      text: "Zwitserse bank",
-      to: "SwissBank",
+      to: "AllBanks",
     },
     {
       iconType: "MaterialCommunityIcons",
@@ -408,13 +402,6 @@ export const rightMenu = (me, theme) => [
     isHeader: true,
     text: "Maatschappij",
   },
-  {
-    iconType: "Entypo",
-    icon: "info-with-circle",
-
-    text: "Status",
-    to: "Status",
-  },
 
   {
     iconType: "Ionicons",
@@ -439,27 +426,6 @@ export const rightMenu = (me, theme) => [
     text: "Mijn bezittingen",
     to: "MyObjects",
   },
-
-  {
-    iconType: "FontAwesome5",
-    icon: "money-bill-wave",
-
-    text: "Doneren",
-    to: "Donate",
-  },
-
-  {
-    iconType: "MaterialIcons",
-    icon: "attach-money",
-
-    text: "Inkomen",
-    to: "Income",
-  },
-
-  // {
-  //   text: "Statistieken",
-  //   to: "Stats"
-  // },
 
   {
     iconType: "Entypo",
@@ -511,7 +477,6 @@ export const rightMenu = (me, theme) => [
   {
     iconType: "FontAwesome",
     icon: "bank",
-
     text: "Credits kopen",
     to: "Mollie",
   },

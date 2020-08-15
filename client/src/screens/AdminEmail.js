@@ -21,11 +21,13 @@ class Status extends Component {
         {this.state.response ? <T>{this.state.response.response}</T> : null}
         <TextInput
           style={style(device.theme).textInput}
+          placeholderTextColor={device.theme.secondaryTextSoft}
           placeholder="Onderwerp"
           value={this.state.subject}
           onChangeText={(subject) => this.setState({ subject })}
         />
         <TextInput
+          placeholderTextColor={device.theme.secondaryTextSoft}
           style={style(device.theme).textInput}
           placeholder="Bericht"
           value={this.state.message}

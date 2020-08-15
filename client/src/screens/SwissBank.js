@@ -106,6 +106,7 @@ const SwissBank = ({
               <TextInput
                 style={{ ...style(theme).textInput, flex: 1 }}
                 placeholder="Hoeveelheid"
+                placeholderTextColor={theme.secondaryTextSoft}
                 value={amount}
                 onChangeText={(amount) => setAmount(amount)}
               />

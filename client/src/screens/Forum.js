@@ -131,11 +131,13 @@ class Messages extends Component {
         <TextInput
           style={style(device.theme).textInput}
           placeholder="Titel"
+          placeholderTextColor={device.theme.secondaryTextSoft}
           value={this.state.title}
           onChangeText={(title) => this.setState({ title })}
         />
         <TextInput
           multiline
+          placeholderTextColor={device.theme.secondaryTextSoft}
           numberOfLines={4}
           style={{ ...style(device.theme).textInput, height: 150 }}
           placeholder="Bericht"
@@ -252,6 +254,7 @@ class Messages extends Component {
             multiline
             numberOfLines={4}
             style={style(device.theme).textInput}
+            placeholderTextColor={device.theme.secondaryTextSoft}
             placeholder="Reageer"
             value={this.state.message}
             onChangeText={(message) => this.setState({ message })}

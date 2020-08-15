@@ -163,6 +163,7 @@ class Garage extends Component {
                     amount: { ...this.state.amount, [item.id]: x },
                   })
                 }
+                placeholderTextColor={theme.secondaryTextSoft}
                 placeholder="Aantal"
               />
             </View>

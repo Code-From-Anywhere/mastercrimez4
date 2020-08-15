@@ -93,12 +93,14 @@ class Donate extends Component {
       <View>
         <TextInput
           style={style(device.theme).textInput}
+          placeholderTextColor={device.theme.secondaryTextSoft}
           placeholder="Aan"
           value={this.state.to}
           onChangeText={(to) => this.setState({ to })}
         />
         <TextInput
           style={style(device.theme).textInput}
+          placeholderTextColor={device.theme.secondaryTextSoft}
           placeholder="Hoeveelheid"
           value={this.state.amount}
           onChangeText={(amount) => this.setState({ amount })}

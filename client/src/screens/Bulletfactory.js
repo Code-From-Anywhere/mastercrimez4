@@ -97,6 +97,7 @@ const Bulletfactory = ({
 
           <TextInput
             placeholder="0"
+            placeholderTextColor={theme.secondaryTextSoft}
             value={bullets}
             onChangeText={(x) => setBullets(x)}
             style={style(theme).textInput}

@@ -40,6 +40,7 @@ const ChangeName = ({
         >
           <TextInput
             style={{ ...style(theme).textInput, flex: 1 }}
+            placeholderTextColor={theme.secondaryTextSoft}
             placeholder="Naam"
             value={name}
             onChangeText={(x) => setName(x)}

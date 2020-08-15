@@ -1,11 +1,10 @@
 import React, { Component, Fragment } from "react";
 import {
-  Platform, Text,
-
+  Platform,
+  Text,
   TextInput,
-
-
-  TouchableOpacity, View
+  TouchableOpacity,
+  View,
 } from "react-native";
 import MarqueeText from "react-native-marquee";
 import Ticker from "react-ticker";

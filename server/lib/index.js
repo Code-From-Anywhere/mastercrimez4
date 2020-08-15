@@ -691,7 +691,14 @@ server.post("/topic", (req, res) =>
   require("./forum").newTopic(req, res, User, ForumTopic)
 );
 server.post("/response", (req, res) =>
-  require("./forum").response(req, res, User, ForumTopic, ForumResponse)
+  require("./forum").response(
+    req,
+    res,
+    User,
+    ForumTopic,
+    ForumResponse,
+    Message
+  )
 );
 server.get("/topics", (req, res) =>
   require("./forum").topics(req, res, User, ForumTopic, ForumResponse)
@@ -1001,6 +1008,7 @@ const getAvailableName = async () => {
 
 server.post("/signupEmail", async (req, res) => {
   const { email, loginToken } = req.body;
+  console.log("SIGNUPEMAIL");
 
   if (!loginToken || !email) {
     res.json({ error: "Ongeldige invoer" });
@@ -1033,13 +1041,16 @@ server.post("/signupEmail", async (req, res) => {
       to: email,
       from: EMAIL_FROM,
       subject: "Email bevestigen mastercrimez.nl",
-      text: `Klik op de link om je aanmelding te voltooien: https://mastercrimez.nl/#/SignupEmail2/${activationToken}`,
+      html: `Klik <a href="https://mastercrimez.nl/#/SignupEmail2/${activationToken}">hier</a> om je aanmelding te voltooien.`,
     };
 
     //ES6
-    sgMail.send(msg).then(() => {
-      res.json({ success: "Check je mail om je account te activeren" });
-    }, console.error);
+    sgMail
+      .send(msg)
+      .then((response) => {
+        res.json({ success: "Check je mail om je account te activeren" });
+      }, console.error)
+      .catch((e) => console.log(e));
   }
 });
 
@@ -1340,7 +1351,13 @@ const putBulletsInBulletFactories = async () => {
 
 const giveInterest = () => {
   console.log("rente", new Date());
-  sequelize.query(`UPDATE users SET bank=bank*1.05 WHERE health > 0`);
+  sequelize.query(`UPDATE users SET bank=ROUND(bank*1.05) WHERE health > 0`);
+};
+
+const deadPeopleTax = () => {
+  sequelize.query(
+    `UPDATE users SET gamepoints = ROUND(gamepoints * 0.95) WHERE health = 0`
+  );
 };
 
 const swissBankTax = async () => {
@@ -1380,6 +1397,7 @@ cron.schedule("0 19 * * *", function () {
 
 cron.schedule("0 20 * * *", function () {
   giveInterest();
+  deadPeopleTax();
   swissBankTax();
 });
 

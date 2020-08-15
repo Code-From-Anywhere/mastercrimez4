@@ -72,6 +72,7 @@ class Bank extends Component {
           {this.keyValue("Rente", "5% per dag")}
           <View>
             <TextInput
+              placeholderTextColor={theme.secondaryTextSoft}
               style={style(theme).textInput}
               placeholder="Hoeveelheid"
               value={this.state.amount}

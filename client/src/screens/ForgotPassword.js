@@ -1,11 +1,13 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { Text, TextInput, View } from "react-native";
+import Button from "../components/Button";
 import Constants from "../Constants";
+import style from "../Style";
 class Login extends React.Component {
   state = {
     email: "",
     error: null,
-    success: null
+    success: null,
   };
 
   login() {
@@ -14,12 +16,12 @@ class Login extends React.Component {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email }),
     })
-      .then(response => response.json())
-      .then(responseJson => {
+      .then((response) => response.json())
+      .then((responseJson) => {
         console.log("responseJson", responseJson);
 
         if (responseJson.error) {
@@ -33,23 +35,26 @@ class Login extends React.Component {
 
         return responseJson;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }
 
   render() {
-    const { navigation } = this.props;
+    const {
+      navigation,
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
 
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1 }}>
         <View
           style={{
             margin: 20,
-            padding: 20,
             minWidth: 200,
-            backgroundColor: "#CCC",
-            borderRadius: 20
+            borderRadius: 20,
           }}
         >
           {this.state.error ? (
@@ -60,18 +65,17 @@ class Login extends React.Component {
 
           <View
             style={{
-              flexDirection: "row",
               padding: 10,
-              justifyContent: "space-between"
             }}
           >
             <Text style={{ fontSize: 20 }}>Email</Text>
 
             <TextInput
               placeholder="Email"
-              onChangeText={email => this.setState({ email })}
+              placeholderTextColor={theme.secondaryTextSoft}
+              onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
-              style={{ backgroundColor: "white", fontSize: 20 }}
+              style={style(theme).textInput}
             />
           </View>
 
@@ -79,22 +83,16 @@ class Login extends React.Component {
             style={{
               flexDirection: "row",
               padding: 10,
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
             <View />
 
-            <TouchableOpacity
-              style={{
-                backgroundColor: "blue",
-                paddingHorizontal: 30,
-                padding: 10,
-                borderRadius: 30
-              }}
+            <Button
+              theme={theme}
               onPress={() => this.login()}
-            >
-              <Text style={{ fontSize: 20, color: "white" }}>Herstel</Text>
-            </TouchableOpacity>
+              title={"Herstel"}
+            />
           </View>
         </View>
       </View>

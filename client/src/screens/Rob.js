@@ -57,6 +57,7 @@ class Bank extends Component {
       <View>
         <TextInput
           style={style(theme).textInput}
+          placeholderTextColor={theme.secondaryTextSoft}
           placeholder="Naam"
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}

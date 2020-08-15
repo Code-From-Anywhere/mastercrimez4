@@ -1,7 +1,9 @@
 import React from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import md5 from "react-native-md5";
+import Button from "../components/Button";
 import Constants from "../Constants";
+import style from "../Style";
 
 class Login extends React.Component {
   state = {
@@ -49,7 +51,12 @@ class Login extends React.Component {
   }
 
   render() {
-    const { navigation } = this.props;
+    const {
+      navigation,
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -57,7 +64,6 @@ class Login extends React.Component {
           style={{
             margin: 20,
             padding: 20,
-            backgroundColor: "#CCC",
             borderRadius: 20,
           }}
         >
@@ -71,7 +77,6 @@ class Login extends React.Component {
             <View>
               <View
                 style={{
-                  flexDirection: "row",
                   padding: 10,
                   justifyContent: "space-between",
                 }}
@@ -80,19 +85,15 @@ class Login extends React.Component {
 
                 <TextInput
                   placeholder="Email"
+                  placeholderTextColor={theme.secondaryTextSoft}
                   onChangeText={(email) => this.setState({ email })}
                   value={this.state.email}
-                  style={{
-                    backgroundColor: "white",
-                    fontSize: 20,
-                    minWidth: 200,
-                  }}
+                  style={style(theme).textInput}
                 />
               </View>
 
               <View
                 style={{
-                  flexDirection: "row",
                   padding: 10,
                   justifyContent: "space-between",
                 }}
@@ -103,11 +104,7 @@ class Login extends React.Component {
                   secureTextEntry
                   onChangeText={(password) => this.setState({ password })}
                   value={this.state.password}
-                  style={{
-                    backgroundColor: "white",
-                    fontSize: 20,
-                    minWidth: 200,
-                  }}
+                  style={style(theme).textInput}
                 />
               </View>
 
@@ -120,23 +117,18 @@ class Login extends React.Component {
               >
                 <View />
 
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: "blue",
-                    paddingHorizontal: 30,
-                    padding: 10,
-                    borderRadius: 30,
-                  }}
+                <Button
+                  theme={theme}
+                  title="Login"
                   onPress={() => this.login()}
-                >
-                  <Text style={{ fontSize: 20, color: "white" }}>Login</Text>
-                </TouchableOpacity>
+                />
               </View>
 
               <View
                 style={{
                   flexDirection: "row",
                   padding: 10,
+                  flexWrap: "wrap",
                   justifyContent: "space-between",
                 }}
               >

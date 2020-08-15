@@ -1,4 +1,5 @@
 const { Op } = require("sequelize");
+const { sendMessageAndPush } = require("./util");
 
 const newTopic = async (req, res, User, ForumTopic) => {
   const { token, title, message } = req.body;
@@ -81,7 +82,7 @@ const getTopic = async (req, res, User, ForumTopic, ForumResponse) => {
   res.json({ response: "Success", topic, responses });
 };
 
-const response = async (req, res, User, ForumTopic, ForumResponse) => {
+const response = async (req, res, User, ForumTopic, ForumResponse, Message) => {
   const { token, id, response } = req.body;
 
   if (!token) {
@@ -103,12 +104,23 @@ const response = async (req, res, User, ForumTopic, ForumResponse) => {
     return;
   }
 
+  const creator = await User.findOne({ where: { name: topic.name } });
+
   ForumTopic.update({ responses: topic.responses + 1 }, { where: { id } });
   const responseCreate = await ForumResponse.create({
     name: user.name,
     topicId: id,
     message: response,
   });
+  if (creator) {
+    sendMessageAndPush(
+      user,
+      creator,
+      "Er is een bericht geplaatst in een topic van je",
+      Message,
+      true
+    );
+  }
 
   res.json({ response: "Success" });
 };

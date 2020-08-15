@@ -49,13 +49,12 @@ class Login extends React.Component {
       },
     } = this.props;
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1 }}>
         <View
           style={{
             margin: 20,
             padding: 20,
             minWidth: 200,
-            backgroundColor: "#CCC",
             borderRadius: 20,
           }}
         >
@@ -67,15 +66,14 @@ class Login extends React.Component {
 
           <View
             style={{
-              flexDirection: "row",
               padding: 10,
-              justifyContent: "space-between",
             }}
           >
             <Text style={{ fontSize: 20 }}>Email</Text>
 
             <TextInput
               placeholder="Email"
+              placeholderTextColor={theme.secondaryTextSoft}
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
               style={style(theme).textInput}

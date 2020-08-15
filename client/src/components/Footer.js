@@ -128,7 +128,7 @@ function Footer({ navigation, screenProps: { me } }) {
           style={{ marginLeft: 20 }}
           onPress={() => {
             Linking.openURL(
-              "https://open.spotify.com/playlist/4ii4W0n7GaiATVlE4ztUyd?si=fTa9WJyRQne2QbzPRihLMg"
+              "https://open.spotify.com/playlist/5n5j78gTXOM9h2SOdz0Ay5?si=9gBkeObkTXaqFZxHLFutIA"
             );
           }}
         >

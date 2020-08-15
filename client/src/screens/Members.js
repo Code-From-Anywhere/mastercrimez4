@@ -190,6 +190,9 @@ class Members extends Component {
         >
           <TextInput
             placeholder="Zoeken"
+            placeholderTextColor={
+              this.props.screenProps.device.theme.secondaryTextSoft
+            }
             value={search}
             style={{
               flex: 1,

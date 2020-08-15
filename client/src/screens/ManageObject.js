@@ -151,6 +151,7 @@ const Bulletfactory = ({
             <TextInput
               style={{ ...style(theme).textInput, flex: 1 }}
               placeholder="Naam"
+              placeholderTextColor={theme.secondaryTextSoft}
               value={giveTo}
               onChangeText={(x) => setGiveTo(x)}
             />
@@ -168,6 +169,7 @@ const Bulletfactory = ({
               <TextInput
                 style={{ ...style(theme).textInput, flex: 1 }}
                 placeholder="Prijs per kogel"
+                placeholderTextColor={theme.secondaryTextSoft}
                 value={price}
                 onChangeText={(x) => setPrice(x)}
               />
@@ -190,6 +192,7 @@ const Bulletfactory = ({
               <TextInput
                 style={{ ...style(theme).textInput, flex: 1 }}
                 placeholder="Naam"
+                placeholderTextColor={theme.secondaryTextSoft}
                 value={who}
                 onChangeText={(x) => setWho(x)}
               />

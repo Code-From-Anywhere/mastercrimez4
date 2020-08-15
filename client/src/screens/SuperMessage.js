@@ -25,6 +25,7 @@ class SuperMessage extends Component {
         <TextInput
           style={{ ...style(device.theme).textInput, height: 200 }}
           placeholder="Bericht"
+          placeholderTextColor={device.theme.secondaryTextSoft}
           multiline
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}

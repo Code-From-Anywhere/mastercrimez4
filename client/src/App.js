@@ -26,6 +26,7 @@ import { leftMenu, rightMenu } from "./Menus";
 import Accomplice from "./screens/Accomplice";
 import AdminEmail from "./screens/AdminEmail";
 import Airport from "./screens/Airport";
+import AllBanks from "./screens/AllBanks";
 import Backfire from "./screens/Backfire";
 import Bank from "./screens/Bank";
 import Bulletfactory from "./screens/Bulletfactory";
@@ -379,6 +380,7 @@ const Container = rightContainer(
       },
       Status: withLayout(Status),
       StealCar: withLayout(StealCar),
+      AllBanks: withLayout(AllBanks),
       SwissBank: withLayout(SwissBank),
 
       Crimes: withLayout(Crimes),

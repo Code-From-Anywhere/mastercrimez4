@@ -12,6 +12,7 @@ import {
 import { TextInput } from "react-native-gesture-handler";
 import Button from "../components/Button";
 import Constants from "../Constants";
+import style from "../Style";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -167,12 +168,23 @@ class MyProfile extends React.Component {
 
   render() {
     const { photo, images, bio } = this.state;
-    const { device } = this.props.screenProps;
+    const {
+      device,
+      device: { theme },
+    } = this.props.screenProps;
 
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          margin: 20,
+        }}
+      >
         <TextInput
-          style={{ width: "100%", backgroundColor: "#202020", color: "white" }}
+          placeholderTextColor={theme.secondaryTextSoft}
+          style={{ ...style(theme).textInput, width: "100%", height: 200 }}
           multiline={true}
           numberOfLines={4}
           value={bio}

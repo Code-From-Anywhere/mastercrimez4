@@ -176,6 +176,7 @@ const kill = async (req, res, User, Message, Garage, City) => {
         weapon: 0,
         protection: 0,
         airplane: 0,
+        garage: 0,
       },
       { where: { id: user.id } }
     );
@@ -245,6 +246,7 @@ const kill = async (req, res, User, Message, Garage, City) => {
         weapon: 0,
         protection: 0,
         airplane: 0,
+        garage: 0,
         gamepoints: user2.gamepoints - gamepoints,
       },
       { where: { id: user2.id } }
