@@ -5,8 +5,10 @@ export const DEFAULT_THEME = {
   name: "Origineel",
   secondary: "#222222",
   secondaryText: "#FFFFFF",
+  secondaryTextSoft: "#CCCCCC",
   primary: "#555555",
   primaryText: "#FFFFFF",
+  separatorColor: "#CCCCCC",
 };
 
 export type Theme = {
@@ -24,8 +26,10 @@ const themes = [
     name: "Licht bruin",
     secondary: "#f5e6b4",
     secondaryText: "#000000",
+    secondaryTextSoft: "#404040",
     primary: "#555555",
     primaryText: "#FFFFFF",
+    separatorColor: "#CCCCCC",
   },
   {
     name: "Wit",
@@ -33,6 +37,8 @@ const themes = [
     secondary: "#CCCCCC",
     primaryText: "#000000",
     secondaryText: "#000000",
+    secondaryTextSoft: "#404040",
+    separatorColor: "#CCCCCC",
   },
   {
     name: "Blauw",
@@ -40,6 +46,8 @@ const themes = [
     secondary: "#add8e6",
     primaryText: "#000000",
     secondaryText: "#000000",
+    secondaryTextSoft: "#404040",
+    separatorColor: "#CCCCCC",
   },
   {
     name: "Zwart",
@@ -47,6 +55,8 @@ const themes = [
     secondary: "#222222",
     primaryText: "#FFFFFF",
     secondaryText: "#FFFFFF",
+    secondaryTextSoft: "#CCCCCC",
+    separatorColor: "#FFFFFF",
   },
 ];
 const ThemeScreen = ({ navigation, screenProps: { dispatch, me, device } }) => {

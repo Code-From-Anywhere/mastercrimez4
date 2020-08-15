@@ -129,7 +129,9 @@ function Header({ navigation, device, me }) {
             <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
             <Text style={textStyle}>🌍 {me?.city}</Text>
             <Text style={textStyle}>❤️ {me?.health}%</Text>
-            <Text style={textStyle}>⭐️ {getRank(me?.rank, "both")}</Text>
+            <Text style={textStyle}>
+              ⭐️ {getRank(me?.rank, "both")} ({me?.position}e)
+            </Text>
             <Text style={textStyle}>
               💪 {getStrength(me?.strength, "both")}
             </Text>

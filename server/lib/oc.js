@@ -51,6 +51,23 @@ const oc = async (req, res, User, Message) => {
   const rang = getRank(user.rank, "number");
 
   if (user[timeKey] + timeNeeded < Date.now()) {
+    const accomplicesTotal = await User.findAll({
+      attributes: ["name"],
+      where: Sequelize.or(
+        { accomplice: user.name },
+        { accomplice2: user.name },
+        { accomplice3: user.name },
+        { accomplice4: user.name }
+      ),
+    });
+
+    if (accomplicesTotal.length === 0) {
+      return res.json({
+        response:
+          "Jij hebt nog geen handlangers. Nodig vrienden uit om georganiseerde misdaden met ze te kunnen doen.",
+      });
+    }
+
     const accomplices = await User.findAll({
       attributes: ["name"],
       where: Sequelize.and(
@@ -64,13 +81,26 @@ const oc = async (req, res, User, Message) => {
       ),
     });
 
-    const random = Math.ceil(
-      Math.random() * 100000 * rang * (accomplices.length + 1)
-    );
-
     User.update(
       {
         [timeKey]: Date.now(),
+      },
+      { where: { loginToken: token } }
+    );
+
+    if (accomplices.length === 0) {
+      const names = accomplicesTotal.map((acc) => acc.name).join(", ");
+
+      return res.json({
+        response: `Je bent een OC gestart. Je handlangers hebben 2 minuten om deel te nemen. Vraag ${names} om te spelen!`,
+      });
+    }
+
+    const random = Math.ceil(Math.random() * 10000 * rang * accomplices.length);
+
+    const names = accomplices.map((acc) => acc.name).join(", ");
+    User.update(
+      {
         [valueKey]: user[valueKey] + random,
         gamepoints: user.gamepoints + 1,
       },
@@ -78,7 +108,7 @@ const oc = async (req, res, User, Message) => {
     );
 
     res.json({
-      response: `De OC is gelukt! Je hebt ${random} ${name} verdiend. De komende 2 minuten zal jij je handlangers helpen met alle andere misdaden!`,
+      response: `Je hebt een OC gedaan met ${names}. De OC is gelukt! Je hebt ${random} ${name} verdiend. De komende 2 minuten zal jij je handlangers helpen met alle andere misdaden!`,
     });
   } else {
     res.json({

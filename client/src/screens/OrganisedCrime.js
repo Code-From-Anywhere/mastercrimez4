@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Text, View } from "react-native";
 // import { ReCaptcha } from "react-recaptcha-v3";
 import Button from "../components/Button";
+import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
 
@@ -66,11 +67,7 @@ class Wiet extends Component {
           onPress={this.submit}
         />
 
-        {/* <ReCaptcha
-          sitekey={Constants.CAPTCHA}
-          action="oc"
-          verifyCallback={(token) => this.setState({ captcha: token })}
-        /> */}
+        <Footer screenProps={this.props.screenProps} />
       </View>
     );
   };

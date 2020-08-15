@@ -9,10 +9,10 @@
   },
   {
     "id": "2",
-    "kooptext": "Krijg 600 levels moordervaring erbij",
-    "gekochttext": "Je moordervaring is nu 600 levels omhoog!",
+    "kooptext": "Krijg moordervaring erbij",
+    "gekochttext": "Je moordervaring is nu flink omhoog!",
     "wat": "strength",
-    "hoeveel": 600,
+    "hoeveel": 4000,
     "kosten": 300
   },
   {

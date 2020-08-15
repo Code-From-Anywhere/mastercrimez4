@@ -14,9 +14,8 @@ class Login extends React.Component {
   save() {
     const {
       navigation,
-      screenProps: { reloadMe },
+      screenProps: { dispatch, reloadMe },
     } = this.props;
-    const token = this.props.screenProps.device.loginToken;
 
     const { code } = this.state;
 
@@ -26,7 +25,10 @@ class Login extends React.Component {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ code, token }),
+      body: JSON.stringify({
+        code,
+        phone: this.props.navigation.state.params?.phone,
+      }),
     })
       .then((response) => response.json())
       .then((responseJson) => {
@@ -35,7 +37,10 @@ class Login extends React.Component {
         this.setState({ response: responseJson.response });
 
         if (responseJson.success) {
-          reloadMe(token);
+          dispatch({ type: "SET_LOGGED", value: true });
+          dispatch({ type: "SET_LOGIN_TOKEN", value: responseJson.token });
+
+          reloadMe(responseJson.token);
 
           navigation.popToTop();
         }
@@ -61,7 +66,6 @@ class Login extends React.Component {
             flex: 1,
             margin: 20,
             padding: 20,
-            backgroundColor: "#CCC",
             borderRadius: 20,
           }}
         >
@@ -81,6 +85,7 @@ class Login extends React.Component {
 
             <TextInput
               placeholder="000000"
+              placeholderTextColor={theme.secondaryTextSoft}
               onChangeText={(code) => this.setState({ code })}
               value={this.state.code}
               style={style(theme).textInput}

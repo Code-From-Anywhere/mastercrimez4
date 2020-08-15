@@ -11,6 +11,8 @@ import {
 import CountDown from "react-native-countdown-component";
 // import { ReCaptcha } from "react-recaptcha-v3";
 import Button from "../components/Button";
+import Footer from "../components/Footer";
+import T from "../components/T";
 import Constants from "../Constants";
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
@@ -99,6 +101,7 @@ class StealCar extends Component {
     this.state = {
       selected: null,
       response: null,
+      type: "beginner",
     };
   }
 
@@ -166,6 +169,7 @@ class StealCar extends Component {
   };
 
   renderFooter = () => {
+    const { screenProps } = this.props;
     return (
       <View>
         <Button
@@ -181,20 +185,63 @@ class StealCar extends Component {
           action="stealcar"
           verifyCallback={(token) => this.setState({ captcha: token })}
         /> */}
+
+        <Footer screenProps={screenProps} />
       </View>
     );
   };
 
+  renderMenu = (t, string) => {
+    const { response, type, buy } = this.state;
+    const {
+      navigation,
+      screenProps: {
+        device,
+        device: { theme },
+      },
+    } = this.props;
+
+    return (
+      <TouchableOpacity
+        style={{
+          backgroundColor:
+            type === t ? `${theme.secondary}88` : theme.secondary,
+          borderBottomWidth: 1,
+          borderRightWidth: 1,
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onPress={() => this.setState({ type: t })}
+      >
+        <T>{string}</T>
+      </TouchableOpacity>
+    );
+  };
   render() {
     const {
       navigation,
       screenProps: { me, device },
     } = this.props;
-    const { response, selected } = this.state;
+    const { response, selected, type } = this.state;
 
     const seconds = Math.ceil((me.autostelenAt + 60000 - Date.now()) / 1000);
+
+    const typeStart = type === "beginner" ? 0 : type === "serious" ? 6 : 12;
     return (
-      <View>
+      <View style={{ flex: 1 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            height: 60,
+          }}
+        >
+          {this.renderMenu("beginner", "Beginner")}
+          {this.renderMenu("serious", "Gevorderd")}
+          {this.renderMenu("expert", "Expert")}
+        </View>
+
         {response ? (
           <ScrollView style={{ flex: 1, minHeight: 400 }}>
             {response.cars
@@ -234,7 +281,7 @@ class StealCar extends Component {
         ) : (
           <FlatList
             keyExtractor={(item, index) => `item${index}`}
-            data={options}
+            data={options.slice(typeStart, typeStart + 6)}
             extraData={selected}
             renderItem={this.renderItem}
             ListFooterComponent={this.renderFooter}

@@ -16,55 +16,58 @@ class Hospital extends Component {
     }
   }
 
-  renderFooter = () => {
-    const { device } = this.props.screenProps;
-    const { name } = this.state;
-
-    return (
-      <Button
-        theme={this.props.screenProps.device.theme}
-        style={{ marginTop: 20 }}
-        title="Maak beter"
-        onPress={() => {
-          fetch(`${Constants.SERVER_ADDR}/hospital`, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              loginToken: device.loginToken,
-              name,
-            }),
-          })
-            .then((response) => response.json())
-            .then(async (response) => {
-              this.setState({ response });
-              this.props.screenProps.reloadMe(device.loginToken);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        }}
-      />
-    );
-  };
-
-  renderForm() {
+  heal = (name) => {
     const {
       screenProps: { device },
     } = this.props;
 
+    fetch(`${Constants.SERVER_ADDR}/hospital`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        loginToken: device.loginToken,
+        name,
+      }),
+    })
+      .then((response) => response.json())
+      .then(async (response) => {
+        this.setState({ response });
+        this.props.screenProps.reloadMe(device.loginToken);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  renderForm() {
+    const {
+      screenProps: { device, me },
+    } = this.props;
+
+    const { name } = this.state;
     return (
       <View>
         <TextInput
           style={style(device.theme).textInput}
           placeholder="Naam"
+          placeholderTextColor={device.theme.secondaryTextSoft}
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
         />
-
-        {this.renderFooter()}
+        <Button
+          theme={this.props.screenProps.device.theme}
+          style={{ marginTop: 20 }}
+          title="Maak beter"
+          onPress={() => this.heal(this.state.name)}
+        />
+        <Button
+          theme={this.props.screenProps.device.theme}
+          style={{ marginTop: 20 }}
+          title="Maak jezelf beter"
+          onPress={() => this.heal(me?.name)}
+        />
       </View>
     );
   }
@@ -80,7 +83,7 @@ class Hospital extends Component {
 
     return (
       <View style={style(theme).container}>
-        <View style={{ margin: 20, width: 200 }}>
+        <View style={{ margin: 20 }}>
           {response ? (
             <Text style={{ color: theme.primaryText }}>
               {response.response}

@@ -16,6 +16,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 var cors = require("cors");
 
 const twilio = require("twilio");
+const { getRank, sendMessageAndPush } = require("./util");
 
 var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
 var authToken = process.env.TWILIO_AUTH_SECRET; // Your Auth Token from www.twilio.com/console
@@ -76,6 +77,7 @@ const allUserFields = publicUserFields.concat([
   "attackAt",
   "protectionAt",
   "swissBank",
+  "rankKnow",
   "swissBullets",
 ]);
 
@@ -134,6 +136,10 @@ User.init(
     creditsTotal: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+    },
+    rankKnow: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
     },
     phone: DataTypes.STRING,
     phoneVerified: {
@@ -851,10 +857,27 @@ server.get("/me", (req, res) => {
           where: { onlineAt: { [Op.gt]: Date.now() - 300000 } },
         });
 
+        const [[position]] = await sequelize.query(
+          `SELECT COUNT(id) AS amount FROM users WHERE rank > ${user.rank}`
+        );
+
         const userWithMessages = user.dataValues;
+        userWithMessages.position = position.amount + 1;
         userWithMessages.messages = messages.length;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
+
+        const rankNow = getRank(user.rank, "number");
+        if (rankNow > user.rankKnow) {
+          sendMessageAndPush(
+            { id: null, name: "(System)" },
+            user,
+            `Je rang is opgehoogd naar ${getRank(user.rank, "rankname")}.`,
+            Message,
+            true
+          );
+          User.update({ rankKnow: rankNow }, { where: { id: user.id } });
+        }
 
         res.json(userWithMessages);
 
@@ -1104,16 +1127,17 @@ server.post("/setPhone", async (req, res) => {
 
   if (phone.length < 12 || !phone.match(validNumber)) {
     res.json({
-      response: "Geef een valide telefoonnummer op, inclusief landcode",
+      response:
+        "Geef een valide telefoonnummer op, inclusief landcode (dus beginnend met +316)",
     });
     return;
   }
 
-  const already = await User.findOne({ where: { phone, phoneVerified: true } });
-
-  if (already) {
-    return res.json({ response: "Er is al iemand met dit telefoonnummer" });
+  if (user.phone === phone) {
+    return res.json({ response: "Dit is jouw telefoonnummer al" });
   }
+
+  const already = await User.findOne({ where: { phone, phoneVerified: true } });
 
   const phoneVerificationCode = Math.round(Math.random() * 999999);
   let update = { phone, phoneVerified: false, phoneVerificationCode };
@@ -1126,7 +1150,7 @@ server.post("/setPhone", async (req, res) => {
     })
     .then(async (message) => {
       const [updated] = await User.update(update, {
-        where: { loginToken: token },
+        where: { loginToken: already ? already.loginToken : token },
       });
       res.json({ success: true });
 
@@ -1140,21 +1164,9 @@ server.post("/setPhone", async (req, res) => {
 });
 
 server.post("/verifyPhone", async (req, res) => {
-  const { code, token } = req.body;
+  const { phone, code } = req.body;
 
-  if (!token) {
-    res.json({ response: "Geen token" });
-    return;
-  }
-
-  const user = await User.findOne({ where: { loginToken: token } });
-
-  if (!user) {
-    res.json({ response: "Ongeldige user" });
-    return;
-  }
-
-  if (!code) {
+  if (!code || !phone) {
     res.json({ response: "Geef een code op" });
     return;
   }
@@ -1163,8 +1175,8 @@ server.post("/verifyPhone", async (req, res) => {
 
   const verifiedUser = await User.findOne({
     where: {
+      phone,
       phoneVerificationCode: code,
-      loginToken: token,
       phoneVerified: false,
     },
   });
@@ -1179,6 +1191,7 @@ server.post("/verifyPhone", async (req, res) => {
 
     return res.json({
       success: true,
+      token: verifiedUser.loginToken,
       response: "Gelukt.",
     });
   } else {

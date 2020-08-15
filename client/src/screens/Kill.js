@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Text, TextInput, View } from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
+import Footer from "../components/Footer";
 import Constants from "../Constants";
 import style from "../Style";
 class Kill extends Component {
@@ -86,8 +87,8 @@ class Kill extends Component {
     const { response } = this.state;
 
     return (
-      <View style={{ flex: 1, margin: 20, alignItems: "center" }}>
-        <View style={{ width: 200 }}>
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ margin: 20 }}>
           {response ? (
             <Text style={{ color: theme.primaryText }}>
               {response.response}
@@ -96,7 +97,9 @@ class Kill extends Component {
 
           {this.renderForm()}
         </View>
-      </View>
+
+        <Footer screenProps={this.props.screenProps} />
+      </ScrollView>
     );
   }
 }

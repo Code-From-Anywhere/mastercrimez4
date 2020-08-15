@@ -1,5 +1,11 @@
 import React from "react";
-import { Clipboard, Dimensions, TextInput, View } from "react-native";
+import {
+  Clipboard,
+  Dimensions,
+  ScrollView,
+  TextInput,
+  View,
+} from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -60,18 +66,20 @@ class Accomplice extends React.Component {
 
   render() {
     const { response } = this.state;
-    const { me, device } = this.props.screenProps;
+    const {
+      me,
+      device,
+      device: { theme },
+    } = this.props.screenProps;
     const rank = getRank(me?.rank, "number");
     const url = `https://mastercrimez.nl/#/Accomplice?accomplice=${me?.name}`;
     return (
-      <View
+      <ScrollView
         style={{
           flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
         }}
       >
-        <View style={{ maxWidth: 600 }}>
+        <View style={{ maxWidth: 600, margin: 20 }}>
           <T>
             Wiens handlanger wil je zijn? Vul hieronder de naam in van de
             gangster wiens handlanger jij wilt zijn, en hij zal bij alles wat
@@ -100,7 +108,8 @@ class Accomplice extends React.Component {
           <T>{response}</T>
 
           <TextInput
-            style={styles.textInput}
+            placeholderTextColor={theme.secondaryTextSoft}
+            style={styles(theme).textInput}
             value={this.state.accomplice}
             onChangeText={(accomplice) => this.setState({ accomplice })}
             placeholder={"Handlanger"}
@@ -108,7 +117,8 @@ class Accomplice extends React.Component {
 
           {rank >= 11 ? (
             <TextInput
-              style={styles.textInput}
+              placeholderTextColor={theme.secondaryTextSoft}
+              style={styles(theme).textInput}
               value={this.state.accomplice2}
               onChangeText={(accomplice2) => this.setState({ accomplice2 })}
               placeholder={"Handlanger 2"}
@@ -118,15 +128,17 @@ class Accomplice extends React.Component {
           {rank >= 16 ? (
             <>
               <TextInput
-                style={styles.textInput}
+                placeholderTextColor={theme.secondaryTextSoft}
+                style={styles(theme).textInput}
                 value={this.state.accomplice3}
                 onChangeText={(accomplice3) => this.setState({ accomplice3 })}
                 placeholder={"Handlanger 3"}
               />
 
               <TextInput
-                style={styles.textInput}
+                style={styles(theme).textInput}
                 value={this.state.accomplice4}
+                placeholderTextColor={theme.secondaryTextSoft}
                 onChangeText={(accomplice4) => this.setState({ accomplice4 })}
                 placeholder={"Handlanger 4"}
               />
@@ -139,7 +151,7 @@ class Accomplice extends React.Component {
             onPress={this.setAccomplice}
           />
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

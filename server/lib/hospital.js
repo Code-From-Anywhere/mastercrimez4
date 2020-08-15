@@ -1,4 +1,4 @@
-const { getRank } = require("./util");
+const { getRank, sendMessageAndPush } = require("./util");
 const hospital = async (req, res, User, Message) => {
   const { loginToken, name } = req.body;
   const user = await User.findOne({ where: { loginToken } });
@@ -8,6 +8,10 @@ const hospital = async (req, res, User, Message) => {
 
     if (user2) {
       if (user2.health > 0) {
+        if (user2.health === 100) {
+          return res.json({ response: "Deze speler is nog helemaal levend" });
+        }
+
         const cost =
           (100 - user2.health) * getRank(user2.rank, "number") * 1000;
 

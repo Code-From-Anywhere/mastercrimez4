@@ -24,6 +24,7 @@
     "moment": "^2.24.0",
     "react": "16.11.0",
     "react-dom": "16.11.0",
+    "react-helmet": "^6.1.0",
     "react-load-script": "^0.0.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-countdown-component": "^2.7.1",

@@ -247,7 +247,7 @@ const getRankThing = (rank, returntype, type) => {
 
   const diff = nowExp - prevExp;
   const progress = rank - prevExp;
-  const percentage = Math.round((progress / diff) * 100 * 100) / 100;
+  const percentage = Math.round((progress / diff) * 100 * 10) / 10;
 
   if (returntype === "rankname") {
     return nowRank;

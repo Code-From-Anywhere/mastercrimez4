@@ -1,6 +1,7 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { createBrowserApp } from "@react-navigation/web";
 import * as React from "react";
+import Helmet from "react-helmet";
 import {
   Dimensions,
   Platform,
@@ -19,7 +20,6 @@ import { PersistGate } from "redux-persist/es/integration/react";
 import Button from "./components/Button";
 import Dead from "./components/Dead";
 import Fly from "./components/Fly";
-import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Jail from "./components/Jail";
 import { leftMenu, rightMenu } from "./Menus";
@@ -233,6 +233,24 @@ const Layout = ({ screenProps, navigation, children }) => {
         backgroundColor: device.theme.primary,
       }}
     >
+      {Platform.OS === "web" && (
+        <Helmet>
+          <title>MasterCrimeZ - The Ultimate Game</title>
+          <meta name="description" content="Word jij de beste gangster?" />
+
+          <meta property="og:url" content="https://mastercrimez.nl/" />
+          <meta property="og:type" content="article" />
+          <meta
+            property="og:title"
+            content="MasterCrimeZ - The Ultimate Game"
+          />
+          <meta
+            property="og:description"
+            content="Word jij de beste gangster?"
+          />
+          <meta property="og:image" content="" />
+        </Helmet>
+      )}
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
           {leftMenu(me, device.theme).map((item, index) =>
@@ -303,7 +321,6 @@ const Layout = ({ screenProps, navigation, children }) => {
         ) : (
           <View style={{ flex: 1 }}>{children}</View>
         )}
-        {Platform.OS === "web" && <Footer />}
       </View>
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>

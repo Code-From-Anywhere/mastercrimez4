@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
+import T from "../components/T";
 import { post } from "../Util";
 
 const options = [
@@ -106,6 +107,12 @@ class Bunker extends Component {
             keyExtractor={(item, index) => `item${index}`}
             data={options}
             extraData={selected}
+            ListHeaderComponent={() => (
+              <T>
+                Als je in de schuilkelder zit, kan je niet worden beroofd of
+                vermoord.
+              </T>
+            )}
             renderItem={this.renderItem}
             ListFooterComponent={this.renderFooter}
           />

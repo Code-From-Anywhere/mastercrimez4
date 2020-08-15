@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 // import { ReCaptcha } from "react-recaptcha-v3";
 import Button from "../components/Button";
+import Footer from "../components/Footer";
 import Constants from "../Constants";
 
 const options = [
@@ -116,6 +117,7 @@ class Crimes extends Component {
           action="crime"
           verifyCallback={(token) => this.setState({ captcha: token })}
         /> */}
+        <Footer screenProps={this.props.screenProps} />
       </View>
     );
   };

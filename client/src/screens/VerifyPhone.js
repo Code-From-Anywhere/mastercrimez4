@@ -33,7 +33,7 @@ class Login extends React.Component {
         this.setState({ response: responseJson.response });
 
         if (responseJson.success) {
-          navigation.navigate("VerifyPhoneCode");
+          navigation.navigate("VerifyPhoneCode", { phone });
         }
         return responseJson;
       })
@@ -74,6 +74,7 @@ class Login extends React.Component {
 
             <TextInput
               placeholder="+31"
+              placeholderTextColor={theme.secondaryTextSoft}
               onChangeText={(phone) => this.setState({ phone })}
               value={this.state.phone}
               style={style(theme).textInput}
