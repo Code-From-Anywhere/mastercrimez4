@@ -79,18 +79,18 @@ export class KeyboardAvoidingSpace extends React.Component<
     ) {
       notchHeight = StatusBar.currentHeight;
     }
-    let suggestHeight = 0;
-    if (Platform.OS === "ios") {
-      suggestHeight = 30;
-    }
+    // let suggestHeight = 0;
+    // if (Platform.OS === "ios") {
+    //   suggestHeight = 30;
+    // }
     if (this.props.onKeyboardWillShow) {
       this.props.onKeyboardWillShow(duration);
     }
 
     const toValue =
       e.endCoordinates.height +
-      suggestHeight +
-      notchHeight -
+      // suggestHeight +
+      // notchHeight -
       (this.props.offset || 0) -
       (isIphoneX() ? SafeAreaViewPaddingBottom : 0);
 

@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
+import Tabs from "../components/Tabs";
 import Constants from "../Constants";
 import style from "../Style";
 class Messages extends Component {
@@ -279,19 +280,24 @@ class Messages extends Component {
 
     const { newTopic, readTopic } = this.state;
     return (
-      <View style={style(device.theme).container}>
-        <View style={{ flexDirection: "row" }}>
-          <Button
-            theme={this.props.screenProps.device.theme}
-            title={"Nieuw topic"}
-            onPress={() => this.setState({ newTopic: true, readTopic: false })}
-          />
-          <Button
-            theme={this.props.screenProps.device.theme}
-            title={"Topics"}
-            onPress={() => this.setState({ newTopic: false, readTopic: false })}
-          />
-        </View>
+      <View style={{ flex: 1 }}>
+        <Tabs
+          tabs={[
+            {
+              title: "Nieuw topic",
+              onPress: () =>
+                this.setState({ newTopic: true, readTopic: false }),
+              isActive: this.state.newTopic,
+            },
+
+            {
+              title: "Topics",
+              onPress: () =>
+                this.setState({ newTopic: false, readTopic: false }),
+              isActive: this.state.newTopic === false && readTopic === false,
+            },
+          ]}
+        />
 
         {newTopic
           ? this.renderNew()

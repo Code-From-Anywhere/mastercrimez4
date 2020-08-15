@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import {
   Dimensions,
   FlatList,
+  ScrollView,
   TextInput,
   TouchableOpacity,
   View,
@@ -126,7 +127,7 @@ class Messages extends Component {
     } = this.props;
 
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         {this.state.response ? (
           <View>
             <T>{this.state.response.response}</T>
@@ -161,7 +162,7 @@ class Messages extends Component {
           title="Verzenden"
           onPress={this.sendMessage}
         />
-      </View>
+      </ScrollView>
     );
   }
 
@@ -208,7 +209,7 @@ class Messages extends Component {
       (m) => m.id === this.state.readMessage
     );
     return item ? (
-      <View style={{ marginVertical: 20 }}>
+      <ScrollView style={{ marginVertical: 20 }}>
         <T>Van: {item.fromName}</T>
         <T>Verstuurd: {moment(item.createdAt).format("DD-MM-YYYY HH:mm")}</T>
         <T style={{ marginTop: 10 }}>{item.message}</T>
@@ -246,7 +247,7 @@ class Messages extends Component {
             onPress={() => this.deleteMessage(item.id)}
           />
         </View>
-      </View>
+      </ScrollView>
     ) : (
       <T>Bericht niet gevonden</T>
     );
