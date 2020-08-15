@@ -9,9 +9,9 @@
     "req_drivexp": "34",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "5",
-    "power_bos": "4"
+    "power_highway": "3",
+    "power_city": "5",
+    "power_forest": "4"
   },
   {
     "id": "2",
@@ -23,9 +23,9 @@
     "req_drivexp": "4",
     "maxpower": "14",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "3",
@@ -37,9 +37,9 @@
     "req_drivexp": "7",
     "maxpower": "14",
     "instats": "1",
-    "power_snelweg": "1",
-    "power_stad": "4",
-    "power_bos": "7"
+    "power_highway": "1",
+    "power_city": "4",
+    "power_forest": "7"
   },
   {
     "id": "4",
@@ -51,9 +51,9 @@
     "req_drivexp": "20",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "4",
-    "power_bos": "5"
+    "power_highway": "3",
+    "power_city": "4",
+    "power_forest": "5"
   },
   {
     "id": "5",
@@ -65,9 +65,9 @@
     "req_drivexp": "24",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "6",
@@ -79,9 +79,9 @@
     "req_drivexp": "15",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "2",
-    "power_stad": "5",
-    "power_bos": "5"
+    "power_highway": "2",
+    "power_city": "5",
+    "power_forest": "5"
   },
   {
     "id": "7",
@@ -93,9 +93,9 @@
     "req_drivexp": "7",
     "maxpower": "13",
     "instats": "0",
-    "power_snelweg": "1",
-    "power_stad": "4",
-    "power_bos": "7"
+    "power_highway": "1",
+    "power_city": "4",
+    "power_forest": "7"
   },
   {
     "id": "8",
@@ -107,9 +107,9 @@
     "req_drivexp": "7",
     "maxpower": "13",
     "instats": "0",
-    "power_snelweg": "1",
-    "power_stad": "4",
-    "power_bos": "7"
+    "power_highway": "1",
+    "power_city": "4",
+    "power_forest": "7"
   },
   {
     "id": "9",
@@ -121,9 +121,9 @@
     "req_drivexp": "6",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "6",
-    "power_stad": "3",
-    "power_bos": "3"
+    "power_highway": "6",
+    "power_city": "3",
+    "power_forest": "3"
   },
   {
     "id": "10",
@@ -135,9 +135,9 @@
     "req_drivexp": "13",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "11",
@@ -149,9 +149,9 @@
     "req_drivexp": "13",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "12",
@@ -163,9 +163,9 @@
     "req_drivexp": "74",
     "maxpower": "20",
     "instats": "1",
-    "power_snelweg": "2",
-    "power_stad": "3",
-    "power_bos": "7"
+    "power_highway": "2",
+    "power_city": "3",
+    "power_forest": "7"
   },
   {
     "id": "14",
@@ -177,9 +177,9 @@
     "req_drivexp": "60",
     "maxpower": "17",
     "instats": "1",
-    "power_snelweg": "3",
-    "power_stad": "7",
-    "power_bos": "2"
+    "power_highway": "3",
+    "power_city": "7",
+    "power_forest": "2"
   },
   {
     "id": "15",
@@ -191,9 +191,9 @@
     "req_drivexp": "67",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "3",
-    "power_bos": "5"
+    "power_highway": "4",
+    "power_city": "3",
+    "power_forest": "5"
   },
   {
     "id": "16",
@@ -205,9 +205,9 @@
     "req_drivexp": "12",
     "maxpower": "14",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "5",
-    "power_bos": "3"
+    "power_highway": "4",
+    "power_city": "5",
+    "power_forest": "3"
   },
   {
     "id": "17",
@@ -219,9 +219,9 @@
     "req_drivexp": "47",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "18",
@@ -233,9 +233,9 @@
     "req_drivexp": "24",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "19",
@@ -247,9 +247,9 @@
     "req_drivexp": "28",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "20",
@@ -261,9 +261,9 @@
     "req_drivexp": "80",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "7",
-    "power_stad": "4",
-    "power_bos": "1"
+    "power_highway": "7",
+    "power_city": "4",
+    "power_forest": "1"
   },
   {
     "id": "22",
@@ -275,9 +275,9 @@
     "req_drivexp": "25",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
   {
     "id": "23",
@@ -289,9 +289,9 @@
     "req_drivexp": "100",
     "maxpower": "25",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "24",
@@ -303,9 +303,9 @@
     "req_drivexp": "27",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "3",
-    "power_bos": "6"
+    "power_highway": "3",
+    "power_city": "3",
+    "power_forest": "6"
   },
   {
     "id": "25",
@@ -317,9 +317,9 @@
     "req_drivexp": "80",
     "maxpower": "24",
     "instats": "0",
-    "power_snelweg": "6",
-    "power_stad": "3",
-    "power_bos": "3"
+    "power_highway": "6",
+    "power_city": "3",
+    "power_forest": "3"
   },
   {
     "id": "26",
@@ -331,9 +331,9 @@
     "req_drivexp": "27",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "6",
-    "power_stad": "3",
-    "power_bos": "3"
+    "power_highway": "6",
+    "power_city": "3",
+    "power_forest": "3"
   },
   {
     "id": "27",
@@ -345,9 +345,9 @@
     "req_drivexp": "94",
     "maxpower": "22",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "6",
-    "power_bos": "1"
+    "power_highway": "5",
+    "power_city": "6",
+    "power_forest": "1"
   },
   {
     "id": "28",
@@ -359,9 +359,9 @@
     "req_drivexp": "49",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "29",
@@ -373,9 +373,9 @@
     "req_drivexp": "45",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "30",
@@ -387,9 +387,9 @@
     "req_drivexp": "74",
     "maxpower": "22",
     "instats": "0",
-    "power_snelweg": "6",
-    "power_stad": "3",
-    "power_bos": "3"
+    "power_highway": "6",
+    "power_city": "3",
+    "power_forest": "3"
   },
   {
     "id": "31",
@@ -401,9 +401,9 @@
     "req_drivexp": "87",
     "maxpower": "23",
     "instats": "0",
-    "power_snelweg": "6",
-    "power_stad": "3",
-    "power_bos": "3"
+    "power_highway": "6",
+    "power_city": "3",
+    "power_forest": "3"
   },
   {
     "id": "32",
@@ -415,9 +415,9 @@
     "req_drivexp": "23",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "2",
-    "power_stad": "6",
-    "power_bos": "4"
+    "power_highway": "2",
+    "power_city": "6",
+    "power_forest": "4"
   },
   {
     "id": "33",
@@ -429,9 +429,9 @@
     "req_drivexp": "50",
     "maxpower": "20",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "34",
@@ -443,9 +443,9 @@
     "req_drivexp": "33",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "35",
@@ -457,9 +457,9 @@
     "req_drivexp": "67",
     "maxpower": "18",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
   {
     "id": "36",
@@ -471,9 +471,9 @@
     "req_drivexp": "15",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
   {
     "id": "37",
@@ -485,9 +485,9 @@
     "req_drivexp": "13",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
   {
     "id": "38",
@@ -499,9 +499,9 @@
     "req_drivexp": "13",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "39",
@@ -513,9 +513,9 @@
     "req_drivexp": "8",
     "maxpower": "14",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "40",
@@ -527,9 +527,9 @@
     "req_drivexp": "20",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "4",
-    "power_bos": "5"
+    "power_highway": "3",
+    "power_city": "4",
+    "power_forest": "5"
   },
   {
     "id": "41",
@@ -541,9 +541,9 @@
     "req_drivexp": "20",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "4",
-    "power_bos": "5"
+    "power_highway": "3",
+    "power_city": "4",
+    "power_forest": "5"
   },
 
   {
@@ -556,9 +556,9 @@
     "req_drivexp": "40",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "2",
-    "power_bos": "7"
+    "power_highway": "3",
+    "power_city": "2",
+    "power_forest": "7"
   },
   {
     "id": "44",
@@ -570,9 +570,9 @@
     "req_drivexp": "100",
     "maxpower": "25",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
 
   {
@@ -585,9 +585,9 @@
     "req_drivexp": "28",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "47",
@@ -599,9 +599,9 @@
     "req_drivexp": "13",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "48",
@@ -613,9 +613,9 @@
     "req_drivexp": "14",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "49",
@@ -627,9 +627,9 @@
     "req_drivexp": "15",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "50",
@@ -641,9 +641,9 @@
     "req_drivexp": "7",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "6",
-    "power_stad": "3",
-    "power_bos": "3"
+    "power_highway": "6",
+    "power_city": "3",
+    "power_forest": "3"
   },
   {
     "id": "51",
@@ -655,9 +655,9 @@
     "req_drivexp": "15",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "2",
-    "power_stad": "5",
-    "power_bos": "5"
+    "power_highway": "2",
+    "power_city": "5",
+    "power_forest": "5"
   },
   {
     "id": "52",
@@ -669,9 +669,9 @@
     "req_drivexp": "41",
     "maxpower": "18",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "53",
@@ -683,9 +683,9 @@
     "req_drivexp": "40",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "4",
-    "power_bos": "5"
+    "power_highway": "3",
+    "power_city": "4",
+    "power_forest": "5"
   },
   {
     "id": "54",
@@ -697,9 +697,9 @@
     "req_drivexp": "84",
     "maxpower": "24",
     "instats": "1",
-    "power_snelweg": "5",
-    "power_stad": "3",
-    "power_bos": "4"
+    "power_highway": "5",
+    "power_city": "3",
+    "power_forest": "4"
   },
   {
     "id": "55",
@@ -711,9 +711,9 @@
     "req_drivexp": "75",
     "maxpower": "25",
     "instats": "1",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
   {
     "id": "56",
@@ -725,9 +725,9 @@
     "req_drivexp": "100",
     "maxpower": "25",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
   {
     "id": "57",
@@ -739,9 +739,9 @@
     "req_drivexp": "44",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "58",
@@ -753,9 +753,9 @@
     "req_drivexp": "55",
     "maxpower": "20",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "59",
@@ -767,9 +767,9 @@
     "req_drivexp": "30",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "60",
@@ -781,9 +781,9 @@
     "req_drivexp": "91",
     "maxpower": "23",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "61",
@@ -795,9 +795,9 @@
     "req_drivexp": "47",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "2",
-    "power_bos": "7"
+    "power_highway": "3",
+    "power_city": "2",
+    "power_forest": "7"
   },
 
   {
@@ -810,9 +810,9 @@
     "req_drivexp": "100",
     "maxpower": "25",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
 
   {
@@ -825,9 +825,9 @@
     "req_drivexp": "87",
     "maxpower": "22",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "64",
@@ -839,9 +839,9 @@
     "req_drivexp": "60",
     "maxpower": "21",
     "instats": "0",
-    "power_snelweg": "2",
-    "power_stad": "5",
-    "power_bos": "5"
+    "power_highway": "2",
+    "power_city": "5",
+    "power_forest": "5"
   },
   {
     "id": "65",
@@ -853,9 +853,9 @@
     "req_drivexp": "18",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "66",
@@ -867,9 +867,9 @@
     "req_drivexp": "11",
     "maxpower": "14",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "67",
@@ -881,9 +881,9 @@
     "req_drivexp": "94",
     "maxpower": "23",
     "instats": "0",
-    "power_snelweg": "6",
-    "power_stad": "4",
-    "power_bos": "2"
+    "power_highway": "6",
+    "power_city": "4",
+    "power_forest": "2"
   },
   {
     "id": "68",
@@ -895,9 +895,9 @@
     "req_drivexp": "37",
     "maxpower": "18",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "69",
@@ -909,9 +909,9 @@
     "req_drivexp": "43",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "70",
@@ -923,9 +923,9 @@
     "req_drivexp": "94",
     "maxpower": "22",
     "instats": "1",
-    "power_snelweg": "5",
-    "power_stad": "6",
-    "power_bos": "1"
+    "power_highway": "5",
+    "power_city": "6",
+    "power_forest": "1"
   },
   {
     "id": "71",
@@ -937,9 +937,9 @@
     "req_drivexp": "87",
     "maxpower": "21",
     "instats": "1",
-    "power_snelweg": "5",
-    "power_stad": "6",
-    "power_bos": "1"
+    "power_highway": "5",
+    "power_city": "6",
+    "power_forest": "1"
   },
   {
     "id": "72",
@@ -951,9 +951,9 @@
     "req_drivexp": "11",
     "maxpower": "14",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "73",
@@ -965,9 +965,9 @@
     "req_drivexp": "60",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "5",
-    "power_bos": "4"
+    "power_highway": "3",
+    "power_city": "5",
+    "power_forest": "4"
   },
   {
     "id": "74",
@@ -979,9 +979,9 @@
     "req_drivexp": "42",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "75",
@@ -993,9 +993,9 @@
     "req_drivexp": "15",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "76",
@@ -1007,9 +1007,9 @@
     "req_drivexp": "48",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "77",
@@ -1021,9 +1021,9 @@
     "req_drivexp": "20",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "3",
-    "power_bos": "4"
+    "power_highway": "5",
+    "power_city": "3",
+    "power_forest": "4"
   },
   {
     "id": "78",
@@ -1035,9 +1035,9 @@
     "req_drivexp": "60",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "79",
@@ -1049,9 +1049,9 @@
     "req_drivexp": "87",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "80",
@@ -1063,9 +1063,9 @@
     "req_drivexp": "95",
     "maxpower": "25",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "81",
@@ -1077,9 +1077,9 @@
     "req_drivexp": "68",
     "maxpower": "22",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "82",
@@ -1091,9 +1091,9 @@
     "req_drivexp": "53",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "83",
@@ -1105,9 +1105,9 @@
     "req_drivexp": "94",
     "maxpower": "23",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "84",
@@ -1119,9 +1119,9 @@
     "req_drivexp": "47",
     "maxpower": "18",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "3",
-    "power_bos": "4"
+    "power_highway": "5",
+    "power_city": "3",
+    "power_forest": "4"
   },
   {
     "id": "85",
@@ -1133,9 +1133,9 @@
     "req_drivexp": "74",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "86",
@@ -1147,9 +1147,9 @@
     "req_drivexp": "54",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "87",
@@ -1161,9 +1161,9 @@
     "req_drivexp": "23",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "5",
-    "power_bos": "4"
+    "power_highway": "3",
+    "power_city": "5",
+    "power_forest": "4"
   },
   {
     "id": "88",
@@ -1175,9 +1175,9 @@
     "req_drivexp": "59",
     "maxpower": "20",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "89",
@@ -1189,9 +1189,9 @@
     "req_drivexp": "78",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "90",
@@ -1203,9 +1203,9 @@
     "req_drivexp": "46",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "91",
@@ -1217,9 +1217,9 @@
     "req_drivexp": "34",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "92",
@@ -1231,9 +1231,9 @@
     "req_drivexp": "61",
     "maxpower": "21",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "93",
@@ -1245,9 +1245,9 @@
     "req_drivexp": "80",
     "maxpower": "23",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "94",
@@ -1259,9 +1259,9 @@
     "req_drivexp": "19",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "95",
@@ -1273,9 +1273,9 @@
     "req_drivexp": "24",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "3",
-    "power_bos": "4"
+    "power_highway": "5",
+    "power_city": "3",
+    "power_forest": "4"
   },
   {
     "id": "96",
@@ -1287,9 +1287,9 @@
     "req_drivexp": "20",
     "maxpower": "16",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "4",
-    "power_bos": "3"
+    "power_highway": "5",
+    "power_city": "4",
+    "power_forest": "3"
   },
   {
     "id": "97",
@@ -1301,9 +1301,9 @@
     "req_drivexp": "13",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "5",
-    "power_bos": "3"
+    "power_highway": "4",
+    "power_city": "5",
+    "power_forest": "3"
   },
   {
     "id": "98",
@@ -1315,9 +1315,9 @@
     "req_drivexp": "16",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "99",
@@ -1329,9 +1329,9 @@
     "req_drivexp": "40",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "3",
-    "power_bos": "6"
+    "power_highway": "3",
+    "power_city": "3",
+    "power_forest": "6"
   },
   {
     "id": "100",
@@ -1343,9 +1343,9 @@
     "req_drivexp": "14",
     "maxpower": "15",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "101",
@@ -1357,9 +1357,9 @@
     "req_drivexp": "28",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "102",
@@ -1371,9 +1371,9 @@
     "req_drivexp": "48",
     "maxpower": "19",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "103",
@@ -1385,9 +1385,9 @@
     "req_drivexp": "35",
     "maxpower": "18",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "104",
@@ -1399,9 +1399,9 @@
     "req_drivexp": "51",
     "maxpower": "20",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "105",
@@ -1413,9 +1413,9 @@
     "req_drivexp": "66",
     "maxpower": "22",
     "instats": "1",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "106",
@@ -1427,9 +1427,9 @@
     "req_drivexp": "34",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "3",
-    "power_stad": "4",
-    "power_bos": "5"
+    "power_highway": "3",
+    "power_city": "4",
+    "power_forest": "5"
   },
   {
     "id": "107",
@@ -1441,9 +1441,9 @@
     "req_drivexp": "36",
     "maxpower": "18",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "21",
@@ -1455,9 +1455,9 @@
     "req_drivexp": "34",
     "maxpower": "17",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "13",
@@ -1469,9 +1469,9 @@
     "req_drivexp": "87",
     "maxpower": "24",
     "instats": "0",
-    "power_snelweg": "4",
-    "power_stad": "4",
-    "power_bos": "4"
+    "power_highway": "4",
+    "power_city": "4",
+    "power_forest": "4"
   },
   {
     "id": "110",
@@ -1483,9 +1483,9 @@
     "req_drivexp": "-1",
     "maxpower": "30",
     "instats": "1",
-    "power_snelweg": "1",
-    "power_stad": "5",
-    "power_bos": "5"
+    "power_highway": "1",
+    "power_city": "5",
+    "power_forest": "5"
   },
 
   {
@@ -1498,9 +1498,9 @@
     "req_drivexp": "100",
     "maxpower": "25",
     "instats": "0",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   },
   {
     "id": "112",
@@ -1512,8 +1512,8 @@
     "req_drivexp": "100",
     "maxpower": "25",
     "instats": "1",
-    "power_snelweg": "5",
-    "power_stad": "5",
-    "power_bos": "2"
+    "power_highway": "5",
+    "power_city": "5",
+    "power_forest": "2"
   }
 ]

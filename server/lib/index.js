@@ -272,6 +272,31 @@ User.init(
   { sequelize, modelName: "user" }
 );
 
+class Streetrace extends Model {}
+
+Streetrace.init(
+  {
+    city: DataTypes.STRING,
+    numParticipants: DataTypes.INTEGER,
+    type: DataTypes.STRING,
+    price: DataTypes.INTEGER,
+    creator: DataTypes.STRING,
+  },
+  { sequelize, modelName: "streetrace" }
+);
+
+class StreetraceParticipant extends Model {}
+
+StreetraceParticipant.init(
+  {
+    userId: DataTypes.STRING,
+    car: DataTypes.STRING,
+    image: DataTypes.STRING,
+    power: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "streetraceParticipant" }
+);
+
 class City extends Model {}
 
 City.init(
@@ -652,6 +677,54 @@ server.post("/swissBank", (req, res) =>
 
 server.post("/airport", (req, res) =>
   require("./airport").airport(req, res, User)
+);
+
+server.post("/createStreetrace", (req, res) =>
+  require("./streetrace").createStreetrace(
+    req,
+    res,
+    User,
+    Streetrace,
+    StreetraceParticipant,
+    Garage,
+    Message
+  )
+);
+
+server.post("/joinStreetrace", (req, res) =>
+  require("./streetrace").joinStreetrace(
+    req,
+    res,
+    User,
+    Streetrace,
+    StreetraceParticipant,
+    Garage,
+    Message
+  )
+);
+
+server.post("/leaveStreetrace", (req, res) =>
+  require("./streetrace").leaveStreetrace(
+    req,
+    res,
+    User,
+    Streetrace,
+    StreetraceParticipant,
+    Garage,
+    Message
+  )
+);
+
+server.post("/startStreetrace", (req, res) =>
+  require("./streetrace").startStreetrace(
+    req,
+    res,
+    User,
+    Streetrace,
+    StreetraceParticipant,
+    Garage,
+    Message
+  )
 );
 
 server.post("/income", (req, res) =>

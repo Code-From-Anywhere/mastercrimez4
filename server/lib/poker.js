@@ -74,12 +74,16 @@ const poker = async (req, res, User, City) => {
     return res.json({ response: "Geen user gevonden" });
   }
 
+  if (user.cash < amount) {
+    return res.json({ response: "Je hebt niert genoeg geld contant" });
+  }
+
   const [updated] = await User.update(
     { cash: user.cash - amount },
-    { where: { cash: { [Op.gte]: amount } } }
+    { where: { id: user.id, cash: { [Op.gte]: amount } } }
   );
 
-  if (!updated) {
+  if (updated === 0) {
     return res.json({ response: "Je hebt niet genoeg geld contant" });
   }
 
