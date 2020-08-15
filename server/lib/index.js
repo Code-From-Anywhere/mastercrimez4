@@ -598,7 +598,7 @@ server.post("/getProfit", (req, res) =>
   require("./manageObject").getProfit(req, res, sequelize, User, City)
 );
 server.post("/putInJail", (req, res) =>
-  require("./manageObject").putInJail(req, res, User, City)
+  require("./manageObject").putInJail(req, res, User, City, Message)
 );
 
 server.post("/wiet", (req, res) => require("./wiet").wiet(req, res, User));

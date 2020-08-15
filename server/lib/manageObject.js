@@ -261,7 +261,7 @@ const getProfit = async (req, res, sequelize, User, City) => {
   res.json({ response: `Je hebt €${cityObj[key]},- opgehaald` });
 };
 
-const putInJail = async (req, res, User, City) => {
+const putInJail = async (req, res, User, City, Message) => {
   let { city, type, token, who } = req.body;
 
   if (!token) {
@@ -303,6 +303,14 @@ const putInJail = async (req, res, User, City) => {
   }
 
   User.update({ jailAt: Date.now() + 300 * 1000 }, { where: { id: user2.id } });
+
+  sendMessageAndPush(
+    user,
+    user2,
+    `${user.name} heeft jou voor 5 minuten in de gevangenis gestopt`,
+    Message,
+    true
+  );
 
   res.json({
     response: `Je hebt ${user2.name} in de gevangenis gestopt voor 5 minuten`,
