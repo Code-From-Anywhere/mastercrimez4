@@ -302,6 +302,18 @@ const putInJail = async (req, res, User, City, Message) => {
     return res.json({ response: "Object niet gevonden" });
   }
 
+  if (cityObj.jailPutAt >= Date.now()) {
+    const seconds = Math.round((cityObj.jailPutAt - Date.now()) / 1000);
+    return res.json({
+      response: `Je moet nog ${seconds} seconden wachten voordat je weer iemand in de gevangenis kan stoppen`,
+    });
+  }
+
+  City.update(
+    { jailPutAt: Date.now() + 600 * 1000 },
+    { where: { city: cityObj.city } }
+  );
+
   User.update({ jailAt: Date.now() + 300 * 1000 }, { where: { id: user2.id } });
 
   sendMessageAndPush(

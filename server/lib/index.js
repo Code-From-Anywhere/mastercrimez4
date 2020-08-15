@@ -332,6 +332,10 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    jailPutAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
     bankOwner: DataTypes.STRING,
     bankProfit: {
       type: DataTypes.INTEGER,
