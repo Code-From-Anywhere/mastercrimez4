@@ -277,13 +277,13 @@ const startStreetrace = async (
   const participantsCum = participants.map((participant, index) => {
     const beforeParicipants = participants.filter((p, i) => i <= index);
 
-    return {
-      ...participant.dataValues,
-      cumPower: beforeParicipants.reduce(
-        (previousValue, currentValue) => previousValue + currentValue.power,
-        0
-      ),
-    };
+    const returnThing = participant.dataValues;
+    returnThing.cumPower = beforeParicipants.reduce(
+      (previousValue, currentValue) => previousValue + currentValue.power,
+      0
+    );
+
+    return returnThing;
   });
 
   const highestCum = participantsCum[participantsCum.length - 1].cumPower;
