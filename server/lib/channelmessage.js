@@ -1,5 +1,5 @@
 const { saveImageIfValid, publicUserFields } = require("./util");
-
+const { Sequelize, Op } = require("sequelize");
 const getChat = async (req, res, { User, ChannelSub, ChannelMessage }) => {
   const { loginToken, id } = req.query;
 
@@ -82,12 +82,12 @@ const postChat = async (
     image: pathImage,
   });
 
-  const updateUnread = await sequelize.query(
-    `UPDATE channelsubs SET unread=unread+1 WHERE channelId=${cid} AND userId != ${user.id}`
+  ChannelSub.update(
+    { unread: Sequelize.literal(`unread+1`) },
+    { where: { channelId: cid, userId: { [Op.ne]: user.id } } }
   );
-  const updateLastMessage = await sequelize.query(
-    `UPDATE channelsubs SET lastmessage='${message}' WHERE channelId=${cid}`
-  );
+
+  ChannelSub.update({ lastmessage: message }, { where: { channelId: cid } });
 
   //   console.log(updateUnread, updateLastMessage);
 

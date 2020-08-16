@@ -4,6 +4,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -16,7 +17,7 @@ import ImageInput from "../components/ImageInput";
 import Constants from "../Constants";
 import STYLE from "../Style";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const isBigDevice = width > 500;
 const maxWidth = isBigDevice ? 500 : width;
 
@@ -228,6 +229,9 @@ class ChatScreen extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
+          contentContainerStyle={{
+            height: Platform.OS === "web" ? height - 200 : undefined,
+          }}
           inverted
           data={chat}
           renderItem={this.renderItem}

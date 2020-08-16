@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { RefreshControl } from "react-native-web-refresh-control";
 import Separator from "../components/Separator";
+import T from "../components/T";
 import Constants from "../Constants";
 
 class ChatScreen extends React.Component {
@@ -61,8 +62,11 @@ class ChatScreen extends React.Component {
   };
 
   renderItem = ({ item, index }) => {
-    const { navigation } = this.props;
-    console.log(item);
+    const {
+      navigation,
+      screenProps: { me },
+    } = this.props;
+    // console.log(item);
     return (
       <TouchableOpacity
         onPress={() => navigation.navigate("Channel", { id: item.channel.id })}
@@ -106,8 +110,15 @@ class ChatScreen extends React.Component {
           ) : null}
 
           <View style={{ marginLeft: 20 }}>
-            <Text style={{ fontWeight: "bold" }}>{item.channel.name}</Text>
-            {item.lastmessage ? <Text>{item.lastmessage}</Text> : null}
+            <T bold>
+              {item.channel.name
+                ? item.channel.name
+                : item.channel.channelsubs.length === 2
+                ? item.channel.channelsubs.find((x) => x.userId !== me?.id)
+                    ?.user.name
+                : "(RAAAR)"}
+            </T>
+            {item.lastmessage ? <T>{item.lastmessage}</T> : null}
           </View>
         </View>
       </TouchableOpacity>

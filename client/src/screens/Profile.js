@@ -168,29 +168,28 @@ class ProfileScreen extends React.Component {
               </>
             ) : null}
             <View style={styles.row}>
-              {__DEV__ ? (
-                <Button
-                  theme={theme}
-                  title="Stuur bericht"
-                  onPress={async () => {
-                    const { id } = await get(
-                      `pm?loginToken=${loginToken}&userId=${profile.id}`
-                    );
+              <Button
+                theme={theme}
+                title="Chat"
+                onPress={async () => {
+                  const { id } = await get(
+                    `pm?loginToken=${loginToken}&userId=${profile.id}`
+                  );
 
-                    navigation.navigate("Channel", { id });
-                  }}
-                />
-              ) : (
-                <Button
-                  theme={theme}
-                  title="Stuur bericht"
-                  onPress={() =>
-                    navigation.navigate("Messages", {
-                      state: { to: profile.name, newMessage: true },
-                    })
-                  }
-                />
-              )}
+                  navigation.navigate("Channel", { id });
+                }}
+              />
+
+              <Button
+                theme={theme}
+                title="Stuur bericht"
+                onPress={() =>
+                  navigation.navigate("Messages", {
+                    state: { to: profile.name, newMessage: true },
+                  })
+                }
+              />
+
               <Button
                 theme={this.props.screenProps.device.theme}
                 title="Beroof"

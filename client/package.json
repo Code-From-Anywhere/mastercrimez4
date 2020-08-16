@@ -8,7 +8,7 @@
     "web": "expo start --web",
     "build": "expo build:web",
     "deploy": "yarn build && now --prod",
-    "deployAll": "git add . && git commit -m \"Improvements\" && git push && yarn deploy && expo publish",
+    "deployAll": "cd .. && git add . && git commit -m \"Improvements\" && git push && cd client && yarn deploy && expo publish",
     "eject": "expo eject"
   },
   "dependencies": {

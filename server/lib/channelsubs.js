@@ -19,10 +19,11 @@ const channelsubs = async (req, res, User, ChannelSub, Channel) => {
       model: Channel,
       include: {
         model: ChannelSub,
-        attributes: ["id"],
+        attributes: ["id", "userId"],
         include: { model: User, attributes: ["name"] },
       },
     },
+    order: [["updatedAt", "DESC"]],
   }).then((subs) => {
     res.json(subs);
   });

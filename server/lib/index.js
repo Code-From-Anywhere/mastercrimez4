@@ -1011,9 +1011,14 @@ server.get("/me", (req, res) => {
           `SELECT COUNT(id) AS amount FROM users WHERE rank > ${user.rank}`
         );
 
+        const [[chats]] = await sequelize.query(
+          `SELECT SUM(unread) AS unread FROM channelsubs WHERE userId=${user.id};`
+        );
+
         const userWithMessages = user.dataValues;
         userWithMessages.position = position.amount + 1;
         userWithMessages.messages = messages.length;
+        userWithMessages.chats = chats.unread;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
 
