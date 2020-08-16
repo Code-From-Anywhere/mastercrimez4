@@ -289,7 +289,8 @@ class StreetraceParticipant extends Model {}
 
 StreetraceParticipant.init(
   {
-    userId: DataTypes.STRING,
+    streetraceId: DataTypes.INTEGER,
+    name: DataTypes.STRING,
     car: DataTypes.STRING,
     image: DataTypes.STRING,
     power: DataTypes.INTEGER,
@@ -374,11 +375,9 @@ class Garage extends Model {}
 Garage.init(
   {
     userId: DataTypes.INTEGER,
-
     date: DataTypes.DATE,
     auto: DataTypes.STRING,
     image: DataTypes.STRING,
-
     cash: DataTypes.INTEGER,
     power: DataTypes.INTEGER,
     kogels: DataTypes.INTEGER,
@@ -459,6 +458,13 @@ ForumResponse.init(
   },
   { sequelize, modelName: "forum_response" }
 );
+
+StreetraceParticipant.belongsTo(Streetrace, {
+  foreignKey: "streetraceId",
+});
+Streetrace.hasMany(StreetraceParticipant, {
+  foreignKey: "streetraceId",
+});
 
 try {
   sequelize.sync({ alter: true }); //{alter}:true}
@@ -681,6 +687,18 @@ server.post("/airport", (req, res) =>
 
 server.post("/createStreetrace", (req, res) =>
   require("./streetrace").createStreetrace(
+    req,
+    res,
+    User,
+    Streetrace,
+    StreetraceParticipant,
+    Garage,
+    Message
+  )
+);
+
+server.get("/streetraces", (req, res) =>
+  require("./streetrace").streetraces(
     req,
     res,
     User,
