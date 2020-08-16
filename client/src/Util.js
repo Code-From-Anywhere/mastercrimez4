@@ -3,7 +3,7 @@ import { Alert, Dimensions, Platform, ScaledSize } from "react-native";
 import Constants from "./Constants";
 
 export const numberFormat = (x) => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 export const areYouSure = (callback, message: string) => {
