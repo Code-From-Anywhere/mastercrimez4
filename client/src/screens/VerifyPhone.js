@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
-import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
 
@@ -103,7 +96,7 @@ class Login extends React.Component {
             />
           </View>
 
-          <View>
+          {/* <View>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("VerifyPhoneCode", { phone });
@@ -111,7 +104,7 @@ class Login extends React.Component {
             >
               <T>Heb je al een code? Klik hier</T>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </ScrollView>
       </View>
     );
