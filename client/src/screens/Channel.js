@@ -46,7 +46,7 @@ class ChatScreen extends React.Component {
     this.fetchChat();
     setInterval(() => {
       this.fetchChat();
-      post("setRead", { loginToken, id: params?.id });
+      post("setRead", { loginToken, id: params?.subid });
     }, 5000);
   }
 

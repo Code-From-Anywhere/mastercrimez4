@@ -78,7 +78,10 @@ class ChatScreen extends React.Component {
         onPress={() => {
           console.log("HAHH");
           post("setRead", { loginToken, id: item.id });
-          navigation.navigate("Channel", { id: item.channel.id });
+          navigation.navigate("Channel", {
+            id: item.channel.id,
+            subid: item.id,
+          });
         }}
       >
         <View
