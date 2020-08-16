@@ -313,7 +313,7 @@ const startStreetrace = async (
   const prizeMoney = streetrace.price * streetrace.numParticipants;
 
   User.update(
-    { cash: Sequelize.literal(`cash + ${prizeMoney}`) },
+    { bank: Sequelize.literal(`bank + ${prizeMoney}`) },
     { where: { name: winner.name } }
   );
 
