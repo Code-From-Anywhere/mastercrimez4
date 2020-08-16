@@ -21,7 +21,7 @@ class Button extends React.Component {
             padding: 10,
             justifyContent: "center",
             paddingHorizontal: isSmall ? 5 : 20,
-            borderRadius: 20,
+            // borderRadius: 20,
             ...style,
           }}
         >

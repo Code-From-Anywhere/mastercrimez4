@@ -8,7 +8,7 @@ const style = (theme) =>
       padding: 10,
       justifyContent: "center",
       paddingHorizontal: 20,
-      borderRadius: 20,
+      // borderRadius: 20,
       marginVertical: 10,
     },
     container: {

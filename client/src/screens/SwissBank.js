@@ -11,24 +11,23 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { doOnce, get, post } from "../Util";
+import { doOnce, numberFormat, post } from "../Util";
 const SwissBank = ({
   navigation,
   screenProps: {
     device,
     me,
+    cities,
     reloadMe,
+    reloadCities,
     device: { theme },
   },
 }) => {
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
-  const [cities, setCities] = useState(null);
   const [amount, setAmount] = useState("");
   const [type, setType] = useState("bank");
-  doOnce(async () => {
-    fetchCities();
-  });
+  doOnce(reloadCities);
 
   const becomeOwner = async (city) => {
     const { response } = await post("becomeOwner", {
@@ -36,7 +35,7 @@ const SwissBank = ({
       type: "bank",
       token: device.loginToken,
     });
-    fetchCities();
+    reloadCities();
     reloadMe(device.loginToken);
     setBecomeOwnerResponse(response);
   };
@@ -51,11 +50,6 @@ const SwissBank = ({
 
     setResponse(response);
     reloadMe(device.loginToken);
-  };
-
-  const fetchCities = async () => {
-    const { cities } = await get("cities");
-    setCities(cities);
   };
 
   const keyValue = (key, value, onPress) => {
@@ -79,24 +73,20 @@ const SwissBank = ({
       <View style={{ flex: 1, margin: 20 }}>
         <View>
           {response ? <T>{response}</T> : null}
-          {keyValue("Bank", Intl.NumberFormat().format(me?.bank), () =>
+          {keyValue("Bank", numberFormat(me?.bank), () =>
             setAmount(String(me.bank))
           )}
-          {keyValue(
-            "Zwitserse bank",
-            Intl.NumberFormat().format(me?.swissBank),
-            () => setAmount(String(me.swissBank))
+          {keyValue("Zwitserse bank", numberFormat(me?.swissBank), () =>
+            setAmount(String(me.swissBank))
           )}
 
           {keyValue("Kosten", "2% per dag")}
 
-          {keyValue("Kogels", Intl.NumberFormat().format(me?.bullets), () =>
+          {keyValue("Kogels", numberFormat(me?.bullets), () =>
             setAmount(String(me.bullets))
           )}
-          {keyValue(
-            "Zwitserse kogelbank",
-            Intl.NumberFormat().format(me?.swissBullets),
-            () => setAmount(String(me.swissBullets))
+          {keyValue("Zwitserse kogelbank", numberFormat(me?.swissBullets), () =>
+            setAmount(String(me.swissBullets))
           )}
 
           {keyValue("Kosten", "2% per dag")}

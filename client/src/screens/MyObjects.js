@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { ScrollView, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import { doOnce, get } from "../Util";
+import { doOnce } from "../Util";
 const properties = [
   {
     name: "bulletFactory",
@@ -58,20 +58,13 @@ const MyObjects = ({
   screenProps: {
     device,
     me,
+    reloadCities,
     reloadMe,
+    cities,
     device: { theme },
   },
 }) => {
-  const [cities, setCities] = useState(null);
-
-  doOnce(async () => {
-    fetchCities();
-  });
-
-  const fetchCities = async () => {
-    const { cities } = await get("cities");
-    setCities(cities);
-  };
+  doOnce(reloadCities);
 
   let amount = 0;
   properties

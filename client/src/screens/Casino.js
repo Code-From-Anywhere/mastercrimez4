@@ -3,23 +3,22 @@ import React, { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import { doOnce, get, post } from "../Util";
+import { doOnce, post } from "../Util";
 const Casino = ({
   navigation,
   screenProps: {
     device,
     me,
+    cities,
+    reloadCities,
     reloadMe,
     device: { theme },
   },
 }) => {
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
-  const [cities, setCities] = useState(null);
 
-  doOnce(async () => {
-    fetchCities();
-  });
+  doOnce(reloadCities);
 
   const becomeOwner = async (city) => {
     const { response } = await post("becomeOwner", {
@@ -27,14 +26,9 @@ const Casino = ({
       type: "casino",
       token: device.loginToken,
     });
-    fetchCities();
+    reloadCities();
     reloadMe(device.loginToken);
     setBecomeOwnerResponse(response);
-  };
-
-  const fetchCities = async () => {
-    const { cities } = await get("cities");
-    setCities(cities);
   };
 
   const city = cities?.find((x) => x.city === me?.city);

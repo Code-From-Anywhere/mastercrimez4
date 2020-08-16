@@ -3,7 +3,7 @@ import { ScrollView, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { doOnce, get, post } from "../Util";
+import { doOnce, post } from "../Util";
 
 const typeStrings = {
   bulletFactory: "Kogelfabriek",
@@ -27,6 +27,8 @@ const Bulletfactory = ({
   screenProps: {
     device,
     me,
+    cities,
+    reloadCities,
     reloadMe,
     device: { theme },
   },
@@ -36,20 +38,12 @@ const Bulletfactory = ({
 
   const [response, setResponse] = useState(null);
   const [giveTo, setGiveTo] = useState("");
-  const [cities, setCities] = useState(null);
   const [price, setPrice] = useState("");
   const [who, setWho] = useState("");
 
   const theCity = cities?.find((c) => c.city === city);
 
-  doOnce(async () => {
-    fetchCities();
-  });
-
-  const fetchCities = async () => {
-    const { cities } = await get("cities");
-    setCities(cities);
-  };
+  doOnce(reloadCities);
 
   const getProfit = async () => {
     const { response } = await post("getProfit", {
@@ -59,7 +53,7 @@ const Bulletfactory = ({
     });
     setResponse(response);
     reloadMe(device.loginToken);
-    fetchCities();
+    reloadCities();
   };
 
   const giveAway = async () => {
@@ -70,7 +64,7 @@ const Bulletfactory = ({
       to: giveTo,
     });
     reloadMe(device.loginToken);
-    fetchCities();
+    reloadCities();
     setResponse(response);
   };
 
@@ -82,7 +76,7 @@ const Bulletfactory = ({
       who,
     });
     reloadMe(device.loginToken);
-    fetchCities();
+    reloadCities();
     setResponse(response);
   };
 
@@ -94,7 +88,7 @@ const Bulletfactory = ({
       price,
     });
     reloadMe(device.loginToken);
-    fetchCities();
+    reloadCities();
     setResponse(response);
   };
 

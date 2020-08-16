@@ -113,6 +113,11 @@ class Garage extends Component {
   };
 
   renderItem = ({ item, index }) => {
+    const {
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     return (
       <View
         key={`item${index}`}
@@ -145,7 +150,9 @@ class Garage extends Component {
           <Text style={{ color: theme.primaryText }}>{item.auto}</Text>
           <Text style={{ color: theme.primaryText }}>&euro;{item.cash}</Text>
           <Text style={{ color: theme.primaryText }}>{item.kogels} kogels</Text>
-          <Text style={{ color: theme.primaryText }}>{item.power} power</Text>
+          <Text style={{ color: theme.primaryText }}>
+            {item.power}.000 power
+          </Text>
           <Button
             theme={this.props.screenProps.device.theme}
             title="Verkoop"

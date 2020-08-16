@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { ScrollView, View } from "react-native";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getRank, getStrength } from "../Util";
+import { getRank, getStrength, numberFormat } from "../Util";
 const keyNames = {
   createdAt: "Nieuwe leden",
   bank: "Bankgeld",
@@ -60,8 +60,7 @@ class Status extends Component {
                 {values instanceof Array ? (
                   values.map((value, i) => {
                     let v = value[key];
-                    if (key === "bank")
-                      v = `€${Intl.NumberFormat().format(v)},-`;
+                    if (key === "bank") v = `€${numberFormat(v)},-`;
                     if (key === "createdAt")
                       v = moment(v).format("DD-MM-YYYY HH:mm");
                     if (key === "strength") v = getStrength(v, "both");

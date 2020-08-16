@@ -5,7 +5,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { get, post } from "../Util";
+import { post } from "../Util";
 
 class Junkies extends Component {
   constructor(props) {
@@ -17,13 +17,8 @@ class Junkies extends Component {
   }
 
   componentDidMount() {
-    this.fetchCities();
+    this.props.screenProps.reloadCities();
   }
-
-  fetchCities = async () => {
-    const { cities } = await get("cities");
-    this.setState({ cities });
-  };
 
   submit = () => {
     const { device, me } = this.props.screenProps;
@@ -86,13 +81,13 @@ class Junkies extends Component {
   }
 
   becomeOwner = async (city) => {
-    const { reloadMe, device } = this.props.screenProps;
+    const { reloadMe, device, reloadCities } = this.props.screenProps;
     const { response } = await post("becomeOwner", {
       city,
       type: "junkies",
       token: device.loginToken,
     });
-    this.fetchCities();
+    reloadCities();
     reloadMe(device.loginToken);
   };
 
@@ -100,10 +95,9 @@ class Junkies extends Component {
     const {
       device: { theme },
       me,
+      cities,
     } = this.props.screenProps;
     const { navigation } = this.props;
-
-    const { cities } = this.state;
 
     return (
       <>

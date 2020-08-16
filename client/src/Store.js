@@ -19,6 +19,10 @@ const initDevice = {
 
 const deviceReducer = (state: Device = initDevice, action) => {
   switch (action.type) {
+    case "PURGE": {
+      return initDevice;
+    }
+
     case "SET_LOGIN_TOKEN": {
       return { ...initDevice, loginToken: action.value };
     }
@@ -39,6 +43,10 @@ const deviceReducer = (state: Device = initDevice, action) => {
 const initMe = null;
 const meReducer = (state = initMe, action) => {
   switch (action.type) {
+    case "PURGE": {
+      return initMe;
+    }
+
     case "ME_FETCH_SUCCEEDED": {
       return action.me;
     }
@@ -51,10 +59,46 @@ const meReducer = (state = initMe, action) => {
   }
 };
 
+const initStreetraces = null;
+const streetracesReducer = (state = initStreetraces, action) => {
+  switch (action.type) {
+    case "PURGE": {
+      return initStreetraces;
+    }
+
+    case "STREETRACES_FETCH_SUCCEEDED": {
+      return action.streetraces;
+    }
+
+    case "STREETRACES_FETCH_FAILED": {
+      return state;
+    }
+    default:
+      return state;
+  }
+};
+
+const initCities = null;
+const citiesReducer = (state = initCities, action) => {
+  switch (action.type) {
+    case "PURGE": {
+      return initCities;
+    }
+    case "CITIES_FETCH_SUCCEEDED": {
+      return action.cities;
+    }
+    case "CITIES_FETCH_FAILED": {
+      return state;
+    }
+    default:
+      return state;
+  }
+};
+
 const config = {
   key: "v1",
   storage: AsyncStorage,
-  whitelist: ["device", "me"],
+  whitelist: ["device", "me", "streetraces", "cities"],
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -62,6 +106,8 @@ const sagaMiddleware = createSagaMiddleware();
 const reducers = {
   device: deviceReducer,
   me: meReducer,
+  cities: citiesReducer,
+  streetraces: streetracesReducer,
 };
 
 const rootReducer = persistCombineReducers(config, reducers);

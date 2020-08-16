@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 import Chat from "../components/Chat";
-import { getRank, getStrength } from "../Util";
+import { getRank, getStrength, numberFormat } from "../Util";
 const { width } = Dimensions.get("window");
 
 const isSmallDevice = width < 800;
@@ -109,12 +109,8 @@ function Header({ navigation, device, me }) {
             }}
           >
             <Text style={textStyle}>😎 {me?.name}</Text>
-            <Text style={textStyle}>
-              💰 €{Intl.NumberFormat().format(me?.cash)},-
-            </Text>
-            <Text style={textStyle}>
-              💵 €{Intl.NumberFormat().format(me?.bank)},-
-            </Text>
+            <Text style={textStyle}>💰 €{numberFormat(me?.cash)},-</Text>
+            <Text style={textStyle}>💵 €{numberFormat(me?.bank)},-</Text>
             <View style={{ flexDirection: "row" }}>
               <Icon.MaterialCommunityIcons
                 name="pistol"
@@ -122,9 +118,7 @@ function Header({ navigation, device, me }) {
                 color={device.theme.secondaryText}
                 style={{ marginRight: 5 }}
               />
-              <Text style={textStyle}>
-                {Intl.NumberFormat().format(me?.bullets)}
-              </Text>
+              <Text style={textStyle}>{numberFormat(me?.bullets)}</Text>
             </View>
             <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
             <Text style={textStyle}>🌍 {me?.city}</Text>

@@ -7,8 +7,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build": "expo build:web",
-    "deployold": "yarn build && surge ./web-build mastercrimez.nl",
     "deploy": "yarn build && now --prod",
+    "deployAll": "git add . && git commit -m \"Improvements\" && git push && yarn deploy && expo publish",
     "eject": "expo eject"
   },
   "dependencies": {

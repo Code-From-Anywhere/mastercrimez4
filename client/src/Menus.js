@@ -1,6 +1,6 @@
 import React from "react";
 import CountDown from "react-native-countdown-component";
-import { getRank } from "./Util";
+import { getRank, numberFormat } from "./Util";
 export const leftMenu = (me, theme) => {
   const stealcarSeconds = Math.ceil(
     (me?.autostelenAt + 60000 - Date.now()) / 1000
@@ -351,7 +351,7 @@ export const rightMenu = (me, theme) => [
     iconType: "FontAwesome",
     icon: "font",
 
-    text: "Contant: " + Intl.NumberFormat().format(me?.cash),
+    text: "Contant: " + numberFormat(me?.cash),
   },
 
   {
@@ -360,7 +360,7 @@ export const rightMenu = (me, theme) => [
     iconType: "FontAwesome",
     icon: "font",
 
-    text: "Bank: " + Intl.NumberFormat().format(me?.bank),
+    text: "Bank: " + numberFormat(me?.bank),
   },
   {
     isStats: true,
@@ -368,7 +368,7 @@ export const rightMenu = (me, theme) => [
     iconType: "FontAwesome",
     icon: "font",
 
-    text: "Kogels: " + Intl.NumberFormat().format(me?.bullets),
+    text: "Kogels: " + numberFormat(me?.bullets),
   },
   {
     isStats: true,
@@ -425,6 +425,13 @@ export const rightMenu = (me, theme) => [
 
     text: "Mijn bezittingen",
     to: "MyObjects",
+  },
+
+  {
+    iconType: "AntDesign",
+    icon: "star",
+    text: "Status",
+    to: "Status",
   },
 
   {

@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
+import Button from "../components/Button";
 import { leftMenu, rightMenu } from "../Menus";
 const { width } = Dimensions.get("window");
 
@@ -71,7 +72,7 @@ class Home extends Component {
 
   renderCarousel() {
     const {
-      screenProps: { me, device },
+      screenProps: { dispatch, me, device },
     } = this.props;
 
     const menus = [
@@ -81,19 +82,24 @@ class Home extends Component {
     const filtered = menus.filter((menu) => !menu.isHeader && !menu.isStats);
 
     return (
-      <Carousel
-        ref={(c) => {
-          this._carousel = c;
-        }}
-        data={[
-          filtered.slice(0, 16),
-          filtered.slice(16, 32),
-          filtered.slice(32, filtered.length),
-        ]}
-        renderItem={this._renderItem}
-        sliderWidth={width}
-        itemWidth={width}
-      />
+      <View style={{ flex: 1 }}>
+        {__DEV__ && (
+          <Button
+            theme={device.theme}
+            title="Purge"
+            onPress={() => dispatch({ type: "PURGE" })}
+          />
+        )}
+        <Carousel
+          ref={(c) => {
+            this._carousel = c;
+          }}
+          data={[filtered.slice(0, 16), filtered.slice(16, filtered.length)]}
+          renderItem={this._renderItem}
+          sliderWidth={width}
+          itemWidth={width}
+        />
+      </View>
     );
   }
   render() {

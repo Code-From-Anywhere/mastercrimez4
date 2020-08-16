@@ -10,24 +10,25 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { doOnce, get, post } from "../Util";
+import { doOnce, post } from "../Util";
 const Bulletfactory = ({
   navigation,
   screenProps: {
     device,
     me,
+    cities,
     reloadMe,
+    reloadCities,
     device: { theme },
   },
 }) => {
+  console.log("cities", cities);
+
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
   const [bullets, setBullets] = useState(null);
-  const [cities, setCities] = useState(null);
 
-  doOnce(async () => {
-    fetchCities();
-  });
+  doOnce(reloadCities);
 
   const becomeOwner = async (city) => {
     const { response } = await post("becomeOwner", {
@@ -35,14 +36,9 @@ const Bulletfactory = ({
       type: "bulletFactory",
       token: device.loginToken,
     });
-    fetchCities();
+    reloadCities();
     reloadMe(device.loginToken);
     setBecomeOwnerResponse(response);
-  };
-
-  const fetchCities = async () => {
-    const { cities } = await get("cities");
-    setCities(cities);
   };
 
   const city = cities?.find((x) => x.city === me?.city);
@@ -54,7 +50,7 @@ const Bulletfactory = ({
     });
     reloadMe(device.loginToken);
     setResponse(response);
-    fetchCities();
+    reloadCities();
   };
 
   return (

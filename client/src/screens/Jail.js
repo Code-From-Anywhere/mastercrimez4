@@ -5,20 +5,15 @@ import CountDown from "react-native-countdown-component";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { get, post } from "../Util";
+import { post } from "../Util";
 class Jail extends Component {
   state = {
     jail: [],
   };
   componentDidMount() {
     this.fetchMembers();
-    this.fetchCities();
+    this.props.screenProps.reloadCities();
   }
-
-  fetchCities = async () => {
-    const { cities } = await get("cities");
-    this.setState({ cities });
-  };
 
   fetchMembers(order) {
     fetch(`${Constants.SERVER_ADDR}/jail`, {
@@ -91,13 +86,13 @@ class Jail extends Component {
   };
 
   becomeOwner = async (city) => {
-    const { reloadMe, device } = this.props.screenProps;
+    const { reloadMe, reloadCities, device } = this.props.screenProps;
     const { response } = await post("becomeOwner", {
       city,
       type: "jail",
       token: device.loginToken,
     });
-    this.fetchCities();
+    reloadCities();
     reloadMe(device.loginToken);
   };
 
@@ -105,10 +100,9 @@ class Jail extends Component {
     const {
       device: { theme },
       me,
+      cities,
     } = this.props.screenProps;
     const { navigation } = this.props;
-
-    const { cities } = this.state;
 
     return (
       <>

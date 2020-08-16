@@ -9,7 +9,7 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { post } from "../Util";
+import { numberFormat, post } from "../Util";
 
 class Bank extends Component {
   state = {
@@ -63,10 +63,10 @@ class Bank extends Component {
               {response.response}
             </Text>
           ) : null}
-          {this.keyValue("Contant", Intl.NumberFormat().format(me?.cash), () =>
+          {this.keyValue("Contant", numberFormat(me?.cash), () =>
             this.setState({ amount: String(me.cash) })
           )}
-          {this.keyValue("Bank", Intl.NumberFormat().format(me?.bank), () =>
+          {this.keyValue("Bank", numberFormat(me?.bank), () =>
             this.setState({ amount: String(me.bank) })
           )}
           {this.keyValue("Rente", "5% per dag")}

@@ -37,6 +37,7 @@ import ChangeName from "./screens/ChangeName";
 import ChangePassword from "./screens/ChangePassword";
 import Chat from "./screens/Chat";
 import Contribute from "./screens/Contribute";
+import CreateStreetrace from "./screens/CreateStreetrace";
 import Creditshop from "./screens/Creditshop";
 import Crimes from "./screens/Crimes";
 import Donate from "./screens/Donate";
@@ -382,6 +383,7 @@ const Container = rightContainer(
       },
       Status: withLayout(Status),
       StealCar: withLayout(StealCar),
+      CreateStreetrace: withLayout(CreateStreetrace),
       AllBanks: withLayout(AllBanks),
       Poker: withLayout(Poker),
       SwissBank: withLayout(SwissBank),
@@ -511,14 +513,18 @@ class _RootContainer extends React.Component {
   }
 }
 
-const mapStateToProps = ({ device, me }) => {
+const mapStateToProps = ({ device, me, streetraces, cities }) => {
   //console.log("State gets mapped to props... device only");
-  return { device, me };
+  return { device, me, streetraces, cities };
 }; //
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
   reloadMe: (loginToken) =>
     dispatch({ type: "ME_FETCH_REQUESTED", payload: { loginToken } }),
+  reloadStreetraces: () =>
+    dispatch({ type: "STREETRACES_FETCH_REQUESTED", payload: null }),
+  reloadCities: () =>
+    dispatch({ type: "CITIES_FETCH_REQUESTED", payload: null }),
 });
 
 const RootContainer = connect(

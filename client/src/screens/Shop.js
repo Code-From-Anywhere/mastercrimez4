@@ -12,7 +12,7 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { get, post } from "../Util";
+import { post } from "../Util";
 
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
@@ -27,8 +27,7 @@ class Shop extends Component {
   }
 
   fetchCities = async () => {
-    const { cities } = await get("cities");
-    this.setState({ cities });
+    this.props.screenProps.reloadCities();
   };
 
   fetchShop = (type) => {
@@ -78,10 +77,11 @@ class Shop extends Component {
     const {
       device: { theme },
       me,
+      cities,
     } = this.props.screenProps;
     const { navigation } = this.props;
 
-    const { cities, type } = this.state;
+    const { type } = this.state;
 
     const propertyKey =
       type === "weapon"

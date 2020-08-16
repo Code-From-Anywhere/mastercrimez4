@@ -4,7 +4,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { get, post } from "../Util";
+import { post } from "../Util";
 // import { ReCaptcha } from "react-recaptcha-v3";
 
 class Wiet extends Component {
@@ -17,13 +17,9 @@ class Wiet extends Component {
   }
 
   componentDidMount() {
-    this.fetchCities();
+    this.props.screenProps.reloadCities();
   }
 
-  fetchCities = async () => {
-    const { cities } = await get("cities");
-    this.setState({ cities });
-  };
   keyValue(key, value) {
     return (
       <View
@@ -66,13 +62,14 @@ class Wiet extends Component {
   };
 
   becomeOwner = async (city) => {
-    const { reloadMe, device } = this.props.screenProps;
+    const { reloadMe, device, reloadCities } = this.props.screenProps;
     const { response } = await post("becomeOwner", {
       city,
       type: "landlord",
       token: device.loginToken,
     });
-    this.fetchCities();
+    reloadCities();
+
     reloadMe(device.loginToken);
   };
 
@@ -80,10 +77,9 @@ class Wiet extends Component {
     const {
       device: { theme },
       me,
+      cities,
     } = this.props.screenProps;
     const { navigation } = this.props;
-
-    const { cities } = this.state;
 
     return (
       <>
@@ -174,9 +170,7 @@ class Wiet extends Component {
       device: { theme },
       me,
     } = this.props.screenProps;
-    const { navigation } = this.props;
 
-    const { cities } = this.state;
     return (
       <ScrollView style={{ flex: 1 }}>
         {this.keyValue("Wiet in bezit", me?.wiet)}
