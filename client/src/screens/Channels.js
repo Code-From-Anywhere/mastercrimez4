@@ -12,6 +12,7 @@ import { RefreshControl } from "react-native-web-refresh-control";
 import Separator from "../components/Separator";
 import T from "../components/T";
 import Constants from "../Constants";
+import { post } from "../Util";
 
 class ChatScreen extends React.Component {
   constructor(props) {
@@ -25,6 +26,8 @@ class ChatScreen extends React.Component {
 
   componentDidMount() {
     this.fetchChannelsubs();
+
+    setInterval(() => this.fetchChannelsubs(), 5000);
   }
 
   fetchChannelsubs = () => {
@@ -64,12 +67,19 @@ class ChatScreen extends React.Component {
   renderItem = ({ item, index }) => {
     const {
       navigation,
-      screenProps: { me },
+      screenProps: {
+        me,
+        device: { loginToken },
+      },
     } = this.props;
     // console.log(item);
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate("Channel", { id: item.channel.id })}
+        onPress={() => {
+          console.log("HAHH");
+          post("setRead", { loginToken, id: item.id });
+          navigation.navigate("Channel", { id: item.channel.id });
+        }}
       >
         <View
           style={{

@@ -74,4 +74,30 @@ const pm = async (req, res, User, ChannelSub, Channel) => {
   return res.json({ id: newChannel.id });
 };
 
-module.exports = { channelsubs, pm };
+const setRead = async (req, res, User, ChannelSub, Channel) => {
+  const { loginToken, id } = req.body;
+  if (!loginToken) {
+    res.json({ response: "No token" });
+    return;
+  }
+
+  if (!id || isNaN(id)) {
+    res.json({ response: "No id" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    res.json({ response: "Invalid user" });
+    return;
+  }
+
+  const [updated] = await ChannelSub.update(
+    { unread: 0 },
+    { where: { id, userId: user.id } }
+  );
+  return res.json({ success: true });
+};
+
+module.exports = { channelsubs, pm, setRead };

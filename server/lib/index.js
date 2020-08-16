@@ -850,6 +850,9 @@ server.get("/channelsubs", (req, res) =>
 server.get("/pm", (req, res) =>
   require("./channelsubs").pm(req, res, User, ChannelSub, Channel)
 );
+server.post("/setRead", (req, res) =>
+  require("./channelsubs").setRead(req, res, User, ChannelSub, Channel)
+);
 
 server
   .get("/channelmessage", (req, res) =>

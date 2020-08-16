@@ -16,6 +16,7 @@ import { RefreshControl } from "react-native-web-refresh-control";
 import ImageInput from "../components/ImageInput";
 import Constants from "../Constants";
 import STYLE from "../Style";
+import { post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
 const isBigDevice = width > 500;
@@ -34,7 +35,19 @@ class ChatScreen extends React.Component {
   }
 
   componentDidMount() {
+    const {
+      navigation: {
+        state: { params },
+      },
+      screenProps: {
+        device: { loginToken },
+      },
+    } = this.props;
     this.fetchChat();
+    setInterval(() => {
+      this.fetchChat();
+      post("setRead", { loginToken, id: params?.id });
+    }, 5000);
   }
 
   fetchChat = () => {
