@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const { sendMessageAndPush } = require("./util");
 
 const jail = async (req, res, User) => {
@@ -67,6 +67,10 @@ const breakout = async (req, res, User, Message) => {
       response: `Je hebt ${user2.name} uitgebroken.`,
     });
 
+    User.update(
+      { rank: Sequelize.literal(`rank + 10`) },
+      { where: { id: user.id } }
+    );
     sendMessageAndPush(
       user,
       user2,

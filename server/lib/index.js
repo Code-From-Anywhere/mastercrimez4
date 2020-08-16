@@ -16,7 +16,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 var cors = require("cors");
 
 const twilio = require("twilio");
-const { getRank, sendMessageAndPush } = require("./util");
+const { getRank, sendMessageAndPush, publicUserFields } = require("./util");
 
 var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
 var authToken = process.env.TWILIO_AUTH_SECRET; // Your Auth Token from www.twilio.com/console
@@ -24,42 +24,6 @@ var authToken = process.env.TWILIO_AUTH_SECRET; // Your Auth Token from www.twil
 var twilioClient = new twilio(accountSid, authToken);
 
 const EMAIL_FROM = "info@mastercrimez.nl";
-
-const publicUserFields = [
-  "id",
-  "name",
-  "image",
-  "bio",
-  "accomplice",
-  "accomplice2",
-  "accomplice3",
-  "accomplice4",
-  "cash",
-  "bank",
-  "rank",
-  "health",
-  "wiet",
-  "junkies",
-  "hoeren",
-  "strength",
-  "gamepoints",
-  "level",
-  "onlineAt",
-  "autostelenAt",
-  "crimeAt",
-  "reizenAt",
-  "jailAt",
-  "wietAt",
-  "junkiesAt",
-  "hoerenAt",
-  "gymAt",
-  "gymTime",
-  "bunkerAt",
-  "incomeAt",
-  "robAt",
-  "ocAt",
-  "creditsTotal",
-];
 
 const allUserFields = publicUserFields.concat([
   "activated",
@@ -416,6 +380,55 @@ Image.init(
   },
   { sequelize, modelName: "image" }
 );
+
+class Channel extends Model {}
+
+Channel.init(
+  {
+    name: DataTypes.STRING,
+    pmUsers: DataTypes.STRING, // format [uid1][uid2]
+  },
+  {
+    sequelize,
+    modelName: "channel",
+  }
+);
+
+class ChannelSub extends Model {}
+
+ChannelSub.init(
+  {
+    unread: { type: DataTypes.INTEGER, defaultValue: 0 },
+    lastmessage: DataTypes.STRING,
+  },
+  {
+    sequelize,
+    modelName: "channelsub",
+  }
+);
+ChannelSub.belongsTo(Channel);
+Channel.hasMany(ChannelSub);
+
+ChannelSub.belongsTo(User, { constraints: false });
+User.hasMany(ChannelSub, { constraints: false });
+
+class ChannelMessage extends Model {}
+
+ChannelMessage.init(
+  {
+    message: DataTypes.STRING,
+    image: DataTypes.STRING,
+  },
+  {
+    sequelize,
+    modelName: "channelMessage",
+  }
+);
+ChannelMessage.belongsTo(User, { constraints: false });
+User.hasMany(ChannelMessage, { constraints: false });
+
+ChannelMessage.belongsTo(Channel);
+Channel.hasMany(ChannelMessage);
 
 class Message extends Model {}
 
@@ -830,6 +843,31 @@ server.get("/chat", (req, res) => {
   });
 });
 
+server.get("/channelsubs", (req, res) =>
+  require("./channelsubs").channelsubs(req, res, User, ChannelSub, Channel)
+);
+
+server.get("/pm", (req, res) =>
+  require("./channelsubs").pm(req, res, User, ChannelSub, Channel)
+);
+
+server
+  .get("/channelmessage", (req, res) =>
+    require("./channelmessage").getChat(req, res, {
+      User,
+      ChannelMessage,
+      ChannelSub,
+    })
+  )
+  .post("/channelmessage", (req, res) =>
+    require("./channelmessage").postChat(req, res, {
+      User,
+      ChannelMessage,
+      ChannelSub,
+      sequelize,
+    })
+  );
+
 server.post("/chat", async (req, res) => {
   const { message, token } = req.body;
 
@@ -1243,14 +1281,16 @@ server.post("/setPhone", async (req, res) => {
     return;
   }
 
-  if (user.phone === phone) {
-    return res.json({ response: "Dit is jouw telefoonnummer al" });
-  }
+  // if (user.phone === phone) {
+  //   return res.json({ response: "Dit is jouw telefoonnummer al" });
+  // }
 
   const already = await User.findOne({ where: { phone, phoneVerified: true } });
 
   const phoneVerificationCode = Math.round(Math.random() * 999999);
   let update = { phone, phoneVerified: false, phoneVerificationCode };
+
+  res.json({ success: true });
 
   twilioClient.messages
     .create({
@@ -1262,8 +1302,6 @@ server.post("/setPhone", async (req, res) => {
       const [updated] = await User.update(update, {
         where: { loginToken: already ? already.loginToken : token },
       });
-      res.json({ success: true });
-
       console.log(message);
     })
     .catch((e) => {

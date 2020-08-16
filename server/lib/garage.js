@@ -220,10 +220,12 @@ const upgradecar = async (req, res, User, Garage) => {
     return;
   }
 
-  const price = (car.power + 1) * 1000000;
+  const price = (car.power + 1) * 200000;
 
   if (user.cash < price) {
-    res.json({ response: "Je hebt niet genoeg geld contant" });
+    res.json({
+      response: `Je hebt niet genoeg geld contant, het kost €${price},-`,
+    });
     return;
   }
 
