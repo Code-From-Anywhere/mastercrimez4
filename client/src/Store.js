@@ -9,12 +9,14 @@ type Device = {
   loginToken: string,
   logged: boolean,
   theme: Theme,
+  foregrounded: number,
 };
 
 const initDevice = {
   loginToken: "",
   logged: false,
   theme: DEFAULT_THEME,
+  foregrounded: 0,
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
@@ -33,6 +35,10 @@ const deviceReducer = (state: Device = initDevice, action) => {
 
     case "SET_THEME": {
       return { ...state, theme: action.value };
+    }
+
+    case "INCREASE_FOREGROUNDED": {
+      return { ...state, foregrounded: state.foregrounded + 1 };
     }
 
     default:

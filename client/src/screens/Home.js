@@ -8,7 +8,6 @@ import {
   View,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
-import Button from "../components/Button";
 import { leftMenu, rightMenu } from "../Menus";
 const { width } = Dimensions.get("window");
 
@@ -83,13 +82,6 @@ class Home extends Component {
 
     return (
       <View style={{ flex: 1 }}>
-        {__DEV__ && (
-          <Button
-            theme={device.theme}
-            title="Purge"
-            onPress={() => dispatch({ type: "PURGE" })}
-          />
-        )}
         <Carousel
           ref={(c) => {
             this._carousel = c;

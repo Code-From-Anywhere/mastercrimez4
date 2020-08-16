@@ -24,6 +24,13 @@ class Messages extends Component {
   componentDidMount() {
     this.getMessages();
 
+    const id = this.props.navigation.state.params?.id;
+
+    if (id) {
+      this.fetchReadMessage(id);
+      this.setState({ readMessage: id });
+    }
+
     const state = this.props.navigation.state.params?.state;
     if (state) {
       this.setState(state);

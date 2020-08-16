@@ -1,8 +1,12 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { createBrowserApp } from "@react-navigation/web";
+import * as ExpoNotifications from "expo-notifications";
+import * as StoreReview from "expo-store-review";
 import * as React from "react";
+import { useEffect } from "react";
 import Helmet from "react-helmet";
 import {
+  AppState,
   Dimensions,
   Platform,
   SafeAreaView,
@@ -90,6 +94,7 @@ import VerifyPhoneCode from "./screens/VerifyPhoneCode";
 import Wiet from "./screens/Wiet";
 import { persistor, store } from "./Store";
 import { useExpoUpdate } from "./updateHook";
+
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
@@ -106,7 +111,8 @@ function getMobileOperatingSystem() {
   }
 
   // iOS detection from: http://stackoverflow.com/a/9039885/177710
-  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+  if (/iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    //iPad|
     return "ios";
   }
 
@@ -217,6 +223,48 @@ export const renderDrawerMenu = (item, index, navigation, theme) => {
 };
 
 const Layout = ({ screenProps, navigation, children }) => {
+  const _handleNotificationResponse = ({
+    notification: {
+      request: {
+        content: { data },
+      },
+    },
+  }) => {
+    console.log("Wadup", data);
+
+    navigation.navigate("Messages", { id: data.body.id });
+  };
+
+  const handleChange = (nextAppState) => {
+    if (nextAppState === "active") {
+      console.log(screenProps.device.foregrounded);
+
+      screenProps.dispatch({ type: "INCREASE_FOREGROUNDED" });
+
+      if (screenProps.device.foregrounded > 3) {
+        StoreReview.isAvailableAsync().then((available) => {
+          console.log("avaiable", available);
+          if (available) {
+            StoreReview.requestReview();
+          }
+        });
+      }
+    }
+  };
+  useEffect(() => {
+    ExpoNotifications.addNotificationResponseReceivedListener(
+      _handleNotificationResponse
+    );
+  }, []);
+
+  useEffect(() => {
+    AppState.addEventListener("change", handleChange);
+
+    return () => {
+      AppState.removeEventListener("change", handleChange);
+    };
+  }, []);
+
   const { me, device } = screenProps;
 
   const updateAvailable = useExpoUpdate();
@@ -302,7 +350,6 @@ const Layout = ({ screenProps, navigation, children }) => {
         {me?.phoneVerified === false && (
           <View
             style={{
-              margin: 15,
               padding: 15,
               backgroundColor: device.theme.secondary,
               borderRadius: 5,
@@ -336,7 +383,6 @@ const Layout = ({ screenProps, navigation, children }) => {
           <TouchableOpacity
             onPress={() => Updates.reloadAsync()}
             style={{
-              margin: 15,
               padding: 15,
               backgroundColor: device.theme.secondary,
               borderRadius: 5,

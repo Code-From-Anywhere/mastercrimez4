@@ -1,7 +1,7 @@
+import * as StoreReview from "expo-store-review";
 import React, { Component } from "react";
-import { Linking, View } from "react-native";
+import { Linking, Platform, View } from "react-native";
 import Menu from "../components/Menu";
-
 class Status extends Component {
   render() {
     const {
@@ -14,6 +14,16 @@ class Status extends Component {
 
     return (
       <View>
+        {Platform.OS !== "web" && (
+          <Menu
+            theme={theme}
+            title="Geef een review"
+            onPress={() => StoreReview.requestReview()}
+            IconFont="AntDesign"
+            icon="heart"
+          />
+        )}
+
         <Menu
           theme={theme}
           title="Feedback & Contact"

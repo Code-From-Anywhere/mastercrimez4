@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Platform, ScrollView } from "react-native";
 import Menu from "../components/Menu";
+import { areYouSure } from "../Util";
 
 class Status extends Component {
   render() {
@@ -23,6 +24,22 @@ class Status extends Component {
             navigation={navigation}
             title="Notificaties"
             to="Notifications"
+          />
+        )}
+
+        {__DEV__ && (
+          <Menu
+            theme={theme}
+            theme={theme}
+            IconFont="Ionicons"
+            icon="ios-notifications"
+            navigation={navigation}
+            title="Purge"
+            onPress={() =>
+              areYouSure(() => {
+                dispatch({ type: "PURGE" });
+              })
+            }
           />
         )}
 
