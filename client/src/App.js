@@ -21,7 +21,6 @@ import { createStackNavigator } from "react-navigation-stack";
 // import { loadReCaptcha } from "react-recaptcha-v3";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
-import Button from "./components/Button";
 import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Header from "./components/Header";
@@ -40,6 +39,8 @@ import Bunker from "./screens/Bunker";
 import Casino from "./screens/Casino";
 import ChangeName from "./screens/ChangeName";
 import ChangePassword from "./screens/ChangePassword";
+import Channel from "./screens/Channel";
+import Channels from "./screens/Channels";
 import Chat from "./screens/Chat";
 import Contribute from "./screens/Contribute";
 import CreateStreetrace from "./screens/CreateStreetrace";
@@ -93,7 +94,6 @@ import VerifyPhone from "./screens/VerifyPhone";
 import VerifyPhoneCode from "./screens/VerifyPhoneCode";
 import Wiet from "./screens/Wiet";
 import { persistor, store } from "./Store";
-import { useExpoUpdate } from "./updateHook";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -267,8 +267,6 @@ const Layout = ({ screenProps, navigation, children }) => {
 
   const { me, device } = screenProps;
 
-  const updateAvailable = useExpoUpdate();
-
   if (Platform.OS === "web") {
     if (getMobileOperatingSystem() === "android") {
       console.log("is android");
@@ -347,54 +345,6 @@ const Layout = ({ screenProps, navigation, children }) => {
       <View style={{ flex: 1 }}>
         <Header navigation={navigation} device={device} me={me} />
 
-        {me?.phoneVerified === false && (
-          <View
-            style={{
-              padding: 15,
-              backgroundColor: device.theme.secondary,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ color: device.theme.secondaryText }}>
-              Je account is nog niet geverifieerd!
-            </Text>
-            <View
-              style={{
-                marginTop: 10,
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Button
-                theme={device.theme}
-                title="Verifiëer"
-                onPress={() => navigation.navigate("VerifyPhone")}
-              />
-              <Button
-                theme={device.theme}
-                title="Login op een ander account"
-                onPress={() => navigation.navigate("Login")}
-              />
-            </View>
-          </View>
-        )}
-
-        {updateAvailable && (
-          <TouchableOpacity
-            onPress={() => Updates.reloadAsync()}
-            style={{
-              padding: 15,
-              backgroundColor: device.theme.secondary,
-              borderRadius: 5,
-            }}
-          >
-            <Text style={{ color: device.theme.secondaryText }}>
-              Er is een nieuwe update beschikbaar! Klik hier om de app te
-              verversen.
-            </Text>
-          </TouchableOpacity>
-        )}
-
         {me?.reizenAt > Date.now() && !skip ? (
           <Fly screenProps={screenProps} navigation={navigation} />
         ) : (me?.health <= 0 || me?.health === null) && !skip ? (
@@ -404,7 +354,7 @@ const Layout = ({ screenProps, navigation, children }) => {
         ) : (
           <View style={{ flex: 1 }}>{children}</View>
         )}
-        <KeyboardAvoidingSpace />
+        {Platform.OS === "ios" && <KeyboardAvoidingSpace />}
       </View>
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
@@ -464,6 +414,8 @@ const Container = rightContainer(
       Status: withLayout(Status),
       StealCar: withLayout(StealCar),
       CreateStreetrace: withLayout(CreateStreetrace),
+      Channels: withLayout(Channels),
+      Channel: withLayout(Channel),
       AllBanks: withLayout(AllBanks),
       Poker: withLayout(Poker),
       SwissBank: withLayout(SwissBank),

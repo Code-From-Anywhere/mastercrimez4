@@ -27,17 +27,6 @@ class Status extends Component {
 
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
-        {me?.activated !== true ? (
-          <TouchableOpacity onPress={() => navigation.navigate("SignupEmail")}>
-            <View>
-              <T>
-                Je account is nog niet geactiveerd! Klik hier om je account te
-                activeren
-              </T>
-            </View>
-          </TouchableOpacity>
-        ) : null}
-
         {response ? <T>{response}</T> : null}
         {me?.protectionAt > Date.now() ? (
           <TouchableOpacity

@@ -10,7 +10,7 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getRank, getStrength, getUserColor } from "../Util";
+import { get, getRank, getStrength, getUserColor } from "../Util";
 
 class ProfileScreen extends React.Component {
   state = {
@@ -90,7 +90,12 @@ class ProfileScreen extends React.Component {
   };
 
   render() {
-    const { navigation } = this.props;
+    const {
+      navigation,
+      screenProps: {
+        device: { theme, loginToken },
+      },
+    } = this.props;
     const { profile, loading, images } = this.state;
 
     if (loading) {
@@ -163,15 +168,29 @@ class ProfileScreen extends React.Component {
               </>
             ) : null}
             <View style={styles.row}>
-              <Button
-                theme={this.props.screenProps.device.theme}
-                title="Stuur bericht"
-                onPress={() =>
-                  navigation.navigate("Messages", {
-                    state: { to: profile.name, newMessage: true },
-                  })
-                }
-              />
+              {__DEV__ ? (
+                <Button
+                  theme={theme}
+                  title="Stuur bericht"
+                  onPress={async () => {
+                    const { id } = await get(
+                      `pm?loginToken=${loginToken}&userId=${profile.id}`
+                    );
+
+                    navigation.navigate("Channel", { id });
+                  }}
+                />
+              ) : (
+                <Button
+                  theme={theme}
+                  title="Stuur bericht"
+                  onPress={() =>
+                    navigation.navigate("Messages", {
+                      state: { to: profile.name, newMessage: true },
+                    })
+                  }
+                />
+              )}
               <Button
                 theme={this.props.screenProps.device.theme}
                 title="Beroof"

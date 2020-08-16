@@ -4387,6 +4387,11 @@ expo-font@~8.2.1:
     fbjs "1.0.0"
     fontfaceobserver "^2.1.0"
 
+expo-image-manipulator@~8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/expo-image-manipulator/-/expo-image-manipulator-8.2.1.tgz#8b9c9dc40615f045d49b3a3d53e41e3dbede1777"
+  integrity sha512-xz8gG6NWAEDzPe4rbHJCpCrNpfHWh5GBghBRRB6waZs3IMFTvGK/gUyor53xl+9VLi0f/ypGeWPyxl25GeBkMw==
+
 expo-image-picker@~8.3.0:
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-8.3.0.tgz#5a9daacbc1afa7fdbfd31edb22818524ad0b85e2"
@@ -8389,6 +8394,11 @@ react-native-vector-icons@^6.6.0:
     lodash "^4.17.15"
     prop-types "^15.7.2"
     yargs "^15.0.2"
+
+react-native-web-refresh-control@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-web-refresh-control/-/react-native-web-refresh-control-1.0.3.tgz#3ffc5dbe12506088a9ee64ab53a682a421cf88eb"
+  integrity sha512-o1qWewp6ZFmw4aYF5bPIh4zDJJXrfCl5FDoV0Cw8Bh33PSlnl9zpsn7wXl6RVA4l0leUTqUeI/OhmT3XIuvLcw==
 
 react-native-web@~0.11.7:
   version "0.11.7"

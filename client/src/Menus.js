@@ -450,6 +450,13 @@ export const rightMenu = (me, theme) => [
   },
 
   {
+    iconType: "Ionicons",
+    icon: "ios-chatbubbles",
+    text: "Chat V2",
+    to: "Channels",
+  },
+
+  {
     iconType: "MaterialCommunityIcons",
     icon: "chat",
 

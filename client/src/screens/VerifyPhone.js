@@ -1,6 +1,13 @@
 import React from "react";
-import { Text, TextInput, View } from "react-native";
+import {
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Button from "../components/Button";
+import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
 
@@ -49,13 +56,13 @@ class Login extends React.Component {
         device: { theme },
       },
     } = this.props;
+    const { phone } = this.state;
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <View
+        <ScrollView
           style={{
             flex: 1,
-            padding: 20,
           }}
         >
           {this.state.response ? (
@@ -71,7 +78,6 @@ class Login extends React.Component {
             }}
           >
             <Text style={{ fontSize: 20 }}>Telefoonnummer</Text>
-
             <TextInput
               placeholder="+31"
               placeholderTextColor={theme.secondaryTextSoft}
@@ -96,7 +102,17 @@ class Login extends React.Component {
               onPress={() => this.save()}
             />
           </View>
-        </View>
+
+          <View>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("VerifyPhoneCode", { phone });
+              }}
+            >
+              <T>Heb je al een code? Klik hier</T>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </View>
     );
   }
