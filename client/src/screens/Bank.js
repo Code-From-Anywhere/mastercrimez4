@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -56,8 +57,8 @@ class Bank extends Component {
     const { to, amount, type, response } = this.state;
 
     return (
-      <View style={{ flex: 1, margin: 20 }}>
-        <View>
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ margin: 20, flex: 1 }}>
           {response ? (
             <Text style={{ color: theme.primaryText }}>
               {response.response}
@@ -101,7 +102,7 @@ class Bank extends Component {
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

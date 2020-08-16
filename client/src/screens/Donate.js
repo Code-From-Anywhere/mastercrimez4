@@ -1,6 +1,6 @@
 import { connectActionSheet } from "@expo/react-native-action-sheet";
 import React, { Component } from "react";
-import { Text, TextInput, View } from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
@@ -125,7 +125,7 @@ class Donate extends Component {
     const { response } = this.state;
 
     return (
-      <View style={style(device.theme).container}>
+      <ScrollView style={{ flex: 1 }}>
         <View style={{ margin: 20, width: 200 }}>
           {response ? (
             <Text style={{ color: device.theme.primaryText }}>
@@ -135,7 +135,7 @@ class Donate extends Component {
 
           {this.renderForm()}
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

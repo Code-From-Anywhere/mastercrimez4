@@ -127,7 +127,7 @@ class Messages extends Component {
     } = this.props;
 
     return (
-      <View>
+      <ScrollView style={{ flex: 1 }}>
         {this.state.response ? <T>{this.state.response.response}</T> : null}
         <TextInput
           style={style(device.theme).textInput}
@@ -151,7 +151,7 @@ class Messages extends Component {
           title="Verzenden"
           onPress={this.createTopic}
         />
-      </View>
+      </ScrollView>
     );
   }
 
@@ -200,7 +200,7 @@ class Messages extends Component {
 
     const item = this.state.topic;
     return item ? (
-      <ScrollView>
+      <ScrollView style={{ flex: 1 }}>
         <View
           style={{
             flex: 1,

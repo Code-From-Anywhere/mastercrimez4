@@ -22,6 +22,7 @@ import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Header from "./components/Header";
 import Jail from "./components/Jail";
+import Constants from "./Constants";
 import { KeyboardAvoidingSpace } from "./KeyboardAvoidingSpace";
 import { leftMenu, rightMenu } from "./Menus";
 import Accomplice from "./screens/Accomplice";
@@ -41,6 +42,7 @@ import CreateStreetrace from "./screens/CreateStreetrace";
 import Creditshop from "./screens/Creditshop";
 import Crimes from "./screens/Crimes";
 import Donate from "./screens/Donate";
+import DownloadApp from "./screens/DownloadApp";
 import ForgotPassword from "./screens/ForgotPassword";
 import Forum from "./screens/Forum";
 import Garage from "./screens/Garage";
@@ -90,6 +92,26 @@ import { persistor, store } from "./Store";
 import { useExpoUpdate } from "./updateHook";
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
+
+function getMobileOperatingSystem() {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Windows Phone must come first because its UA also contains "Android"
+  if (/windows phone/i.test(userAgent)) {
+    return "windows";
+  }
+
+  if (/android/i.test(userAgent)) {
+    return "android";
+  }
+
+  // iOS detection from: http://stackoverflow.com/a/9039885/177710
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return "ios";
+  }
+
+  return "unknown";
+}
 
 export const renderMenu = (item, index, navigation, theme: Theme) => {
   const isHeaderStyle = item.isHeader
@@ -198,6 +220,18 @@ const Layout = ({ screenProps, navigation, children }) => {
   const { me, device } = screenProps;
 
   const updateAvailable = useExpoUpdate();
+
+  if (Platform.OS === "web") {
+    if (getMobileOperatingSystem() === "android") {
+      console.log("is android");
+      window.location.replace(Constants.ANDROID_APP_URL);
+    }
+
+    if (getMobileOperatingSystem() === "ios") {
+      console.log("is ios");
+      window.location.replace(Constants.IOS_APP_URL);
+    }
+  }
 
   const allowedRoutes = [
     "Home",
@@ -423,6 +457,7 @@ const Container = rightContainer(
       AdminEmail: withLayout(AdminEmail),
       Forum: withLayout(Forum),
       Theme: withLayout(Theme),
+      DownloadApp: DownloadApp,
 
       Profile: {
         screen: withLayout(Profile),
