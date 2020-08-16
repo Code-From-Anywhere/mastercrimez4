@@ -966,11 +966,17 @@ server.get("/stats", async (req, res) => {
   );
 
   const newMembers = await User.count({
-    where: { createdAt: { [Op.gt]: Date.now() - 86400000 } },
+    where: {
+      phoneVerified: true,
+      createdAt: { [Op.gt]: Date.now() - 86400000 },
+    },
   });
 
   const onlineToday = await User.count({
-    where: { onlineAt: { [Op.gt]: Date.now() - 86400000 } },
+    where: {
+      phoneVerified: true,
+      onlineAt: { [Op.gt]: Date.now() - 86400000 },
+    },
   });
 
   allStats.push({ newMembers });
