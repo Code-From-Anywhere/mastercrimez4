@@ -63,7 +63,9 @@ const bomb = async (req, res, sequelize, User, City, Message) => {
   const price = 50000 * bombs;
 
   if (price > user.cash) {
-    res.json({ response: "Je hebt niet genoeg geld contant" });
+    res.json({
+      response: `Je hebt niet genoeg geld contant, het kost €${price},-`,
+    });
     return;
   }
 

@@ -1,11 +1,5 @@
 [
   {
-    "text": "Oei.. [user] heeft je zo’n harde tik verkocht, dat je naar het ziekenhuis moest.. daar gaat je eigen risico.",
-    "lifeDecrease": true,
-    "jail": false
-  },
-
-  {
     "text": "We hebben hier veel domme spelers gehad op MasterCrimeZ, maar met een automatisch geweer een politiebureau inlopen is nieuw! Alle agenten sprongen op je en hebben je in de gevangenis gegooid.",
     "lifeDecrease": false,
     "jail": true
