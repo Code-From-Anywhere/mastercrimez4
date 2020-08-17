@@ -1483,13 +1483,6 @@ server.post("/login", async (req, res) => {
   }
 });
 
-const zcaptcha = require("./captcha");
-const test = async () => {
-  const img = await zcaptcha.getCaptcha("1234");
-  fs.writeFileSync("image.png", img);
-};
-test();
-
 const getCaptcha = async (req, res) => {
   const { loginToken } = req.query;
   if (!loginToken) {
