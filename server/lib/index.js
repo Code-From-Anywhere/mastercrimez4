@@ -968,7 +968,8 @@ server.get("/stats", async (req, res) => {
     }))
   );
 
-  const newMembers = await User.count({
+  const newMembers = await User.findAll({
+    attributes: ["name"],
     where: {
       phoneVerified: true,
       createdAt: { [Op.gt]: Date.now() - 86400000 },
@@ -982,7 +983,7 @@ server.get("/stats", async (req, res) => {
     },
   });
 
-  allStats.push({ newMembers });
+  allStats.push({ newMembers: newMembers.map((x) => x.name).join(", ") });
   allStats.push({ onlineToday });
 
   res.json(allStats);
