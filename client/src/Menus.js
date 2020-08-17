@@ -238,6 +238,13 @@ export const leftMenu = (me, theme) => {
     },
 
     {
+      iconType: "FontAwesome",
+      icon: "bomb",
+      text: "Bombarderen",
+      to: "Bomb",
+    },
+
+    {
       iconType: "FontAwesome5",
       icon: "dice",
       text: "Casino",

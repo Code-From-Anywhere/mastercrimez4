@@ -34,6 +34,7 @@ import Airport from "./screens/Airport";
 import AllBanks from "./screens/AllBanks";
 import Backfire from "./screens/Backfire";
 import Bank from "./screens/Bank";
+import Bomb from "./screens/Bomb";
 import Bulletfactory from "./screens/Bulletfactory";
 import Bunker from "./screens/Bunker";
 import Casino from "./screens/Casino";
@@ -418,6 +419,7 @@ const Container = rightContainer(
       Channel: withLayout(Channel),
       AllBanks: withLayout(AllBanks),
       Poker: withLayout(Poker),
+      Bomb: withLayout(Bomb),
       SwissBank: withLayout(SwissBank),
 
       Crimes: withLayout(Crimes),

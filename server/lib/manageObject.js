@@ -9,8 +9,8 @@ const typeStrings = {
   weaponShop: "Wapenwinkel",
   rld: "Red light district",
   airport: "Vliegveld",
-  estateAgent: "Makelaar",
-  bank: "Bank",
+  estateAgent: "Makelaarskantoor",
+  bank: "Zwitserse Bank",
   jail: "Gevangenis",
   garage: "Garage",
 };
@@ -261,6 +261,49 @@ const getProfit = async (req, res, sequelize, User, City) => {
   res.json({ response: `Je hebt €${cityObj[key]},- opgehaald` });
 };
 
+const repairObject = async (req, res, sequelize, User, City) => {
+  let { city, type, token } = req.body;
+
+  if (!token) {
+    return res.json({ response: "Geen logintoken gegeven" });
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+  if (!user) {
+    return res.json({ response: "Geen user gevonden" });
+  }
+
+  const key = properties.map((p) => p.name).includes(type)
+    ? `${type}Damage`
+    : null;
+
+  if (!key) {
+    return res.json({ response: "Ongeldig type" });
+  }
+  const ownerKey = properties.map((p) => p.name).includes(type)
+    ? `${type}Owner`
+    : null;
+
+  const cityObj = await City.findOne({
+    where: { city, [ownerKey]: user.name },
+  });
+
+  if (!cityObj) {
+    return res.json({ response: "Object niet gevonden" });
+  }
+
+  const [cityUpdated] = await City.update(
+    { [key]: 0 },
+    { where: { city: cityObj.city, [key]: { [Op.gt]: 0 } } }
+  );
+
+  if (!cityUpdated) {
+    return res.json({ response: "Je hebt geen schade." });
+  }
+
+  res.json({ response: `Je hebt je ${typeStrings[type]} gerepareerd.` });
+};
+
 const putInJail = async (req, res, User, City, Message) => {
   let { city, type, token, who } = req.body;
 
@@ -329,4 +372,11 @@ const putInJail = async (req, res, User, City, Message) => {
   });
 };
 
-module.exports = { becomeOwner, giveAway, changePrice, getProfit, putInJail };
+module.exports = {
+  becomeOwner,
+  giveAway,
+  changePrice,
+  getProfit,
+  putInJail,
+  repairObject,
+};

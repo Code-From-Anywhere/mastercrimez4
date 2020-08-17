@@ -3,7 +3,7 @@ import { ScrollView, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { doOnce, post } from "../Util";
+import { doOnce, numberFormat, post } from "../Util";
 
 const typeStrings = {
   bulletFactory: "Kogelfabriek",
@@ -13,7 +13,7 @@ const typeStrings = {
   weaponShop: "Wapenwinkel",
   rld: "Red light district",
   airport: "Vliegveld",
-  estateAgent: "Makelaar",
+  estateAgent: "Makelaarskantoor",
   bank: "Bank",
   jail: "Gevangenis",
   garage: "Garage",
@@ -47,6 +47,17 @@ const Bulletfactory = ({
 
   const getProfit = async () => {
     const { response } = await post("getProfit", {
+      token: device.loginToken,
+      city,
+      type,
+    });
+    setResponse(response);
+    reloadMe(device.loginToken);
+    reloadCities();
+  };
+
+  const repair = async () => {
+    const { response } = await post("repairObject", {
       token: device.loginToken,
       city,
       type,
@@ -106,6 +117,7 @@ const Bulletfactory = ({
   const profitKey = `${type}Profit`;
   const priceKey = `${type}Price`;
   const ownerKey = `${type}Owner`;
+  const damageKey = `${type}Damage`;
   return (
     <ScrollView style={{ flex: 1, padding: 15 }}>
       {response && <T>{response}</T>}
@@ -118,7 +130,7 @@ const Bulletfactory = ({
 
           <View style={rowStyle}>
             <T>Winst</T>
-            <T>{theCity[profitKey]}</T>
+            <T>€{numberFormat(theCity[profitKey])},-</T>
           </View>
 
           {theCity[priceKey] && (
@@ -133,6 +145,17 @@ const Bulletfactory = ({
             onPress={getProfit}
             theme={theme}
             title="Haal winst op"
+          />
+
+          <View style={rowStyle}>
+            <T>Schade</T>
+            <T>{theCity[damageKey]}%</T>
+          </View>
+          <Button
+            style={{ marginVertical: 15 }}
+            onPress={repair}
+            theme={theme}
+            title="Repareer"
           />
 
           <View

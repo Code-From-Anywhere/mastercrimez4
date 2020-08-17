@@ -105,7 +105,7 @@ class Shop extends Component {
         : type === "airplane"
         ? "Vliegveld"
         : type === "home"
-        ? "Makelaar"
+        ? "Makelaarskantoor"
         : "Garage";
     return (
       <View style={{ margin: 15 }}>

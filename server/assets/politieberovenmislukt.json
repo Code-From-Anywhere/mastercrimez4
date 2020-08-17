@@ -1,0 +1,55 @@
+[
+  {
+    "text": "Oei.. [user] heeft je zo’n harde tik verkocht, dat je naar het ziekenhuis moest.. daar gaat je eigen risico.",
+    "lifeDecrease": true,
+    "jail": false
+  },
+
+  {
+    "text": "We hebben hier veel domme spelers gehad op MasterCrimeZ, maar met een automatisch geweer een politiebureau inlopen is nieuw! Alle agenten sprongen op je en hebben je in de gevangenis gegooid.",
+    "lifeDecrease": false,
+    "jail": true
+  },
+
+  {
+    "text": "Beroof dan geen net begonnen agent, hij had geen eens geld op zak. De politie verdient echt geen bakken met geld hoor. Je bent ervandoor gegaan met een donut en sigaretten!",
+    "lifeDecrease": false,
+    "jail": false
+  },
+
+  {
+    "text": "De agent was een ex-militair en heeft je arm gebroken toen je je wapen op hem richtte. Dat doet zeer! Doe er maar wat ijs op in de bajes.",
+    "lifeDecrease": true,
+    "jail": true
+  },
+
+  {
+    "text": "De agente zag er zo goed uit, dat je om haar nummer vroeg in plaats van haar portemonnee.. dombo!",
+    "lifeDecrease": false,
+    "jail": false
+  },
+
+  {
+    "text": "De agente die je wou beroven, was omringt door meer dan 10 andere agenten.. Helaas.",
+    "lifeDecrease": false,
+    "jail": false
+  },
+
+  {
+    "text": "Je had teveel gedronken en wou een junk beroven in plaats van een agent. De junk sloeg z'n biertje tegen je hoofd.",
+    "lifeDecrease": true,
+    "jail": false
+  },
+
+  {
+    "text": "Je had net de kluis gevonden in het politiebureau toen een schoonmaakster jou zag. Ze sloeg alarm, je bent gepakt!",
+    "lifeDecrease": false,
+    "jail": true
+  },
+
+  {
+    "text": "Je wapen blokkeerde toen je op de agent wou schieten na een heftige vechtpartij. Je rende maar weg toen hij op jou probeerde te schieten.",
+    "lifeDecrease": false,
+    "jail": false
+  }
+]

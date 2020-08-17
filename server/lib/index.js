@@ -39,6 +39,20 @@ const allUserFields = publicUserFields.concat([
   "pushtoken",
   "credits",
   "attackAt",
+  "autostelenAt",
+  "crimeAt",
+  "reizenAt",
+  "jailAt",
+  "wietAt",
+  "junkiesAt",
+  "hoerenAt",
+  "gymAt",
+  "gymTime",
+  "bunkerAt",
+  "incomeAt",
+  "robAt",
+  "ocAt",
+  "bombAt",
   "protectionAt",
   "swissBank",
   "rankKnow",
@@ -129,6 +143,7 @@ User.init(
     crimeAt: DataTypes.BIGINT,
     reizenAt: DataTypes.BIGINT,
     jailAt: DataTypes.BIGINT,
+    bombAt: DataTypes.BIGINT,
     wietAt: DataTypes.BIGINT,
     junkiesAt: DataTypes.BIGINT,
     hoerenAt: DataTypes.BIGINT,
@@ -280,46 +295,91 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    bulletFactoryDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     casinoOwner: DataTypes.STRING,
     casinoProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    casinoDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     rldOwner: DataTypes.STRING,
     rldProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    rldDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     landlordOwner: DataTypes.STRING,
     landlordProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    landlordDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     junkiesOwner: DataTypes.STRING,
     junkiesProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    junkiesDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     weaponShopOwner: DataTypes.STRING,
     weaponShopProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    weaponShopDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     estateAgentOwner: DataTypes.STRING,
     estateAgentProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    estateAgentDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     garageOwner: DataTypes.STRING,
     garageProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    garageDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     airportOwner: DataTypes.STRING,
     airportProfit: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    airportDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     jailOwner: DataTypes.STRING,
     jailProfit: {
       type: DataTypes.INTEGER,
@@ -329,8 +389,17 @@ City.init(
       type: DataTypes.BIGINT,
       defaultValue: 0,
     },
+    jailDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     bankOwner: DataTypes.STRING,
     bankProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    bankDamage: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
@@ -419,7 +488,7 @@ class ChannelMessage extends Model {}
 
 ChannelMessage.init(
   {
-    message: DataTypes.STRING,
+    message: DataTypes.TEXT,
     image: DataTypes.STRING,
   },
   {
@@ -602,6 +671,9 @@ server.post("/sellcar", (req, res) =>
 server.post("/buyBullets", (req, res) =>
   require("./buyBullets").buyBullets(req, res, sequelize, User, City)
 );
+server.post("/bomb", (req, res) =>
+  require("./bomb").bomb(req, res, sequelize, User, City, Message)
+);
 
 server.get("/cities", (req, res) => require("./cities").cities(req, res, City));
 
@@ -648,6 +720,11 @@ server.post("/switchStatus", (req, res) =>
 server.post("/getProfit", (req, res) =>
   require("./manageObject").getProfit(req, res, sequelize, User, City)
 );
+
+server.post("/repairObject", (req, res) =>
+  require("./manageObject").repairObject(req, res, sequelize, User, City)
+);
+
 server.post("/putInJail", (req, res) =>
   require("./manageObject").putInJail(req, res, User, City, Message)
 );

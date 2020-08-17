@@ -47,8 +47,8 @@ const PrivacyPage = ({ navigation }) => {
         </T>
         <T>- Casino eigenaren krijgen 50% van de rake van de casino</T>
         <T>
-          - Wapenwinkel, vliegveld, garage en makelaars krijgen 20% van de
-          totale kosten gemaakt bij het kopen van nieuwe dingen in de
+          - Wapenwinkel, vliegveld, garage en makelaarskantoren krijgen 20% van
+          de totale kosten gemaakt bij het kopen van nieuwe dingen in de
           respectievelijke winkel.
         </T>
       </View>

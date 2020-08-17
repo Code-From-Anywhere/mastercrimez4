@@ -47,7 +47,7 @@ const typeStrings = {
   junkies: "Leger des Heils",
   weaponShop: "Wapenwinkel",
   airport: "Vliegveld",
-  estateAgent: "Makelaar",
+  estateAgent: "Makelaarskantoor",
   bank: "Bank",
   jail: "Gevangenis",
   garage: "Garage",

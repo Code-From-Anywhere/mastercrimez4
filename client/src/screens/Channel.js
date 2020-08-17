@@ -121,6 +121,7 @@ class ChatScreen extends React.Component {
             marginHorizontal: 10,
             backgroundColor: isMe ? "#d9f6c2" : "white",
             padding: 10,
+            maxWidth: 200,
             borderRadius: 10,
             borderWidth: 0.5,
             borderColor: "#CCC",

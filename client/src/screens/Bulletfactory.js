@@ -24,8 +24,6 @@ const Bulletfactory = ({
     device: { theme },
   },
 }) => {
-  console.log("cities", cities);
-
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
   const [bullets, setBullets] = useState(null);
