@@ -192,6 +192,62 @@ const Bulletfactory = ({
         );
       })}
 
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={{ flex: 2 }}>
+          <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
+            Stad
+          </Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            flex: 3,
+          }}
+        >
+          <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
+            Schade
+          </Text>
+          <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
+            Prijs per kogel
+          </Text>
+        </View>
+      </View>
+      {cities?.map((city, index) => {
+        return (
+          <View
+            key={`i${index}`}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingVertical: 10,
+              borderBottomWidth: 0.5,
+              borderBottomColor: "black",
+            }}
+          >
+            <View style={{ flex: 2 }}>
+              <Text style={{ color: theme.primaryText }}>{city.city}</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                flex: 3,
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <T>{city.bulletFactoryDamage}%</T>
+              </View>
+
+              <Text style={{ color: theme.primaryText }}>
+                €{city.bulletFactoryPrice}
+              </Text>
+            </View>
+          </View>
+        );
+      })}
+
       <View style={{ height: 80 }} />
     </ScrollView>
   );
