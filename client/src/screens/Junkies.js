@@ -3,6 +3,7 @@ import { Entypo } from "@expo/vector-icons";
 import React, { Component } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import T from "../components/T";
 import Constants from "../Constants";
 import { post } from "../Util";
@@ -13,6 +14,8 @@ class Junkies extends Component {
 
     this.state = {
       response: null,
+      random: Math.random(),
+      captcha: "",
     };
   }
 
@@ -37,7 +40,12 @@ class Junkies extends Component {
     })
       .then((response) => response.json())
       .then(async (response) => {
-        this.setState({ response, loading: false });
+        this.setState({
+          response,
+          loading: false,
+          random: Math.random(),
+          captcha: "",
+        });
         this.props.screenProps.reloadMe(device.loginToken);
       })
       .catch((error) => {
@@ -50,6 +58,14 @@ class Junkies extends Component {
     return (
       <View>
         {this.keyValue("Junkies in bezit", me?.junkies)}
+
+        <Captcha
+          screenProps={this.props.screenProps}
+          captcha={this.state.captcha}
+          onChangeCaptcha={(x) => this.setState({ captcha: x })}
+          random={this.state.random}
+          onChangeRandom={(x) => this.setState({ random: x })}
+        />
 
         <Button
           theme={this.props.screenProps.device.theme}

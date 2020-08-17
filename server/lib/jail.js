@@ -1,5 +1,5 @@
 const { Op, Sequelize } = require("sequelize");
-const { sendMessageAndPush } = require("./util");
+const { sendMessageAndPush, needCaptcha } = require("./util");
 
 const jail = async (req, res, User) => {
   const people = await User.findAll({
@@ -11,7 +11,7 @@ const jail = async (req, res, User) => {
 };
 
 const breakout = async (req, res, User, Message) => {
-  const { token, name } = req.body;
+  const { token, name, captcha } = req.body;
 
   if (!token) {
     res.json({ response: "Geen token" });
@@ -24,6 +24,10 @@ const breakout = async (req, res, User, Message) => {
     res.json({ response: "Ongeldige user" });
     return;
   }
+
+  // if (user.needCaptcha && Number(captcha) !== user.captcha) {
+  //   return res.json({ response: "Verkeerde code!" });
+  // }
 
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
@@ -59,7 +63,11 @@ const breakout = async (req, res, User, Message) => {
     });
 
     User.update(
-      { jailAt: Date.now() + seconds * 1000 },
+      {
+        // captcha: null,
+        // needCaptcha: needCaptcha(),
+        jailAt: Date.now() + seconds * 1000,
+      },
       { where: { id: user.id } }
     );
   } else {
@@ -68,7 +76,11 @@ const breakout = async (req, res, User, Message) => {
     });
 
     User.update(
-      { rank: Sequelize.literal(`rank + 10`) },
+      {
+        // captcha: null,
+        // needCaptcha: needCaptcha(),
+        rank: Sequelize.literal(`rank + 10`),
+      },
       { where: { id: user.id } }
     );
     sendMessageAndPush(

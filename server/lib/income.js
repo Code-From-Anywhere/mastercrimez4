@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+const { needCaptcha } = require("./util");
 
 const income = async (req, res, sequelize, User, City) => {
   const { token, captcha } = req.body;
@@ -13,6 +14,10 @@ const income = async (req, res, sequelize, User, City) => {
   if (!user) {
     res.json({ response: "Ongeldige user" });
     return;
+  }
+
+  if (user.needCaptcha && Number(captcha) !== user.captcha) {
+    return res.json({ response: "Verkeerde code!" });
   }
 
   const isNotVerified = await User.findOne({
@@ -34,7 +39,12 @@ const income = async (req, res, sequelize, User, City) => {
   const landlordProfit = Math.round(user.wiet * 10 * Math.sqrt(uren2));
 
   const [updated] = await User.update(
-    { incomeAt: Date.now(), cash: user.cash + amount },
+    {
+      incomeAt: Date.now(),
+      cash: user.cash + amount,
+      captcha: null,
+      needCaptcha: needCaptcha(),
+    },
     { where: { id: user.id, incomeAt: user.incomeAt } }
   );
 

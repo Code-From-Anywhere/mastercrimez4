@@ -340,7 +340,7 @@ const kill = async (req, res, User, Message, Garage, City) => {
     );
 
     res.json({
-      response: `Je hebt ${damage}% schade toegebracht aan ${user2.name}. Je hebt ${stolenTotal},- gestolen. ${responseMessageBackfire}`,
+      response: `Je hebt ${damage}% schade toegebracht aan ${user2.name}. Je hebt ${stolenTotal},- gestolen. ${responseBackfire}`,
     });
   }
 };

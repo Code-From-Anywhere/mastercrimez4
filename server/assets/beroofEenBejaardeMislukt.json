@@ -1,0 +1,50 @@
+[
+  {
+    "text": "De gehandicapte vrouw sloeg je knockout met haar wandelstok.",
+    "lifeDecrease": true,
+    "jail": false
+  },
+  {
+    "text": "Hij kan dan misschien niet praten, maar door z’n kreten kwam de hele verzorgingstehuis je in elkaar rammen tot de politie aankwam.",
+    "lifeDecrease": true,
+    "jail": true
+  },
+  {
+    "text": "De gehandicapte man reed je over met zijn rollator toen je greep naar zijn portemonnee. Auw! ",
+    "lifeDecrease": true,
+    "jail": false
+  },
+
+  {
+    "text": "De zusters van de verzorgingstehuis vonden je verdacht. Je werd opgepakt voordat je bij je slachtoffer kon komen! ",
+    "lifeDecrease": false,
+    "jail": true
+  },
+  {
+    "text": "De gehandicapte heeft blijkbaar een wapen aan z’n rolstoel geplakt, hij kan dan misschien niet meer lopen, maar z’n armen werken nog uitstekend. Hij schoot je in je heup.)",
+    "lifeDecrease": true,
+    "jail": false
+  },
+  {
+    "text": "De vrouw die je wou beroven was knettergek en heeft je vastgebonden aan haar bed. De rest van de details besparen we je.",
+    "lifeDecrease": false,
+    "jail": false
+  },
+
+  {
+    "text": "Voortaan is het handig om kogels mee te nemen, de gehandicapte heeft je overmeesterd en netjes gewacht op de politie.",
+    "lifeDecrease": false,
+    "jail": true
+  },
+
+  {
+    "text": "Je Google Maps deed het niet, je wist niet hoe je naar je slachtoffer moest rijden.",
+    "lifeDecrease": false,
+    "jail": false
+  },
+  {
+    "text": "De gehandicapte vrouw kreeg een hartstilstand toen ze je aantrof in haar woning, nu kom je nooit te weten waar het geld ligt! Je bent maar snel weggevlucht!",
+    "lifeDecrease": false,
+    "jail": false
+  }
+]

@@ -43,6 +43,7 @@ const allUserFields = publicUserFields.concat([
   "swissBank",
   "rankKnow",
   "swissBullets",
+  "needCaptcha",
 ]);
 
 function me(token) {
@@ -86,6 +87,8 @@ class User extends Model {}
 
 User.init(
   {
+    captcha: DataTypes.INTEGER,
+    needCaptcha: DataTypes.BOOLEAN,
     loginToken: DataTypes.STRING,
     activationToken: DataTypes.STRING,
     forgotPasswordToken: DataTypes.STRING,
@@ -1479,6 +1482,32 @@ server.post("/login", async (req, res) => {
     res.json({ error: "Email/wachtwoord komen niet overeen" });
   }
 });
+
+const zcaptcha = require("./captcha");
+const test = async () => {
+  const img = await zcaptcha.getCaptcha("1234");
+  fs.writeFileSync("image.png", img);
+};
+test();
+
+const getCaptcha = async (req, res) => {
+  const { loginToken } = req.query;
+  if (!loginToken) {
+    return res.json({ response: "No token given" });
+  }
+  const code = Math.random().toString().substr(2, 4);
+  console.log("CODE", code);
+  const image = await zcaptcha.getCaptcha(code, undefined, "transparent");
+  res.writeHead(200, {
+    "Content-Type": "image/png",
+  });
+
+  User.update({ captcha: code }, { where: { loginToken } });
+
+  return res.end(image, "binary");
+};
+
+server.get("/captcha.png", getCaptcha);
 
 /*
 * * * * * *

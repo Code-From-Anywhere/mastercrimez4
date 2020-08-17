@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "express-session": "^1.17.1",
+    "zoia-captcha": "^1.0.6"
+  }
+}

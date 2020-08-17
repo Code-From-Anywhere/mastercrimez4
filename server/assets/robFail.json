@@ -1,0 +1,57 @@
+[
+  {
+    "text": " Het is mislukt! [user] schrok niet van je wapen en trok een veel groter wapen, je moest met piepende banden vluchten!",
+    "lifeDecrease": false,
+    "jail": false
+  },
+  {
+    "text": "Oei.. [user] heeft je zo’n harde tik verkocht, dat je naar het ziekenhuis moest.. daar gaat je eigen risico.",
+    "lifeDecrease": true,
+    "jail": false
+  },
+  {
+    "text": "[user] zag je al aankomen en heeft zijn pitbull op je afgestuurd.. rennen!",
+    "lifeDecrease": false,
+    "jail": false
+  },
+  {
+    "text": "Je had [user]’s portemonnee, kwam eindelijk thuis! Perfect! Volgende keer even dubbel checken, want de portemonnee was leeg..",
+    "lifeDecrease": false,
+    "jail": false
+  },
+  {
+    "text": "[user] werd beschermd door de WebMaster. Je durfde er niet langs.",
+    "lifeDecrease": false,
+    "jail": false
+  },
+  {
+    "text": "Een wapen tegen z’n hoofd en schreeuwen dat hij z’n spullen af moet geven, erg intimiderend. Maar doe het dan niet voor een politiebureau..",
+    "lifeDecrease": false,
+    "jail": true
+  },
+  {
+    "text": "[user] wist toen je je wapen trok, je wapen te bemachtigen. Als straf ben je in je been geschoten.",
+    "lifeDecrease": true,
+    "jail": false
+  },
+  {
+    "text": "Laat je partner je rugtas niet inpakken, in plaats van een écht pistool, had je partner er een waterpistool in gedaan.. zonder water ook nog! Helaas!",
+    "lifeDecrease": false,
+    "jail": false
+  },
+  {
+    "text": "Het was te druk om [user] te beroven.",
+    "lifeDecrease": false,
+    "jail": false
+  },
+  {
+    "text": "[user] had geen portemonnee bij. Teleurgesteld ben je weggelopen.",
+    "lifeDecrease": false,
+    "jail": false
+  },
+  {
+    "text": "Je verwarde [user] met een undercover agent. Je bent in de boeien geslagen en afgevoerd naar de gevangenis.",
+    "lifeDecrease": false,
+    "jail": true
+  }
+]

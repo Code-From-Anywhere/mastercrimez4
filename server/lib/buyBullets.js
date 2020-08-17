@@ -1,8 +1,9 @@
 const items = require("../assets/shop.json");
 const { Op } = require("sequelize");
+const { needCaptcha } = require("./util");
 
 const buyBullets = async (req, res, sequelize, User, City) => {
-  let { loginToken, amount } = req.body;
+  let { loginToken, amount, captcha } = req.body;
 
   amount = Math.round(Number(amount));
 
@@ -16,6 +17,10 @@ const buyBullets = async (req, res, sequelize, User, City) => {
   const user = await User.findOne({ where: { loginToken } });
   if (!user) {
     return res.json({ response: "Geen user gevonden" });
+  }
+
+  if (user.needCaptcha && Number(captcha) !== user.captcha) {
+    return res.json({ response: "Verkeerde code!" });
   }
 
   const city = await City.findOne({ where: { city: user.city } });
@@ -46,6 +51,8 @@ const buyBullets = async (req, res, sequelize, User, City) => {
 
   const [updated] = await User.update(
     {
+      captcha: null,
+      needCaptcha: needCaptcha(),
       bullets: user.bullets + amount,
       cash: user.cash - price,
     },

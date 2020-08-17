@@ -1,25 +1,9 @@
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
+const { needCaptcha } = require("./util");
 
 const crime = async (req, res, User) => {
   const { token, option, captcha } = req.body;
-
-  // const secret_key = process.env.GOOGLE_CAPTCHA_KEY;
-  // const url = `https://www.google.com/recaptcha/api/siteverify?secret=${secret_key}&response=${captcha}`;
-
-  // const robot = await fetch(url, {
-  //   method: "post",
-  // })
-  //   .then((response) => response.json())
-  //   .then((google_response) => {
-  //     return google_response;
-  //   })
-  //   .catch((error) => res.json({ error }));
-
-  // if (!robot.success || robot.score < 0.3) {
-  //   res.json({ response: "Je bent helaas gepakt door de robot-detectie!" });
-  //   return;
-  // }
 
   if (!token) {
     res.json({ response: "Geen token" });
@@ -41,13 +25,19 @@ const crime = async (req, res, User) => {
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    if (user.needCaptcha && Number(captcha) !== user.captcha) {
+      return res.json({ response: "Verkeerde code!" });
+    }
     if (user.crimeAt + 60000 < Date.now()) {
       const kans = Math.round((user.rank + 30) / (option * option));
       const kans2 = kans > 75 ? 75 : kans;
 
       const random = Math.ceil(Math.random() * 100);
 
-      User.update({ crimeAt: Date.now() }, { where: { loginToken: token } });
+      User.update(
+        { crimeAt: Date.now(), captcha: null, needCaptcha: needCaptcha() },
+        { where: { loginToken: token } }
+      );
 
       if (kans2 >= random) {
         const accomplices = await User.findAll({

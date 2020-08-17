@@ -1,5 +1,7 @@
+const { needCaptcha } = require("./util");
+
 const bunker = async (req, res, User) => {
-  const { token, option } = req.body;
+  const { token, option, captcha } = req.body;
 
   if (option < 0 || option > 3 || isNaN(option)) {
     res.json({ response: "Ongeldige keuze" });
@@ -14,6 +16,10 @@ const bunker = async (req, res, User) => {
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    if (user.needCaptcha && Number(captcha) !== user.captcha) {
+      return res.json({ response: "Verkeerde code!" });
+    }
+
     if (user.bunkerAt < Date.now()) {
       const seconds = option === 1 ? 60 : option === 2 ? 300 : 900;
       const cost = option === 1 ? 50000 : option === 2 ? 250000 : 1000000;
@@ -23,6 +29,8 @@ const bunker = async (req, res, User) => {
           {
             bunkerAt: Date.now() + seconds * 1000,
             cash: user.cash - cost,
+            captcha: null,
+            needCaptcha: needCaptcha(),
           },
           { where: { loginToken: token } }
         );

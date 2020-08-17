@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import T from "../components/T";
 import Constants from "../Constants";
-// import { ReCaptcha } from "react-recaptcha-v3";
 import style from "../Style";
 class Income extends Component {
   state = {
     response: null,
+    captcha: "",
+    random: Math.random(),
   };
   keyValue(key, value) {
     return (
@@ -24,6 +26,14 @@ class Income extends Component {
 
     return (
       <View>
+        <Captcha
+          screenProps={this.props.screenProps}
+          captcha={this.state.captcha}
+          onChangeCaptcha={(x) => this.setState({ captcha: x })}
+          random={this.state.random}
+          onChangeRandom={(x) => this.setState({ random: x })}
+        />
+
         <Button
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha}
@@ -43,7 +53,7 @@ class Income extends Component {
             })
               .then((response) => response.json())
               .then(async (response) => {
-                this.setState({ response });
+                this.setState({ response, captcha: "", random: Math.random() });
                 this.props.screenProps.reloadMe(device.loginToken);
               })
               .catch((error) => {

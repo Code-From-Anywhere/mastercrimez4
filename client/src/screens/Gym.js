@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import T from "../components/T";
 import Constants from "../Constants";
 import { getStrength } from "../Util";
@@ -28,6 +29,8 @@ class Gym extends Component {
     this.state = {
       selected: null,
       response: null,
+      captcha: "",
+      random: Math.random(),
     };
   }
 
@@ -105,7 +108,12 @@ class Gym extends Component {
     })
       .then((response) => response.json())
       .then(async (response) => {
-        this.setState({ response, loading: false });
+        this.setState({
+          response,
+          loading: false,
+          captcha: "",
+          random: Math.random(),
+        });
         this.props.screenProps.reloadMe(device.loginToken);
       })
       .catch((error) => {
@@ -116,18 +124,20 @@ class Gym extends Component {
   renderFooter = () => {
     return (
       <View>
+        <Captcha
+          screenProps={this.props.screenProps}
+          captcha={this.state.captcha}
+          onChangeCaptcha={(x) => this.setState({ captcha: x })}
+          random={this.state.random}
+          onChangeRandom={(x) => this.setState({ random: x })}
+        />
+
         <Button
           theme={this.props.screenProps.device.theme}
-          // disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
           title="Train"
           onPress={this.submit}
         />
-        {/* <ReCaptcha
-          sitekey={Constants.CAPTCHA}
-          action="gym"
-          verifyCallback={(token) => this.setState({ captcha: token })}
-        /> */}
       </View>
     );
   };

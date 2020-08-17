@@ -31,9 +31,11 @@ class Button extends React.Component {
             </View>
           ) : null}
 
-          <Text style={{ textAlign: "center", color: theme.secondaryText }}>
-            {title}
-          </Text>
+          {title && (
+            <Text style={{ textAlign: "center", color: theme.secondaryText }}>
+              {title}
+            </Text>
+          )}
         </View>
       </TouchableOpacity>
     );

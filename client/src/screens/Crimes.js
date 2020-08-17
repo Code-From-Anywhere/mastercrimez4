@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 // import { ReCaptcha } from "react-recaptcha-v3";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
 import Constants from "../Constants";
 
@@ -38,6 +39,8 @@ class Crimes extends Component {
     this.state = {
       selected: null,
       response: null,
+      captcha: "",
+      random: Math.random(),
     };
   }
 
@@ -93,7 +96,12 @@ class Crimes extends Component {
     })
       .then((response) => response.json())
       .then(async (response) => {
-        this.setState({ response, loading: false });
+        this.setState({
+          response,
+          loading: false,
+          random: Math.random(),
+          captcha: "",
+        });
         this.props.screenProps.reloadMe(device.loginToken);
       })
       .catch((error) => {
@@ -104,6 +112,14 @@ class Crimes extends Component {
   renderFooter = () => {
     return (
       <View>
+        <Captcha
+          screenProps={this.props.screenProps}
+          captcha={this.state.captcha}
+          onChangeCaptcha={(x) => this.setState({ captcha: x })}
+          random={this.state.random}
+          onChangeRandom={(x) => this.setState({ random: x })}
+        />
+
         <Button
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
@@ -112,11 +128,6 @@ class Crimes extends Component {
           onPress={this.submit}
         />
 
-        {/* <ReCaptcha
-          sitekey={Constants.CAPTCHA}
-          action="crime"
-          verifyCallback={(token) => this.setState({ captcha: token })}
-        /> */}
         <Footer screenProps={this.props.screenProps} />
       </View>
     );

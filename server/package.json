@@ -21,10 +21,12 @@
   "dependencies": {
     "@mollie/api-client": "^3.2.3",
     "@sendgrid/mail": "^6.5.5",
+    "convert-svg-to-png": "^0.5.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "expo-image-manipulator": "^8.1.0",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "isomorphic-fetch": "^2.2.1",
     "jimp": "^0.10.1",
     "multer": "^1.4.2",
@@ -32,7 +34,10 @@
     "node-cron": "^2.0.3",
     "sequelize": "^5.21.5",
     "sqlite3": "^4.1.1",
-    "twilio": "^3.48.2"
+    "svg-captcha-express": "^1.0.8",
+    "svg-png-converter": "^0.0.9",
+    "twilio": "^3.48.2",
+    "zoia-captcha": "^1.0.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

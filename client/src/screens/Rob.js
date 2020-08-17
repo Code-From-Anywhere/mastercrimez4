@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -21,6 +22,8 @@ class Bank extends Component {
   }
   state = {
     response: null,
+    captcha: "",
+    random: Math.random(),
   };
 
   rob = () => {
@@ -35,11 +38,12 @@ class Bank extends Component {
       body: JSON.stringify({
         token: device.loginToken,
         name: this.state.name,
+        captcha: this.state.captcha,
       }),
     })
       .then((response) => response.json())
       .then(async (response) => {
-        this.setState({ response });
+        this.setState({ response, random: Math.random(), captcha: "" });
         this.props.screenProps.reloadMe(device.loginToken);
       })
       .catch((error) => {
@@ -61,6 +65,14 @@ class Bank extends Component {
           placeholder="Naam"
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
+        />
+
+        <Captcha
+          screenProps={this.props.screenProps}
+          captcha={this.state.captcha}
+          onChangeCaptcha={(x) => this.setState({ captcha: x })}
+          random={this.state.random}
+          onChangeRandom={(x) => this.setState({ random: x })}
         />
 
         <View

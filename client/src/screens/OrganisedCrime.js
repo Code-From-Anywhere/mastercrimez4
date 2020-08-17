@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Text, View } from "react-native";
 // import { ReCaptcha } from "react-recaptcha-v3";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -12,6 +13,8 @@ class Wiet extends Component {
 
     this.state = {
       response: null,
+      captcha: "",
+      random: Math.random(),
     };
   }
 
@@ -48,7 +51,12 @@ class Wiet extends Component {
     })
       .then((response) => response.json())
       .then(async (response) => {
-        this.setState({ response, loading: false });
+        this.setState({
+          response,
+          loading: false,
+          random: Math.random(),
+          captcha: "",
+        });
         this.props.screenProps.reloadMe(device.loginToken);
       })
       .catch((error) => {
@@ -59,6 +67,14 @@ class Wiet extends Component {
     const { device, me } = this.props.screenProps;
     return (
       <View>
+        <Captcha
+          screenProps={this.props.screenProps}
+          captcha={this.state.captcha}
+          onChangeCaptcha={(x) => this.setState({ captcha: x })}
+          random={this.state.random}
+          onChangeRandom={(x) => this.setState({ random: x })}
+        />
+
         <Button
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}

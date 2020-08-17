@@ -8,11 +8,13 @@ import {
   View,
 } from "react-native";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import T from "../components/T";
 import style from "../Style";
 import { doOnce, post } from "../Util";
 const Bulletfactory = ({
   navigation,
+  screenProps,
   screenProps: {
     device,
     me,
@@ -27,6 +29,8 @@ const Bulletfactory = ({
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
   const [bullets, setBullets] = useState(null);
+  const [captcha, setCaptcha] = useState("");
+  const [random, setRandom] = useState(Math.random());
 
   doOnce(reloadCities);
 
@@ -47,10 +51,13 @@ const Bulletfactory = ({
     const { response } = await post("buyBullets", {
       loginToken: device.loginToken,
       amount: bullets,
+      captcha,
     });
     reloadMe(device.loginToken);
     setResponse(response);
     reloadCities();
+    setCaptcha("");
+    setRandom(Math.random());
   };
 
   return (
@@ -97,6 +104,14 @@ const Bulletfactory = ({
             value={bullets}
             onChangeText={(x) => setBullets(x)}
             style={style(theme).textInput}
+          />
+
+          <Captcha
+            screenProps={screenProps}
+            captcha={captcha}
+            onChangeCaptcha={(x) => setCaptcha(x)}
+            random={random}
+            onChangeRandom={(x) => setRandom(x)}
           />
 
           <Button theme={theme} title="Koop" onPress={submit} />

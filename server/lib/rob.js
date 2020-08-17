@@ -1,10 +1,15 @@
-const { getRank, getStrength, sendMessageAndPush } = require("./util");
+const {
+  getRank,
+  getStrength,
+  sendMessageAndPush,
+  needCaptcha,
+} = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
 const SECONDS = 30;
 
 const rob = async (req, res, User, Message) => {
-  const { token, name } = req.body;
+  const { token, name, captcha } = req.body;
 
   if (!token) {
     res.json({ response: "Geen token" });
@@ -16,6 +21,10 @@ const rob = async (req, res, User, Message) => {
   if (!user) {
     res.json({ response: "Ongeldig token" });
     return;
+  }
+
+  if (user.needCaptcha && Number(captcha) !== user.captcha) {
+    return res.json({ response: "Verkeerde code!" });
   }
 
   const isNotVerified = await User.findOne({
@@ -80,7 +89,10 @@ const rob = async (req, res, User, Message) => {
 
   if (probability < random) {
     res.json({ response: "Het is mislukt" });
-    User.update({ robAt: now }, { where: { id: user.id } });
+    User.update(
+      { robAt: now, captcha: null, needCaptcha: needCaptcha() },
+      { where: { id: user.id } }
+    );
 
     return;
   }
@@ -92,7 +104,12 @@ const rob = async (req, res, User, Message) => {
 
   if (gelukt) {
     const [gelukt2] = await User.update(
-      { cash: user.cash + stealAmount, robAt: now },
+      {
+        cash: user.cash + stealAmount,
+        robAt: now,
+        captcha: null,
+        needCaptcha: needCaptcha(),
+      },
       { where: { id: user.id, robAt: { [Op.lte]: now - SECONDS * 1000 } } }
     );
 

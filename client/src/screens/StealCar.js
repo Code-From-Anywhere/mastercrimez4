@@ -9,11 +9,12 @@ import {
   View,
 } from "react-native";
 import CountDown from "react-native-countdown-component";
-// import { ReCaptcha } from "react-recaptcha-v3";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
+
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
 
@@ -100,6 +101,8 @@ class StealCar extends Component {
 
     this.state = {
       selected: null,
+      captcha: "",
+      random: Math.random(),
       response: null,
       type: "beginner",
     };
@@ -160,7 +163,12 @@ class StealCar extends Component {
         .then(async (response) => {
           this.props.screenProps.reloadMe(device.loginToken);
 
-          this.setState({ response, loading: false });
+          this.setState({
+            response,
+            loading: false,
+            random: Math.random(),
+            captcha: "",
+          });
         })
         .catch((error) => {
           console.error(error);
@@ -169,9 +177,25 @@ class StealCar extends Component {
   };
 
   renderFooter = () => {
-    const { screenProps } = this.props;
+    const {
+      screenProps,
+      screenProps: {
+        me,
+
+        device: { loginToken, theme },
+      },
+    } = this.props;
+
     return (
       <View>
+        <Captcha
+          screenProps={screenProps}
+          captcha={this.state.captcha}
+          onChangeCaptcha={(x) => this.setState({ captcha: x })}
+          random={this.state.random}
+          onChangeRandom={(x) => this.setState({ random: x })}
+        />
+
         <Button
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}

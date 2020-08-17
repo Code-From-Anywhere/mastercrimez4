@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
+import Captcha from "../components/Captcha";
 import T from "../components/T";
 import { post } from "../Util";
 
@@ -27,6 +28,8 @@ class Bunker extends Component {
   state = {
     selected: null,
     response: null,
+    captcha: "",
+    random: Math.random(),
   };
   renderItem = ({ item, index }) => {
     const {
@@ -63,19 +66,30 @@ class Bunker extends Component {
   renderFooter = () => {
     const { device } = this.props.screenProps;
     return (
-      <Button
-        theme={this.props.screenProps.device.theme}
-        style={{ borderRadius: 10, marginTop: 20 }}
-        title="Duik onder"
-        onPress={async () => {
-          const response = await post("bunker", {
-            token: device.loginToken,
-            option: this.state.selected,
-          });
-          this.setState({ response });
-          this.props.screenProps.reloadMe(device.loginToken);
-        }}
-      />
+      <>
+        <Captcha
+          screenProps={this.props.screenProps}
+          captcha={this.state.captcha}
+          onChangeCaptcha={(x) => this.setState({ captcha: x })}
+          random={this.state.random}
+          onChangeRandom={(x) => this.setState({ random: x })}
+        />
+
+        <Button
+          theme={this.props.screenProps.device.theme}
+          style={{ borderRadius: 10, marginTop: 20 }}
+          title="Duik onder"
+          onPress={async () => {
+            const response = await post("bunker", {
+              token: device.loginToken,
+              option: this.state.selected,
+              captcha: this.state.captcha,
+            });
+            this.setState({ response, captcha: "", random: Math.random() });
+            this.props.screenProps.reloadMe(device.loginToken);
+          }}
+        />
+      </>
     );
   };
   render() {

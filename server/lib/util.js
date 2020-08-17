@@ -1,5 +1,7 @@
 const fetch = require("node-fetch");
 
+const needCaptcha = () => Math.round(Math.random() * 50) === 1;
+
 const publicUserFields = [
   "id",
   "name",
@@ -316,5 +318,6 @@ module.exports = {
   getStrength,
   sendMessageAndPush,
   saveImageIfValid,
+  needCaptcha,
   publicUserFields,
 };
