@@ -1483,6 +1483,8 @@ server.post("/login", async (req, res) => {
   }
 });
 
+const zcaptcha = require("./captcha");
+
 const getCaptcha = async (req, res) => {
   const { loginToken } = req.query;
   if (!loginToken) {
