@@ -1,4 +1,4 @@
-const { getRank, getStrength } = require("./util");
+const { getRank, getStrength, sendMessageAndPush } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
 const SECONDS = 30;
