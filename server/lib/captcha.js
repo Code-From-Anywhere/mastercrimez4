@@ -36,7 +36,7 @@ exports.getCaptcha = async (
         .rotate(getRandomInt(1, getRandomInt(1, 60), true))
         .opacity(0.4)
         .print(font, 0, 0, cp)
-        .resize(20, 20, Jimp.RESIZE_BEZIER)
+        // .resize(20, 20, Jimp.RESIZE_BEZIER)
         .rotate(getRandomInt(1, 15))
         .resize(getRandomInt(40, 42), getRandomInt(40, 42), Jimp.RESIZE_HERMITE)
         .opacity(0.8)
