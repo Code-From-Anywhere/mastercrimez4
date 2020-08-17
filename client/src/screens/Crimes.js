@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
-// import { ReCaptcha } from "react-recaptcha-v3";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
@@ -44,7 +43,7 @@ class Crimes extends Component {
     };
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = (item, index) => {
     const {
       me,
       device: { theme },
@@ -157,13 +156,11 @@ class Crimes extends Component {
             />
           </View>
         ) : (
-          <FlatList
-            keyExtractor={(item, index) => `item${index}`}
-            data={options}
-            extraData={selected}
-            renderItem={this.renderItem}
-            ListFooterComponent={this.renderFooter}
-          />
+          <ScrollView>
+            {options.map(this.renderItem)}
+
+            {this.renderFooter()}
+          </ScrollView>
         )}
       </View>
     );

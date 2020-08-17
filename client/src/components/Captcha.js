@@ -31,7 +31,7 @@ const Captcha = ({
         <TextInput
           style={[style(screenProps.device.theme).textInput, { width: 100 }]}
           value={captcha}
-          onChangeText={onChangeCaptcha}
+          onChangeText={(x) => onChangeCaptcha(x)}
         />
         <TouchableOpacity onPress={() => onChangeRandom(Math.random())}>
           <MaterialCommunityIcons
