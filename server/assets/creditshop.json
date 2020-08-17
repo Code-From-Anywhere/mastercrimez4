@@ -39,5 +39,13 @@
     "wat": "rank",
     "hoeveel": 10000,
     "kosten": 500
+  },
+  {
+    "id": 8,
+    "kooptext": "Ga nu uit de gevangenis",
+    "gekochttext": "Je bent nu uit de gevangenis",
+    "wat": "jailAt",
+    "hoeveel": -300000,
+    "kosten": 5
   }
 ]

@@ -2,6 +2,7 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import CountDown from "react-native-countdown-component";
 import Constants from "../Constants";
+import { post } from "../Util";
 import Button from "./Button";
 import T from "./T";
 class Jail extends React.Component {
@@ -53,6 +54,15 @@ class Jail extends React.Component {
     );
   };
 
+  buyOut = async () => {
+    const { device, reloadMe } = this.props.screenProps;
+    const { response } = await post("creditshopBuy", {
+      loginToken: device.loginToken,
+      type: 8,
+    });
+    this.setState({ response });
+    reloadMe(device.loginToken);
+  };
   render() {
     const {
       screenProps: { me, device, reloadMe },
@@ -68,6 +78,12 @@ class Jail extends React.Component {
           size={20}
           timeToShow={["M", "S"]}
           timeLabels={{ m: "Minuten", s: "Seconden" }}
+        />
+
+        <Button
+          theme={device.theme}
+          title="Koop jezelf uit voor 5 credits"
+          onPress={() => this.buyOut()}
         />
 
         <View style={{ flexDirection: "row" }}>
