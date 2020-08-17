@@ -983,7 +983,9 @@ server.get("/stats", async (req, res) => {
     },
   });
 
-  allStats.push({ newMembers: newMembers.map((x) => x.name).join(", ") });
+  allStats.push({
+    newMembers: newMembers.map((x) => x.dataValues.name).join(", "),
+  });
   allStats.push({ onlineToday });
 
   res.json(allStats);
