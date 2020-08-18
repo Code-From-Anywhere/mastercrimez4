@@ -6,6 +6,7 @@ const donate = async (req, res, User, Message) => {
   const user = await User.findOne({ where: { loginToken } });
   const validTypes = [
     "cash",
+    "bank",
     "bullets",
     "hoeren",
     "junkies",
@@ -15,6 +16,7 @@ const donate = async (req, res, User, Message) => {
 
   const typeNames = {
     cash: "contant",
+    bank: "bankgeld",
     bullets: "kogels",
     hoeren: "hoeren",
     junkies: "junkies",

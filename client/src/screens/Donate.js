@@ -56,14 +56,14 @@ class Donate extends Component {
   openActionSheet = () => {
     // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
     const options = [
-      "Contant Geld",
+      "Bank Geld",
       "Kogels",
       "Wiet",
       "Junkies",
       "Hoeren",
       "Gamepoints",
     ];
-    const keys = ["cash", "bullets", "wiet", "junkies", "hoeren", "gamepoints"];
+    const keys = ["bank", "bullets", "wiet", "junkies", "hoeren", "gamepoints"];
     this.props.showActionSheetWithOptions(
       {
         options,
@@ -83,7 +83,7 @@ class Donate extends Component {
 
     const names = {
       bullets: "Kogels",
-      cash: "Geld",
+      bank: "Bankgeld",
       wiet: "Wiet",
       junkies: "Junkies",
       hoeren: "Hoeren",
