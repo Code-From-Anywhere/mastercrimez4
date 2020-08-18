@@ -11,6 +11,13 @@ function randomEntry(array) {
 const stealcar = async (req, res, User, Garage) => {
   const { token, option, captcha } = req.body;
 
+  if (true) {
+    res.json({
+      response:
+        "Auto stelen is tijdleijk buiten werking tot een probleem is verholpen",
+    });
+    return;
+  }
   if (!token) {
     console.log("token", req);
     res.json({ response: "Geen token" });
