@@ -44,7 +44,7 @@ const possibilities = {
   // royalFlush: 0.999823,
   royalFlush: 0.999791,
   straightFlush: 0.99948,
-  quads: 0.9978,
+  fourOfAKind: 0.9978,
   fullHouse: 0.9781,
   flush: 0.9415,
   straight: 0.8953,
