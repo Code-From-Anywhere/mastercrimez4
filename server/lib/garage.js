@@ -62,7 +62,7 @@ const garageGrouped = async (req, res, User, Garage, sequelize) => {
   if (user) {
     //find all future activities within square, add distance, filter distance, add its user
     const [grouped, meta] = await sequelize.query(
-      `SELECT id, auto, COUNT(*) as amount, image, cash, power, kogels from garages WHERE userId='${user.id}' AND power=0 GROUP BY auto ORDER BY amount DESC`
+      `SELECT id,auto, COUNT(*) as amount, image, cash, power, kogels from garages WHERE userId='${user.id}' AND power=0 GROUP BY garages.auto ORDER BY amount DESC`
     );
 
     res.json(grouped);
