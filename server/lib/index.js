@@ -1072,6 +1072,9 @@ server.get("/stats", async (req, res) => {
 });
 
 server.get("/me", (req, res) => {
+  if (!req.query.token || isNaN(req.query.token) || req.query.token < 1) {
+    res.json({ response: "Geen correct token gegeven" });
+  }
   User.findOne({
     attributes: allUserFields,
     where: { loginToken: req.query.token },
