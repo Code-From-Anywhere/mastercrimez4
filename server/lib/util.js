@@ -1,6 +1,6 @@
 const fetch = require("node-fetch");
 
-const needCaptcha = () => true; //Math.round(Math.random() * 50) === 1;
+const needCaptcha = () => Math.round(Math.random() * 50) === 1;
 
 const publicUserFields = [
   "id",
