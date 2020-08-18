@@ -11,13 +11,13 @@ function randomEntry(array) {
 const stealcar = async (req, res, User, Garage) => {
   const { token, option, captcha } = req.body;
 
-  if (true) {
-    res.json({
-      response:
-        "Auto stelen is tijdleijk buiten werking tot een probleem is verholpen",
-    });
-    return;
-  }
+  // if (true) {
+  //   res.json({
+  //     response:
+  //       "Auto stelen is tijdleijk buiten werking tot een probleem is verholpen",
+  //   });
+  //   return;
+  // }
   if (!token) {
     console.log("token", req);
     res.json({ response: "Geen token" });
@@ -68,7 +68,7 @@ const stealcar = async (req, res, User, Garage) => {
 
       const random = Math.ceil(Math.random() * 100);
 
-      User.update(
+      const [updated] = await User.update(
         {
           autostelenAt: Date.now(),
           needCaptcha: needCaptcha(),
@@ -76,6 +76,10 @@ const stealcar = async (req, res, User, Garage) => {
         },
         { where: { loginToken: token } }
       );
+
+      if (!updated) {
+        return res.json({ response: "Kon jou user niet updaten" });
+      }
       if (kans2 >= random) {
         const accomplices = await User.findAll({
           attributes: ["name"],
