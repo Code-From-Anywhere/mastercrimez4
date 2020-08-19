@@ -40,7 +40,7 @@ const Accomplice = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accomplice,
+        accomplice: accomplice1,
         accomplice2,
         accomplice3,
         accomplice4,
