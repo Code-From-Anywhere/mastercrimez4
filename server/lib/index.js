@@ -58,6 +58,7 @@ const allUserFields = publicUserFields.concat([
   "rankKnow",
   "swissBullets",
   "needCaptcha",
+  "numActions",
 ]);
 
 function me(token) {
@@ -103,6 +104,10 @@ User.init(
   {
     captcha: DataTypes.INTEGER,
     needCaptcha: DataTypes.BOOLEAN,
+    numActions: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     loginToken: DataTypes.STRING,
     activationToken: DataTypes.STRING,
     forgotPasswordToken: DataTypes.STRING,
@@ -139,28 +144,84 @@ User.init(
     accomplice4: DataTypes.STRING,
 
     onlineAt: DataTypes.BIGINT,
-    autostelenAt: DataTypes.BIGINT,
-    crimeAt: DataTypes.BIGINT,
-    reizenAt: DataTypes.BIGINT,
-    jailAt: DataTypes.BIGINT,
-    bombAt: DataTypes.BIGINT,
-    wietAt: DataTypes.BIGINT,
-    junkiesAt: DataTypes.BIGINT,
-    hoerenAt: DataTypes.BIGINT,
-    gymAt: DataTypes.BIGINT,
-    gymTime: DataTypes.BIGINT,
-    bunkerAt: DataTypes.BIGINT,
-    incomeAt: DataTypes.BIGINT,
+    autostelenAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    gymTime: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    crimeAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    reizenAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    jailAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    bombAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    wietAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    junkiesAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    hoerenAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    gymAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    bunkerAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    incomeAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
 
     attackAt: {
       type: DataTypes.BIGINT, //wanneer je HEBT aangevallen
       defaultValue: 0,
     },
-    attackedAt: DataTypes.BIGINT, //wanneer je bent aangevallen
-    robbedAt: DataTypes.BIGINT, //wanneer je bent berooft
-    robAt: DataTypes.BIGINT, //wanneer je HEBT beroofd
-    ocAt: DataTypes.BIGINT,
-    protectionAt: DataTypes.BIGINT,
+
+    attackedAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+
+    robbedAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+
+    robAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+
+    ocAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+
+    protectionAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
 
     home: {
       type: DataTypes.INTEGER,
@@ -552,7 +613,7 @@ Streetrace.hasMany(StreetraceParticipant, {
 });
 
 try {
-  sequelize.sync(); //{alter}:true}
+  sequelize.sync({ alter: true }); //{alter}:true}
 } catch (e) {
   console.log("e", e);
 }
@@ -1104,10 +1165,21 @@ server.get("/me", (req, res) => {
           `SELECT SUM(unread) AS unread FROM channelsubs WHERE userId=${user.id};`
         );
 
+        const accomplices = await User.findAll({
+          attributes: ["name", "rank"],
+          where: Sequelize.or(
+            { accomplice: user.name },
+            { accomplice2: user.name },
+            { accomplice3: user.name },
+            { accomplice4: user.name }
+          ),
+        });
+
         const userWithMessages = user.dataValues;
+        userWithMessages.accomplices = accomplices;
         userWithMessages.position = position.amount + 1;
         userWithMessages.messages = messages.length;
-        userWithMessages.chats = chats.unread;
+        userWithMessages.chats = chats.unread || 0;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
 
@@ -1155,10 +1227,31 @@ server.get("/me", (req, res) => {
           where: { onlineAt: { [Op.gt]: Date.now() - 300000 } },
         });
 
+        const [[position]] = await sequelize.query(
+          `SELECT COUNT(id) AS amount FROM users WHERE rank > ${newuser.rank}`
+        );
+
+        const [[chats]] = await sequelize.query(
+          `SELECT SUM(unread) AS unread FROM channelsubs WHERE userId=${newuser.id};`
+        );
+
+        const accomplices = await User.findAll({
+          attributes: ["name", "rank"],
+          where: Sequelize.or(
+            { accomplice: newuser.name },
+            { accomplice2: newuser.name },
+            { accomplice3: newuser.name },
+            { accomplice4: newuser.name }
+          ),
+        });
+
         const userWithMessages = newuser.dataValues;
         userWithMessages.messages = messages.length;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
+        userWithMessages.accomplices = accomplices;
+        userWithMessages.position = position.amount + 1;
+        userWithMessages.chats = chats.unread || 0;
 
         res.json(userWithMessages);
       }
@@ -1571,7 +1664,6 @@ const getCaptcha = async (req, res) => {
     return res.json({ response: "No token given" });
   }
   const code = Math.random().toString().substr(2, 4);
-  console.log("CODE", code);
   const image = await zcaptcha.getCaptcha(code, undefined, "transparent");
   res.writeHead(200, {
     "Content-Type": "image/png",
@@ -1642,22 +1734,25 @@ const swissBankTax = async () => {
   );
 };
 
-//elk uur
-cron.schedule("0 * * * *", async () => {
-  putBulletsInBulletFactories();
-});
+if (process.env.NODE_APP_INSTANCE == 0) {
+  console.log("Scheduling CRONS....");
+  //elk uur
+  cron.schedule("0 * * * *", async () => {
+    putBulletsInBulletFactories();
+  });
 
-cron.schedule("0 19 * * *", function () {
-  //send push notification that happy hour is started
-});
+  cron.schedule("0 19 * * *", function () {
+    //send push notification that happy hour is started
+  });
 
-//8 uur savonds
+  //8 uur savonds
 
-cron.schedule("0 20 * * *", function () {
-  giveInterest();
-  deadPeopleTax();
-  swissBankTax();
-});
+  cron.schedule("0 20 * * *", function () {
+    giveInterest();
+    deadPeopleTax();
+    swissBankTax();
+  });
+}
 
 const port = process.env.PORT || 4001;
 

@@ -71,7 +71,6 @@ import Mollie from "./screens/Mollie";
 import MollieComplete from "./screens/MollieComplete";
 import MyObjects from "./screens/MyObjects";
 import MyProfile from "./screens/MyProfile";
-import Notifications from "./screens/Notifications";
 import OrganisedCrime from "./screens/OrganisedCrime";
 import Poker from "./screens/Poker";
 import Privacy from "./screens/Privacy";
@@ -238,7 +237,7 @@ const Layout = ({ screenProps, navigation, children }) => {
 
   const handleChange = (nextAppState) => {
     if (nextAppState === "active") {
-      console.log(screenProps.device.foregrounded);
+      screenProps.reloadMe(screenProps.device.loginToken);
 
       screenProps.dispatch({ type: "INCREASE_FOREGROUNDED" });
 
@@ -476,7 +475,6 @@ const Container = rightContainer(
       ChangeName: withLayout(ChangeName),
       VerifyPhoneCode: withLayout(VerifyPhoneCode),
       SuperMessage: withLayout(SuperMessage),
-      Notifications: withLayout(Notifications),
       ForgotPassword: withLayout(ForgotPassword),
       RecoverPassword: {
         screen: withLayout(RecoverPassword),

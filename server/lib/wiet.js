@@ -1,4 +1,4 @@
-const { getRank, needCaptcha } = require("./util");
+const { getRank, needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
 
@@ -17,7 +17,7 @@ const wiet = async (req, res, User) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified) {
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
@@ -52,11 +52,17 @@ const wiet = async (req, res, User) => {
         {
           captcha: null,
           needCaptcha: needCaptcha(),
+          numActions: Sequelize.literal(`numActions+1`),
           [timeKey]: Date.now(),
           [valueKey]: user[valueKey] + random,
           gamepoints: user.gamepoints + 1,
         },
-        { where: { loginToken: token } }
+        {
+          where: {
+            loginToken: token,
+            [timeKey]: { [Op.lt]: Date.now() - 120000 },
+          },
+        }
       );
 
       res.json({

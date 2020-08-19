@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Clipboard,
   Dimensions,
@@ -9,33 +9,29 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import styles from "../Style";
+import { default as style, default as styles } from "../Style";
 import { getRank } from "../Util";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
-class Accomplice extends React.Component {
-  state = {
-    accomplice: this.props.screenProps.me?.accomplice,
-    accomplice2: this.props.screenProps.me?.accomplice2,
-    accomplice3: this.props.screenProps.me?.accomplice3,
-    accomplice4: this.props.screenProps.me?.accomplice4,
-    response: null,
-  };
+const Accomplice = ({
+  navigation,
+  screenProps: {
+    me,
+    device,
+    reloadMe,
+    device: { theme },
+  },
+}) => {
+  const [accomplice1, setAccomplice1] = useState(me?.accomplice);
+  const [accomplice2, setAccomplice2] = useState(me?.accomplice2);
+  const [accomplice3, setAccomplice3] = useState(me?.accomplice3);
+  const [accomplice4, setAccomplice4] = useState(me?.accomplice4);
+  const [response, setResponse] = useState(null);
 
-  componentDidMount() {
-    const accomplice = this.props.navigation.state.params?.accomplice;
-
-    if (accomplice) {
-      this.setState({ accomplice }, () => {
-        this.setAccomplice();
-      });
-    }
-  }
-
-  setAccomplice = () => {
-    const { device, reloadMe } = this.props.screenProps;
+  const submit = (acc) => {
+    //how to set accomplice acc from params to the right body?
 
     fetch(`${Constants.SERVER_ADDR}/setAccomplice`, {
       method: "POST",
@@ -44,17 +40,16 @@ class Accomplice extends React.Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accomplice: this.state.accomplice,
-        accomplice2: this.state.accomplice2,
-        accomplice3: this.state.accomplice3,
-        accomplice4: this.state.accomplice4,
-
+        accomplice,
+        accomplice2,
+        accomplice3,
+        accomplice4,
         loginToken: device.loginToken,
       }),
     })
       .then((response) => response.json())
       .then(({ response }) => {
-        this.setState({ response });
+        setResponse(response);
         reloadMe(device.loginToken);
       })
       .catch((error) => {
@@ -63,96 +58,116 @@ class Accomplice extends React.Component {
       });
   };
 
-  render() {
-    const { response } = this.state;
-    const {
-      me,
-      device,
-      device: { theme },
-    } = this.props.screenProps;
-    const rank = getRank(me?.rank, "number");
-    const url = `https://mastercrimez.nl/#/Accomplice?accomplice=${me?.name}`;
+  const keyValue = (key, value) => {
     return (
-      <ScrollView
+      <View
         style={{
-          flex: 1,
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          height: 40,
+          alignItems: "center",
         }}
       >
-        <View style={{ maxWidth: 600, margin: 20 }}>
+        <T>{key}</T>
+        <T>{value}</T>
+      </View>
+    );
+  };
+
+  useEffect(() => {
+    const accomplice = navigation.state.params?.accomplice;
+    if (accomplice) {
+      submit(accomplice);
+    }
+  }, []);
+
+  const rank = getRank(me?.rank, "number");
+  const url = `https://mastercrimez.nl/#/Accomplice?accomplice=${me?.name}`;
+  return (
+    <ScrollView
+      style={{
+        flex: 1,
+      }}
+    >
+      <View style={{ maxWidth: 600, margin: 20 }}>
+        <T>
+          Handlangers helpen je bij alles: misdaden, auto stelen, junkies,
+          hoeren en wiet. Wiens handlanger wil je zijn? Godfathers kunnen 2x
+          handlanger zijn, Unlimited-dons kunnen 4x handlanger zijn.
+        </T>
+
+        <View style={{ marginBottom: 20 }}>
           <T>
-            Wiens handlanger wil je zijn? Vul hieronder de naam in van de
-            gangster wiens handlanger jij wilt zijn, en hij zal bij alles wat
-            hij doet hulp van je krijgen als jullie beide organised crime doen.
+            Deel deze link met vrienden, zodat ze jouw handlanger worden als ze
+            beginnen met spelen!
           </T>
+          <TextInput
+            value={url}
+            onFocus={() => {
+              Clipboard.setString(url);
+              setResponse("Gekopiëerd naar klembord");
+            }}
+            style={style(theme).textInput}
+          />
+        </View>
 
-          <View style={{ marginVertical: 20 }}>
-            <T>Jij bent 1e handlanger van: {me?.accomplice || "(Niemand)"}</T>
-            <T>Jij bent 2e handlanger van: {me?.accomplice2 || "(Niemand)"}</T>
-            <T>Jij bent 3e handlanger van: {me?.accomplice3 || "(Niemand)"}</T>
-            <T>Jij bent 4e handlanger van: {me?.accomplice4 || "(Niemand)"}</T>
-          </View>
-          <View style={{ marginBottom: 20 }}>
-            <T>
-              Deel deze link met vrienden, zodat ze jouw handlanger worden als
-              ze beginnen met spelen!
-            </T>
-            <TextInput
-              value={url}
-              onFocus={() => {
-                Clipboard.setString(url);
-                this.setState({ response: "Gekopiëerd naar klembord" });
-              }}
-            />
-          </View>
-          <T>{response}</T>
+        <T bold>Jouw handlangers:</T>
+        {me?.accomplices.length > 0 ? (
+          me?.accomplices.map((accomplice) => {
+            return keyValue(accomplice.name, getRank(accomplice.rank, "both"));
+          })
+        ) : (
+          <T>Je hebt nog geen handlangers!</T>
+        )}
 
+        <T bold style={{ marginTop: 15 }}>
+          Wiens handlanger wil jij zijn?
+        </T>
+        <T>{response}</T>
+
+        <TextInput
+          placeholderTextColor={theme.secondaryTextSoft}
+          style={styles(theme).textInput}
+          value={accomplice1}
+          onChangeText={setAccomplice1}
+          placeholder={"Handlanger"}
+        />
+
+        {rank >= 11 ? (
           <TextInput
             placeholderTextColor={theme.secondaryTextSoft}
             style={styles(theme).textInput}
-            value={this.state.accomplice}
-            onChangeText={(accomplice) => this.setState({ accomplice })}
-            placeholder={"Handlanger"}
+            value={accomplice2}
+            onChangeText={setAccomplice2}
+            placeholder={"Handlanger 2"}
           />
+        ) : null}
 
-          {rank >= 11 ? (
+        {rank >= 16 ? (
+          <>
             <TextInput
               placeholderTextColor={theme.secondaryTextSoft}
               style={styles(theme).textInput}
-              value={this.state.accomplice2}
-              onChangeText={(accomplice2) => this.setState({ accomplice2 })}
-              placeholder={"Handlanger 2"}
+              value={accomplice3}
+              onChangeText={setAccomplice3}
+              placeholder={"Handlanger 3"}
             />
-          ) : null}
 
-          {rank >= 16 ? (
-            <>
-              <TextInput
-                placeholderTextColor={theme.secondaryTextSoft}
-                style={styles(theme).textInput}
-                value={this.state.accomplice3}
-                onChangeText={(accomplice3) => this.setState({ accomplice3 })}
-                placeholder={"Handlanger 3"}
-              />
+            <TextInput
+              style={styles(theme).textInput}
+              value={accomplice4}
+              placeholderTextColor={theme.secondaryTextSoft}
+              onChangeText={setAccomplice4}
+              placeholder={"Handlanger 4"}
+            />
+          </>
+        ) : null}
 
-              <TextInput
-                style={styles(theme).textInput}
-                value={this.state.accomplice4}
-                placeholderTextColor={theme.secondaryTextSoft}
-                onChangeText={(accomplice4) => this.setState({ accomplice4 })}
-                placeholder={"Handlanger 4"}
-              />
-            </>
-          ) : null}
-
-          <Button
-            theme={device.theme}
-            title="Opslaan"
-            onPress={this.setAccomplice}
-          />
-        </View>
-      </ScrollView>
-    );
-  }
-}
+        <Button theme={theme} title="Opslaan" onPress={submit} />
+      </View>
+    </ScrollView>
+  );
+};
 
 export default Accomplice;

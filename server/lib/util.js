@@ -2,6 +2,8 @@ const fetch = require("node-fetch");
 
 const needCaptcha = () => Math.round(Math.random() * 50) === 1;
 
+const NUM_ACTIONS_UNTIL_VERIFY = 20;
+
 const publicUserFields = [
   "id",
   "name",
@@ -307,4 +309,5 @@ module.exports = {
   saveImageIfValid,
   needCaptcha,
   publicUserFields,
+  NUM_ACTIONS_UNTIL_VERIFY,
 };

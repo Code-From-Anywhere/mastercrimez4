@@ -26,7 +26,7 @@ class Status extends Component {
     } = this.props;
 
     return (
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={{ flex: 1 }}>
         {response ? <T>{response}</T> : null}
         {me?.protectionAt > Date.now() ? (
           <TouchableOpacity
@@ -60,14 +60,14 @@ class Status extends Component {
           </TouchableOpacity>
         ) : null}
 
-        <View style={{ width: 200 }}>
-          {this.keyValue("Contant", `€${me?.cash}`)}
-          {this.keyValue("Bank", `€${me?.bank}`)}
+        <View style={{ marginHorizontal: 20 }}>
+          {this.keyValue("💰 Contant", `€${me?.cash}`)}
+          {this.keyValue("💵 Bank", `€${me?.bank}`)}
+          {this.keyValue("🔥 GamePoints", me?.gamepoints)}
+          {this.keyValue("⭐️ Rank", getRank(me?.rank, "both"))}
+          {this.keyValue("💪 Moordrang", getStrength(me?.strength, "both"))}
+          {this.keyValue("❤️ Leven", `${me?.health}%`)}
           {this.keyValue("Kogels", me?.bullets)}
-          {this.keyValue("GamePoints", me?.gamepoints)}
-          {this.keyValue("Rank", getRank(me?.rank, "both"))}
-          {this.keyValue("Moordrang", getStrength(me?.strength, "both"))}
-          {this.keyValue("Leven", `${me?.health}%`)}
           {this.keyValue("Wiet", me?.wiet)}
           {this.keyValue("Junkies", me?.junkies)}
           {this.keyValue("Hoeren", me?.hoeren)}

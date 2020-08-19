@@ -1,3 +1,9 @@
+/*
+TODO:nudgen om push notificaties aan te zetten
+
+
+*/
+
 import React, { Component } from "react";
 import {
   Dimensions,

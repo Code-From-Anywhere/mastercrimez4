@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { sendMessageAndPush } = require("./util");
-
+const { Sequelize } = require("sequelize");
 const donate = async (req, res, User, Message) => {
   const { loginToken, to, amount, type } = req.body;
   const user = await User.findOne({ where: { loginToken } });
@@ -34,6 +34,14 @@ const donate = async (req, res, User, Message) => {
     return;
   }
 
+  const isNotVerified = await User.findOne({
+    where: { loginToken, phoneVerified: false },
+  });
+  if (isNotVerified) {
+    //NB: Verify instantly here because you can otherwise send stuff to your main
+    return res.json({ response: "Je moet je account eerst verifiëren!" });
+  }
+
   if (user) {
     if (user[type] >= amount) {
       const user2 = await User.findOne({ where: { name: to } });
@@ -46,7 +54,10 @@ const donate = async (req, res, User, Message) => {
             const typeName = typeNames[type];
 
             const gelukt = await User.update(
-              { [type]: user[type] - amount },
+              {
+                [type]: user[type] - amount,
+                numActions: Sequelize.literal(`numActions+1`),
+              },
               { where: { id: user.id, [type]: { [Op.gte]: amount } } }
             );
             if (gelukt[0] === 1) {

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import Menu from "../components/Menu";
 import { areYouSure } from "../Util";
 
@@ -8,6 +8,7 @@ class Status extends Component {
     const {
       navigation,
       screenProps: {
+        dispatch,
         me,
         device: { theme },
       },
@@ -15,7 +16,7 @@ class Status extends Component {
 
     return (
       <ScrollView>
-        {Platform.OS !== "web" && (
+        {/* {Platform.OS !== "web" && (
           <Menu
             theme={theme}
             theme={theme}
@@ -25,7 +26,7 @@ class Status extends Component {
             title="Notificaties"
             to="Notifications"
           />
-        )}
+        )} */}
 
         {__DEV__ && (
           <Menu

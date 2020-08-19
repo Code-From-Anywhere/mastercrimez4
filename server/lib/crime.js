@@ -1,6 +1,6 @@
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
-const { needCaptcha } = require("./util");
+const { needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
 
 const crime = async (req, res, User) => {
   const { token, option, captcha } = req.body;
@@ -18,7 +18,7 @@ const crime = async (req, res, User) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified) {
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
@@ -34,10 +34,24 @@ const crime = async (req, res, User) => {
 
       const random = Math.ceil(Math.random() * 100);
 
-      User.update(
-        { crimeAt: Date.now(), captcha: null, needCaptcha: needCaptcha() },
-        { where: { loginToken: token } }
+      const [updated] = await User.update(
+        {
+          crimeAt: Date.now(),
+          captcha: null,
+          needCaptcha: needCaptcha(),
+          numActions: Sequelize.literal(`numActions+1`),
+        },
+        {
+          where: {
+            loginToken: token,
+            crimeAt: { [Op.lt]: Date.now() - 60000 },
+          },
+        }
       );
+
+      if (!updated) {
+        return res.json({ response: "Kon jouw user niet updaten" });
+      }
 
       if (kans2 >= random) {
         const accomplices = await User.findAll({

@@ -1,4 +1,9 @@
-const { getRank, getStrength, needCaptcha } = require("./util");
+const {
+  getRank,
+  getStrength,
+  needCaptcha,
+  NUM_ACTIONS_UNTIL_VERIFY,
+} = require("./util");
 const { Sequelize, Op } = require("sequelize");
 const fetch = require("isomorphic-fetch");
 
@@ -26,7 +31,7 @@ const oc = async (req, res, User, Message) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified) {
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
@@ -68,14 +73,24 @@ const oc = async (req, res, User, Message) => {
       ),
     });
 
-    User.update(
+    const updated = await User.update(
       {
         captcha: null,
         needCaptcha: needCaptcha(),
+        numActions: Sequelize.literal(`numActions+1`),
         [timeKey]: Date.now(),
       },
-      { where: { loginToken: token } }
+      {
+        where: {
+          loginToken: token,
+          [timeKey]: { [Op.lt]: Date.now() - timeNeeded },
+        },
+      }
     );
+
+    if (!updated) {
+      return res.json({ response: "Kon user niet updaten" });
+    }
 
     if (accomplices.length === 0) {
       const names = accomplicesTotal.map((acc) => acc.name).join(", ");

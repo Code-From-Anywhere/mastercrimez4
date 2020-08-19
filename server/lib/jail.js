@@ -1,5 +1,9 @@
 const { Op, Sequelize } = require("sequelize");
-const { sendMessageAndPush, needCaptcha } = require("./util");
+const {
+  sendMessageAndPush,
+  needCaptcha,
+  NUM_ACTIONS_UNTIL_VERIFY,
+} = require("./util");
 
 const jail = async (req, res, User) => {
   const people = await User.findAll({
@@ -32,7 +36,7 @@ const breakout = async (req, res, User, Message) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified) {
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
@@ -66,6 +70,7 @@ const breakout = async (req, res, User, Message) => {
       {
         // captcha: null,
         // needCaptcha: needCaptcha(),
+        numActions: Sequelize.literal(`numActions+1`),
         jailAt: Date.now() + seconds * 1000,
       },
       { where: { id: user.id } }
@@ -79,6 +84,7 @@ const breakout = async (req, res, User, Message) => {
       {
         // captcha: null,
         // needCaptcha: needCaptcha(),
+        numActions: Sequelize.literal(`numActions+1`),
         rank: Sequelize.literal(`rank + 10`),
       },
       { where: { id: user.id } }

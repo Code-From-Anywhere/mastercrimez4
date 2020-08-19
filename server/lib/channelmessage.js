@@ -87,7 +87,13 @@ const postChat = async (
     { where: { channelId: cid, userId: { [Op.ne]: user.id } } }
   );
 
-  ChannelSub.update({ lastmessage: message }, { where: { channelId: cid } });
+  ChannelSub.update(
+    {
+      lastmessage:
+        message.length > 80 ? message.substring(0, 80) + ".." : message,
+    },
+    { where: { channelId: cid } }
+  );
 
   //   console.log(updateUnread, updateLastMessage);
 

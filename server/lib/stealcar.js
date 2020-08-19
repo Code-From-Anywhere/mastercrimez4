@@ -1,6 +1,6 @@
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
-const { needCaptcha } = require("./util");
+const { needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
 const cars = require("../assets/cars.json");
 const texts = require("../assets/carsTexts.json");
 
@@ -20,7 +20,7 @@ const stealcar = async (req, res, User, Garage) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified) {
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
@@ -65,9 +65,15 @@ const stealcar = async (req, res, User, Garage) => {
         {
           autostelenAt: Date.now(),
           needCaptcha: needCaptcha(),
+          numActions: Sequelize.literal(`numActions+1`),
           captcha: null,
         },
-        { where: { loginToken: token } }
+        {
+          where: {
+            loginToken: token,
+            autostelenAt: { [Op.lt]: Date.now() - 60000 },
+          },
+        }
       );
 
       if (!updated) {

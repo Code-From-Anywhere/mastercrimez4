@@ -27,7 +27,7 @@ function Header({ navigation, device, me }) {
     color: device.theme.secondaryText,
   };
 
-  const notActivated = me?.phoneVerified === false && (
+  const notActivated = me?.phoneVerified === false && me?.numActions >= 20 && (
     <View
       style={{
         padding: 15,
@@ -117,46 +117,79 @@ function Header({ navigation, device, me }) {
 
   const statsHeader = (
     <>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          paddingBottom: 10,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-
-          elevation: 5,
-        }}
-      >
-        <Text style={textStyle}>😎 {me?.name}</Text>
-        <Text style={textStyle}>💰 €{numberFormat(me?.cash)},-</Text>
-        <Text style={textStyle}>💵 €{numberFormat(me?.bank)},-</Text>
-        <View style={{ flexDirection: "row" }}>
-          <Icon.MaterialCommunityIcons
-            name="pistol"
-            size={18}
-            color={device.theme.secondaryText}
-            style={{ marginRight: 5 }}
-          />
-          <Text style={textStyle}>{numberFormat(me?.bullets)}</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Status")}>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <Text style={textStyle}>😎 {me?.name}</Text>
+          <Text style={textStyle}>💰 €{numberFormat(me?.cash)},-</Text>
+          <Text style={textStyle}>💵 €{numberFormat(me?.bank)},-</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Icon.MaterialCommunityIcons
+              name="pistol"
+              size={18}
+              color={device.theme.secondaryText}
+              style={{ marginRight: 5 }}
+            />
+            <Text style={textStyle}>{numberFormat(me?.bullets)}</Text>
+          </View>
+          <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
+          <Text style={textStyle}>🌍 {me?.city}</Text>
+          <Text style={textStyle}>❤️ {me?.health}%</Text>
+          <Text style={textStyle}>
+            ⭐️ {getRank(me?.rank, "both")} ({me?.position}e)
+          </Text>
+          <Text style={textStyle}>💪 {getStrength(me?.strength, "both")}</Text>
+          <Text
+            style={textStyle}
+            onPress={() => navigation.navigate("Messages")}
+          >
+            💬 {me?.messages}
+          </Text>
         </View>
-        <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
-        <Text style={textStyle}>🌍 {me?.city}</Text>
-        <Text style={textStyle}>❤️ {me?.health}%</Text>
-        <Text style={textStyle}>
-          ⭐️ {getRank(me?.rank, "both")} ({me?.position}e)
-        </Text>
-        <Text style={textStyle}>💪 {getStrength(me?.strength, "both")}</Text>
-        <Text style={textStyle} onPress={() => navigation.navigate("Messages")}>
-          💬 {me?.messages}
-        </Text>
-      </View>
+      </TouchableOpacity>
+
+      {!me?.phoneVerified && (
+        <View
+          style={{
+            padding: 5,
+            backgroundColor: device.theme.secondary,
+            borderRadius: 5,
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => navigation.navigate("VerifyPhone")}
+          >
+            <AntDesign
+              name="exclamationcircleo"
+              color="red"
+              style={{ marginRight: 10 }}
+            />
+            <Text
+              style={{ color: device.theme.secondaryText, fontWeight: "bold" }}
+            >
+              Verifiëer je account
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </>
   );
 
@@ -165,7 +198,6 @@ function Header({ navigation, device, me }) {
       style={{
         justifyContent: "space-between",
         flexDirection: "row",
-        marginTop: 20,
       }}
     >
       {navigation.state.routeName !== "Home" ? (

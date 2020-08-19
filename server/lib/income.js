@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
-const { needCaptcha } = require("./util");
+const { needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
 
 const income = async (req, res, sequelize, User, City) => {
   const { token, captcha } = req.body;
@@ -23,7 +23,7 @@ const income = async (req, res, sequelize, User, City) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified) {
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
@@ -40,6 +40,7 @@ const income = async (req, res, sequelize, User, City) => {
 
   const [updated] = await User.update(
     {
+      numActions: Sequelize.literal(`numActions+1`),
       incomeAt: Date.now(),
       cash: user.cash + amount,
       captcha: null,

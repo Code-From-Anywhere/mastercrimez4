@@ -1,3 +1,7 @@
+import ExpoConstants from "expo-constants";
+import * as IntentLauncher from "expo-intent-launcher";
+import * as Notifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
 import { useEffect } from "react";
 import { Alert, Dimensions, Platform, ScaledSize } from "react-native";
 import Constants from "./Constants";
@@ -5,6 +9,58 @@ import Constants from "./Constants";
 export const numberFormat = (x) => {
   return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
+
+export async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (ExpoConstants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      Alert.alert(
+        "Geen toegang",
+        "Je hebt notificaties uitgezet. Ga naar instellingen om het aan te zetten.",
+        [
+          {
+            text: "Cancel",
+          },
+          {
+            text: "Open Settings",
+            onPress: () => {
+              Platform.OS === "ios"
+                ? Linking.openURL("app-settings:")
+                : IntentLauncher.startActivityAsync(
+                    IntentLauncher.ACTION_APPLICATION_DETAILS_SETTINGS
+                  );
+            },
+          },
+        ]
+      );
+      return;
+    }
+
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+  } else {
+    console.log("Must use physical device for Push Notifications");
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  return token;
+}
 
 export const areYouSure = (callback, message: string) => {
   Alert.alert(

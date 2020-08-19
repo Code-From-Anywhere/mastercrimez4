@@ -1,4 +1,9 @@
-const { getRank, getStrength, sendMessageAndPush } = require("./util");
+const {
+  getRank,
+  getStrength,
+  sendMessageAndPush,
+  NUM_ACTIONS_UNTIL_VERIFY,
+} = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
 const properties = [
@@ -40,7 +45,7 @@ const kill = async (req, res, User, Message, Garage, City) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified) {
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
@@ -106,7 +111,7 @@ const kill = async (req, res, User, Message, Garage, City) => {
   }
 
   const [canAttack] = await User.update(
-    { attackAt: Date.now() },
+    { attackAt: Date.now(), numActions: Sequelize.literal(`numActions+1`) },
     {
       where: {
         id: user.id,
@@ -158,8 +163,8 @@ const kill = async (req, res, User, Message, Garage, City) => {
   let responseMessageBackfire;
 
   if (damageBackfire >= user.health) {
-    responseBackfire = `${user2.name} schoot terug met ${user2.bullets} kogels. Jij ging dood van de schoten.`;
-    responseMessageBackfire = `Met je backfire van ${user2.bullets} kogels heb je ${user.name} doodgeschoten!`;
+    responseBackfire = `${user2.name} schoot terug met ${bulletsBackfire} kogels. Jij ging dood van de schoten.`;
+    responseMessageBackfire = `Met je backfire van ${bulletsBackfire} kogels heb je ${user.name} doodgeschoten!`;
 
     User.update(
       {
@@ -191,7 +196,7 @@ const kill = async (req, res, User, Message, Garage, City) => {
         return updated;
       });
   } else {
-    responseBackfire = `${user2.name} schoot terug met ${user2.bullets} kogels. Dit heeft jou ${damageBackfire}% schade toegebracht.`;
+    responseBackfire = `${user2.name} schoot terug met ${bulletsBackfire} kogels. Dit heeft jou ${damageBackfire}% schade toegebracht.`;
     responseMessageBackfire = `Met je backfire heb je ${user2.name} ${damageBackfire}% schade toegebracht.`;
 
     User.update(

@@ -3,6 +3,7 @@ const {
   getStrength,
   sendMessageAndPush,
   needCaptcha,
+  NUM_ACTIONS_UNTIL_VERIFY,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
@@ -30,7 +31,7 @@ const rob = async (req, res, User, Message) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified) {
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
@@ -90,8 +91,15 @@ const rob = async (req, res, User, Message) => {
   if (probability < random) {
     res.json({ response: "Het is mislukt" });
     User.update(
-      { robAt: now, captcha: null, needCaptcha: needCaptcha() },
-      { where: { id: user.id } }
+      {
+        robAt: now,
+        captcha: null,
+        needCaptcha: needCaptcha(),
+        numActions: Sequelize.literal(`numActions+1`),
+      },
+      {
+        where: { id: user.id, robAt: { [Op.lt]: Date.now() - SECONDS * 1000 } },
+      }
     );
 
     return;
@@ -109,6 +117,7 @@ const rob = async (req, res, User, Message) => {
         robAt: now,
         captcha: null,
         needCaptcha: needCaptcha(),
+        numActions: Sequelize.literal(`numActions+1`),
       },
       { where: { id: user.id, robAt: { [Op.lte]: now - SECONDS * 1000 } } }
     );

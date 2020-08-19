@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
@@ -60,7 +60,7 @@ class Gym extends Component {
       </View>
     );
   };
-  renderItem = ({ item, index }) => {
+  renderItem = (item, index) => {
     const {
       screenProps: {
         device: { theme },
@@ -167,14 +167,13 @@ class Gym extends Component {
               />
             </View>
           ) : (
-            <FlatList
-              keyExtractor={(item, index) => `item${index}`}
-              data={options}
-              extraData={selected}
-              renderItem={this.renderItem}
-              ListFooterComponent={this.renderFooter}
-              ListHeaderComponent={this.renderHeader}
-            />
+            <ScrollView>
+              {this.renderHeader()}
+
+              {options.map(this.renderItem)}
+
+              {this.renderFooter()}
+            </ScrollView>
           )}
         </View>
       </View>
