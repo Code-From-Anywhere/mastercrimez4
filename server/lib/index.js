@@ -1559,7 +1559,7 @@ server.post("/updateName", async (req, res) => {
   }
   var realname = name.replace(/[^a-z0-9]/gi, "");
 
-  if (realname.length < 6) {
+  if (realname.length < 2) {
     res.json({ response: "Deze naam is te kort" });
     return;
   }
