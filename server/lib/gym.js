@@ -27,6 +27,18 @@ const gym = async (req, res, User) => {
       return res.json({ response: "Verkeerde code!" });
     }
 
+    if (user.jailAt > Date.now()) {
+      return res.json({ response: "Je zit in de bajes." });
+    }
+
+    if (user.health === 0) {
+      return res.json({ response: "Je bent dood." });
+    }
+
+    if (user.reizenAt > Date.now()) {
+      return res.json({ response: "Je bent aan het reizen." });
+    }
+
     if (user.gymAt + user.gymTime < Date.now()) {
       const random = Math.ceil(
         Math.random() * 10 * option * getRank(user.rank, "number")

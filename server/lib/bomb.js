@@ -36,6 +36,18 @@ const bomb = async (req, res, sequelize, User, City, Message) => {
     return res.json({ response: "Geen user gevonden" });
   }
 
+  if (user.jailAt > Date.now()) {
+    return res.json({ response: "Je zit in de bajes." });
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: "Je bent dood." });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: "Je bent aan het reizen." });
+  }
+
   if (user.bombAt + 300000 > Date.now()) {
     return res.json({
       response: `Je moet nog ${Math.round(

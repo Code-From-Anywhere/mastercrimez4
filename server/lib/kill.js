@@ -42,6 +42,18 @@ const kill = async (req, res, User, Message, Garage, City) => {
     return;
   }
 
+  if (user.jailAt > Date.now()) {
+    return res.json({ response: "Je zit in de bajes." });
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: "Je bent dood." });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: "Je bent aan het reizen." });
+  }
+
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });

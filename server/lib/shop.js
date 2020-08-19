@@ -25,6 +25,18 @@ const buy = async (req, res, User, City) => {
   if (user) {
     const item = next(type, user);
 
+    if (user.jailAt > Date.now()) {
+      return res.json({ response: "Je zit in de bajes." });
+    }
+
+    if (user.health === 0) {
+      return res.json({ response: "Je bent dood." });
+    }
+
+    if (user.reizenAt > Date.now()) {
+      return res.json({ response: "Je bent aan het reizen." });
+    }
+
     if (!item) {
       res.json({ response: "Dat ding bestaat niet" });
       return;

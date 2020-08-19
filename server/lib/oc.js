@@ -24,6 +24,18 @@ const oc = async (req, res, User, Message) => {
     return;
   }
 
+  if (user.jailAt > Date.now()) {
+    return res.json({ response: "Je zit in de bajes." });
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: "Je bent dood." });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: "Je bent aan het reizen." });
+  }
+
   if (user.needCaptcha && Number(captcha) !== user.captcha) {
     return res.json({ response: "Verkeerde code!" });
   }

@@ -35,6 +35,18 @@ const createStreetrace = async (
     return res.json({ response: "Geen user gevonden" });
   }
 
+  if (user.jailAt > Date.now()) {
+    return res.json({ response: "Je zit in de bajes." });
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: "Je bent dood." });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: "Je bent aan het reizen." });
+  }
+
   const car = await Garage.findOne({ where: { id: carId, userId: user.id } });
 
   if (!car) {
@@ -114,6 +126,18 @@ const joinStreetrace = async (
 
   if (!user) {
     return res.json({ response: "Geen user gevonden" });
+  }
+
+  if (user.jailAt > Date.now()) {
+    return res.json({ response: "Je zit in de bajes." });
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: "Je bent dood." });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: "Je bent aan het reizen." });
   }
 
   const car = await Garage.findOne({ where: { id: carId, userId: user.id } });
@@ -198,6 +222,18 @@ const leaveStreetrace = async (
     return res.json({ response: "Geen user gevonden" });
   }
 
+  if (user.jailAt > Date.now()) {
+    return res.json({ response: "Je zit in de bajes." });
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: "Je bent dood." });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: "Je bent aan het reizen." });
+  }
+
   const streetrace = await Streetrace.findOne({ where: { id: streetraceId } });
 
   if (!streetrace) {
@@ -250,6 +286,18 @@ const startStreetrace = async (
 
   if (!user) {
     return res.json({ response: "Geen user gevonden" });
+  }
+
+  if (user.jailAt > Date.now()) {
+    return res.json({ response: "Je zit in de bajes." });
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: "Je bent dood." });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: "Je bent aan het reizen." });
   }
 
   const streetrace = await Streetrace.findOne({ where: { id: streetraceId } });

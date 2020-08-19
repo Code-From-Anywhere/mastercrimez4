@@ -34,6 +34,18 @@ const crime = async (req, res, User) => {
 
       const random = Math.ceil(Math.random() * 100);
 
+      if (user.jailAt > Date.now()) {
+        return res.json({ response: "Je zit in de bajes." });
+      }
+
+      if (user.health === 0) {
+        return res.json({ response: "Je bent dood." });
+      }
+
+      if (user.reizenAt > Date.now()) {
+        return res.json({ response: "Je bent aan het reizen." });
+      }
+
       const [updated] = await User.update(
         {
           crimeAt: Date.now(),

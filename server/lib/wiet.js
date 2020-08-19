@@ -24,6 +24,18 @@ const wiet = async (req, res, User) => {
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    if (user.jailAt > Date.now()) {
+      return res.json({ response: "Je zit in de bajes." });
+    }
+
+    if (user.health === 0) {
+      return res.json({ response: "Je bent dood." });
+    }
+
+    if (user.reizenAt > Date.now()) {
+      return res.json({ response: "Je bent aan het reizen." });
+    }
+
     if (user.needCaptcha && Number(captcha) !== user.captcha) {
       return res.json({ response: "Verkeerde code!" });
     }
