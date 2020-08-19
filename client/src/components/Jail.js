@@ -11,6 +11,12 @@ class Jail extends React.Component {
   };
   componentDidMount() {
     this.fetchMembers();
+
+    const { reloadMe, device } = this.props.screenProps;
+    setInterval(() => {
+      reloadMe(device.loginToken);
+      this.fetchMembers();
+    }, 2500);
   }
 
   fetchMembers(order) {
@@ -81,23 +87,12 @@ class Jail extends React.Component {
         />
 
         <Button
+          style={{ marginVertical: 15 }}
           theme={device.theme}
           title="Koop jezelf uit voor 5 credits"
           onPress={() => this.buyOut()}
         />
 
-        <View style={{ flexDirection: "row" }}>
-          <View />
-          <Button
-            theme={device.theme}
-            title="Vernieuw"
-            onPress={() => {
-              reloadMe(device.loginToken);
-              this.fetchMembers();
-            }}
-          />
-          <View />
-        </View>
         <FlatList
           data={this.state.jail}
           renderItem={this.renderItem}
