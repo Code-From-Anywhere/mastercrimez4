@@ -94,6 +94,7 @@ const bomb = async (req, res, sequelize, User, City, Message) => {
       needCaptcha: needCaptcha(),
       cash: user.cash - price + stolenMoney,
       bombAt: Date.now(),
+      onlineAt: Date.now(),
     },
     { where: { id: user.id, cash: { [Op.gte]: price } } }
   );

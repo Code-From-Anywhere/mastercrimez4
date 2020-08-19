@@ -115,7 +115,10 @@ const poker = async (req, res, User, City) => {
   const payout = Object.values(payouts)[windex];
 
   User.update(
-    { cash: Sequelize.literal(`cash + ${payout * amount}`) },
+    {
+      cash: Sequelize.literal(`cash + ${payout * amount}`),
+      onlineAt: Date.now(),
+    },
     { where: { id: user.id } }
   );
 

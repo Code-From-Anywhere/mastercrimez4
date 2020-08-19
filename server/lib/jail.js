@@ -64,11 +64,6 @@ const breakout = async (req, res, User, Message) => {
     return;
   }
 
-  if (user.jailAt > Date.now()) {
-    res.json({ response: `Je zit in de gevangenis.` });
-    return;
-  }
-
   const random = Math.round(Math.random() * 100);
 
   if (random < 50) {
@@ -82,6 +77,7 @@ const breakout = async (req, res, User, Message) => {
       {
         // captcha: null,
         // needCaptcha: needCaptcha(),
+        onlineAt: Date.now(),
         numActions: Sequelize.literal(`numActions+1`),
         jailAt: Date.now() + seconds * 1000,
       },
@@ -96,6 +92,7 @@ const breakout = async (req, res, User, Message) => {
       {
         // captcha: null,
         // needCaptcha: needCaptcha(),
+        onlineAt: Date.now(),
         numActions: Sequelize.literal(`numActions+1`),
         rank: Sequelize.literal(`rank + 10`),
       },

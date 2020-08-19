@@ -69,6 +69,7 @@ const donate = async (req, res, User, Message) => {
               {
                 [type]: user[type] - amount,
                 numActions: Sequelize.literal(`numActions+1`),
+                onlineAt: Date.now(),
               },
               { where: { id: user.id, [type]: { [Op.gte]: amount } } }
             );

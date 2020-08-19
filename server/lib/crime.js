@@ -49,6 +49,7 @@ const crime = async (req, res, User) => {
       const [updated] = await User.update(
         {
           crimeAt: Date.now(),
+          onlineAt: Date.now(),
           captcha: null,
           needCaptcha: needCaptcha(),
           numActions: Sequelize.literal(`numActions+1`),

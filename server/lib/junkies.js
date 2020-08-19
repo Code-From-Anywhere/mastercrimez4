@@ -66,6 +66,7 @@ const junkies = async (req, res, User) => {
           needCaptcha: needCaptcha(),
           numActions: Sequelize.literal(`numActions+1`),
           [timeKey]: Date.now(),
+          onlineAt: Date.now(),
           [valueKey]: user[valueKey] + random,
           gamepoints: user.gamepoints + 1,
         },

@@ -66,6 +66,7 @@ const hoeren = async (req, res, User) => {
           captcha: null,
           needCaptcha: needCaptcha(),
           [timeKey]: Date.now(),
+          onlineAt: Date.now(),
           [valueKey]: user[valueKey] + random,
           gamepoints: user.gamepoints + 1,
         },

@@ -21,6 +21,8 @@ const newTopic = async (req, res, User, ForumTopic) => {
     return;
   }
 
+  User.update({ onlineAt: Date.now() }, { where: { id: user.id } });
+
   ForumTopic.create({
     name: user.name,
     title,
@@ -97,6 +99,7 @@ const response = async (req, res, User, ForumTopic, ForumResponse, Message) => {
     return;
   }
 
+  User.update({ onlineAt: Date.now() }, { where: { id: user.id } });
   const topic = await ForumTopic.findOne({ where: { id } });
 
   if (!topic) {

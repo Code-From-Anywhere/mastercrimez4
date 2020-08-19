@@ -42,6 +42,7 @@ const bunker = async (req, res, User) => {
             cash: user.cash - cost,
             captcha: null,
             needCaptcha: needCaptcha(),
+            onlineAt: Date.now(),
           },
           { where: { loginToken: token } }
         );

@@ -50,6 +50,7 @@ const gym = async (req, res, User) => {
           needCaptcha: needCaptcha(),
           numActions: Sequelize.literal(`numActions+1`),
           gymAt: Date.now(),
+          onlineAt: Date.now(),
           gymTime: 120000 * option,
           strength: user.strength + random,
           gamepoints: user.gamepoints + 1,

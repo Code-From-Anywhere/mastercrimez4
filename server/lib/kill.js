@@ -123,7 +123,11 @@ const kill = async (req, res, User, Message, Garage, City) => {
   }
 
   const [canAttack] = await User.update(
-    { attackAt: Date.now(), numActions: Sequelize.literal(`numActions+1`) },
+    {
+      attackAt: Date.now(),
+      onlineAt: Date.now(),
+      numActions: Sequelize.literal(`numActions+1`),
+    },
     {
       where: {
         id: user.id,

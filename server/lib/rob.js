@@ -105,6 +105,7 @@ const rob = async (req, res, User, Message) => {
     User.update(
       {
         robAt: now,
+        onlineAt: Date.now(),
         captcha: null,
         needCaptcha: needCaptcha(),
         numActions: Sequelize.literal(`numActions+1`),

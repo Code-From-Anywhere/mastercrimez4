@@ -67,6 +67,7 @@ const buyBullets = async (req, res, sequelize, User, City) => {
       needCaptcha: needCaptcha(),
       bullets: user.bullets + amount,
       cash: user.cash - price,
+      onlineAt: Date.now(),
     },
     { where: { id: user.id, cash: { [Op.gte]: price } } }
   );

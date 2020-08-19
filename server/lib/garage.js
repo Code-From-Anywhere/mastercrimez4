@@ -86,7 +86,7 @@ const sellcar = async (req, res, User, Garage) => {
 
       if (destroy) {
         User.update(
-          { cash: user.cash + Number(car.cash) },
+          { cash: user.cash + Number(car.cash), onlineAt: Date.now() },
           { where: { id: user.id } }
         );
 

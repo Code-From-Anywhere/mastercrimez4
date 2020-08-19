@@ -54,6 +54,7 @@ const income = async (req, res, sequelize, User, City) => {
     {
       numActions: Sequelize.literal(`numActions+1`),
       incomeAt: Date.now(),
+      onlineAt: Date.now(),
       cash: user.cash + amount,
       captcha: null,
       needCaptcha: needCaptcha(),

@@ -38,7 +38,12 @@ const airport = async (req, res, User) => {
   }
 
   User.update(
-    { city: to, reizenAt: Date.now() + time * 1000, cash: user.cash - cost },
+    {
+      city: to,
+      reizenAt: Date.now() + time * 1000,
+      cash: user.cash - cost,
+      onlineAt: Date.now(),
+    },
     { where: { id: user.id } }
   );
 

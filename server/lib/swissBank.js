@@ -52,6 +52,7 @@ const swissBank = async (req, res, User) => {
         {
           [key]: Math.round(Number(user[key]) - Number(amount)),
           [key2]: Math.round(Number(user[key2]) + Number(amount * 0.95)),
+          onlineAt: Date.now(),
         },
         { where: { id: user.id, [key]: { [Op.gte]: amount } } }
       );

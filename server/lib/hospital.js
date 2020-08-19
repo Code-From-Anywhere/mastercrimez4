@@ -1,3 +1,4 @@
+const { Sequelize } = require("sequelize/types");
 const { getRank, sendMessageAndPush } = require("./util");
 const hospital = async (req, res, User, Message) => {
   const { loginToken, name } = req.body;
@@ -21,7 +22,14 @@ const hospital = async (req, res, User, Message) => {
           });
           return;
         }
-        User.update({ cash: user.cash - cost }, { where: { id: user.id } });
+        const [updated] = await User.update(
+          { cash: Sequelize.literal(`cash-${cost}`), onlineAt: Date.now() },
+          { where: { id: user.id, cash: { [Op.gte]: cost } } }
+        );
+
+        if (!updated) {
+          return res.json({ response: "Er ging iets mis" });
+        }
         User.update({ health: 100 }, { where: { id: user2.id } });
         const message = `${user.name} heeft jou naar het ziekenhuis gebracht.`;
         sendMessageAndPush(user, user2, message, Message, true);

@@ -76,6 +76,7 @@ const stealcar = async (req, res, User, Garage) => {
       const [updated] = await User.update(
         {
           autostelenAt: Date.now(),
+          onlineAt: Date.now(),
           needCaptcha: needCaptcha(),
           numActions: Sequelize.literal(`numActions+1`),
           captcha: null,

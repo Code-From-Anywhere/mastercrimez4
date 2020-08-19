@@ -85,9 +85,10 @@ const oc = async (req, res, User, Message) => {
       ),
     });
 
-    const updated = await User.update(
+    const [updated] = await User.update(
       {
         captcha: null,
+        onlineAt: Date.now(),
         needCaptcha: needCaptcha(),
         numActions: Sequelize.literal(`numActions+1`),
         [timeKey]: Date.now(),

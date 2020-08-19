@@ -82,6 +82,8 @@ const postChat = async (
     image: pathImage,
   });
 
+  User.update({ onlineAt: Date.now() }, { where: { id: user.id } });
+
   ChannelSub.update(
     { unread: Sequelize.literal(`unread+1`) },
     { where: { channelId: cid, userId: { [Op.ne]: user.id } } }

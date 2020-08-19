@@ -67,7 +67,7 @@ const createStreetrace = async (
   }
 
   const [updated] = await User.update(
-    { cash: user.cash - price },
+    { cash: user.cash - price, onlineAt: Date.now() },
     { where: { id: user.id, cash: { [Op.gte]: price } } }
   );
 
@@ -177,7 +177,7 @@ const joinStreetrace = async (
   }
 
   const [updated] = await User.update(
-    { cash: user.cash - streetrace.price },
+    { cash: user.cash - streetrace.price, onlineAt: Date.now() },
     { where: { id: user.id, cash: { [Op.gte]: streetrace.price } } }
   );
 
@@ -257,7 +257,10 @@ const leaveStreetrace = async (
   }
 
   const [updated] = await User.update(
-    { cash: Sequelize.literal(`cash + ${streetrace.price}`) },
+    {
+      cash: Sequelize.literal(`cash + ${streetrace.price}`),
+      onlineAt: Date.now(),
+    },
     { where: { id: user.id } }
   );
 

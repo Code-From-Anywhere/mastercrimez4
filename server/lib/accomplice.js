@@ -138,6 +138,8 @@ const setAccomplice = async (req, res, User) => {
     }
   }
 
+  updated.onlineAt = Date.now();
+
   const updated = await User.update(update, { where: { loginToken } });
   res.json({ response: "Gelukt" });
 };

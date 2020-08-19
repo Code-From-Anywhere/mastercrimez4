@@ -52,6 +52,7 @@ const buy = async (req, res, User, City) => {
         [type]: user[type] + 1,
         rank: user.rank + user[type] * 100,
         cash: user.cash - item.price,
+        onlineAt: Date.now(),
       },
       { where: { id: user.id, cash: { [Op.gte]: item.price } } }
     );
