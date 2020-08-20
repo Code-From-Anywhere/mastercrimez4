@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import Button from "../components/Button";
 import Separator from "../components/Separator";
+import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
 const { width } = Dimensions.get("window");
@@ -50,7 +51,18 @@ class Garage extends Component {
     })
       .then((response) => response.json())
       .then(async (carGroups) => {
-        this.setState({ carGroups });
+        const amount = carGroups.reduce(
+          (previous, current) => ({
+            ...previous,
+            [current.id]: String(current.amount),
+          }),
+          {}
+        );
+
+        this.setState({
+          carGroups,
+          amount,
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -107,6 +119,8 @@ class Garage extends Component {
       },
     } = this.props;
 
+    const value = this.state.amount[item.id];
+
     return (
       <View
         key={`item${index}`}
@@ -150,14 +164,14 @@ class Garage extends Component {
               <Text style={{ color: theme.primaryText }}>
                 {item.kogels} kogels
               </Text>
-              <Text style={{ color: theme.primaryText }}>
-                {item.power} power
-              </Text>
 
+              <T bold style={{ marginTop: 15 }}>
+                Aantal:
+              </T>
               <TextInput
                 key={`amount${item.id}`}
                 style={style(device.theme).textInput}
-                value={this.state.amount[item.id]}
+                value={value}
                 onChangeText={(x) =>
                   this.setState({
                     amount: { ...this.state.amount, [item.id]: x },

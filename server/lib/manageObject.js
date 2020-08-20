@@ -19,7 +19,7 @@ const properties = [
   {
     name: "bulletFactory",
     changePrice: true,
-    maxPrice: 250,
+    maxPrice: 100,
   },
   {
     name: "casino",
