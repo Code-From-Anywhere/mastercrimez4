@@ -1310,6 +1310,11 @@ server.post("/updateToken", async (req, res) => {
     return res.json({ response: "Token too short" });
   }
 
+  const already = await User.findOne({ where: { loginToken: newLoginToken } });
+  if (already) {
+    return res.json({ response: "already" });
+  }
+
   User.update({ loginToken: String(newLoginToken) }, { where: { loginToken } });
 
   console.log({ response: "Success", success: true, token: newLoginToken });
