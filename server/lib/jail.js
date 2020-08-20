@@ -110,7 +110,7 @@ const breakout = async (req, res, User, Message) => {
   }
 };
 
-const buyout = async (req, res, User, Message) => {
+const buyout = async (req, res, User, Message, City) => {
   const { token, type } = req.body; //type = cash or credits
 
   if (type !== "cash" && type !== "credits") {
@@ -164,6 +164,13 @@ const buyout = async (req, res, User, Message) => {
 
   if (updated === 0) {
     return res.json({ response: `Je hebt niet genoeg ${type}` });
+  }
+
+  if (type === "cash") {
+    const [cityUpdated] = await City.update(
+      { jailProfit: Sequelize.literal(`jailProfit+${price * 0.5}`) },
+      { where: { city: user.city } }
+    );
   }
 
   return res.json({ response: "Je bent nu uit de gevangenis" });
