@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize/types");
+const { Sequelize, Op } = require("sequelize");
 const { getRank, sendMessageAndPush } = require("./util");
 const hospital = async (req, res, User, Message) => {
   const { loginToken, name } = req.body;
