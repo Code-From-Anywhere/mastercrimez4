@@ -43,7 +43,7 @@ const oc = async (req, res, User, Message) => {
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
-  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
+  if (isNotVerified) {
     return res.json({ response: "Je moet je account eerst verifiëren!" });
   }
 
