@@ -60,11 +60,11 @@ class Jail extends React.Component {
     );
   };
 
-  buyOut = async () => {
+  buyOut = async (type) => {
     const { device, reloadMe } = this.props.screenProps;
-    const { response } = await post("creditshopBuy", {
-      loginToken: device.loginToken,
-      type: 8,
+    const { response } = await post("buyout", {
+      token: device.loginToken,
+      type,
     });
     this.setState({ response });
     reloadMe(device.loginToken);
@@ -74,6 +74,7 @@ class Jail extends React.Component {
       screenProps: { me, device, reloadMe },
       navigation,
     } = this.props;
+    const { response } = this.state;
     const sec = Math.round((me.jailAt - Date.now()) / 1000);
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
@@ -86,11 +87,20 @@ class Jail extends React.Component {
           timeLabels={{ m: "Minuten", s: "Seconden" }}
         />
 
+        <View style={{ height: 15 }} />
+
+        {response && <T>{response}</T>}
         <Button
           style={{ marginVertical: 15 }}
           theme={device.theme}
           title="Koop jezelf uit voor 5 credits"
-          onPress={() => this.buyOut()}
+          onPress={() => this.buyOut("credits")}
+        />
+        <Button
+          style={{ marginVertical: 15 }}
+          theme={device.theme}
+          title="Koop jezelf uit voor 1.000.000 contant"
+          onPress={() => this.buyOut("cash")}
         />
 
         <FlatList

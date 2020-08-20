@@ -110,4 +110,63 @@ const breakout = async (req, res, User, Message) => {
   }
 };
 
-module.exports = { jail, breakout };
+const buyout = async (req, res, User, Message) => {
+  const { token, type } = req.body; //type = cash or credits
+
+  if (type !== "cash" && type !== "credits") {
+    return res.json({ response: "Ongeldig type" });
+  }
+  const creditPrice = 5;
+  const cashPrice = 1000000;
+
+  if (!token) {
+    res.json({ response: "Geen token" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: "Ongeldige user" });
+    return;
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: "Je bent dood." });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: "Je bent aan het reizen." });
+  }
+
+  const isNotVerified = await User.findOne({
+    where: { loginToken: token, phoneVerified: false },
+  });
+  if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
+    return res.json({ response: "Je moet je account eerst verifiëren!" });
+  }
+
+  if (user.jailAt < Date.now()) {
+    res.json({ response: `Je zit niet in de gevangenis.` });
+    return;
+  }
+
+  const price = type === "cash" ? cashPrice : creditPrice;
+
+  const [updated] = await User.update(
+    {
+      jailAt: null,
+      [type]: Sequelize.literal(`${type}-${price}`),
+      onlineAt: Date.now(),
+    },
+    { where: { id: user.id, [type]: { [Op.gte]: price } } }
+  );
+
+  if (updated === 0) {
+    return res.json({ response: `Je hebt niet genoeg ${type}` });
+  }
+
+  return res.json({ response: "Je bent nu uit de gevangenis" });
+};
+
+module.exports = { jail, breakout, buyout };

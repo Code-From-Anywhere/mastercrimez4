@@ -825,6 +825,10 @@ server.post("/breakout", (req, res) =>
   require("./jail").breakout(req, res, User, Message)
 );
 
+server.post("/buyout", (req, res) =>
+  require("./jail").buyout(req, res, User, Message)
+);
+
 server.post("/poker", (req, res) =>
   require("./poker").poker(req, res, User, City)
 );
