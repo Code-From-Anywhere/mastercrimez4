@@ -94,6 +94,7 @@ import VerifyPhone from "./screens/VerifyPhone";
 import VerifyPhoneCode from "./screens/VerifyPhoneCode";
 import Wiet from "./screens/Wiet";
 import { persistor, store } from "./Store";
+import { post } from "./Util";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -514,17 +515,43 @@ const Container = rightContainer(
   }
 );
 
+function makeid(length) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 class _RootContainer extends React.Component {
-  componentDidMount() {
+  async componentDidMount() {
     const { device, reloadMe, dispatch } = this.props;
 
     let token = device.loginToken;
-    if (!token) {
-      token = Math.round(Math.random() * Number.MAX_SAFE_INTEGER);
-      dispatch({ type: "SET_LOGIN_TOKEN", value: token });
-    }
 
-    reloadMe(token);
+    //NB this updates users their login token without them logging out. After a while, remove this, then update all remaining unsafe loginTokens manually
+    if (token.length < 15) {
+      const newLoginToken = makeid(64);
+      const { success } = await post("updateToken", {
+        loginToken: token,
+        newLoginToken,
+      });
+      if (success) {
+        dispatch({ type: "SET_LOGIN_TOKEN", value: newLoginToken });
+        reloadMe(newLoginToken);
+        console.log("set new login token to", newLoginToken);
+      }
+    } else {
+      if (!token) {
+        token = makeid(64);
+        dispatch({ type: "SET_LOGIN_TOKEN", value: token });
+      }
+
+      reloadMe(token);
+    }
   }
 
   componentDidUpdate(prevProps) {

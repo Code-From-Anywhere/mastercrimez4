@@ -1137,7 +1137,7 @@ server.get("/stats", async (req, res) => {
 });
 
 server.get("/me", (req, res) => {
-  if (!req.query.token || isNaN(req.query.token) || req.query.token < 1) {
+  if (!req.query.token) {
     res.json({ response: "Geen correct token gegeven" });
   }
   User.findOne({
@@ -1287,6 +1287,33 @@ server.post("/forgotPassword", async (req, res) => {
   } else {
     res.json({ error: "Email niet gevonden" });
   }
+});
+
+server.post("/updateToken", async (req, res) => {
+  const { loginToken, newLoginToken } = req.body;
+
+  if (!loginToken) {
+    return res.json({ response: "No token given" });
+  }
+
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    return res.json({ response: "No user found" });
+  }
+
+  if (!newLoginToken) {
+    return res.json({ response: "no new login token given" });
+  }
+
+  if (newLoginToken.length < 15) {
+    return res.json({ response: "Token too short" });
+  }
+
+  User.update({ loginToken: String(newLoginToken) }, { where: { loginToken } });
+
+  console.log({ response: "Success", success: true, token: newLoginToken });
+  return res.json({ response: "Success", success: true });
 });
 
 server.post("/forgotPassword2", async (req, res) => {
