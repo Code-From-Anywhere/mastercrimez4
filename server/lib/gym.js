@@ -58,7 +58,7 @@ const gym = async (req, res, User) => {
         {
           where: {
             loginToken: token,
-            gymAt: { [Op.lt]: Date.now() - 120000 * option },
+            gymAt: { [Op.lt]: Date.now() - user.gymTime },
           },
         }
       );
