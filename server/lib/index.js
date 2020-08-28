@@ -633,14 +633,6 @@ try {
   console.log("e", e);
 }
 
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, //1minute
-  max: 120, // limit each IP to 100 requests per windowMs
-});
-
-//  apply to all requests
-server.use(limiter);
-
 server.use(body_parser.json({ limit: "10mb", extended: true }));
 server.use(body_parser.urlencoded({ limit: "10mb", extended: true }));
 
@@ -650,6 +642,14 @@ server.use(
     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
   })
 );
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, //1minute
+  max: 120, // limit each IP to 100 requests per windowMs
+});
+
+//  apply to all requests
+server.use(limiter);
 
 server.use("/images", express.static("images"));
 server.use("/uploads", express.static("uploads"));
