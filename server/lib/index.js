@@ -643,13 +643,15 @@ server.use(
   })
 );
 
+server.enable("trust proxy");
+
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, //1minute
   max: 120, // limit each IP to 100 requests per windowMs
 });
 
 //  apply to all requests
-// server.use(limiter);
+server.use(limiter);
 
 server.use("/images", express.static("images"));
 server.use("/uploads", express.static("uploads"));
