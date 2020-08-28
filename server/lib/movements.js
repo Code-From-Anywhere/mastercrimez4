@@ -13,10 +13,11 @@ const movementsApp = async (req, res, User, Movement) => {
     return;
   }
 
-  const bulkMovements = movements.map((m) => ({
-    ...m,
-    userId: user.id,
-  }));
+  const bulkMovements = movements.map((m) => {
+    var m2 = m;
+    m2.userId = user.id;
+    return m2;
+  });
 
   Movement.bulkCreate(bulkMovements);
 };
