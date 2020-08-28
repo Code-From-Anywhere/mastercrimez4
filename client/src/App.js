@@ -532,26 +532,23 @@ class _RootContainer extends React.Component {
 
     let token = device.loginToken;
 
-    //NB this updates users their login token without them logging out. After a while, remove this, then update all remaining unsafe loginTokens manually
-    if (token.length < 15) {
-      const newLoginToken = makeid(64);
-      const { success } = await post("updateToken", {
-        loginToken: token,
-        newLoginToken,
-      });
-      if (success) {
-        dispatch({ type: "SET_LOGIN_TOKEN", value: newLoginToken });
-        reloadMe(newLoginToken);
-        console.log("set new login token to", newLoginToken);
-      }
-    } else {
-      if (!token) {
-        token = makeid(64);
-        dispatch({ type: "SET_LOGIN_TOKEN", value: token });
-      }
-
-      reloadMe(token);
+    if (!token) {
+      token = makeid(64);
+      dispatch({ type: "SET_LOGIN_TOKEN", value: token });
     }
+
+    reloadMe(token);
+
+    setInterval(() => this.sendMovements(), 60000);
+  }
+
+  sendMovements() {
+    const { dispatch, device } = this.props;
+    post("movementsApp", {
+      loginToken: device.loginToken,
+      movements: device.movements,
+    });
+    dispatch({ type: "CLEAR_MOVEMENTS" });
   }
 
   componentDidUpdate(prevProps) {

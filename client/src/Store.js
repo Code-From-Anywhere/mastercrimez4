@@ -5,11 +5,18 @@ import createSagaMiddleware from "redux-saga";
 import mySaga from "./Sagas";
 import { DEFAULT_THEME, Theme } from "./screens/Theme";
 
+type Movement = {
+  action: string,
+  locationX: number,
+  locationY: number,
+  timestamp: number,
+};
 type Device = {
   loginToken: string,
   logged: boolean,
   theme: Theme,
   foregrounded: number,
+  movements: Movement[],
 };
 
 const initDevice = {
@@ -17,6 +24,7 @@ const initDevice = {
   logged: false,
   theme: DEFAULT_THEME,
   foregrounded: 0,
+  movements: [],
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
@@ -35,6 +43,14 @@ const deviceReducer = (state: Device = initDevice, action) => {
 
     case "SET_THEME": {
       return { ...state, theme: action.value };
+    }
+
+    case "ADD_MOVEMENT": {
+      return { ...state, movements: state.movements.concat([action.value]) };
+    }
+
+    case "CLEAR_MOVEMENTS": {
+      return { ...state, movements: [] };
     }
 
     case "INCREASE_FOREGROUNDED": {

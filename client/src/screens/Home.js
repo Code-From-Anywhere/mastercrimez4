@@ -83,9 +83,10 @@ class Home extends Component {
   };
 
   _renderItem = ({ item, index }) => {
-    const { navigation } = this.props;
     const {
+      navigation,
       screenProps: {
+        dispatch,
         device: { theme },
       },
     } = this.props;
@@ -114,7 +115,18 @@ class Home extends Component {
                   justifyContent: "center",
                   alignItems: "center",
                 }}
-                onPress={() => navigation.navigate(menu.to)}
+                onPress={(e) => {
+                  navigation.navigate(menu.to);
+
+                  const movement = {
+                    action: "Menu_" + menu.to,
+                    locationX: e.nativeEvent.locationX,
+                    locationY: e.nativeEvent.locationY,
+                    timestamp: Date.now(),
+                  };
+
+                  dispatch({ type: "ADD_MOVEMENT", value: movement });
+                }}
               >
                 {TheIcon && (
                   <TheIcon

@@ -10,6 +10,7 @@ const cron = require("node-cron");
 
 const cities = require("../assets/airport.json");
 require("dotenv").config();
+const rateLimit = require("express-rate-limit");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -262,21 +263,22 @@ User.init(
     },
 
     cash: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       defaultValue: 0,
     },
+
     gamepoints: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
 
     bank: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       defaultValue: 0,
     },
 
     swissBank: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       defaultValue: 0,
     },
 
@@ -563,6 +565,19 @@ User.hasMany(ChannelMessage, { constraints: false });
 ChannelMessage.belongsTo(Channel);
 Channel.hasMany(ChannelMessage);
 
+class Movement extends Model {}
+
+Movement.init(
+  {
+    userId: DataTypes.INTEGER,
+    action: DataTypes.STRING,
+    locationX: DataTypes.FLOAT,
+    locationY: DataTypes.FLOAT,
+    timestamp: DataTypes.BIGINT,
+  },
+  { sequelize, modelName: "movement" }
+);
+
 class Message extends Model {}
 
 Message.init(
@@ -617,6 +632,15 @@ try {
 } catch (e) {
   console.log("e", e);
 }
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, //1minute
+  max: 120, // limit each IP to 100 requests per windowMs
+});
+
+//  apply to all requests
+server.use(limiter);
+
 server.use(body_parser.json({ limit: "10mb", extended: true }));
 server.use(body_parser.urlencoded({ limit: "10mb", extended: true }));
 
@@ -841,6 +865,10 @@ server.post("/swissBank", (req, res) =>
 
 server.post("/airport", (req, res) =>
   require("./airport").airport(req, res, User)
+);
+
+server.post("/movementsApp", (req, res) =>
+  require("./movements").movementsApp(req, res, User, Movement)
 );
 
 server.post("/createStreetrace", (req, res) =>

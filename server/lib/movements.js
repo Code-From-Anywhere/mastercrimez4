@@ -1,0 +1,24 @@
+const movementsApp = async (req, res, User, Movement) => {
+  const { loginToken, movements } = req.body;
+
+  if (!loginToken) {
+    res.json({ response: "Geen token" });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    res.json({ response: "Ongeldige user" });
+    return;
+  }
+
+  const bulkMovements = movements.map((m) => ({
+    ...m,
+    userId: user.id,
+  }));
+
+  Movement.bulkCreate(bulkMovements);
+};
+
+module.exports = { movementsApp };
