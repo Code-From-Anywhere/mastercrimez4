@@ -649,7 +649,7 @@ const limiter = rateLimit({
 });
 
 //  apply to all requests
-server.use(limiter);
+// server.use(limiter);
 
 server.use("/images", express.static("images"));
 server.use("/uploads", express.static("uploads"));
