@@ -539,7 +539,9 @@ class _RootContainer extends React.Component {
 
     reloadMe(token);
 
-    setInterval(() => this.sendMovements(), 60000);
+    if (Platform.OS !== "web") {
+      setInterval(() => this.sendMovements(), 60000);
+    }
   }
 
   sendMovements() {
