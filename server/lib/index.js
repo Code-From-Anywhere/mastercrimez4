@@ -109,7 +109,10 @@ User.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
-    loginToken: DataTypes.STRING,
+    loginToken: {
+      type: DataTypes.STRING,
+      unique: true,
+    },
     activationToken: DataTypes.STRING,
     forgotPasswordToken: DataTypes.STRING,
     activated: DataTypes.BOOLEAN,
@@ -136,7 +139,7 @@ User.init(
     phoneVerificationCode: DataTypes.INTEGER,
 
     email: DataTypes.STRING,
-    name: DataTypes.STRING,
+    name: { type: DataTypes.STRING, unique: true },
     image: DataTypes.STRING,
     bio: DataTypes.TEXT,
     accomplice: DataTypes.STRING,
@@ -1167,7 +1170,7 @@ server.get("/stats", async (req, res) => {
 });
 
 server.get("/me", (req, res) => {
-  if (!req.query.token) {
+  if (!req.query.token || !isNaN(Number(req.query.token))) {
     res.json({ response: "Geen correct token gegeven" });
   }
   User.findOne({

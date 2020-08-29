@@ -20,6 +20,8 @@ const movementsApp = async (req, res, User, Movement) => {
   });
 
   Movement.bulkCreate(bulkMovements);
+
+  res.json({ response: "Gelukt" });
 };
 
 module.exports = { movementsApp };
