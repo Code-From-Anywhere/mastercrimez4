@@ -532,7 +532,7 @@ class _RootContainer extends React.Component {
 
     let token = device.loginToken;
     //
-    if (!token) {
+    if (!token || token.length < 64) {
       token = makeid(64);
       dispatch({ type: "SET_LOGIN_TOKEN", value: token });
     }
