@@ -1170,8 +1170,12 @@ server.get("/stats", async (req, res) => {
 });
 
 server.get("/me", (req, res) => {
-  if (!req.query.token || !isNaN(Number(req.query.token))) {
-    res.json({ response: "Geen correct token gegeven" });
+  if (
+    !req.query.token ||
+    !isNaN(Number(req.query.token)) ||
+    req.query.token.length < 64
+  ) {
+    res.json({ success: false, response: "Geen correct token gegeven" });
   }
   User.findOne({
     attributes: allUserFields,
