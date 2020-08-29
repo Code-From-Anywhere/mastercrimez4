@@ -1831,4 +1831,5 @@ const port = process.env.PORT || 4001;
 
 server.listen(port, () => {
   console.log(`Server listening at ${port}`);
+  console.log(`instance=${process.env.NODE_APP_INSTANCE}`);
 });
