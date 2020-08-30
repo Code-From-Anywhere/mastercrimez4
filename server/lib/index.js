@@ -1844,7 +1844,7 @@ const swissBankTax = async () => {
   );
 };
 
-if (process.env.NODE_APP_INSTANCE === 0) {
+if (process.env.NODE_APP_INSTANCE == 0) {
   console.log("Scheduling CRONS....");
   //elk uur
   cron.schedule("0 * * * *", async () => {
