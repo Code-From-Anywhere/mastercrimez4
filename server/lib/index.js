@@ -1764,7 +1764,10 @@ second ( optional )
 
 const putBulletsInBulletFactories = async () => {
   const online = await User.findAll({
-    where: { onlineAt: { [Op.gt]: Date.now() - 300000 } },
+    where: {
+      phoneVerified: true,
+      onlineAt: { [Op.gt]: Date.now() - 300000 },
+    },
   });
 
   const newBullets = online.length * 1000;
@@ -1807,24 +1810,23 @@ const swissBankTax = async () => {
   );
 };
 
-if (process.env.NODE_APP_INSTANCE == 0) {
+if (process.env.NODE_APP_INSTANCE === 0) {
   console.log("Scheduling CRONS....");
   //elk uur
   cron.schedule("0 * * * *", async () => {
     putBulletsInBulletFactories();
   });
 
-  cron.schedule("0 19 * * *", function () {
-    //send push notification that happy hour is started
-  });
-
-  //8 uur savonds
-
   cron.schedule("0 20 * * *", function () {
     giveInterest();
     deadPeopleTax();
     swissBankTax();
   });
+  cron.schedule("0 19 * * *", function () {
+    //send push notification that happy hour is started
+  });
+
+  //8 uur savonds
 }
 
 const port = process.env.PORT || 4001;
