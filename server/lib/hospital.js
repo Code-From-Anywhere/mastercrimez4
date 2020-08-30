@@ -1,6 +1,6 @@
 const { Sequelize, Op } = require("sequelize");
 const { getRank, sendMessageAndPush } = require("./util");
-const hospital = async (req, res, User, Message) => {
+const hospital = async (req, res, User, Message, Action) => {
   const { loginToken, name } = req.body;
   const user = await User.findOne({ where: { loginToken } });
 
@@ -33,6 +33,12 @@ const hospital = async (req, res, User, Message) => {
         User.update({ health: 100 }, { where: { id: user2.id } });
         const message = `${user.name} heeft jou naar het ziekenhuis gebracht.`;
         sendMessageAndPush(user, user2, message, Message, true);
+
+        Action.create({
+          userId: user.id,
+          action: "hospital",
+          timestamp: Date.now(),
+        });
 
         res.json({
           response: `Je hebt ${user2.name} naar het ziekenhuis gebracht voor ${cost}`,

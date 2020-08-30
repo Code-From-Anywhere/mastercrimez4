@@ -1,6 +1,6 @@
 const cities = require("../assets/airport.json");
 
-const airport = async (req, res, User) => {
+const airport = async (req, res, User, Action) => {
   const { token, to } = req.body;
 
   if (!cities.includes(to)) {
@@ -46,6 +46,12 @@ const airport = async (req, res, User) => {
     },
     { where: { id: user.id } }
   );
+
+  Action.create({
+    userId: user.id,
+    action: "airport",
+    timestamp: Date.now(),
+  });
 
   res.json({
     response: `Je reist nu met je vliegtuig naar ${to}. Het duurt ${time} seconden.`,

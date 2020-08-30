@@ -1,7 +1,7 @@
 const { Op } = require("sequelize");
 const { sendMessageAndPush } = require("./util");
 const { Sequelize } = require("sequelize");
-const donate = async (req, res, User, Message) => {
+const donate = async (req, res, User, Message, Action) => {
   const { loginToken, to, amount, type } = req.body;
   const user = await User.findOne({ where: { loginToken } });
   const validTypes = [
@@ -80,6 +80,12 @@ const donate = async (req, res, User, Message) => {
               );
             }
             const message = `${user.name} heeft jou ${amount2} ${typeName} overgemaakt`;
+
+            Action.create({
+              userId: user.id,
+              action: "donate",
+              timestamp: Date.now(),
+            });
 
             sendMessageAndPush(user, user2, message, Message, true);
 

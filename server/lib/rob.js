@@ -9,7 +9,7 @@ const { Sequelize, Op } = require("sequelize");
 
 const SECONDS = 30;
 
-const rob = async (req, res, User, Message) => {
+const rob = async (req, res, User, Message, Action) => {
   const { token, name, captcha } = req.body;
 
   if (!token) {
@@ -99,6 +99,12 @@ const rob = async (req, res, User, Message) => {
 
   const now = Date.now();
   User.update({ robbedAt: now }, { where: { id: user2.id } });
+
+  Action.create({
+    userId: user.id,
+    action: "rob",
+    timestamp: Date.now(),
+  });
 
   if (probability < random) {
     res.json({ response: "Het is mislukt" });

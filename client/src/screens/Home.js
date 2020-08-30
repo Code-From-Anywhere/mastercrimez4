@@ -119,7 +119,7 @@ class Home extends Component {
                   navigation.navigate(menu.to);
 
                   const movement = {
-                    action: "Menu_" + menu.to,
+                    action: "App_Menu_" + menu.to,
                     locationX: e.nativeEvent.locationX,
                     locationY: e.nativeEvent.locationY,
                     timestamp: Date.now(),

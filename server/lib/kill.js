@@ -22,7 +22,7 @@ const properties = [
 
 const SECONDS = 120;
 
-const kill = async (req, res, User, Message, Garage, City) => {
+const kill = async (req, res, User, Message, Garage, City, Action) => {
   const { token, name, bullets } = req.body;
 
   if (!token) {
@@ -135,6 +135,12 @@ const kill = async (req, res, User, Message, Garage, City) => {
       },
     }
   );
+
+  Action.create({
+    userId: user.id,
+    action: "kill",
+    timestamp: Date.now(),
+  });
 
   if (!canAttack) {
     // NB: this prevents the spam bug!
@@ -366,7 +372,7 @@ const kill = async (req, res, User, Message, Garage, City) => {
   }
 };
 
-const getalive = async (req, res, User, Message, Garage) => {
+const getalive = async (req, res, User, Message, Garage, Action) => {
   const { token, option } = req.body;
 
   if (!token) {
@@ -386,6 +392,12 @@ const getalive = async (req, res, User, Message, Garage) => {
 
     return;
   }
+
+  Action.create({
+    userId: user.id,
+    action: "getAlive",
+    timestamp: Date.now(),
+  });
 
   User.update(
     { health: 100, protectionAt: Date.now() + 86400000 },

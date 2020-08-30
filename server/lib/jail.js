@@ -14,7 +14,7 @@ const jail = async (req, res, User) => {
   res.json({ jail: people });
 };
 
-const breakout = async (req, res, User, Message) => {
+const breakout = async (req, res, User, Message, Action) => {
   const { token, name, captcha } = req.body;
 
   if (!token) {
@@ -66,6 +66,12 @@ const breakout = async (req, res, User, Message) => {
 
   const random = Math.round(Math.random() * 100);
 
+  Action.create({
+    userId: user.id,
+    action: "breakout",
+    timestamp: Date.now(),
+  });
+
   if (random < 50) {
     const seconds = 45;
 
@@ -110,7 +116,7 @@ const breakout = async (req, res, User, Message) => {
   }
 };
 
-const buyout = async (req, res, User, Message, City) => {
+const buyout = async (req, res, User, Message, City, Action) => {
   const { token, type } = req.body; //type = cash or credits
 
   if (type !== "cash" && type !== "credits") {
@@ -165,6 +171,12 @@ const buyout = async (req, res, User, Message, City) => {
   if (updated === 0) {
     return res.json({ response: `Je hebt niet genoeg ${type}` });
   }
+
+  Action.create({
+    userId: user.id,
+    action: "buyout",
+    timestamp: Date.now(),
+  });
 
   if (type === "cash") {
     const [cityUpdated] = await City.update(

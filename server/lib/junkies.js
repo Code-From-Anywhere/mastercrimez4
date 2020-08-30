@@ -2,7 +2,7 @@ const { getRank, needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
 
-const junkies = async (req, res, User) => {
+const junkies = async (req, res, User, Action) => {
   const { token, captcha } = req.body;
 
   const timeNeeded = 120000;
@@ -59,6 +59,12 @@ const junkies = async (req, res, User) => {
       const random = Math.ceil(
         Math.random() * 10 * rang * (accomplices.length + 1)
       );
+
+      Action.create({
+        userId: user.id,
+        action: "junkies",
+        timestamp: Date.now(),
+      });
 
       User.update(
         {

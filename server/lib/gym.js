@@ -1,7 +1,7 @@
 const { getRank, needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
-const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
-const gym = async (req, res, User) => {
+
+const gym = async (req, res, User, Action) => {
   const { token, option, captcha } = req.body;
 
   if (option < 1 || option > 3 || isNaN(option)) {
@@ -62,6 +62,12 @@ const gym = async (req, res, User) => {
           },
         }
       );
+
+      Action.create({
+        userId: user.id,
+        action: "gym",
+        timestamp: Date.now(),
+      });
 
       res.json({
         response: `Success! Het is je ${random} keer gelukt`,

@@ -1,6 +1,6 @@
 const { needCaptcha } = require("./util");
 
-const bunker = async (req, res, User) => {
+const bunker = async (req, res, User, Action) => {
   const { token, option, captcha } = req.body;
 
   if (option < 0 || option > 3 || isNaN(option)) {
@@ -46,6 +46,12 @@ const bunker = async (req, res, User) => {
           },
           { where: { loginToken: token } }
         );
+
+        Action.create({
+          userId: user.id,
+          action: "bunker",
+          timestamp: Date.now(),
+        });
 
         res.json({
           response: `Je bent ondergedoken.`,

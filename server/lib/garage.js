@@ -71,7 +71,7 @@ const garageGrouped = async (req, res, User, Garage, sequelize) => {
   }
 };
 
-const sellcar = async (req, res, User, Garage) => {
+const sellcar = async (req, res, User, Garage, Action) => {
   const { id, loginToken } = req.body;
 
   if (!loginToken) {
@@ -90,6 +90,12 @@ const sellcar = async (req, res, User, Garage) => {
           { where: { id: user.id } }
         );
 
+        Action.create({
+          userId: user.id,
+          action: "sellcar",
+          timestamp: Date.now(),
+        });
+
         res.json({ response: "Verkocht" });
       } else {
         res.json({ response: "Kon auto niet verwijderen" });
@@ -102,7 +108,7 @@ const sellcar = async (req, res, User, Garage) => {
   }
 };
 
-const bulkaction = async (req, res, User, Garage) => {
+const bulkaction = async (req, res, User, Garage, Action) => {
   const { auto, loginToken, amount, action } = req.body;
 
   if (!action) {
@@ -162,13 +168,19 @@ const bulkaction = async (req, res, User, Garage) => {
   );
 
   if (updated) {
+    Action.create({
+      userId: user.id,
+      action: "garage_bulkAction",
+      timestamp: Date.now(),
+    });
+
     res.json({ response: "Gelukt" });
   } else {
     res.json({ response: "Er ging iets fout" });
   }
 };
 
-const crushcar = async (req, res, User, Garage) => {
+const crushcar = async (req, res, User, Garage, Action) => {
   const { id, loginToken } = req.body;
 
   if (!loginToken) {
@@ -188,6 +200,12 @@ const crushcar = async (req, res, User, Garage) => {
           { where: { id: user.id } }
         );
 
+        Action.create({
+          userId: user.id,
+          action: "crushCar",
+          timestamp: Date.now(),
+        });
+
         res.json({ response: "Gecrushed" });
       } else {
         res.json({ response: "Kon auto niet verwijderen" });
@@ -200,7 +218,7 @@ const crushcar = async (req, res, User, Garage) => {
   }
 };
 
-const upgradecar = async (req, res, User, Garage) => {
+const upgradecar = async (req, res, User, Garage, Action) => {
   const { id, loginToken } = req.body;
 
   if (!loginToken) {
@@ -240,6 +258,12 @@ const upgradecar = async (req, res, User, Garage) => {
     res.json({ response: "Deze auto heeft het maximale level bereikt" });
     return;
   }
+
+  Action.create({
+    userId: user.id,
+    action: "upgradeCar",
+    timestamp: Date.now(),
+  });
 
   User.update({ cash: user.cash - Number(price) }, { where: { id: user.id } });
   Garage.update({ power: car.power + 1 }, { where: { id: car.id } });

@@ -56,7 +56,7 @@ const possibilities = {
 
 const { Op, Sequelize } = require("sequelize");
 
-const poker = async (req, res, User, City) => {
+const poker = async (req, res, User, City, Action) => {
   const { loginToken, amount } = req.body;
 
   if (!loginToken) {
@@ -121,6 +121,12 @@ const poker = async (req, res, User, City) => {
     },
     { where: { id: user.id } }
   );
+
+  Action.create({
+    userId: user.id,
+    action: "poker",
+    timestamp: Date.now(),
+  });
 
   winnerString = strings[winner];
 

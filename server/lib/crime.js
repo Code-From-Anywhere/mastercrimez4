@@ -2,7 +2,7 @@ const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
 const { needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
 
-const crime = async (req, res, User) => {
+const crime = async (req, res, User, Action) => {
   const { token, option, captcha } = req.body;
 
   if (!token) {
@@ -65,6 +65,12 @@ const crime = async (req, res, User) => {
       if (!updated) {
         return res.json({ response: "Kon jouw user niet updaten" });
       }
+
+      Action.create({
+        userId: user.id,
+        action: "crime",
+        timestamp: Date.now(),
+      });
 
       if (kans2 >= random) {
         const accomplices = await User.findAll({

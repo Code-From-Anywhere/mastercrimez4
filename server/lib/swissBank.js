@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const swissBank = async (req, res, User) => {
+const swissBank = async (req, res, User, Action) => {
   const { token, amount, deposit, type } = req.body;
 
   if (type !== "bullets" && type !== "bank") {
@@ -57,6 +57,12 @@ const swissBank = async (req, res, User) => {
         { where: { id: user.id, [key]: { [Op.gte]: amount } } }
       );
       if (updated[0] === 1) {
+        Action.create({
+          userId: user.id,
+          action: "swissbank",
+          timestamp: Date.now(),
+        });
+
         const typeString = type === "bullets" ? "kogels" : "bankgeld";
         const what = deposit ? "gestort" : "opgenomen";
         res.json({ response: `Je hebt ${amount} ${typeString} ${what}` });

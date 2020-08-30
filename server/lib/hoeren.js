@@ -2,7 +2,7 @@ const { getRank, needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
 
-const hoeren = async (req, res, User) => {
+const hoeren = async (req, res, User, Action) => {
   const { token, captcha } = req.body;
 
   const timeNeeded = 120000;
@@ -77,6 +77,12 @@ const hoeren = async (req, res, User) => {
           },
         }
       );
+
+      Action.create({
+        userId: user.id,
+        action: "hoeren",
+        timestamp: Date.now(),
+      });
 
       res.json({
         response: `Je hebt ${random} ${name} gepimpt`,

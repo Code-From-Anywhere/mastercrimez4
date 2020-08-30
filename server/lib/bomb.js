@@ -15,7 +15,7 @@ const typeStrings = {
   garage: "Garage",
 };
 
-const bomb = async (req, res, sequelize, User, City, Message) => {
+const bomb = async (req, res, sequelize, User, City, Message, Action) => {
   let { loginToken, bombs, type, captcha } = req.body;
 
   bombs = Math.round(Number(bombs));
@@ -102,6 +102,12 @@ const bomb = async (req, res, sequelize, User, City, Message) => {
   if (!updated) {
     return res.json({ response: "Er ging iets fout" });
   }
+
+  Action.create({
+    userId: user.id,
+    action: "bomb",
+    timestamp: Date.now(),
+  });
 
   await City.update(
     {

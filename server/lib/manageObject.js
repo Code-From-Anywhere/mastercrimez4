@@ -226,7 +226,7 @@ const changePrice = async (req, res, User, City) => {
   res.json({ response: `De prijs is nu ${price}` });
 };
 
-const getProfit = async (req, res, sequelize, User, City) => {
+const getProfit = async (req, res, sequelize, User, City, Action) => {
   let { city, type, token } = req.body;
 
   if (!token) {
@@ -270,10 +270,16 @@ const getProfit = async (req, res, sequelize, User, City) => {
     `UPDATE users SET cash = cash+${cityObj[key]} WHERE id = ${user.id}`
   );
 
+  Action.create({
+    userId: user.id,
+    action: "getprofit",
+    timestamp: Date.now(),
+  });
+
   res.json({ response: `Je hebt €${cityObj[key]},- opgehaald` });
 };
 
-const repairObject = async (req, res, sequelize, User, City) => {
+const repairObject = async (req, res, sequelize, User, City, Action) => {
   let { city, type, token } = req.body;
 
   if (!token) {
@@ -313,10 +319,16 @@ const repairObject = async (req, res, sequelize, User, City) => {
     return res.json({ response: "Je hebt geen schade." });
   }
 
+  Action.create({
+    userId: user.id,
+    action: "repairObject",
+    timestamp: Date.now(),
+  });
+
   res.json({ response: `Je hebt je ${typeStrings[type]} gerepareerd.` });
 };
 
-const putInJail = async (req, res, User, City, Message) => {
+const putInJail = async (req, res, User, City, Message, Action) => {
   let { city, type, token, who } = req.body;
 
   if (!token) {
@@ -363,6 +375,12 @@ const putInJail = async (req, res, User, City, Message) => {
       response: `Je moet nog ${seconds} seconden wachten voordat je weer iemand in de gevangenis kan stoppen`,
     });
   }
+
+  Action.create({
+    userId: user.id,
+    action: "putInJail",
+    timestamp: Date.now(),
+  });
 
   City.update(
     { jailPutAt: Date.now() + 600 * 1000 },

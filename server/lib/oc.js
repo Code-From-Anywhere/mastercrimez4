@@ -9,7 +9,7 @@ const fetch = require("isomorphic-fetch");
 
 const SECONDS = 120;
 
-const oc = async (req, res, User, Message) => {
+const oc = async (req, res, User, Message, Action) => {
   const { token, captcha } = req.body;
 
   if (!token) {
@@ -104,6 +104,12 @@ const oc = async (req, res, User, Message) => {
     if (!updated) {
       return res.json({ response: "Kon user niet updaten" });
     }
+
+    Action.create({
+      userId: user.id,
+      action: "oc",
+      timestamp: Date.now(),
+    });
 
     if (accomplices.length === 0) {
       const names = accomplicesTotal.map((acc) => acc.name).join(", ");

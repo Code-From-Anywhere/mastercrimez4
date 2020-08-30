@@ -111,7 +111,6 @@ User.init(
     },
     loginToken: {
       type: DataTypes.STRING,
-      unique: true,
     },
     activationToken: DataTypes.STRING,
     forgotPasswordToken: DataTypes.STRING,
@@ -139,7 +138,7 @@ User.init(
     phoneVerificationCode: DataTypes.INTEGER,
 
     email: DataTypes.STRING,
-    name: { type: DataTypes.STRING, unique: true },
+    name: { type: DataTypes.STRING },
     image: DataTypes.STRING,
     bio: DataTypes.TEXT,
     accomplice: DataTypes.STRING,
@@ -317,7 +316,14 @@ User.init(
 
     password: DataTypes.STRING,
   },
-  { sequelize, modelName: "user" }
+  {
+    sequelize,
+    modelName: "user",
+    indexes: [
+      { unique: true, fields: ["name"] },
+      { unique: true, fields: ["loginToken"] },
+    ],
+  }
 );
 
 class Streetrace extends Model {}
@@ -581,6 +587,17 @@ Movement.init(
   { sequelize, modelName: "movement" }
 );
 
+class Action extends Model {}
+
+Action.init(
+  {
+    userId: DataTypes.INTEGER,
+    action: DataTypes.STRING,
+    timestamp: DataTypes.BIGINT,
+  },
+  { sequelize, modelName: "action" }
+);
+
 class Message extends Model {}
 
 Message.init(
@@ -755,44 +772,46 @@ server.get("/garageGrouped", (req, res) =>
 );
 
 server.post("/sellcar", (req, res) =>
-  require("./garage").sellcar(req, res, User, Garage)
+  require("./garage").sellcar(req, res, User, Garage, Action)
 );
 
 server.post("/buyBullets", (req, res) =>
-  require("./buyBullets").buyBullets(req, res, sequelize, User, City)
+  require("./buyBullets").buyBullets(req, res, sequelize, User, City, Action)
 );
 server.post("/bomb", (req, res) =>
-  require("./bomb").bomb(req, res, sequelize, User, City, Message)
+  require("./bomb").bomb(req, res, sequelize, User, City, Message, Action)
 );
 
 server.get("/cities", (req, res) => require("./cities").cities(req, res, City));
 
 server.post("/crushcar", (req, res) =>
-  require("./garage").crushcar(req, res, User, Garage)
+  require("./garage").crushcar(req, res, User, Garage, Action)
 );
 
 server.post("/upgradecar", (req, res) =>
-  require("./garage").upgradecar(req, res, User, Garage)
+  require("./garage").upgradecar(req, res, User, Garage, Action)
 );
 
 server.post("/bulkaction", (req, res) =>
-  require("./garage").bulkaction(req, res, User, Garage)
+  require("./garage").bulkaction(req, res, User, Garage, Action)
 );
 
 server.post("/stealcar", (req, res) =>
-  require("./stealcar").stealcar(req, res, User, Garage)
+  require("./stealcar").stealcar(req, res, User, Garage, Action)
 );
 
 server.post("/removeprotection", (req, res) =>
   require("./removeprotection").removeprotection(req, res, User)
 );
 
-server.post("/crime", (req, res) => require("./crime").crime(req, res, User));
+server.post("/crime", (req, res) =>
+  require("./crime").crime(req, res, User, Action)
+);
 
-server.post("/gym", (req, res) => require("./gym").gym(req, res, User));
+server.post("/gym", (req, res) => require("./gym").gym(req, res, User, Action));
 
 server.post("/hoeren", (req, res) =>
-  require("./hoeren").hoeren(req, res, User)
+  require("./hoeren").hoeren(req, res, User, Action)
 );
 
 server.post("/becomeOwner", (req, res) =>
@@ -804,41 +823,47 @@ server.post("/giveAway", (req, res) =>
 server.post("/changePrice", (req, res) =>
   require("./manageObject").changePrice(req, res, User, City)
 );
-server.post("/switchStatus", (req, res) =>
-  require("./manageObject").switchStatus(req, res, User, City)
-);
 server.post("/getProfit", (req, res) =>
-  require("./manageObject").getProfit(req, res, sequelize, User, City)
+  require("./manageObject").getProfit(req, res, sequelize, User, City, Action)
 );
 
 server.post("/repairObject", (req, res) =>
-  require("./manageObject").repairObject(req, res, sequelize, User, City)
+  require("./manageObject").repairObject(
+    req,
+    res,
+    sequelize,
+    User,
+    City,
+    Action
+  )
 );
 
 server.post("/putInJail", (req, res) =>
-  require("./manageObject").putInJail(req, res, User, City, Message)
+  require("./manageObject").putInJail(req, res, User, City, Message, Action)
 );
 
-server.post("/wiet", (req, res) => require("./wiet").wiet(req, res, User));
+server.post("/wiet", (req, res) =>
+  require("./wiet").wiet(req, res, User, Action)
+);
 
 server.post("/junkies", (req, res) =>
-  require("./junkies").junkies(req, res, User)
+  require("./junkies").junkies(req, res, User, Action)
 );
 
 // server.get("/showroom", (req, res) =>
 //   require("./showroom").showroom(req, res, User, Garage)
 // );
 
-server.post("/buycar", (req, res) =>
-  require("./showroom").buycar(req, res, User, Garage)
-);
+// server.post("/buycar", (req, res) =>
+//   require("./showroom").buycar(req, res, User, Garage)
+// );
 
 server.post("/donate", (req, res) =>
-  require("./donate").donate(req, res, User, Message)
+  require("./donate").donate(req, res, User, Message, Action)
 );
 
 server.post("/bunker", (req, res) =>
-  require("./bunker").bunker(req, res, User)
+  require("./bunker").bunker(req, res, User, Action)
 );
 
 server.get("/creditshop", (req, res) =>
@@ -851,25 +876,27 @@ server.post("/creditshopBuy", (req, res) =>
 
 server.get("/jail", (req, res) => require("./jail").jail(req, res, User));
 server.post("/breakout", (req, res) =>
-  require("./jail").breakout(req, res, User, Message)
+  require("./jail").breakout(req, res, User, Message, Action)
 );
 
 server.post("/buyout", (req, res) =>
-  require("./jail").buyout(req, res, User, Message, City)
+  require("./jail").buyout(req, res, User, Message, City, Action)
 );
 
 server.post("/poker", (req, res) =>
-  require("./poker").poker(req, res, User, City)
+  require("./poker").poker(req, res, User, City, Action)
 );
 
-server.post("/bank", (req, res) => require("./bank").bank(req, res, User));
+server.post("/bank", (req, res) =>
+  require("./bank").bank(req, res, User, Action)
+);
 
 server.post("/swissBank", (req, res) =>
-  require("./swissBank").swissBank(req, res, User)
+  require("./swissBank").swissBank(req, res, User, Action)
 );
 
 server.post("/airport", (req, res) =>
-  require("./airport").airport(req, res, User)
+  require("./airport").airport(req, res, User, Action)
 );
 
 server.post("/movementsApp", (req, res) =>
@@ -884,7 +911,8 @@ server.post("/createStreetrace", (req, res) =>
     Streetrace,
     StreetraceParticipant,
     Garage,
-    Message
+    Message,
+    Action
   )
 );
 
@@ -908,7 +936,8 @@ server.post("/joinStreetrace", (req, res) =>
     Streetrace,
     StreetraceParticipant,
     Garage,
-    Message
+    Message,
+    Action
   )
 );
 
@@ -920,7 +949,8 @@ server.post("/leaveStreetrace", (req, res) =>
     Streetrace,
     StreetraceParticipant,
     Garage,
-    Message
+    Message,
+    Action
   )
 );
 
@@ -932,30 +962,33 @@ server.post("/startStreetrace", (req, res) =>
     Streetrace,
     StreetraceParticipant,
     Garage,
-    Message
+    Message,
+    Action
   )
 );
 
 server.post("/income", (req, res) =>
-  require("./income").income(req, res, sequelize, User, City)
+  require("./income").income(req, res, sequelize, User, City, Action)
 );
 
 server.post("/rob", (req, res) =>
-  require("./rob").rob(req, res, User, Message)
+  require("./rob").rob(req, res, User, Message, Action)
 );
 
 server.post("/hospital", (req, res) =>
-  require("./hospital").hospital(req, res, User, Message)
+  require("./hospital").hospital(req, res, User, Message, Action)
 );
 
 server.post("/kill", (req, res) =>
-  require("./kill").kill(req, res, User, Message, Garage, City)
+  require("./kill").kill(req, res, User, Message, Garage, City, Action)
 );
 
-server.post("/oc", (req, res) => require("./oc").oc(req, res, User, Message));
+server.post("/oc", (req, res) =>
+  require("./oc").oc(req, res, User, Message, Action)
+);
 
 server.post("/getalive", (req, res) =>
-  require("./kill").getalive(req, res, User, Message, Garage)
+  require("./kill").getalive(req, res, User, Message, Garage, Action)
 );
 
 server.post("/admin/email", (req, res) =>
@@ -964,7 +997,7 @@ server.post("/admin/email", (req, res) =>
 
 //messages
 server.post("/message", (req, res) =>
-  require("./message").message(req, res, User, Message)
+  require("./message").message(req, res, User, Message, Action)
 );
 server.get("/messages", (req, res) =>
   require("./message").messages(req, res, User, Message)

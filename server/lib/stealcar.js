@@ -8,7 +8,7 @@ function randomEntry(array) {
   return array[Math.floor(array.length * Math.random())];
 }
 
-const stealcar = async (req, res, User, Garage) => {
+const stealcar = async (req, res, User, Garage, Action) => {
   const { token, option, captcha } = req.body;
 
   if (!token) {
@@ -92,6 +92,13 @@ const stealcar = async (req, res, User, Garage) => {
       if (!updated) {
         return res.json({ response: "Kon jou user niet updaten" });
       }
+
+      Action.create({
+        userId: user.id,
+        action: "stealcar",
+        timestamp: Date.now(),
+      });
+
       if (kans2 >= random) {
         const accomplices = await User.findAll({
           attributes: ["name"],

@@ -1,6 +1,6 @@
 const { Sequelize, Model, DataTypes, Op } = require("sequelize");
 const { sendMessageAndPush } = require("./util");
-const message = async (req, res, User, Message) => {
+const message = async (req, res, User, Message, Action) => {
   const { token, to, message } = req.body;
 
   if (!token) {
@@ -28,6 +28,12 @@ const message = async (req, res, User, Message) => {
     res.json({ response: "Die persoon bestaat niet" });
     return;
   }
+
+  Action.create({
+    userId: user.id,
+    action: "message",
+    timestamp: Date.now(),
+  });
 
   sendMessageAndPush(user, user2, message, Message);
 

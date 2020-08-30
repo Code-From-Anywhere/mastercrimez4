@@ -120,7 +120,7 @@ function getMobileOperatingSystem() {
   return "unknown";
 }
 
-export const renderMenu = (item, index, navigation, theme: Theme) => {
+export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
   const isHeaderStyle = item.isHeader
     ? {
         marginTop: 20,
@@ -139,9 +139,18 @@ export const renderMenu = (item, index, navigation, theme: Theme) => {
   return (
     <TouchableOpacity
       key={`item${index}`}
-      onPress={() => {
+      onPress={(e) => {
         if (item.to) {
           navigation.navigate(item.to, item.params);
+
+          const movement = {
+            action: "Web_Menu_" + item.to,
+            locationX: e.nativeEvent.locationX,
+            locationY: e.nativeEvent.locationY,
+            timestamp: Date.now(),
+          };
+
+          dispatch({ type: "ADD_MOVEMENT", value: movement });
         }
       }}
     >
@@ -176,7 +185,7 @@ export const renderMenu = (item, index, navigation, theme: Theme) => {
   );
 };
 
-export const renderDrawerMenu = (item, index, navigation, theme) => {
+export const renderDrawerMenu = (item, index, navigation, theme, dispatch) => {
   const isHeaderStyle = item.isHeader
     ? {
         marginTop: 20,
@@ -191,9 +200,18 @@ export const renderDrawerMenu = (item, index, navigation, theme) => {
   return (
     <TouchableOpacity
       key={`item${index}`}
-      onPress={() => {
+      onPress={(e) => {
         if (item.to) {
           navigation.navigate(item.to, item.params);
+
+          const movement = {
+            action: "Web_Menu_" + item.to,
+            locationX: e.nativeEvent.locationX,
+            locationY: e.nativeEvent.locationY,
+            timestamp: Date.now(),
+          };
+
+          dispatch({ type: "ADD_MOVEMENT", value: movement });
         }
       }}
     >
@@ -266,7 +284,7 @@ const Layout = ({ screenProps, navigation, children }) => {
     };
   }, []);
 
-  const { me, device } = screenProps;
+  const { me, device, dispatch } = screenProps;
 
   if (Platform.OS === "web") {
     if (getMobileOperatingSystem() === "android") {
@@ -338,7 +356,7 @@ const Layout = ({ screenProps, navigation, children }) => {
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
           {leftMenu(me, device.theme).map((item, index) =>
-            renderMenu(item, index, navigation, device.theme)
+            renderMenu(item, index, navigation, device.theme, dispatch)
           )}
         </View>
       )}
@@ -360,7 +378,7 @@ const Layout = ({ screenProps, navigation, children }) => {
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
           {rightMenu(me, device.theme).map((item, index) =>
-            renderMenu(item, index, navigation, device.theme)
+            renderMenu(item, index, navigation, device.theme, dispatch)
           )}
         </View>
       )}
@@ -376,7 +394,7 @@ export const withLayout = (Component) => (props) => (
 const CustomDrawerContentComponent = (props) => {
   const {
     navigation,
-    screenProps: { me, device },
+    screenProps: { me, device, dispatch },
   } = props;
 
   return (
@@ -386,10 +404,10 @@ const CustomDrawerContentComponent = (props) => {
         forceInset={{ top: "always", horizontal: "never" }}
       >
         {leftMenu(me, device.theme).map((item, index) =>
-          renderDrawerMenu(item, index, navigation, device.theme)
+          renderDrawerMenu(item, index, navigation, device.theme, dispatch)
         )}
         {rightMenu(me, device.theme).map((item, index) =>
-          renderDrawerMenu(item, index, navigation, device.theme)
+          renderDrawerMenu(item, index, navigation, device.theme, dispatch)
         )}
       </SafeAreaView>
     </ScrollView>
@@ -539,18 +557,18 @@ class _RootContainer extends React.Component {
 
     reloadMe(token);
 
-    if (Platform.OS !== "web") {
-      setInterval(() => this.sendMovements(), 60000);
-    }
+    setInterval(() => this.sendMovements(), 60000);
   }
 
   sendMovements() {
     const { dispatch, device } = this.props;
-    post("movementsApp", {
-      loginToken: device.loginToken,
-      movements: device.movements,
-    });
-    dispatch({ type: "CLEAR_MOVEMENTS" });
+    if (device.movements.length > 0) {
+      post("movementsApp", {
+        loginToken: device.loginToken,
+        movements: device.movements,
+      });
+      dispatch({ type: "CLEAR_MOVEMENTS" });
+    }
   }
 
   componentDidUpdate(prevProps) {

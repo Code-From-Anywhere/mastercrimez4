@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 const { needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
 
-const income = async (req, res, sequelize, User, City) => {
+const income = async (req, res, sequelize, User, City, Action) => {
   const { token, captcha } = req.body;
 
   if (!token) {
@@ -65,6 +65,12 @@ const income = async (req, res, sequelize, User, City) => {
   if (!updated) {
     return res.json({ response: "Je kan nu geen inkomen ophalen" });
   }
+
+  Action.create({
+    userId: user.id,
+    action: "income",
+    timestamp: Date.now(),
+  });
 
   City.update(
     {

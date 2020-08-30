@@ -11,7 +11,8 @@ const createStreetrace = async (
   Streetrace,
   StreetraceParticipant,
   Garage,
-  Message
+  Message,
+  Action
 ) => {
   let { loginToken, numParticipants, type, price, carId } = req.body;
   numParticipants = Math.round(numParticipants);
@@ -97,6 +98,12 @@ const createStreetrace = async (
     power: car.power * typePower,
   });
 
+  Action.create({
+    userId: user.id,
+    action: "createStreetrace",
+    timestamp: Date.now(),
+  });
+
   res.json({ response: "De streetrace is aangemaakt", success: true });
 };
 
@@ -107,7 +114,8 @@ const joinStreetrace = async (
   Streetrace,
   StreetraceParticipant,
   Garage,
-  Message
+  Message,
+  Action
 ) => {
   let { loginToken, streetraceId, carId } = req.body;
 
@@ -195,6 +203,12 @@ const joinStreetrace = async (
     power: car.power * typePower,
   });
 
+  Action.create({
+    userId: user.id,
+    action: "joinstreetrace",
+    timestamp: Date.now(),
+  });
+
   res.json({ response: "Je hebt deelgenomen", success: true });
 };
 
@@ -205,7 +219,8 @@ const leaveStreetrace = async (
   Streetrace,
   StreetraceParticipant,
   Garage,
-  Message
+  Message,
+  Action
 ) => {
   let { loginToken, streetraceId } = req.body;
 
@@ -264,6 +279,12 @@ const leaveStreetrace = async (
     { where: { id: user.id } }
   );
 
+  Action.create({
+    userId: user.id,
+    action: "leaveStreetrace",
+    timestamp: Date.now(),
+  });
+
   res.json({ response: "Je hebt de streetrace verlaten", success: true });
 };
 
@@ -274,7 +295,8 @@ const startStreetrace = async (
   Streetrace,
   StreetraceParticipant,
   Garage,
-  Message
+  Message,
+  Action
 ) => {
   let { loginToken, streetraceId } = req.body;
 
@@ -390,6 +412,12 @@ De winnaar is ${winner.name}. ${winner.name} wint €${prizeMoney},-`;
   //delete streetrace
   //delete participants
   //if delete streetrace is succesful, give winner pricemoney
+
+  Action.create({
+    userId: user.id,
+    action: "startStreetrace",
+    timestamp: Date.now(),
+  });
 
   res.json({
     response:

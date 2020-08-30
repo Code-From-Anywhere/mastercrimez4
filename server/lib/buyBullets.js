@@ -2,7 +2,7 @@ const items = require("../assets/shop.json");
 const { Op } = require("sequelize");
 const { needCaptcha } = require("./util");
 
-const buyBullets = async (req, res, sequelize, User, City) => {
+const buyBullets = async (req, res, sequelize, User, City, Action) => {
   let { loginToken, amount, captcha } = req.body;
 
   amount = Math.round(Number(amount));
@@ -75,6 +75,12 @@ const buyBullets = async (req, res, sequelize, User, City) => {
   if (!updated) {
     return res.json({ response: "Er ging iets fout" });
   }
+
+  Action.create({
+    userId: user.id,
+    action: "buyBullets",
+    timestamp: Date.now(),
+  });
 
   const profit = Math.round(price / 2);
   sequelize.query(
