@@ -332,9 +332,14 @@ const adminMenu = (me) => {
           {
             iconType: "FontAwesome",
             icon: "font",
-
             text: "Emailen",
             to: "AdminEmail",
+          },
+          {
+            iconType: "Entypo",
+            icon: "eye",
+            text: "UserWatch",
+            to: "AdminUserWatch",
           },
         ]
       : [];

@@ -30,6 +30,7 @@ import { KeyboardAvoidingSpace } from "./KeyboardAvoidingSpace";
 import { leftMenu, rightMenu } from "./Menus";
 import Accomplice from "./screens/Accomplice";
 import AdminEmail from "./screens/AdminEmail";
+import AdminUserWatch from "./screens/AdminUserWatch";
 import Airport from "./screens/Airport";
 import AllBanks from "./screens/AllBanks";
 import Backfire from "./screens/Backfire";
@@ -473,6 +474,7 @@ const Container = rightContainer(
       Hospital: withLayout(Hospital),
       Income: withLayout(Income),
       AdminEmail: withLayout(AdminEmail),
+      AdminUserWatch: withLayout(AdminUserWatch),
       Forum: withLayout(Forum),
       Theme: withLayout(Theme),
       DownloadApp: DownloadApp,

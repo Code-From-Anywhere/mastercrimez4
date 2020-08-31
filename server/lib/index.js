@@ -996,6 +996,14 @@ server.post("/admin/email", (req, res) =>
   require("./admin_email").email(req, res, User)
 );
 
+server.get("/admin/ips", (req, res) =>
+  require("./admin_ips").ips(req, res, User, sequelize)
+);
+
+server.get("/admin/actions", (req, res) =>
+  require("./admin_actions").actions(req, res, User, sequelize)
+);
+
 //messages
 server.post("/message", (req, res) =>
   require("./message").message(req, res, User, Message, Action)

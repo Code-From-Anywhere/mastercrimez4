@@ -42,6 +42,14 @@ const Mollie = ({
         title="Koop 40000 credits voor €250"
         onPress={() => submit(2)}
       />
+
+      <Text style={{ color: theme.primaryText }}>{`Betaal regels:\n\n
+De website eigenaren zijn niet aansprakelijk voor eventuele schade/verlies opgelopen tijdens het spelen van dit spel.
+Personen jonger dan 16 jaar dienen toestemming te vragen aan hun ouders voor het betalen.
+Eventuele kosten die zijn opgelopen door het betalen zijn niet terug te krijgen van de eigenaren.
+Het Betaald-Account-schap is alleen geldig op het account waarop het besteld is en het is niet mogelijk om dit over te plaatsen naar een ander account.
+Mocht de website offline gaan of mocht er verlies van gegevens plaats vinden dan is het geld voor het Betaald-Account-Schap en het Betaald-Account-Schap zelf en alles wat je hebt gekregen door het Betaald-Account-Schap niet terug te krijgen!
+`}</Text>
     </View>
   );
 };
