@@ -257,7 +257,8 @@ const Layout = ({ screenProps, navigation, children }) => {
 
   const handleChange = (nextAppState) => {
     if (nextAppState === "active") {
-      screenProps.reloadMe(screenProps.device.loginToken);
+      // somehow this doesn't work properly
+      // screenProps.reloadMe(screenProps.device.loginToken);
 
       screenProps.dispatch({ type: "INCREASE_FOREGROUNDED" });
 
