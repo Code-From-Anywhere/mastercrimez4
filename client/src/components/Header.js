@@ -19,7 +19,10 @@ const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
 function Header({ navigation, device, me }) {
-  const updateAvailable = useExpoUpdate();
+  let updateAvailable = false;
+  if (Platform.OS !== "web") {
+    updateAvailable = useExpoUpdate();
+  }
 
   const textStyle = {
     marginRight: 10,

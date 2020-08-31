@@ -109,6 +109,7 @@ User.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    ip: DataTypes.STRING,
     loginToken: {
       type: DataTypes.STRING,
     },
@@ -1273,7 +1274,7 @@ server.get("/me", (req, res) => {
         res.json(userWithMessages);
 
         User.update(
-          { onlineAt: Date.now() },
+          { onlineAt: Date.now(), ip: req.ip },
           { where: { loginToken: req.query.token } }
         );
       } else {
