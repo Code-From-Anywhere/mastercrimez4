@@ -1,7 +1,7 @@
 const express = require("express");
 const server = express();
 const body_parser = require("body-parser");
-const multer = require("multer");
+
 const sgMail = require("@sendgrid/mail");
 const fs = require("fs");
 const Jimp = require("jimp");
@@ -1203,16 +1203,17 @@ server.get("/stats", async (req, res) => {
 });
 
 server.get("/me", (req, res) => {
-  if (
-    !req.query.token ||
+  if (!req.query.token) {
+    /* ||
     !isNaN(Number(req.query.token)) ||
-    req.query.token.length < 64
-  ) {
-    res.json({ success: false, response: "Geen correct token gegeven" });
+    req.query.token.length < 64*/
+
+    return res.json({ success: false, response: "Geen correct token gegeven" });
   }
+
   User.findOne({
     attributes: allUserFields,
-    where: { loginToken: req.query.token },
+    where: { loginToken: String(req.query.token) },
   })
     .then(async (user) => {
       if (user) {
@@ -1278,13 +1279,13 @@ server.get("/me", (req, res) => {
       } else {
         const name = await getAvailableName();
         const user = await User.create({
-          loginToken: req.query.token,
+          loginToken: String(req.query.token),
           name,
         });
 
         const newuser = await User.findOne({
           attributes: allUserFields,
-          where: { loginToken: req.query.token },
+          where: { loginToken: String(req.query.token) },
         });
 
         const messages = await Message.findAll({
