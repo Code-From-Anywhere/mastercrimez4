@@ -327,7 +327,7 @@ const adminMenu = (me) => {
           {
             iconType: "Entypo",
             icon: "eye",
-            text: "UserWatch",
+            text: "User Watch",
             to: "AdminUserWatch",
           },
         ]
