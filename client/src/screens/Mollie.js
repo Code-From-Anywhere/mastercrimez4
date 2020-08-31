@@ -1,5 +1,5 @@
 import React from "react";
-import { Linking, View } from "react-native";
+import { Linking, Platform, Text, View } from "react-native";
 import Button from "../components/Button";
 import { post } from "../Util";
 const Mollie = ({
@@ -18,7 +18,11 @@ const Mollie = ({
       Linking.openURL(response.url);
     }
   };
-  return (
+  return Platform.OS === "ios" ? (
+    <Text style={{ color: theme.primaryText }}>
+      Je kunt alleen op de website credits kopen!
+    </Text>
+  ) : (
     <View style={{ flex: 1, justifyContent: "space-around" }}>
       <Button
         theme={theme}
