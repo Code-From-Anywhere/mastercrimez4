@@ -13,10 +13,15 @@ class Jail extends React.Component {
     this.fetchMembers();
 
     const { reloadMe, device } = this.props.screenProps;
-    setInterval(() => {
+    this.interval = setInterval(() => {
       reloadMe(device.loginToken);
       this.fetchMembers();
     }, 2500);
+  }
+
+  componentWillUnmount() {
+    console.log("Clear interval jail");
+    clearInterval(this.interval);
   }
 
   fetchMembers(order) {
