@@ -231,12 +231,12 @@ class Home extends Component {
         var x = event.clientX;
         var y = event.clientY;
         var coor = "X coords: " + x + ", Y coords: " + y;
-        console.log("coor", coor);
+        // console.log("coor", coor);
       };
 
       document.onmousemove = handleMouseMove;
 
-      return <Text style={{ color: theme.primaryText }}>Welkom terug</Text>;
+      return <Text style={{ color: theme.primaryText }}>Welkom terug.</Text>;
     }
     return this.renderCarousel();
   }

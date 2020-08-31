@@ -549,13 +549,14 @@ class _RootContainer extends React.Component {
     const { device, reloadMe, dispatch } = this.props;
 
     let token = device.loginToken;
-    //
+
     if (!token || token.length < 64) {
       token = makeid(64);
       dispatch({ type: "SET_LOGIN_TOKEN", value: token });
+      reloadMe(token);
+    } else {
+      reloadMe(token);
     }
-
-    reloadMe(token);
 
     setInterval(() => this.sendMovements(), 60000);
   }
