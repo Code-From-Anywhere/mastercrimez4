@@ -323,6 +323,13 @@ const adminMenu = (me) => {
             isHeader: true,
             text: "Admin panel",
           },
+
+          {
+            iconType: "Entypo",
+            icon: "eye",
+            text: "UserWatch",
+            to: "AdminUserWatch",
+          },
         ]
       : [];
 
@@ -334,12 +341,6 @@ const adminMenu = (me) => {
             icon: "font",
             text: "Emailen",
             to: "AdminEmail",
-          },
-          {
-            iconType: "Entypo",
-            icon: "eye",
-            text: "UserWatch",
-            to: "AdminUserWatch",
           },
         ]
       : [];
