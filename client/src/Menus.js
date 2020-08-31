@@ -330,6 +330,20 @@ const adminMenu = (me) => {
             text: "User Watch",
             to: "AdminUserWatch",
           },
+
+          {
+            iconType: "Entypo",
+            icon: "eye",
+            text: "Hackers",
+            to: "Hackers",
+          },
+
+          {
+            iconType: "Entypo",
+            icon: "eye",
+            text: "Politie",
+            to: "Police",
+          },
         ]
       : [];
 

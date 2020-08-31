@@ -54,6 +54,7 @@ import ForgotPassword from "./screens/ForgotPassword";
 import Forum from "./screens/Forum";
 import Garage from "./screens/Garage";
 import Gym from "./screens/Gym";
+import Hackers from "./screens/Hackers";
 import Hoeren from "./screens/Hoeren";
 import Home from "./screens/Home";
 import Hospital from "./screens/Hospital";
@@ -74,6 +75,7 @@ import MyObjects from "./screens/MyObjects";
 import MyProfile from "./screens/MyProfile";
 import OrganisedCrime from "./screens/OrganisedCrime";
 import Poker from "./screens/Poker";
+import Police from "./screens/Police";
 import Privacy from "./screens/Privacy";
 import Prizes from "./screens/Prizes";
 import Profile from "./screens/Profile";
@@ -433,6 +435,8 @@ const Container = rightContainer(
         path: "",
       },
       Status: withLayout(Status),
+      Hackers: withLayout(Hackers),
+      Police: withLayout(Police),
       StealCar: withLayout(StealCar),
       CreateStreetrace: withLayout(CreateStreetrace),
       Channels: withLayout(Channels),
