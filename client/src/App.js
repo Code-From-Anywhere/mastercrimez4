@@ -46,7 +46,6 @@ import Channels from "./screens/Channels";
 import Chat from "./screens/Chat";
 import Contribute from "./screens/Contribute";
 import CreateStreetrace from "./screens/CreateStreetrace";
-import Creditshop from "./screens/Creditshop";
 import Crimes from "./screens/Crimes";
 import Donate from "./screens/Donate";
 import DownloadApp from "./screens/DownloadApp";
@@ -69,7 +68,6 @@ import Login from "./screens/Login";
 import ManageObject from "./screens/ManageObject";
 import Members from "./screens/Members";
 import Messages from "./screens/Messages";
-import Mollie from "./screens/Mollie";
 import MollieComplete from "./screens/MollieComplete";
 import MyObjects from "./screens/MyObjects";
 import MyProfile from "./screens/MyProfile";
@@ -90,12 +88,13 @@ import Stats from "./screens/Stats";
 import Status from "./screens/Status";
 import StealCar from "./screens/StealCar";
 import Streetrace from "./screens/Streetrace";
-import SuperMessage from "./screens/SuperMessage";
 import SwissBank from "./screens/SwissBank";
 import Theme from "./screens/Theme";
 import VerifyPhone from "./screens/VerifyPhone";
 import VerifyPhoneCode from "./screens/VerifyPhoneCode";
+import VIP from "./screens/VIP";
 import Wiet from "./screens/Wiet";
+import Work from "./screens/Work";
 import { persistor, store } from "./Store";
 import { post } from "./Util";
 
@@ -469,7 +468,6 @@ const Container = rightContainer(
       Chat: withLayout(Chat),
       Gym: withLayout(Gym),
       Wiet: withLayout(Wiet),
-      Creditshop: withLayout(Creditshop),
       MollieComplete: withLayout(MollieComplete),
       OrganisedCrime: withLayout(OrganisedCrime),
       Junkies: withLayout(Junkies),
@@ -483,7 +481,7 @@ const Container = rightContainer(
       Forum: withLayout(Forum),
       Theme: withLayout(Theme),
       DownloadApp: DownloadApp,
-
+      VIP: withLayout(VIP),
       Profile: {
         screen: withLayout(Profile),
         path: "Profile/:name",
@@ -500,7 +498,6 @@ const Container = rightContainer(
 
       ChangeName: withLayout(ChangeName),
       VerifyPhoneCode: withLayout(VerifyPhoneCode),
-      SuperMessage: withLayout(SuperMessage),
       ForgotPassword: withLayout(ForgotPassword),
       RecoverPassword: {
         screen: withLayout(RecoverPassword),
@@ -512,6 +509,7 @@ const Container = rightContainer(
       VerifyPhone: withLayout(VerifyPhone),
       MyProfile: withLayout(MyProfile),
       Login: withLayout(Login),
+      Work: withLayout(Work),
 
       //INFO
       Info: withLayout(Info),
@@ -520,7 +518,6 @@ const Container = rightContainer(
       Privacy: withLayout(Privacy),
       Contribute: withLayout(Contribute),
       Prizes: withLayout(Prizes),
-      Mollie: withLayout(Mollie),
     },
     {
       drawerPosition: "right",

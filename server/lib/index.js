@@ -17,13 +17,19 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 var cors = require("cors");
 
 const twilio = require("twilio");
-const { getRank, sendMessageAndPush, publicUserFields } = require("./util");
+const {
+  getRank,
+  sendMessageAndPush,
+  publicUserFields,
+  getTextFunction,
+} = require("./util");
 
 var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
 var authToken = process.env.TWILIO_AUTH_SECRET; // Your Auth Token from www.twilio.com/console
 
 var twilioClient = new twilio(accountSid, authToken);
 
+let getText = getTextFunction();
 const EMAIL_FROM = "info@mastercrimez.nl";
 
 const allUserFields = publicUserFields.concat([
@@ -55,6 +61,7 @@ const allUserFields = publicUserFields.concat([
   "ocAt",
   "bombAt",
   "protectionAt",
+  "workAt",
   "swissBank",
   "rankKnow",
   "swissBullets",
@@ -119,6 +126,11 @@ User.init(
     level: DataTypes.INTEGER,
     pushtoken: DataTypes.STRING,
 
+    locale: {
+      type: DataTypes.STRING,
+      defaultValue: "en",
+    },
+
     credits: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -157,6 +169,10 @@ User.init(
       defaultValue: 0,
     },
     crimeAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    workAt: {
       type: DataTypes.BIGINT,
       defaultValue: 0,
     },
@@ -689,6 +705,8 @@ server.post("/upload", async (req, res, next) => {
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   try {
     // to declare some path to store your converted image
     const path = "./uploads/" + Date.now() + ".png";
@@ -706,7 +724,7 @@ server.post("/upload", async (req, res, next) => {
 
     Image.create({ image: path, uid: user.id });
 
-    return res.json({ path, response: "Gelukt" });
+    return res.json({ path, response: getText("succeeded") });
   } catch (e) {
     next(e);
   }
@@ -716,14 +734,14 @@ server.get("/listimages", async (req, res) => {
   const { token, uid } = req.query;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
@@ -738,14 +756,14 @@ server.post("/deleteimage", async (req, res) => {
   const { token, id } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
@@ -807,6 +825,10 @@ server.post("/removeprotection", (req, res) =>
 
 server.post("/crime", (req, res) =>
   require("./crime").crime(req, res, User, Action)
+);
+
+server.post("/work", (req, res) =>
+  require("./work").work(req, res, User, Action)
 );
 
 server.post("/gym", (req, res) => require("./gym").gym(req, res, User, Action));
@@ -1101,7 +1123,7 @@ server.post("/chat", async (req, res) => {
       res.json(chat);
     });
   } else {
-    res.json({ response: "invalid token" });
+    res.json({ response: getText("invalidUser") });
   }
 });
 
@@ -1217,7 +1239,7 @@ server.get("/me", (req, res) => {
     !isNaN(Number(req.query.token)) ||
     req.query.token.length < 64*/
 
-    return res.json({ success: false, response: "Geen correct token gegeven" });
+    return res.json({ success: false, response: getText("noToken") });
   }
 
   User.findOne({
@@ -1272,7 +1294,7 @@ server.get("/me", (req, res) => {
           sendMessageAndPush(
             { id: null, name: "(System)" },
             user,
-            `Je rang is opgehoogd naar ${getRank(user.rank, "rankname")}.`,
+            getText("yourRankIncreasedTo", getRank(user.rank, "rankname")),
             Message,
             true
           );
@@ -1351,21 +1373,23 @@ server.post("/forgotPassword", async (req, res) => {
   if (user) {
     const forgotPasswordToken = Math.round(Math.random() * 999999999);
 
+    getText = getTextFunction(user.locale);
+
     const msg = {
       to: email,
       from: EMAIL_FROM,
-      subject: "Wachtwoord resetten mastercrimez.nl",
-      text: `Klik op de link om je wachtwoord te resetten: https://mastercrimez.nl/#/RecoverPassword/${forgotPasswordToken}`,
+      subject: getText("resetPasswordTitle"),
+      text: getText("resetPasswordText", forgotPasswordToken),
     };
 
     User.update({ forgotPasswordToken }, { where: { email: user.email } });
 
     //ES6
     sgMail.send(msg).then(() => {
-      res.json({ success: "Check je mail om je wachtwoord te resetten" });
+      res.json({ success: getText("resetPasswordSuccess") });
     }, console.error);
   } else {
-    res.json({ error: "Email niet gevonden" });
+    res.json({ error: getText("resetPasswordEmailNotFound") });
   }
 });
 
@@ -1373,32 +1397,38 @@ server.post("/updateToken", async (req, res) => {
   const { loginToken, newLoginToken } = req.body;
 
   if (!loginToken) {
-    return res.json({ response: "No token given" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    return res.json({ response: "No user found" });
+    return res.json({ response: getText("invalidUser") });
   }
 
+  getText = getTextFunction(user.locale);
+
   if (!newLoginToken) {
-    return res.json({ response: "no new login token given" });
+    return res.json({ response: getText("noNewLoginToken") });
   }
 
   if (newLoginToken.length < 15) {
-    return res.json({ response: "Token too short" });
+    return res.json({ response: getText("tokenTooShort") });
   }
 
   const already = await User.findOne({ where: { loginToken: newLoginToken } });
   if (already) {
-    return res.json({ response: "already" });
+    return res.json({ response: getText("already") });
   }
 
   User.update({ loginToken: String(newLoginToken) }, { where: { loginToken } });
 
-  console.log({ response: "Success", success: true, token: newLoginToken });
-  return res.json({ response: "Success", success: true });
+  console.log({
+    response: getText("success"),
+    success: true,
+    token: newLoginToken,
+  });
+  return res.json({ response: getText("success"), success: true });
 });
 
 server.post("/forgotPassword2", async (req, res) => {
@@ -1410,9 +1440,9 @@ server.post("/forgotPassword2", async (req, res) => {
   );
 
   if (updated[0] === 1) {
-    res.json({ success: "Wachtwoord gereset" });
+    res.json({ success: getText("forgotPasswordSuccess") });
   } else {
-    res.json({ error: "Email/token niet gevonden" });
+    res.json({ error: getText("forgotPasswordError") });
   }
 });
 
@@ -1425,19 +1455,17 @@ function randomEntry(array) {
   return array[Math.floor(array.length * Math.random())];
 }
 
-const getAvailableName = async () => {
+const getAvailableName = async (locale) => {
   const names = [
-    "butje",
-    "sukkel",
-    "gozer",
-    "gappie",
-    "gabber",
-    "gastje",
-    "gast",
-    "gemenerik",
-    "gek",
-    "crimert",
+    "dork",
+    "criminal",
+    "dude",
+    "guest",
     "gangster",
+    "buddy",
+    "pimp",
+    "meany",
+    "crazy",
   ];
   const name = randomEntry(names);
   const number = Math.round(Math.random() * 1000);
@@ -1447,7 +1475,7 @@ const getAvailableName = async () => {
   const already = await User.findOne({ where: { name: fullname } });
 
   if (already) {
-    return getAvailableName();
+    return getAvailableName(locale);
   }
   return fullname;
 };
@@ -1457,7 +1485,7 @@ server.post("/signupEmail", async (req, res) => {
   console.log("SIGNUPEMAIL");
 
   if (!loginToken || !email) {
-    res.json({ error: "Ongeldige invoer" });
+    res.json({ error: getText("invalidInput") });
     return;
   }
 
@@ -1468,14 +1496,16 @@ server.post("/signupEmail", async (req, res) => {
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ error: "Ongeldig token" });
+    res.json({ error: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (emailAlready) {
-    res.json({ error: "Email is al in gebruik" });
+    res.json({ error: getText("signupEmailAlreadyInUse") });
   } else if (!isEmail(email)) {
-    res.json({ error: "Dat is geen geldig emailadres" });
+    res.json({ error: getText("signupEmailNotValid") });
   } else {
     const activationToken = Math.round(Math.random() * 999999999);
 
@@ -1486,15 +1516,15 @@ server.post("/signupEmail", async (req, res) => {
     const msg = {
       to: email,
       from: EMAIL_FROM,
-      subject: "Email bevestigen mastercrimez.nl",
-      html: `Klik <a href="https://mastercrimez.nl/#/SignupEmail2/${activationToken}">hier</a> om je aanmelding te voltooien.`,
+      subject: getText("signupEmailConfirmTitle"),
+      html: getText("signupEmailHtml", activationToken),
     };
 
     //ES6
     sgMail
       .send(msg)
       .then((response) => {
-        res.json({ success: "Check je mail om je account te activeren" });
+        res.json({ success: getText("signupEmailSuccess") });
       }, console.error)
       .catch((e) => console.log(e));
   }
@@ -1513,30 +1543,33 @@ server.post("/activate", async (req, res) => {
     );
 
     if (user[0] === 1) {
-      res.json({ response: "Gelukt" });
+      res.json({ response: getText("success") });
     } else {
-      res.json({ response: "Deze link is ongeldig" });
+      res.json({ response: getText("invalidLink") });
     }
   }
 });
 
 server.post("/updateProfile", async (req, res) => {
-  const { loginToken, image, backfire, bio, pushtoken } = req.body;
+  const { loginToken, image, backfire, bio, pushtoken, locale } = req.body;
 
   if (!loginToken) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
   let update = {};
 
+  if (locale) {
+    update.locale = locale;
+  }
   if (image) {
     update.image = image;
   }
@@ -1560,23 +1593,24 @@ server.post("/updateProfile", async (req, res) => {
 });
 
 server.post("/setPhone", async (req, res) => {
-  console.log("SET PHOEN");
   const { phone, token } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (!phone) {
-    res.json({ response: "Geef een telefoonnummer op" });
+    res.json({ response: getText("setPhoneNoPhone") });
     return;
   }
 
@@ -1584,8 +1618,7 @@ server.post("/setPhone", async (req, res) => {
 
   if (phone.length < 12 || !phone.match(validNumber)) {
     res.json({
-      response:
-        "Geef een valide telefoonnummer op, inclusief landcode (dus beginnend met +316)",
+      response: getText("setPhoneInvalid"),
     });
     return;
   }
@@ -1603,7 +1636,7 @@ server.post("/setPhone", async (req, res) => {
 
   twilioClient.messages
     .create({
-      body: `Je MasterCrimeZ verificatiecode is ${phoneVerificationCode}`,
+      body: getText("setPhoneSMS", phoneVerificationCode),
       to: phone,
       from: process.env.TWILIO_PHONE_FROM,
     })
@@ -1616,7 +1649,7 @@ server.post("/setPhone", async (req, res) => {
     .catch((e) => {
       console.log("error", e);
 
-      res.json({ success: false, response: "Ongeldig telefoonnummer" });
+      res.json({ success: false, response: getText("setPhoneInvalid") });
     });
 });
 
@@ -1624,7 +1657,7 @@ server.post("/verifyPhone", async (req, res) => {
   const { phone, code } = req.body;
 
   if (!code || !phone) {
-    res.json({ response: "Geef een code op" });
+    res.json({ response: getText("verifyPhoneInputError") });
     return;
   }
 
@@ -1644,15 +1677,15 @@ server.post("/verifyPhone", async (req, res) => {
       { where: { id: verifiedUser.id } }
     );
 
-    console.log("updated", updated);
+    // console.log("updated", updated);
 
     return res.json({
       success: true,
       token: verifiedUser.loginToken,
-      response: "Gelukt.",
+      response: getText("success"),
     });
   } else {
-    return res.json({ success: false, response: "Verkeerde code" });
+    return res.json({ success: false, response: getText("invalidCode") });
   }
 });
 
@@ -1660,28 +1693,28 @@ server.post("/updateName", async (req, res) => {
   const { loginToken, name } = req.body;
 
   if (!loginToken) {
-    return res.json({ response: "Geen token gegeven" });
+    return res.json({ response: getText("noToken") });
   }
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
   if (!name) {
-    res.json({ response: "Deze naam is te kort" });
+    res.json({ response: getText("updateNameNameTooShort") });
     return;
   }
   var realname = name.replace(/[^a-z0-9]/gi, "");
 
   if (realname.length < 2) {
-    res.json({ response: "Deze naam is te kort" });
+    res.json({ response: getText("updateNameNameTooShort") });
     return;
   }
 
   if (realname.length > 20) {
-    res.json({ response: "Deze naam is te lang" });
+    res.json({ response: getText("updateNameNameTooLong") });
     return;
   }
 
@@ -1695,7 +1728,7 @@ server.post("/updateName", async (req, res) => {
   });
 
   if (already) {
-    res.json({ response: "Deze naam is al bezet." });
+    res.json({ response: getText("updateNameNameInUse") });
     return;
   }
 
@@ -1730,7 +1763,7 @@ server.post("/updateName", async (req, res) => {
         return updated;
       });
 
-    res.json({ response: "Naam veranderd" });
+    res.json({ response: getText("updateNameSuccess") });
   }
 });
 
@@ -1743,12 +1776,12 @@ server.post("/changePassword", async (req, res) => {
       { where: { loginToken: token } }
     );
     if (user[0] === 1) {
-      res.json({ success: "Wachtwoord veranderd" });
+      res.json({ success: getText("passwordChanged") });
     } else {
-      res.json({ error: "No correct token" });
+      res.json({ error: getText("invalidToken") });
     }
   } else {
-    res.json({ error: "No correct token" });
+    res.json({ error: getText("invalidToken") });
   }
 });
 
@@ -1763,12 +1796,14 @@ server.post("/login", async (req, res) => {
   });
 
   if (user) {
+    getText = getTextFunction(user.locale);
+
     res.json({
       loginToken: user.loginToken,
-      success: `Je bent ingelogd op ${user.name}`,
+      success: getText("loginSuccess", user.name),
     });
   } else {
-    res.json({ error: "Email/wachtwoord komen niet overeen" });
+    res.json({ error: getText("loginFail") });
   }
 });
 
@@ -1777,7 +1812,7 @@ const zcaptcha = require("./captcha");
 const getCaptcha = async (req, res) => {
   const { loginToken } = req.query;
   if (!loginToken) {
-    return res.json({ response: "No token given" });
+    return res.json({ response: getText("noToken") });
   }
   const code = Math.random().toString().substr(2, 4);
   const image = await zcaptcha.getCaptcha(code, undefined, "transparent");

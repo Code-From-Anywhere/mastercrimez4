@@ -9,6 +9,7 @@ import {
   AppState,
   Dimensions,
   Linking,
+  NativeModules,
   Platform,
   Text,
   TouchableOpacity,
@@ -19,7 +20,9 @@ import T from "../components/T";
 import { leftMenu, rightMenu } from "../Menus";
 import { post } from "../Util";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
+const itemWidth = width / 4;
+const amountOfItems = Math.floor((height - 200) / itemWidth) * 4;
 
 class Home extends Component {
   state = {
@@ -34,6 +37,7 @@ class Home extends Component {
     AppState.addEventListener("change", this._handleAppStateChange);
 
     this.turnOnNotifications();
+    this.sendLanguage();
   }
 
   componentWillUnmount() {
@@ -43,9 +47,26 @@ class Home extends Component {
   _handleAppStateChange = (nextAppState) => {
     if (nextAppState === "active") {
       this.turnOnNotifications();
+      this.sendLanguage();
     }
   };
 
+  sendLanguage = () => {
+    const { device, me } = this.props.screenProps;
+
+    const locale =
+      Platform.OS === "ios"
+        ? NativeModules.SettingsManager.settings.AppleLocale ||
+          NativeModules.SettingsManager.settings.AppleLanguages[0]
+        : NativeModules.I18nManager.localeIdentifier;
+
+    if (locale !== me?.locale) {
+      post("updateProfile", {
+        locale,
+        loginToken: device.loginToken,
+      });
+    }
+  };
   turnOnNotifications = async () => {
     const { device, me } = this.props.screenProps;
     if (ExpoConstants.isDevice && Platform.OS !== "web") {
@@ -90,6 +111,7 @@ class Home extends Component {
         device: { theme },
       },
     } = this.props;
+
     return (
       <View
         style={{
@@ -103,15 +125,18 @@ class Home extends Component {
         {item.map((menu, index) => {
           const TheIcon = Icon[menu.iconType];
           return (
-            <View key={`i${index}`} style={{ width: 90, alignItems: "center" }}>
+            <View
+              key={`i${index}`}
+              style={{ width: itemWidth, alignItems: "center" }}
+            >
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
                   borderColor: "#000",
                   backgroundColor: theme.secondary,
                   borderRadius: 10,
-                  width: 70,
-                  height: 70,
+                  width: itemWidth - 25,
+                  height: itemWidth - 25,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -131,7 +156,7 @@ class Home extends Component {
                 {TheIcon && (
                   <TheIcon
                     name={menu.icon}
-                    size={40}
+                    size={(itemWidth - 25) / 2}
                     color={theme.secondaryText}
                   />
                 )}
@@ -195,7 +220,13 @@ class Home extends Component {
           ref={(c) => {
             this._carousel = c;
           }}
-          data={[filtered.slice(0, 16), filtered.slice(16, filtered.length)]}
+          data={[
+            filtered.slice(0, amountOfItems),
+            filtered.slice(amountOfItems, amountOfItems * 2),
+            amountOfItems * 2 > filtered.length
+              ? undefined
+              : filtered.slice(amountOfItems * 2, filtered.length),
+          ].filter((x) => !!x)}
           renderItem={this._renderItem}
           sliderWidth={width}
           onSnapToItem={(index) => this.setState({ activeSlide: index })}

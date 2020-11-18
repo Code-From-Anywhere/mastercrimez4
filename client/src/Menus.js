@@ -7,6 +7,7 @@ export const leftMenu = (me, theme) => {
   );
 
   const crimeSeconds = Math.ceil((me?.crimeAt + 60000 - Date.now()) / 1000);
+  const bunkerSeconds = Math.ceil((me?.bunkerAt - Date.now()) / 1000);
 
   const attackSeconds = Math.ceil((me?.attackAt + 120000 - Date.now()) / 1000);
 
@@ -19,6 +20,7 @@ export const leftMenu = (me, theme) => {
     (me?.junkiesAt + 120000 - Date.now()) / 1000
   );
   const hoerenSeconds = Math.ceil((me?.hoerenAt + 120000 - Date.now()) / 1000);
+  const workSeconds = Math.ceil((me?.workAt - Date.now()) / 1000);
   return [
     {
       isHeader: true,
@@ -50,7 +52,6 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "Ionicons",
       icon: "md-cash",
-
       text: "Misdaden",
       to: "Crimes",
       component:
@@ -108,7 +109,6 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "Ionicons",
       icon: "md-cash",
-
       text: "Georganiseerde Misdaad",
       to: "OrganisedCrime",
       component:
@@ -210,6 +210,27 @@ export const leftMenu = (me, theme) => {
     },
 
     {
+      iconType: "AntDesign",
+      icon: "tool",
+
+      text: "Werken",
+      to: "Work",
+      component:
+        workSeconds > 0 ? (
+          <CountDown
+            style={{ marginLeft: 10 }}
+            until={workSeconds}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
+            onFinish={() => {}}
+            size={8}
+            timeToShow={["M", "S"]}
+            timeLabels={{ m: null, s: null }}
+          />
+        ) : null,
+    },
+
+    {
       iconType: "FontAwesome",
       icon: "bars",
 
@@ -254,9 +275,21 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "MaterialCommunityIcons",
       icon: "warehouse",
-
       text: "Schuilkelder",
       to: "Bunker",
+      component:
+        bunkerSeconds > 0 ? (
+          <CountDown
+            style={{ marginLeft: 10 }}
+            until={bunkerSeconds}
+            digitStyle={{ backgroundColor: theme.secondary }}
+            digitTxtStyle={{ color: theme.secondaryText }}
+            onFinish={() => {}}
+            size={8}
+            timeToShow={["M", "S"]}
+            timeLabels={{ m: null, s: null }}
+          />
+        ) : null,
     },
 
     {
@@ -518,24 +551,8 @@ export const rightMenu = (me, theme) => [
   {
     iconType: "FontAwesome",
     icon: "bank",
-    text: "Credits kopen",
-    to: "Mollie",
-  },
-
-  {
-    iconType: "FontAwesome5",
-    icon: "piggy-bank",
-
-    text: "Creditshop",
-    to: "Creditshop",
-  },
-
-  {
-    iconType: "AntDesign",
-    icon: "message1",
-
-    text: "Super bericht",
-    to: "SuperMessage",
+    text: "VIP",
+    to: "VIP",
   },
 
   ...adminMenu(me),

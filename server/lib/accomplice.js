@@ -1,8 +1,10 @@
 const { Sequelize } = require("sequelize");
-const { getRank } = require("./util");
+const { getRank, getTextFunction } = require("./util");
 
 const RANK_GODFATHER = 11;
 const RANK_UNLIMITED_DON = 16;
+
+let getText = getTextFunction();
 
 const setAccomplice = async (req, res, User) => {
   const {
@@ -14,16 +16,18 @@ const setAccomplice = async (req, res, User) => {
   } = req.body;
 
   if (!loginToken) {
-    res.json({ response: "Give a token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Invalid user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
+
+  getText = getTextFunction(user.locale);
 
   const rank = getRank(user.rank, "number");
 
@@ -48,14 +52,14 @@ const setAccomplice = async (req, res, User) => {
     ) {
       update.accomplice = accompliceUser.name;
     } else {
-      res.json({ response: "Ongeldige naam" });
+      res.json({ response: getText("invalidName") });
       return;
     }
   }
 
   if (accomplice2) {
     if (rank < RANK_GODFATHER) {
-      res.json({ response: "Je rang is niet hoog genoeg" });
+      res.json({ response: getText("rankTooLow") });
       return;
     }
 
@@ -77,14 +81,14 @@ const setAccomplice = async (req, res, User) => {
     ) {
       update.accomplice2 = accompliceUser.name;
     } else {
-      res.json({ response: "Ongeldige naam" });
+      res.json({ response: getText("invalidName") });
       return;
     }
   }
 
   if (accomplice3) {
     if (rank < RANK_UNLIMITED_DON) {
-      res.json({ response: "Je rang is niet hoog genoeg" });
+      res.json({ response: getText("rankTooLow") });
       return;
     }
     const accompliceUser = await User.findOne({
@@ -105,14 +109,14 @@ const setAccomplice = async (req, res, User) => {
     ) {
       update.accomplice3 = accompliceUser.name;
     } else {
-      res.json({ response: "Ongeldige naam" });
+      res.json({ response: getText("invalidName") });
       return;
     }
   }
 
   if (accomplice4) {
     if (rank < RANK_UNLIMITED_DON) {
-      res.json({ response: "Je rang is niet hoog genoeg" });
+      res.json({ response: getText("rankTooLow") });
       return;
     }
     const accompliceUser = await User.findOne({
@@ -133,7 +137,7 @@ const setAccomplice = async (req, res, User) => {
     ) {
       update.accomplice4 = accompliceUser.name;
     } else {
-      res.json({ response: "Ongeldige naam" });
+      res.json({ response: getText("invalidName") });
       return;
     }
   }
@@ -141,7 +145,7 @@ const setAccomplice = async (req, res, User) => {
   update.onlineAt = Date.now();
 
   const updated = await User.update(update, { where: { loginToken } });
-  res.json({ response: "Gelukt" });
+  res.json({ response: getText("success") });
 };
 
 module.exports = { setAccomplice };

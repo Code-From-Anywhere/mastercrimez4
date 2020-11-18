@@ -2,6 +2,26 @@ const fetch = require("node-fetch");
 
 const needCaptcha = () => Math.round(Math.random() * 50) === 1;
 
+const replaceAll = (string, search, replacement) =>
+  string.split(search).join(replacement);
+const getTextFunction = (userLocale) => (key, ...args) => {
+  let languageObject = require("../locale/nl.json"); //change default to 'en' later
+
+  if (userLocale === "nl") {
+    languageObject = require("../locale/nl.json");
+  }
+
+  let string =
+    languageObject[key] ||
+    `Couldn't find key '${key}' for locale '${userLocale}'`;
+
+  args.forEach((arg, index) => {
+    string = replaceAll(string, `$${index + 1}`, arg);
+  });
+
+  return string;
+};
+
 const NUM_ACTIONS_UNTIL_VERIFY = 20;
 
 const publicUserFields = [
@@ -307,6 +327,7 @@ module.exports = {
   getStrength,
   sendMessageAndPush,
   saveImageIfValid,
+  getTextFunction,
   needCaptcha,
   publicUserFields,
   NUM_ACTIONS_UNTIL_VERIFY,
