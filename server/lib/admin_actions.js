@@ -1,27 +1,31 @@
-const { publicUserFields } = require("./util");
+const { publicUserFields, getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const actions = async (req, res, User, sequelize) => {
   const { token, userId } = req.query;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   if (!userId) {
-    res.json({ response: "Geen id" });
+    res.json({ response: getText("noId") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.level < 2) {
-    res.json({ response: "Geen toegang" });
+    res.json({ response: getText("noAccess") });
     return;
   }
 
@@ -30,7 +34,7 @@ const actions = async (req, res, User, sequelize) => {
     where: { id: userId },
   });
   if (!user2) {
-    return res.json({ response: "User niet gevonden" });
+    return res.json({ response: getText("userNotFound") });
   }
 
   const query = `SELECT * FROM actions WHERE userId=${userId} AND timestamp > ${

@@ -1,34 +1,38 @@
-const { needCaptcha } = require("./util");
+const { needCaptcha, getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const bunker = async (req, res, User, Action) => {
   const { token, option, captcha } = req.body;
 
   if (option < 0 || option > 3 || isNaN(option)) {
-    res.json({ response: "Ongeldige keuze" });
+    res.json({ response: getText("invalidChoice") });
     return;
   }
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    getText = getTextFunction(user.locale);
+
     if (user.jailAt > Date.now()) {
-      return res.json({ response: "Je zit in de bajes." });
+      return res.json({ response: getText("youreInJail") });
     }
 
     if (user.health === 0) {
-      return res.json({ response: "Je bent dood." });
+      return res.json({ response: getText("youreDead") });
     }
 
     if (user.reizenAt > Date.now()) {
-      return res.json({ response: "Je bent aan het reizen." });
+      return res.json({ response: getText("youreTraveling") });
     }
     if (user.needCaptcha && Number(captcha) !== user.captcha) {
-      return res.json({ response: "Verkeerde code!" });
+      return res.json({ response: getText("wrongCode") });
     }
 
     if (user.bunkerAt < Date.now()) {
@@ -54,18 +58,18 @@ const bunker = async (req, res, User, Action) => {
         });
 
         res.json({
-          response: `Je bent ondergedoken.`,
+          response: getText("bunkerSuccess"),
         });
       } else {
-        res.json({ response: "Je hebt niet genoeg geld contant" });
+        res.json({ response: getText("notEnoughCash", cost) });
       }
     } else {
       res.json({
-        response: "Je zit al in de schuilkelder.",
+        response: getText("bunkerAlready"),
       });
     }
   } else {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 

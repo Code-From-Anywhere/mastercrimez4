@@ -1,27 +1,32 @@
 const cities = require("../assets/airport.json");
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const airport = async (req, res, User, Action) => {
   const { token, to } = req.body;
 
   if (!cities.includes(to)) {
-    res.json({ response: "Deze stad is ongeldig" });
+    res.json({ response: getText("invalidCity") });
     return;
   }
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.airplane === 0) {
-    res.json({ response: "Je hebt geen vliegtuig!" });
+    res.json({ response: getText("noAirplane") });
     return;
   }
 
@@ -32,7 +37,7 @@ const airport = async (req, res, User, Action) => {
 
   if (user.cash < cost) {
     res.json({
-      response: `Je hebt niet genoeg geld contant, het kost ${cost}`,
+      response: getText("notEnoughCash", cost),
     });
     return;
   }
@@ -54,7 +59,7 @@ const airport = async (req, res, User, Action) => {
   });
 
   res.json({
-    response: `Je reist nu met je vliegtuig naar ${to}. Het duurt ${time} seconden.`,
+    response: getText("airportSuccess", to, time),
   });
 };
 

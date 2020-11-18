@@ -1,5 +1,8 @@
 const items = require("../assets/creditshop.json");
 const { Op } = require("sequelize");
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const creditshop = async (req, res, User) => {
   res.json({ items });
@@ -8,20 +11,22 @@ const creditshop = async (req, res, User) => {
 const creditshopBuy = async (req, res, User) => {
   const { loginToken, type } = req.body;
   if (!loginToken) {
-    return res.json({ response: "Geen token" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken } });
   if (user) {
+    getText = getTextFunction(user.locale);
+
     const item = items.find((i) => i.id === type);
 
     if (!item) {
-      res.json({ response: "Dat ding bestaat niet" });
+      res.json({ response: getText("itemDoesntExist") });
       return;
     }
 
     if (item.kosten > user.credits) {
-      res.json({ response: "Je hebt niet genoeg credits" });
+      res.json({ response: getText("notEnoughCredits") });
       return;
     }
 
@@ -34,12 +39,14 @@ const creditshopBuy = async (req, res, User) => {
     );
 
     if (updated === 1) {
-      res.json({ response: item.gekochttext });
+      const locale = getLocale(user.locale);
+
+      res.json({ response: item.gekochttext[locale] });
     } else {
-      res.json({ response: "Er ging iets fout" });
+      res.json({ response: getText("somethingWentWrong") });
     }
   } else {
-    res.json({ response: "Kan deze gebruiker niet vinden" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 

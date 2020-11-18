@@ -1,6 +1,9 @@
 const { Op } = require("sequelize");
-const { sendMessageAndPush } = require("./util");
+const { sendMessageAndPush, getTextFunction } = require("./util");
 const { Sequelize } = require("sequelize");
+
+let getText = getTextFunction();
+
 const donate = async (req, res, User, Message, Action) => {
   const { loginToken, to, amount, type } = req.body;
   const user = await User.findOne({ where: { loginToken } });
@@ -14,23 +17,13 @@ const donate = async (req, res, User, Message, Action) => {
     "gamepoints",
   ];
 
-  const typeNames = {
-    cash: "contant",
-    bank: "bankgeld",
-    bullets: "kogels",
-    hoeren: "hoeren",
-    junkies: "junkies",
-    wiet: "wiet",
-    gamepoints: "gamepoints",
-  };
-
   if (amount <= 0 || isNaN(amount)) {
-    res.json({ response: "Ongeldige hoeveelheid" });
+    res.json({ response: getText("invalidAmount") });
     return;
   }
 
   if (!validTypes.includes(type)) {
-    res.json({ response: "Ongeldig type" });
+    res.json({ response: getText("invalidType") });
     return;
   }
 
@@ -39,20 +32,31 @@ const donate = async (req, res, User, Message, Action) => {
   });
   if (isNotVerified) {
     //NB: Verify instantly here because you can otherwise send stuff to your main
-    return res.json({ response: "Je moet je account eerst verifiëren!" });
+    return res.json({ response: getText("accountNotVerified") });
   }
 
   if (user) {
+    getText = getTextFunction(user.locale);
+    const typeNames = {
+      cash: getText("cash"),
+      bank: getText("bankMoney"),
+      bullets: getText("bullets"),
+      hoeren: getText("hoeren"),
+      junkies: getText("junkiesCurrency"),
+      wiet: getText("wiet"),
+      gamepoints: getText("gamepoints"),
+    };
+
     if (user.jailAt > Date.now()) {
-      return res.json({ response: "Je zit in de bajes." });
+      return res.json({ response: getText("youreInJail") });
     }
 
     if (user.health === 0) {
-      return res.json({ response: "Je bent dood." });
+      return res.json({ response: getText("youreDead") });
     }
 
     if (user.reizenAt > Date.now()) {
-      return res.json({ response: "Je bent aan het reizen." });
+      return res.json({ response: getText("youreTraveling") });
     }
 
     if (user[type] >= amount) {
@@ -79,7 +83,12 @@ const donate = async (req, res, User, Message, Action) => {
                 { where: { id: user2.id } }
               );
             }
-            const message = `${user.name} heeft jou ${amount2} ${typeName} overgemaakt`;
+            const message = getText(
+              "donateMessage",
+              user.name,
+              amount2,
+              typeName
+            );
 
             Action.create({
               userId: user.id,
@@ -89,21 +98,21 @@ const donate = async (req, res, User, Message, Action) => {
 
             sendMessageAndPush(user, user2, message, Message, true);
 
-            res.json({ response: "Overgemaakt." });
+            res.json({ response: getText("donateSuccess") });
           } else {
-            res.json({ response: "Deze speler is dood" });
+            res.json({ response: getText("thisPlayerIsDead") });
           }
         } else {
-          res.json({ response: "Je kan niet naar jezelf overmaken" });
+          res.json({ response: getText("cantDonateToYourself") });
         }
       } else {
-        res.json({ response: "Deze speler bestaat niet" });
+        res.json({ response: getText("playerDoesntExist") });
       }
     } else {
-      res.json({ response: "Je hebt niet genoeg" });
+      res.json({ response: getText("notEnough") });
     }
   } else {
-    res.json({ response: "Kan deze gebruiker niet vinden" });
+    res.json({ response: getText("cantFindPlayer") });
   }
 };
 

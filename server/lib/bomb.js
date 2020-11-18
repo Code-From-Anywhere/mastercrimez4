@@ -1,7 +1,9 @@
 const { Op, Sequelize } = require("sequelize");
-const { needCaptcha, sendMessageAndPush } = require("./util");
+const { needCaptcha, sendMessageAndPush, getTextFunction } = require("./util");
 
-const typeStrings = {
+let getText = getTextFunction();
+
+let typeStrings = {
   bulletFactory: "Kogelfabriek",
   casino: "Casino",
   landlord: "Huisjesmelker",
@@ -21,54 +23,68 @@ const bomb = async (req, res, sequelize, User, City, Message, Action) => {
   bombs = Math.round(Number(bombs));
 
   if (isNaN(bombs) || bombs <= 0) {
-    return res.json({ response: "Dat is geen geldig aantal" });
+    return res.json({ response: getText("invalidNumber") });
   }
   if (!loginToken) {
-    return res.json({ response: "Geen logintoken gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   if (!Object.keys(typeStrings).includes(type)) {
-    return res.json({ response: "Ongeldig type" });
+    return res.json({ response: getText("invalidType") });
   }
 
   const user = await User.findOne({ where: { loginToken } });
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
 
+  getText = getTextFunction(user.locale);
+
+  typeStrings = {
+    bulletFactory: getText("bulletFactory"),
+    casino: getText("casino"),
+    landlord: getText("landlord"),
+    junkies: getText("junkies"),
+    weaponShop: getText("weaponShop"),
+    rld: getText("rld"),
+    airport: getText("airport"),
+    estateAgent: getText("estateAgent"),
+    bank: getText("bank"),
+    jail: getText("jail"),
+    garage: getText("garage"),
+  };
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   if (user.bombAt + 300000 > Date.now()) {
+    const seconds = Math.round((user.bombAt + 300000 - Date.now()) / 1000);
     return res.json({
-      response: `Je moet nog ${Math.round(
-        (user.bombAt + 300000 - Date.now()) / 1000
-      )} seconden wachten voor je weer kan bombarderen`,
+      response: getText("waitForBomb", seconds),
     });
   }
 
   if (user.needCaptcha && Number(captcha) !== user.captcha) {
-    return res.json({ response: "Verkeerde code!" });
+    return res.json({ response: getText("wrongCode") });
   }
 
   const city = await City.findOne({ where: { city: user.city } });
 
   if (!city) {
-    return res.json({ response: "Stad niet gevonden" });
+    return res.json({ response: getText("cityNotFound") });
   }
 
   if (bombs > user.airplane * 5) {
     return res.json({
-      response: "Zoveel bommen kan je niet werpen met dit vliegtuig",
+      response: getText("tooManyBombs"),
     });
   }
 
@@ -76,7 +92,7 @@ const bomb = async (req, res, sequelize, User, City, Message, Action) => {
 
   if (price > user.cash) {
     res.json({
-      response: `Je hebt niet genoeg geld contant, het kost €${price},-`,
+      response: getText("notEnoughCash", price),
     });
     return;
   }
@@ -100,7 +116,7 @@ const bomb = async (req, res, sequelize, User, City, Message, Action) => {
   );
 
   if (!updated) {
-    return res.json({ response: "Er ging iets fout" });
+    return res.json({ response: getText("somethingWentWrong") });
   }
 
   Action.create({
@@ -120,8 +136,8 @@ const bomb = async (req, res, sequelize, User, City, Message, Action) => {
   let extraText = "";
   let extraMessage = "";
   if (city[`${type}Damage`] + damage === 100) {
-    extraText = `Je hebt de ${typeStrings[type]} overgenomen!`;
-    extraMessage = `${user.name} heeft jouw ${typeStrings[type]} overgenomen!`;
+    extraText = getText("bombExtraText", typeStrings[type]);
+    extraMessage = getText("bombExtraMessage", user.name, typeStrings[type]);
     City.update(
       {
         [`${type}Owner`]: user.name,
@@ -137,7 +153,16 @@ const bomb = async (req, res, sequelize, User, City, Message, Action) => {
       sendMessageAndPush(
         user,
         user2,
-        `${user.name} gooide ${bombs} bommen op jouw ${typeStrings[type]} in ${city.city}. Dit heeft jouw ${typeStrings[type]} ${damage}% schade aangebracht, ook stal ${user.name} €${stolenMoney},-. ${extraMessage}`,
+        getText(
+          "bombMessage",
+          user.name,
+          bombs,
+          typeStrings[type],
+          city.city,
+          damage,
+          stolenMoney,
+          extraMessage
+        ),
         Message,
         true
       );
@@ -145,11 +170,16 @@ const bomb = async (req, res, sequelize, User, City, Message, Action) => {
   }
   //
   res.json({
-    response: `Je gooide ${bombs} bommen op de ${typeStrings[type]} van ${
-      city.city
-    } van ${
-      city[`${type}Owner`]
-    }. Je bracht hiermee ${damage}% schade aan, en stal €${stolenMoney},-. ${extraText}`,
+    response: getText(
+      "bombSuccess",
+      bombs,
+      typeStrings[type],
+      city.city,
+      city[`${type}Owner`],
+      damage,
+      stolenMoney,
+      extraText
+    ),
   });
 };
 

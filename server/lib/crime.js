@@ -1,32 +1,41 @@
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
-const { needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
+const {
+  needCaptcha,
+  NUM_ACTIONS_UNTIL_VERIFY,
+  getTextFunction,
+} = require("./util");
+
+let getText = getTextFunction();
 
 const crime = async (req, res, User, Action) => {
   const { token, option, captcha } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   if (!option || option <= 0 || option > 15) {
-    res.json({ response: "Ongeldige invoer" + option });
+    res.json({ response: getText("invalidOption", option) });
     return;
   }
 
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
+
   if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
-    return res.json({ response: "Je moet je account eerst verifiëren!" });
+    return res.json({ response: getText("accountNotVerified") });
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    getText = getTextFunction(user.locale);
+
     if (user.needCaptcha && Number(captcha) !== user.captcha) {
-      return res.json({ response: "Verkeerde code!" });
+      return res.json({ response: getText("wrongCode") });
     }
     if (user.crimeAt + 60000 < Date.now()) {
       const kans = Math.round((user.rank + 30) / (option * option));
@@ -35,15 +44,15 @@ const crime = async (req, res, User, Action) => {
       const random = Math.ceil(Math.random() * 100);
 
       if (user.jailAt > Date.now()) {
-        return res.json({ response: "Je zit in de bajes." });
+        return res.json({ response: getText("youreInJail") });
       }
 
       if (user.health === 0) {
-        return res.json({ response: "Je bent dood." });
+        return res.json({ response: getText("youreDead") });
       }
 
       if (user.reizenAt > Date.now()) {
-        return res.json({ response: "Je bent aan het reizen." });
+        return res.json({ response: getText("youreTraveling") });
       }
 
       const [updated] = await User.update(
@@ -63,7 +72,7 @@ const crime = async (req, res, User, Action) => {
       );
 
       if (!updated) {
-        return res.json({ response: "Kon jouw user niet updaten" });
+        return res.json({ response: getText("couldntUpdateUser") });
       }
 
       Action.create({
@@ -98,9 +107,7 @@ const crime = async (req, res, User, Action) => {
           { where: { loginToken: token } }
         );
 
-        res.json({
-          response: `Gelukt. Je hebt €${stolen},- gejat`,
-        });
+        res.json({ response: getText("crimeSuccess", stolen) });
       } else {
         const random2 = Math.ceil(Math.random() * 100);
 
@@ -111,22 +118,19 @@ const crime = async (req, res, User, Action) => {
             { where: { id: user.id } }
           );
           res.json({
-            response: `Mislukt, je zit nu voor ${seconden} seconden in de gevangenis`,
+            response: getText("failAndJail", seconden),
           });
         } else {
-          res.json({ response: "Mislukt" });
+          res.json({ response: getText("fail") });
         }
       }
     } else {
-      res.json({
-        response: `Je moet een minuut wachten.  Nog ${Math.round(
-          (user.crimeAt + 60000 - Date.now()) / 1000
-        )} seconden`,
-      });
+      const sec = Math.round((user.crimeAt + 60000 - Date.now()) / 1000);
+      res.json({ response: getText("waitSeconds", sec) });
     }
     //create activity with all variables
   } else {
-    res.json({ response: "Invalid token" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 

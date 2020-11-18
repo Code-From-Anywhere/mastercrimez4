@@ -1,8 +1,10 @@
 const emails = require("../assets/emails.json");
 const sgMail = require("@sendgrid/mail");
+const { getTextFunction } = require("./util");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const EMAIL_FROM = "info@mastercrimez.nl";
 
+let getText = getTextFunction();
 function isEmail(email) {
   var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
@@ -12,24 +14,26 @@ const email = async (req, res, User) => {
   const { token, message, subject } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.level < 10) {
-    res.json({ response: "Geen toegang" });
+    res.json({ response: getText("noAccess") });
     return;
   }
 
   if (!message || !subject) {
-    res.json({ response: "Vul een onderwerp en bericht in" });
+    res.json({ response: getText("fillInSubjectAndMessage") });
     return;
   }
 
@@ -49,7 +53,7 @@ const email = async (req, res, User) => {
   //     }
   //   });
 
-  res.json({ response: "Gelukt" });
+  res.json({ response: getText("success") });
 };
 
 module.exports = { email };

@@ -4,6 +4,10 @@ const needCaptcha = () => Math.round(Math.random() * 50) === 1;
 
 const replaceAll = (string, search, replacement) =>
   string.split(search).join(replacement);
+
+const getLocale = (userLocale) => {
+  return "nl";
+};
 const getTextFunction = (userLocale) => (key, ...args) => {
   let languageObject = require("../locale/nl.json"); //change default to 'en' later
 
@@ -328,6 +332,7 @@ module.exports = {
   sendMessageAndPush,
   saveImageIfValid,
   getTextFunction,
+  getLocale,
   needCaptcha,
   publicUserFields,
   NUM_ACTIONS_UNTIL_VERIFY,

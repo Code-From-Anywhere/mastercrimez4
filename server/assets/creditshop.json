@@ -1,24 +1,24 @@
 [
   {
     "id": "1",
-    "kooptext": "koop €7,500,000 euro",
-    "gekochttext": "Je hebt er nu 7,5 miljoen bij op de bank!",
+    "kooptext": { "nl": "koop €7,500,000 euro" },
+    "gekochttext": { "nl": "Je hebt er nu 7,5 miljoen bij op de bank!" },
     "wat": "bank",
     "hoeveel": 7500000,
     "kosten": 300
   },
   {
     "id": "2",
-    "kooptext": "Krijg moordervaring erbij",
-    "gekochttext": "Je moordervaring is nu flink omhoog!",
+    "kooptext": { "nl": "Krijg moordervaring erbij" },
+    "gekochttext": { "nl": "Je moordervaring is nu flink omhoog!" },
     "wat": "strength",
     "hoeveel": 4000,
     "kosten": 300
   },
   {
     "id": "3",
-    "kooptext": "Koop 100.000 kogels",
-    "gekochttext": "Je hebt nu 100.000 kogels erbij!",
+    "kooptext": { "nl": "Koop 100.000 kogels" },
+    "gekochttext": { "nl": "Je hebt nu 100.000 kogels erbij!" },
     "wat": "bullets",
     "hoeveel": 100000,
     "kosten": 300
@@ -26,16 +26,16 @@
 
   {
     "id": "6",
-    "kooptext": "Krijg 3000 gamepoints",
-    "gekochttext": "Je hebt nu 3000 gamepoints erbij!",
+    "kooptext": { "nl": "Krijg 3000 gamepoints" },
+    "gekochttext": { "nl": "Je hebt nu 3000 gamepoints erbij!" },
     "wat": "gamepoints",
     "hoeveel": 3000,
     "kosten": 1000
   },
   {
     "id": "7",
-    "kooptext": "Ga wat rang omhoog!",
-    "gekochttext": "Je bent heel wat rang omhoog gegaan!",
+    "kooptext": { "nl": "Ga wat rang omhoog!" },
+    "gekochttext": { "nl": "Je bent heel wat rang omhoog gegaan!" },
     "wat": "rank",
     "hoeveel": 10000,
     "kosten": 500

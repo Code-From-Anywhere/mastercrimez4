@@ -1,15 +1,19 @@
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
+
 const channelsubs = async (req, res, User, ChannelSub, Channel) => {
   const { loginToken } = req.query;
 
   if (!loginToken) {
-    res.json({ response: "No token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Invalid user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
@@ -33,26 +37,28 @@ const pm = async (req, res, User, ChannelSub, Channel) => {
   const { loginToken, userId } = req.query;
 
   if (!loginToken) {
-    res.json({ response: "No token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   if (!userId || isNaN(userId)) {
-    res.json({ response: "No userId" });
+    res.json({ response: getText("noId") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Invalid user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
+
+  getText = getTextFunction(user.locale);
 
   const user2 = await User.findOne({ where: { id: userId } });
 
   if (!user2) {
-    res.json({ response: "Invalid user2" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
@@ -77,19 +83,19 @@ const pm = async (req, res, User, ChannelSub, Channel) => {
 const setRead = async (req, res, User, ChannelSub, Channel) => {
   const { loginToken, id } = req.body;
   if (!loginToken) {
-    res.json({ response: "No token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   if (!id || isNaN(id)) {
-    res.json({ response: "No id" });
+    res.json({ response: getText("noId") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Invalid user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 

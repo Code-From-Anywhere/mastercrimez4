@@ -1,26 +1,35 @@
-const { saveImageIfValid, publicUserFields } = require("./util");
+const {
+  saveImageIfValid,
+  publicUserFields,
+  getTextFunction,
+} = require("./util");
 const { Sequelize, Op } = require("sequelize");
+
+let getText = getTextFunction();
+
 const getChat = async (req, res, { User, ChannelSub, ChannelMessage }) => {
   const { loginToken, id } = req.query;
 
   if (!loginToken) {
-    res.json({ response: "No token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Invalid user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
+
+  getText = getTextFunction(user.locale);
 
   const isSub = await ChannelSub.findOne({
     where: { channelId: id, userId: user.id },
   });
 
   if (!isSub) {
-    res.json({ response: "You're not part of this chat" });
+    res.json({ response: getText("notSubbed") });
     return;
   }
 
@@ -42,33 +51,35 @@ const postChat = async (
   const { loginToken, cid, message, image } = req.body;
 
   if (!loginToken) {
-    res.json({ response: "No token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   if (!message) {
-    res.json({ response: "No message" });
+    res.json({ response: getText("noMessage") });
     return;
   }
 
   if (!cid) {
-    res.json({ response: "No cid" });
+    res.json({ response: getText("noChannelId") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Invalid user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
+
+  getText = getTextFunction(user.locale);
 
   const sub = await ChannelSub.findOne({
     where: { channelId: cid, userId: user.id },
   });
 
   if (!sub) {
-    res.json({ response: "You're not part of this chat" });
+    res.json({ response: getText("notSubbed") });
     return;
   }
 
@@ -99,7 +110,11 @@ const postChat = async (
 
   //   console.log(updateUnread, updateLastMessage);
 
-  res.json({ response: "Chat created", success: true, chatId: chatCreated.id });
+  res.json({
+    response: getText("postChatSuccess"),
+    success: true,
+    chatId: chatCreated.id,
+  });
 };
 
 module.exports = { getChat, postChat };

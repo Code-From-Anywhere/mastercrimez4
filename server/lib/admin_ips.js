@@ -1,20 +1,26 @@
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
+
 const ips = async (req, res, User, sequelize) => {
   const { token } = req.query;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.level < 2) {
-    res.json({ response: "Geen toegang" });
+    res.json({ response: getText("noAccess") });
     return;
   }
 
