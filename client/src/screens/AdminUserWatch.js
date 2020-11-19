@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import T from "../components/T";
-import { doOnce, get } from "../Util";
+import { doOnce, get, getTextFunction } from "../Util";
 const AdminUserWatch = ({
   navigation,
   screenProps,
@@ -10,6 +10,8 @@ const AdminUserWatch = ({
     device: { theme, loginToken },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
   const [ips, setIps] = useState([]);
   const [id, setId] = useState(null);
   const [user, setUser] = useState(null);
@@ -37,21 +39,27 @@ const AdminUserWatch = ({
   return (
     <ScrollView style={{ flex: 1, padding: 15 }}>
       {me?.level < 2 ? (
-        <T>Geen toegang</T>
+        <T>{getText("noAccess")}</T>
       ) : (
         <View style={{ flex: 1 }}>
           {id && user && actions && movements ? (
             <View>
               <TouchableOpacity onPress={() => setId(null)}>
                 <T bold style={{ marginBottom: 20 }}>
-                  Terug
+                  {getText("back")}
                 </T>
               </TouchableOpacity>
 
-              <T>Naam: {user.name}</T>
+              <T>
+                {getText("name")}: {user.name}
+              </T>
 
-              <T>Actions: {actions.length}</T>
-              <T>Movements: {movements.length}</T>
+              <T>
+                {getText("actions")}: {actions.length}
+              </T>
+              <T>
+                {getText("movements")}: {movements.length}
+              </T>
             </View>
           ) : (
             ips.map((ip, index) => {

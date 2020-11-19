@@ -6,6 +6,31 @@ import { useEffect } from "react";
 import { Alert, Dimensions, Platform, ScaledSize } from "react-native";
 import Constants from "./Constants";
 
+const replaceAll = (string, search, replacement) =>
+  string.split(search).join(replacement);
+
+export const getLocale = (userLocale) => {
+  return "nl";
+};
+export const getTextFunction = (userLocale) => (key, ...args) => {
+  //default
+  let languageObject = require("./locale/nl.json"); //change default to 'en' later
+
+  if (userLocale === "nl") {
+    languageObject = require("./locale/nl.json");
+  }
+
+  let string =
+    languageObject[key] ||
+    `Couldn't find key '${key}' for locale '${userLocale}'`;
+
+  args.forEach((arg, index) => {
+    string = replaceAll(string, `$${index + 1}`, arg);
+  });
+
+  return string;
+};
+
 export const numberFormat = (x) => {
   return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
@@ -136,27 +161,27 @@ export const getUserColor = (item, theme) =>
 
 const ranks = [
   {
-    rank: "Nietsnut",
+    rank: "Nobody",
     exp: 50,
   },
   {
-    rank: "Vandaal",
+    rank: "Vandal",
     exp: 150,
   },
   {
-    rank: "Jatter",
+    rank: "Little thief",
     exp: 300,
   },
   {
-    rank: "Dief",
+    rank: "Thief",
     exp: 500,
   },
   {
-    rank: "Autodief",
+    rank: "Carthief",
     exp: 800,
   },
   {
-    rank: "Crimineel",
+    rank: "Criminal",
     exp: 1200,
   },
   {
@@ -203,23 +228,23 @@ const ranks = [
 
 const strengthRanks = [
   {
-    rank: "Ultra-Slapjanus",
+    rank: "Very weak",
     exp: 50,
   },
   {
-    rank: "Slapjanus",
+    rank: "Weak",
     exp: 150,
   },
   {
-    rank: "Vreselijke Amateur",
+    rank: "Incredibly amature",
     exp: 300,
   },
   {
-    rank: "Amateur",
+    rank: "Amature",
     exp: 500,
   },
   {
-    rank: "Normaal",
+    rank: "Normal",
     exp: 800,
   },
   {
@@ -227,15 +252,15 @@ const strengthRanks = [
     exp: 1200,
   },
   {
-    rank: "Redelijk sterk",
+    rank: "A bit strong",
     exp: 1800,
   },
   {
-    rank: "Bokser",
+    rank: "Boxer",
     exp: 2800,
   },
   {
-    rank: "Sterk",
+    rank: "Strong",
     exp: 4000,
   },
   {
@@ -243,51 +268,51 @@ const strengthRanks = [
     exp: 5600,
   },
   {
-    rank: "Super sterk",
+    rank: "Super strong",
     exp: 7000,
   },
   {
-    rank: "Machtig",
+    rank: "Powerful",
     exp: 9000,
   },
   {
-    rank: "Erg machtig",
+    rank: "Very powerful",
     exp: 11000,
   },
   {
-    rank: "Super machtig",
+    rank: "Super powerful",
     exp: 14000,
   },
   {
-    rank: "Ultra deluxe machtig",
+    rank: "Ultra deluxe powerful",
     exp: 17000,
   },
   {
-    rank: "Onmenselijk sterk",
+    rank: "Inhumanly powerful",
     exp: 20000,
   },
   {
-    rank: "Robotachtig sterk",
+    rank: "Robotly powerful",
     exp: 25000,
   },
   {
-    rank: "Goddelijk",
+    rank: "Godly",
     exp: 30000,
   },
   {
-    rank: "Erg goddelijk",
+    rank: "Very godly",
     exp: 35000,
   },
   {
-    rank: "Super goddelijk",
+    rank: "Super godly",
     exp: 40000,
   },
   {
-    rank: "Ultra deluxe goddelijk",
+    rank: "Ultra deluxe godly",
     exp: 45000,
   },
   {
-    rank: "Beter dan Allah",
+    rank: "God damn strong",
     exp: 50000,
   },
   {

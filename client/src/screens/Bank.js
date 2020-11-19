@@ -10,7 +10,7 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { numberFormat, post } from "../Util";
+import { getTextFunction, numberFormat, post } from "../Util";
 
 class Bank extends Component {
   state = {
@@ -54,6 +54,8 @@ class Bank extends Component {
       },
     } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     const { to, amount, type, response } = this.state;
 
     return (
@@ -64,18 +66,18 @@ class Bank extends Component {
               {response.response}
             </Text>
           ) : null}
-          {this.keyValue("Contant", numberFormat(me?.cash), () =>
+          {this.keyValue(getText("cash"), numberFormat(me?.cash), () =>
             this.setState({ amount: String(me.cash) })
           )}
-          {this.keyValue("Bank", numberFormat(me?.bank), () =>
+          {this.keyValue(getText("bank"), numberFormat(me?.bank), () =>
             this.setState({ amount: String(me.bank) })
           )}
-          {this.keyValue("Rente", "5% per dag")}
+          {this.keyValue(getText("rent"), getText("rentAmount"))}
           <View>
             <TextInput
               placeholderTextColor={theme.secondaryTextSoft}
               style={style(theme).textInput}
-              placeholder="Hoeveelheid"
+              placeholder={getText("amount")}
               value={this.state.amount}
               onChangeText={(amount) => this.setState({ amount })}
             />
@@ -89,13 +91,13 @@ class Bank extends Component {
             >
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="In"
+                title={getText("in")}
                 onPress={() => this.deposit(true)}
                 style={{ width: 80 }}
               />
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="Uit"
+                title={getText("out")}
                 onPress={() => this.deposit(false)}
                 style={{ width: 80 }}
               />

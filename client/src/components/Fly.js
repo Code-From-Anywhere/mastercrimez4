@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
 import CountDown from "react-native-countdown-component";
+import { getTextFunction } from "../Util";
 
 class Fly extends React.Component {
   render() {
@@ -9,10 +10,12 @@ class Fly extends React.Component {
       navigation,
     } = this.props;
     const sec = Math.round((me.reizenAt - Date.now()) / 1000);
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text style={{ color: device.theme.primaryText }}>
-          Je bent aan het reizen naar {me.city}.
+          {getText("flyYoureTravelingTo", me?.city)}
         </Text>
         <CountDown
           until={sec}
@@ -21,7 +24,7 @@ class Fly extends React.Component {
           }}
           size={20}
           timeToShow={["M", "S"]}
-          timeLabels={{ m: "Minuten", s: "Seconden" }}
+          timeLabels={{ m: getText("minutes"), s: getText("seconds") }}
         />
       </View>
     );

@@ -12,10 +12,13 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import T from "../components/T";
+import { getTextFunction } from "../Util";
 import Button from "./Button";
 const { width } = Dimensions.get("window");
 
 function Footer({ navigation, screenProps: { me } }) {
+  const getText = getTextFunction(me?.locale);
+
   const theme = useSelector((state) => state.device.theme);
   const [text, setText] = useState("");
   const url = `https://mastercrimez.nl/#/Accomplice?accomplice=${me?.name}`;
@@ -28,12 +31,9 @@ function Footer({ navigation, screenProps: { me } }) {
   return (
     <View style={{ alignItems: "center" }}>
       <View style={{ margin: 10 }}>
-        <T bold>Vrienden uitnodigen</T>
+        <T bold>{getText("footerInviteFriends")}</T>
         <View style={{ marginBottom: 20 }}>
-          <T>
-            Deel deze link met vrienden, zodat ze jouw handlanger worden als ze
-            beginnen met spelen!
-          </T>
+          <T>{getText("footerInviteText")}</T>
           <View style={{ flexDirection: "row" }}>
             <TextInput
               value={url}
@@ -47,10 +47,14 @@ function Footer({ navigation, screenProps: { me } }) {
               }}
               onFocus={copy}
             />
-            <Button theme={theme} title="Kopiëer" onPress={copy} />
+            <Button
+              theme={theme}
+              title={getText("footerCopy")}
+              onPress={copy}
+            />
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <T>Delen</T>
+            <T>{getText("footerShare")}</T>
 
             <TouchableOpacity
               onPress={() => {
@@ -75,7 +79,7 @@ function Footer({ navigation, screenProps: { me } }) {
             <TouchableOpacity
               onPress={() => {
                 Linking.openURL(
-                  `whatsapp://send?text=Hey kom ook deze vette game spelen! ${url}`
+                  `whatsapp://send?text=${getText("footerWhatsappText", url)}`
                 );
               }}
             >
@@ -89,7 +93,7 @@ function Footer({ navigation, screenProps: { me } }) {
       </View>
 
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <T>Volg ons</T>
+        <T>{getText("footerFollowUs")}</T>
         <TouchableOpacity
           onPress={() => {
             Linking.openURL(
@@ -154,7 +158,9 @@ function Footer({ navigation, screenProps: { me } }) {
       </View>
       <View style={{ height: 20 }} />
 
-      <Text style={{ color: theme.primaryText }}>&copy; MasterCrimeZ 2020</Text>
+      <Text style={{ color: theme.primaryText }}>
+        &copy; MasterCrimeZ 2006-{new Date().getFullYear()}
+      </Text>
     </View>
   );
 }

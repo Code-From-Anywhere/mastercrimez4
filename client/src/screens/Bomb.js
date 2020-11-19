@@ -5,21 +5,7 @@ import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
 import style from "../Style";
-import { doOnce, numberFormat, post } from "../Util";
-
-const typeStrings = {
-  bulletFactory: "Kogelfabriek",
-  casino: "Casino",
-  landlord: "Huisjesmelker",
-  junkies: "Leger des Heils",
-  weaponShop: "Wapenwinkel",
-  rld: "Red light district",
-  airport: "Vliegveld",
-  estateAgent: "Makelaarskantoor",
-  bank: "Zwitserse Bank",
-  jail: "Gevangenis",
-  garage: "Garage",
-};
+import { doOnce, getTextFunction, numberFormat, post } from "../Util";
 
 const Bomb = ({
   navigation,
@@ -35,6 +21,8 @@ const Bomb = ({
 }) => {
   const { showActionSheetWithOptions } = useActionSheet();
 
+  const getText = getTextFunction(me?.locale);
+
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
   const [bombs, setBombs] = useState(null);
@@ -43,6 +31,20 @@ const Bomb = ({
   const [random, setRandom] = useState(Math.random());
 
   doOnce(reloadCities);
+
+  const typeStrings = {
+    bulletFactory: getText("bulletFactory"),
+    casino: getText("casino"),
+    landlord: getText("landlord"),
+    junkies: getText("junkiesObject"),
+    weaponShop: getText("weaponShop"),
+    rld: getText("rld"),
+    airport: getText("airport"),
+    estateAgent: getText("estateAgent"),
+    bank: getText("bankObject"),
+    jail: getText("jail"),
+    garage: getText("garage"),
+  };
 
   const city = cities?.find((x) => x.city === me?.city);
 
@@ -76,12 +78,12 @@ const Bomb = ({
 
     const options = Object.keys(typeStrings).map(
       (type) =>
-        `${typeStrings[type]} (${
-          city[`${type}Damage`]
-        }% schade, €${numberFormat(city[`${type}Profit`])} winst)`
+        `${typeStrings[type]} (${city[`${type}Damage`]}% ${getText(
+          "damage"
+        )}, €${numberFormat(city[`${type}Profit`])} ${getText("profit")})`
     );
 
-    options.push("Cancel");
+    options.push(getText("cancel"));
     const destructiveButtonIndex = undefined;
     const cancelButtonIndex = options.length - 1;
 
@@ -107,10 +109,12 @@ const Bomb = ({
           <Image source={require("../../assets/bombarderen.jpg")} />
           <Text style={{ color: theme.primaryText }}>
             {me?.airplane === 0
-              ? `Jij hebt nog geen vliegtuig, dus kan niet bombarderen`
-              : `Jij hebt een ${airplanes[me?.airplane]}. Hiermee kan je ${
+              ? getText("bombNoAirplane")
+              : getText(
+                  "bombAirplaneText",
+                  airplanes[me?.airplane],
                   me?.airplane * 5
-                } bommen gooien. Één bom kost €50.000,-`}
+                )}
           </Text>
 
           {response && (
@@ -119,7 +123,7 @@ const Bomb = ({
             </Text>
           )}
 
-          <T style={{ marginTop: 15 }}>Bommen</T>
+          <T style={{ marginTop: 15 }}>{getText("bombs")}</T>
           <TextInput
             placeholder="0"
             placeholderTextColor={theme.secondaryTextSoft}
@@ -128,21 +132,23 @@ const Bomb = ({
             style={style(theme).textInput}
           />
 
-          <T style={{ marginVertical: 15 }}>Bezitting</T>
+          <T style={{ marginVertical: 15 }}>{getText("property")}</T>
           <Button
             theme={theme}
             onPress={selectType}
-            title={type ? typeStrings[type] : "Welke bezitting?"}
+            title={type ? typeStrings[type] : getText("whichProperty")}
           />
 
           {type ? (
-            <T>{`Deze ${typeStrings[type]} heeft ${
-              city[`${type}Damage`]
-            }% schade, en €${numberFormat(
-              city[`${type}Profit`]
-            )} winst. De eigenaar is nu ${
-              city[`${type}Owner`] || `(Niemand)`
-            }`}</T>
+            <T>
+              {getText(
+                "bombInfo",
+                typeStrings[type],
+                city[`${type}Damage`],
+                numberFormat(city[`${type}Profit`]),
+                city[`${type}Owner`] || `(Niemand)`
+              )}
+            </T>
           ) : null}
 
           <Captcha
@@ -156,7 +162,7 @@ const Bomb = ({
           <Button
             style={{ marginTop: 15 }}
             theme={theme}
-            title="Bommen los"
+            title={getText("bombAction")}
             onPress={submit}
           />
         </>

@@ -3,7 +3,7 @@ import { ScrollView, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 
 const ChangeName = ({
   navigation,
@@ -14,6 +14,8 @@ const ChangeName = ({
     device: { theme },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
   const [name, setName] = useState(me?.name);
   const [response, setResponse] = useState(null);
 
@@ -41,11 +43,15 @@ const ChangeName = ({
           <TextInput
             style={{ ...style(theme).textInput, flex: 1 }}
             placeholderTextColor={theme.secondaryTextSoft}
-            placeholder="Naam"
+            placeholder={getText("name")}
             value={name}
             onChangeText={(x) => setName(x)}
           />
-          <Button onPress={changeName} theme={theme} title="Verander" />
+          <Button
+            onPress={changeName}
+            theme={theme}
+            title={getText("change")}
+          />
         </View>
       </View>
     </ScrollView>

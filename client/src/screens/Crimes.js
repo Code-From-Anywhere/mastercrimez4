@@ -4,32 +4,7 @@ import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
 import Constants from "../Constants";
-
-const options = [
-  {
-    id: 1,
-    option: "Overval een gehandicapte",
-  },
-  {
-    id: 2,
-    option: "Beroof de politie",
-  },
-
-  {
-    id: 3,
-    option: "Steel zakgeld van een kind",
-  },
-
-  {
-    id: 4,
-    option: "Beroof een hoer",
-  },
-
-  {
-    id: 5,
-    option: "Steel geld van je moeder",
-  },
-];
+import { getTextFunction } from "../Util";
 
 class Crimes extends Component {
   constructor(props) {
@@ -109,6 +84,8 @@ class Crimes extends Component {
   };
 
   renderFooter = () => {
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
     return (
       <View>
         <Captcha
@@ -123,7 +100,7 @@ class Crimes extends Component {
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
-          title="Steel"
+          title={getText("steal")}
           onPress={this.submit}
         />
 
@@ -141,6 +118,34 @@ class Crimes extends Component {
     } = this.props;
     const { response, selected } = this.state;
 
+    const getText = getTextFunction(me?.locale);
+
+    const options = [
+      {
+        id: 1,
+        option: getText("crimeOption1"),
+      },
+      {
+        id: 2,
+        option: getText("crimeOption2"),
+      },
+
+      {
+        id: 3,
+        option: getText("crimeOption3"),
+      },
+
+      {
+        id: 4,
+        option: getText("crimeOption4"),
+      },
+
+      {
+        id: 5,
+        option: getText("crimeOption5"),
+      },
+    ];
+
     return (
       <View style={{ margin: 20 }}>
         {response ? (
@@ -151,7 +156,7 @@ class Crimes extends Component {
 
             <Button
               theme={theme}
-              title="OK"
+              title={getText("ok")}
               onPress={() => this.setState({ response: null })}
             />
           </View>

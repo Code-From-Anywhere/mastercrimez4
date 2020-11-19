@@ -3,26 +3,7 @@ import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
-import { post } from "../Util";
-
-const options = [
-  {
-    id: 1,
-    option: "1 minuut",
-    price: "50000",
-  },
-  {
-    id: 2,
-    option: "5 minuten",
-    price: "250000",
-  },
-
-  {
-    id: 3,
-    option: "15 minuten",
-    price: "1000000",
-  },
-];
+import { getTextFunction, post } from "../Util";
 
 class Bunker extends Component {
   state = {
@@ -64,7 +45,9 @@ class Bunker extends Component {
   };
 
   renderFooter = () => {
-    const { device } = this.props.screenProps;
+    const { device, me } = this.props.screenProps;
+    const getText = getTextFunction(me?.locale);
+
     return (
       <>
         <Captcha
@@ -78,7 +61,7 @@ class Bunker extends Component {
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ borderRadius: 10, marginTop: 20 }}
-          title="Duik onder"
+          title={getText("bunkerCTA")}
           onPress={async () => {
             const response = await post("bunker", {
               token: device.loginToken,
@@ -100,7 +83,28 @@ class Bunker extends Component {
         device: { theme },
       },
     } = this.props;
+    const getText = getTextFunction(me?.locale);
+
     const { response, selected } = this.state;
+
+    const options = [
+      {
+        id: 1,
+        option: getText("bunkerOneMinute"),
+        price: "50000",
+      },
+      {
+        id: 2,
+        option: getText("bunkerFiveMinutes"),
+        price: "250000",
+      },
+
+      {
+        id: 3,
+        option: getText("bunker15Minutes"),
+        price: "1000000",
+      },
+    ];
 
     return (
       <View style={{ margin: 20 }}>
@@ -112,7 +116,7 @@ class Bunker extends Component {
 
             <Button
               theme={theme}
-              title="OK"
+              title={getText("ok")}
               onPress={() => this.setState({ response: null })}
             />
           </View>
@@ -121,12 +125,7 @@ class Bunker extends Component {
             keyExtractor={(item, index) => `item${index}`}
             data={options}
             extraData={selected}
-            ListHeaderComponent={() => (
-              <T>
-                Als je in de schuilkelder zit, kan je niet worden beroofd of
-                vermoord.
-              </T>
-            )}
+            ListHeaderComponent={() => <T>{getText("bunkerInfo")}</T>}
             renderItem={this.renderItem}
             ListFooterComponent={this.renderFooter}
           />

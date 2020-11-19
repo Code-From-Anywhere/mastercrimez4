@@ -11,7 +11,7 @@ import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
 import style from "../Style";
-import { doOnce, post } from "../Util";
+import { doOnce, getTextFunction, post } from "../Util";
 const Bulletfactory = ({
   navigation,
   screenProps,
@@ -24,6 +24,8 @@ const Bulletfactory = ({
     device: { theme },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
   const [bullets, setBullets] = useState(null);
@@ -63,31 +65,36 @@ const Bulletfactory = ({
       {!city?.bulletFactoryOwner ? (
         <View>
           <Text style={{ color: theme.primaryText }}>
-            Deze kogelfabriek heeft geen eigenaar.
+            {getText("bulletfactoryNoOwner")}
           </Text>
           {becomeOwnerResponse && <T>{becomeOwnerResponse}</T>}
           <Button
             theme={theme}
-            title="Word eigenaar"
+            title={getText("becomeOwner")}
             onPress={() => becomeOwner(me?.city)}
           />
         </View>
       ) : (
         <>
           <Text style={{ color: theme.primaryText }}>
-            De eigenaar van de kogelfabriek in{" "}
-            <Text style={{ fontWeight: "bold" }}>{me?.city}</Text> is{" "}
+            {getText("bulletfactoryInfo1")}{" "}
+            <Text style={{ fontWeight: "bold" }}>{me?.city}</Text>{" "}
+            {getText("is")}{" "}
             <Text style={{ fontWeight: "bold" }}>
-              {city?.bulletFactoryOwner || "(Niemand)"}
+              {city?.bulletFactoryOwner || getText("nobody")}
             </Text>
-            , de prijs per kogel is {city?.bulletFactoryPrice}, en de winst is{" "}
-            {city?.bulletFactoryProfit}
+            ,{" "}
+            {getText(
+              "bulletfactoryInfo2",
+              city?.bulletFactoryPrice,
+              city?.bulletFactoryProfit
+            )}
           </Text>
 
           <Text style={{ color: theme.primaryText, marginTop: 20 }}>
-            Er zijn nog{" "}
-            <Text style={{ fontWeight: "bold" }}>{city?.bullets}</Text> kogels
-            beschikbaar
+            {getText("bulletfactoryInfo3")}{" "}
+            <Text style={{ fontWeight: "bold" }}>{city?.bullets}</Text>{" "}
+            {getText("bulletfactoryInfo4")}
           </Text>
 
           {response && (
@@ -112,7 +119,7 @@ const Bulletfactory = ({
             onChangeRandom={(x) => setRandom(x)}
           />
 
-          <Button theme={theme} title="Koop" onPress={submit} />
+          <Button theme={theme} title={getText("buy")} onPress={submit} />
         </>
       )}
 
@@ -121,7 +128,7 @@ const Bulletfactory = ({
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <View style={{ flex: 2 }}>
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Stad
+            {getText("city")}
           </Text>
         </View>
         <View
@@ -132,10 +139,10 @@ const Bulletfactory = ({
           }}
         >
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Eigenaar
+            {getText("owner")}
           </Text>
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Kogels
+            {getText("bullets")}
           </Text>
         </View>
       </View>
@@ -169,7 +176,7 @@ const Bulletfactory = ({
                   </Text>
                 ) : (
                   <TouchableOpacity onPress={() => becomeOwner(city.city)}>
-                    <T>(Niemand)</T>
+                    <T>{getText("nobody")}</T>
                   </TouchableOpacity>
                 )}
                 {city.bulletFactoryOwner === me?.name ? (
@@ -195,7 +202,7 @@ const Bulletfactory = ({
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <View style={{ flex: 2 }}>
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Stad
+            {getText("city")}
           </Text>
         </View>
         <View
@@ -206,10 +213,10 @@ const Bulletfactory = ({
           }}
         >
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Schade
+            {getText("damage")}
           </Text>
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Prijs per kogel
+            {getText("pricePerBullet")}
           </Text>
         </View>
       </View>

@@ -9,6 +9,7 @@ import {
 import MarqueeText from "react-native-marquee";
 import Ticker from "react-ticker";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 
 class Chat extends Component {
   state = {
@@ -47,9 +48,11 @@ class Chat extends Component {
     ));
   };
   render() {
-    const { device, navigation } = this.props;
+    const { device, navigation, me } = this.props;
 
     const { chat, input } = this.state;
+
+    const getText = getTextFunction(me?.locale);
 
     const allText = chat
       .map((item) => `${item.name}${item.message}`)
@@ -124,7 +127,7 @@ class Chat extends Component {
           <View style={{ width: 100, height: 30 }}>
             <TextInput
               value={input}
-              placeholder="Je bericht"
+              placeholder={getText("chatYourMessage")}
               style={{
                 backgroundColor: "#404040",
                 fontSize: 20,

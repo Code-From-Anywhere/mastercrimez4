@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import { doOnce, post } from "../Util";
+import { doOnce, getTextFunction, post } from "../Util";
 const Casino = ({
   navigation,
   screenProps: {
@@ -15,6 +15,8 @@ const Casino = ({
     device: { theme },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
   const [response, setResponse] = useState(null);
   const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
 
@@ -38,30 +40,31 @@ const Casino = ({
       {!city?.casinoOwner ? (
         <View>
           <Text style={{ color: theme.primaryText }}>
-            Dit casino heeft geen eigenaar.
+            {getText("casinoNoOwner")}
           </Text>
           {becomeOwnerResponse && <T>{becomeOwnerResponse}</T>}
           <Button
             theme={theme}
-            title="Word eigenaar"
+            title={getText("becomeOwner")}
             onPress={() => becomeOwner(me?.city)}
           />
         </View>
       ) : (
         <>
           <Text style={{ color: theme.primaryText }}>
-            De eigenaar van het casino in{" "}
-            <Text style={{ fontWeight: "bold" }}>{me?.city}</Text> is{" "}
+            {getText("casinoInfo1")}{" "}
+            <Text style={{ fontWeight: "bold" }}>{me?.city}</Text>{" "}
+            {getText("is")}{" "}
             <Text style={{ fontWeight: "bold" }}>
-              {city?.casinoOwner || "(Niemand)"}
+              {city?.casinoOwner || getText("nobody")}
             </Text>
-            . De winst is {city?.casinoProfit}
+            . {getText("casinoInfo2", city?.casinoProfit)}
           </Text>
 
           <Button
             onPress={() => navigation.navigate("Poker")}
             theme={theme}
-            title="Poker"
+            title={getText("poker")}
           />
 
           {response && (
@@ -77,7 +80,7 @@ const Casino = ({
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <View style={{ flex: 2 }}>
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Stad
+            {getText("city")}
           </Text>
         </View>
         <View
@@ -88,10 +91,10 @@ const Casino = ({
           }}
         >
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Eigenaar
+            {getText("owner")}
           </Text>
           <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-            Winst
+            {getText("profit")}
           </Text>
         </View>
       </View>
@@ -123,7 +126,7 @@ const Casino = ({
                   <T>{city.casinoOwner}</T>
                 ) : (
                   <TouchableOpacity onPress={() => becomeOwner(city.city)}>
-                    <T>(Niemand)</T>
+                    <T>{getText("nobody")}</T>
                   </TouchableOpacity>
                 )}
                 {city.casinoOwner === me?.name ? (

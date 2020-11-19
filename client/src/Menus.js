@@ -1,6 +1,6 @@
 import React from "react";
 import CountDown from "react-native-countdown-component";
-import { getRank, numberFormat } from "./Util";
+import { getRank, getTextFunction, numberFormat } from "./Util";
 export const leftMenu = (me, theme) => {
   const stealcarSeconds = Math.ceil(
     (me?.autostelenAt + 60000 - Date.now()) / 1000
@@ -21,10 +21,13 @@ export const leftMenu = (me, theme) => {
   );
   const hoerenSeconds = Math.ceil((me?.hoerenAt + 120000 - Date.now()) / 1000);
   const workSeconds = Math.ceil((me?.workAt - Date.now()) / 1000);
+
+  const getText = getTextFunction(me?.locale);
+
   return [
     {
       isHeader: true,
-      text: "Misdaden",
+      text: getText("headerCrime"),
       iconType: "FontAwesome",
       icon: "font",
     },
@@ -32,7 +35,7 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "FontAwesome",
       icon: "car",
-      text: "Auto Stelen",
+      text: getText("menuStealCar"),
       to: "StealCar",
       component:
         stealcarSeconds > 0 ? (
@@ -52,7 +55,7 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "Ionicons",
       icon: "md-cash",
-      text: "Misdaden",
+      text: getText("menuCrimes"),
       to: "Crimes",
       component:
         crimeSeconds > 0 ? (
@@ -71,7 +74,7 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "MaterialCommunityIcons",
       icon: "pistol",
-      text: "Aanvallen",
+      text: getText("menuKill"),
       to: "Kill",
       component:
         attackSeconds > 0 ? (
@@ -90,7 +93,7 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "MaterialCommunityIcons",
       icon: "pistol",
-      text: "Beroven",
+      text: getText("menuRob"),
       to: "Rob",
       component:
         robSeconds > 0 ? (
@@ -109,7 +112,7 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "Ionicons",
       icon: "md-cash",
-      text: "Georganiseerde Misdaad",
+      text: getText("menuOC"),
       to: "OrganisedCrime",
       component:
         ocSeconds > 0 ? (
@@ -129,7 +132,7 @@ export const leftMenu = (me, theme) => {
       iconType: "AntDesign",
       icon: "stepforward",
 
-      text: "Sportschool",
+      text: getText("menuGym"),
       to: "Gym",
       component:
         gymSeconds > 0 ? (
@@ -150,7 +153,7 @@ export const leftMenu = (me, theme) => {
       iconType: "MaterialCommunityIcons",
       icon: "tree",
 
-      text: "Wietplantage",
+      text: getText("menuWiet"),
       to: "Wiet",
       component:
         wietSeconds > 0 ? (
@@ -171,7 +174,7 @@ export const leftMenu = (me, theme) => {
       iconType: "MaterialIcons",
       icon: "people",
 
-      text: "Junkies",
+      text: getText("menuJunkies"),
       to: "Junkies",
       component:
         junkiesSeconds > 0 ? (
@@ -192,7 +195,7 @@ export const leftMenu = (me, theme) => {
       iconType: "FontAwesome",
       icon: "female",
 
-      text: "Hoeren",
+      text: getText("menuProstitutes"),
       to: "Hoeren",
       component:
         hoerenSeconds > 0 ? (
@@ -213,7 +216,7 @@ export const leftMenu = (me, theme) => {
       iconType: "AntDesign",
       icon: "tool",
 
-      text: "Werken",
+      text: getText("menuWork"),
       to: "Work",
       component:
         workSeconds > 0 ? (
@@ -234,7 +237,7 @@ export const leftMenu = (me, theme) => {
       iconType: "FontAwesome",
       icon: "bars",
 
-      text: `Gevangenis (${me?.jail})`,
+      text: getText("menuJail", me?.jail),
       to: "Jail",
     },
 
@@ -242,40 +245,40 @@ export const leftMenu = (me, theme) => {
       iconType: "FontAwesome",
       icon: "font",
       isHeader: true,
-      text: "Uitgeven",
+      text: getText("headerSpend"),
     },
 
     {
       iconType: "FontAwesome",
       icon: "bank",
-      text: "Bank",
+      text: getText("menuBank"),
       to: "AllBanks",
     },
     {
       iconType: "MaterialCommunityIcons",
       icon: "pistol",
-      text: "Kogelfabriek",
+      text: getText("menuBulletfactory"),
       to: "Bulletfactory",
     },
 
     {
       iconType: "FontAwesome",
       icon: "bomb",
-      text: "Bombarderen",
+      text: getText("menuBomb"),
       to: "Bomb",
     },
 
     {
       iconType: "FontAwesome5",
       icon: "dice",
-      text: "Casino",
+      text: getText("menuCasino"),
       to: "Casino",
     },
 
     {
       iconType: "MaterialCommunityIcons",
       icon: "warehouse",
-      text: "Schuilkelder",
+      text: getText("menuBunker"),
       to: "Bunker",
       component:
         bunkerSeconds > 0 ? (
@@ -295,86 +298,76 @@ export const leftMenu = (me, theme) => {
     {
       iconType: "FontAwesome5",
       icon: "hospital",
-
-      text: "Ziekenhuis",
+      text: getText("menuHospital"),
       to: "Hospital",
     },
 
     {
       iconType: "Entypo",
       icon: "shop",
-      text: "Winkel",
+      text: getText("menuShop"),
       to: "Shop",
     },
 
     {
       iconType: "Ionicons",
       icon: "ios-car",
-      text: "Garage",
+      text: getText("menuGarage"),
       to: "Garage",
     },
     {
       iconType: "MaterialIcons",
       icon: "local-car-wash",
-      text: "Racecars",
+      text: getText("menuRacecars"),
       to: "Racecars",
     },
     {
       iconType: "MaterialCommunityIcons",
       icon: "car-key",
-      text: "Streetrace",
+      text: getText("menuStreetrace"),
       to: "Streetrace",
     },
-    // {
-    //   text: "Kogelfabriek",
-    // iconType: "FontAwesome",
-    // icon: "font",
-    //   to: "Bulletfactory"
-    // },
-    // {
-    //   text: "Casino",
-    //   to: "Casino"
-    // },
+
     {
       iconType: "FontAwesome",
       icon: "plane",
-
-      text: "Vliegveld",
+      text: getText("menuAirport"),
       to: "Airport",
     },
   ];
 };
 
 const adminMenu = (me) => {
+  const getText = getTextFunction(me?.locale);
+
   const gameMod =
     me?.level > 1
       ? [
           {
             iconType: "FontAwesome",
             icon: "font",
-
             isHeader: true,
-            text: "Admin panel",
+            text: getText("headerAdminPanel"),
           },
 
           {
             iconType: "Entypo",
             icon: "eye",
-            text: "User Watch",
+            text: getText("menuUserWatch"),
             to: "AdminUserWatch",
           },
 
           {
             iconType: "Entypo",
             icon: "eye",
-            text: "Hackers",
+            text: getText("menuHackers"),
             to: "Hackers",
           },
 
           {
             iconType: "Entypo",
             icon: "eye",
-            text: "Politie",
+            text: getText("menuPolice"),
             to: "Police",
           },
         ]
@@ -386,7 +379,7 @@ const adminMenu = (me) => {
           {
             iconType: "FontAwesome",
             icon: "font",
-            text: "Emailen",
+            text: getText("menuAdminEmail"),
             to: "AdminEmail",
           },
         ]
@@ -395,165 +388,165 @@ const adminMenu = (me) => {
   return [...gameMod, ...admin];
 };
 
-export const rightMenu = (me, theme) => [
-  {
-    iconType: "FontAwesome",
-    icon: "font",
+export const rightMenu = (me, theme) => {
+  const getText = getTextFunction(me?.locale);
 
-    isHeader: true,
-    text: me?.name,
-    to: "Profile",
-    params: { name: me?.name },
-  },
+  return [
+    {
+      iconType: "FontAwesome",
+      icon: "font",
 
-  {
-    isStats: true,
-    iconType: "FontAwesome",
-    icon: "font",
+      isHeader: true,
+      text: me?.name,
+      to: "Profile",
+      params: { name: me?.name },
+    },
 
-    text: "Contant: " + numberFormat(me?.cash),
-  },
+    {
+      isStats: true,
+      iconType: "FontAwesome",
+      icon: "font",
 
-  {
-    isStats: true,
+      text: getText("menuCash", numberFormat(me?.cash)),
+    },
 
-    iconType: "FontAwesome",
-    icon: "font",
+    {
+      isStats: true,
 
-    text: "Bank: " + numberFormat(me?.bank),
-  },
-  {
-    isStats: true,
+      iconType: "FontAwesome",
+      icon: "font",
 
-    iconType: "FontAwesome",
-    icon: "font",
+      text: getText("menuBankMoney", numberFormat(me?.bank)),
+    },
+    {
+      isStats: true,
 
-    text: "Kogels: " + numberFormat(me?.bullets),
-  },
-  {
-    isStats: true,
+      iconType: "FontAwesome",
+      icon: "font",
 
-    iconType: "FontAwesome",
-    icon: "font",
+      text: getText("menuBullets", numberFormat(me?.bullets)),
+    },
+    {
+      isStats: true,
 
-    text: "Rank: " + getRank(me?.rank, "both"),
-  },
-  {
-    isStats: true,
+      iconType: "FontAwesome",
+      icon: "font",
+      text: getText("menuRank", getRank(me?.rank, "both")),
+    },
+    {
+      isStats: true,
 
-    iconType: "FontAwesome",
-    icon: "font",
+      iconType: "FontAwesome",
+      icon: "font",
 
-    text: "Health: " + me?.health + "%",
-  },
-  {
-    isStats: true,
+      text: getText("menuHealth", me?.health),
+    },
+    {
+      isStats: true,
 
-    iconType: "FontAwesome",
-    icon: "font",
+      iconType: "FontAwesome",
+      icon: "font",
 
-    text: "Stad: " + me?.city,
-  },
+      text: getText("menuCity", me?.city),
+    },
 
-  {
-    iconType: "FontAwesome",
-    icon: "font",
+    {
+      iconType: "FontAwesome",
+      icon: "font",
 
-    isHeader: true,
-    text: "Maatschappij",
-  },
+      isHeader: true,
+      text: getText("headerSociety"),
+    },
 
-  {
-    iconType: "Ionicons",
-    icon: "ios-people",
+    {
+      iconType: "Ionicons",
+      icon: "ios-people",
 
-    text: `Leden (${me?.online} online)`,
-    to: "Members",
-  },
+      text: getText("menuMembers", me?.online),
+      to: "Members",
+    },
 
-  {
-    iconType: "AntDesign",
-    icon: "star",
+    {
+      iconType: "AntDesign",
+      icon: "star",
+      text: getText("menuStats"),
+      to: "Stats",
+    },
 
-    text: "Statistieken",
-    to: "Stats",
-  },
+    {
+      iconType: "AntDesign",
+      icon: "star",
+      text: getText("menuMyObjects"),
+      to: "MyObjects",
+    },
 
-  {
-    iconType: "AntDesign",
-    icon: "star",
+    {
+      iconType: "AntDesign",
+      icon: "star",
+      text: getText("menuStatus"),
+      to: "Status",
+    },
 
-    text: "Mijn bezittingen",
-    to: "MyObjects",
-  },
+    {
+      iconType: "Entypo",
+      icon: "info-with-circle",
 
-  {
-    iconType: "AntDesign",
-    icon: "star",
-    text: "Status",
-    to: "Status",
-  },
+      isHeader: true,
+      text: getText("headerGeneral"),
+    },
 
-  {
-    iconType: "Entypo",
-    icon: "info-with-circle",
+    {
+      iconType: "Ionicons",
+      icon: "ios-chatbubbles",
+      text: getText("menuChat"),
+      to: "Chat",
+    },
 
-    isHeader: true,
-    text: "Algemeen",
-  },
+    {
+      iconType: "Ionicons",
+      icon: "ios-chatbubbles",
+      text: getText("menuChannels", me?.chats),
+      to: "Channels",
+    },
 
-  {
-    iconType: "Ionicons",
-    icon: "ios-chatbubbles",
-    text: "Chat",
-    to: "Chat",
-  },
+    {
+      iconType: "MaterialCommunityIcons",
+      icon: "chat",
+      text: getText("menuMessages", me?.messages),
+      to: "Messages",
+    },
 
-  {
-    iconType: "Ionicons",
-    icon: "ios-chatbubbles",
-    text: `Chat V2 (${me?.chats})`,
-    to: "Channels",
-  },
+    {
+      iconType: "FontAwesome",
+      icon: "wechat",
 
-  {
-    iconType: "MaterialCommunityIcons",
-    icon: "chat",
+      text: getText("menuForum"),
+      to: "Forum",
+    },
 
-    text: `Berichten (${me?.messages})`,
-    to: "Messages",
-  },
+    {
+      iconType: "SimpleLineIcons",
+      icon: "settings",
 
-  {
-    iconType: "FontAwesome",
-    icon: "wechat",
+      text: getText("menuSettings"),
+      to: "Settings",
+    },
 
-    text: "Forum",
-    to: "Forum",
-  },
+    {
+      iconType: "Entypo",
+      icon: "info-with-circle",
 
-  {
-    iconType: "SimpleLineIcons",
-    icon: "settings",
+      text: getText("menuInfo"),
+      to: "Info",
+    },
 
-    text: "Instellingen",
-    to: "Settings",
-  },
+    {
+      iconType: "FontAwesome",
+      icon: "bank",
+      text: getText("menuVIP"),
+      to: "VIP",
+    },
 
-  {
-    iconType: "Entypo",
-    icon: "info-with-circle",
-
-    text: "Informatie",
-    to: "Info",
-  },
-
-  {
-    iconType: "FontAwesome",
-    icon: "bank",
-    text: "VIP",
-    to: "VIP",
-  },
-
-  ...adminMenu(me),
-];
+    ...adminMenu(me),
+  ];
+};

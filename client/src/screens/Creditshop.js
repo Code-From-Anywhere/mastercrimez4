@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, View } from "react-native";
 import Button from "../components/Button";
-import { doOnce, get, post } from "../Util";
+import { doOnce, get, getTextFunction, post } from "../Util";
 
 const Creditshop = ({ screenProps }) => {
   const [items, setItems] = useState(null);
@@ -13,6 +13,8 @@ const Creditshop = ({ screenProps }) => {
     reloadMe,
     me,
   } = screenProps;
+
+  const getText = getTextFunction(me?.locale);
 
   doOnce(async () => {
     const { items } = await get("creditshop");
@@ -30,7 +32,7 @@ const Creditshop = ({ screenProps }) => {
   return (
     <View style={{ flex: 1, justifyContent: "space-around" }}>
       <Text style={{ color: device.theme.primaryText, alignSelf: "center" }}>
-        Je hebt nog {me?.credits} credits
+        {getText("youStillHaveCredits", me?.credits)}
       </Text>
 
       {response && (

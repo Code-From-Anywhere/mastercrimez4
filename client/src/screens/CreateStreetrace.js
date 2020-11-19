@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import T from "../components/T";
 import TabInput from "../components/TabInput";
 import style from "../Style";
-import { doOnce, get, post } from "../Util";
+import { doOnce, get, getTextFunction, post } from "../Util";
 
 const CreateStreetrace = ({
   navigation,
@@ -17,6 +17,8 @@ const CreateStreetrace = ({
     device: { theme, loginToken },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
   const [loading, setLoading] = useState(false);
   const [racecars, setRacecars] = useState(null);
   const [response, setResponse] = useState(null);
@@ -57,7 +59,7 @@ const CreateStreetrace = ({
     <View style={{ flex: 1, justifyContent: "space-between" }}>
       <View>
         {response && <T>{response}</T>}
-        <T>Aantal Deelnemers</T>
+        <T>{getText("amountParticipants")}</T>
         <TextInput
           style={style(theme).textInput}
           value={numParticipants}
@@ -68,40 +70,42 @@ const CreateStreetrace = ({
         <TabInput
           tabs={[
             {
-              title: "Snelweg",
+              title: getText("highway"),
               onPress: () => setType("highway"),
               isActive: type === "highway",
             },
             {
-              title: "Stad",
+              title: getText("city"),
               onPress: () => setType("city"),
               isActive: type === "city",
             },
             {
-              title: "Bos",
+              title: getText("forest"),
               onPress: () => setType("forest"),
               isActive: type === "forest",
             },
           ]}
         />
 
-        <T style={{ marginTop: 15 }}>Kosten per deelname</T>
+        <T style={{ marginTop: 15 }}>{getText("costPerParticipation")}</T>
         <TextInput
           style={style(theme).textInput}
           value={price}
           onChangeText={(x) => setPrice(x)}
         />
 
-        <T style={{ marginTop: 15, marginBottom: 10 }}>Kies je auto:</T>
+        <T style={{ marginTop: 15, marginBottom: 10 }}>
+          {getText("chooseYourCar")}:
+        </T>
         <Button
           theme={theme}
-          title={car ? car.auto : "Kies een auto"}
+          title={car ? car.auto : getText("chooseACar")}
           onPress={() => {
             // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
-            const options = racecars.map(
-              (racecar) => `${racecar.auto} met ${racecar.power}.000 power`
+            const options = racecars.map((racecar) =>
+              getText("createStreetraceOption", racecar.auto, racecar.power)
             );
-            options.push("Cancel");
+            options.push(getText("cancel"));
             const destructiveButtonIndex = undefined;
             const cancelButtonIndex = options.length - 1;
 
@@ -120,7 +124,7 @@ const CreateStreetrace = ({
         />
       </View>
 
-      <Button theme={theme} onPress={submit} title="Maak aan" />
+      <Button theme={theme} onPress={submit} title={getText("create")} />
     </View>
   );
 };

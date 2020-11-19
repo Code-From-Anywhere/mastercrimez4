@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import Tabs from "../components/Tabs";
+import { getTextFunction } from "../Util";
 import Bank from "./Bank";
 import Donate from "./Donate";
 import Income from "./Income";
 import SwissBank from "./SwissBank";
 const AllBanks = (props) => {
+  const getText = getTextFunction(props.screenProps.me?.locale);
+
   const [tab, setTab] = useState("bank");
 
   return (
@@ -13,23 +16,23 @@ const AllBanks = (props) => {
       <Tabs
         tabs={[
           {
-            title: "Bank",
+            title: getText("menuBank"),
             isActive: tab === "bank",
             onPress: () => setTab("bank"),
           },
           {
-            title: "Zwitserse bank",
+            title: getText("menuSwissBank"),
             isActive: tab === "swissBank",
             onPress: () => setTab("swissBank"),
           },
 
           {
-            title: "Doneren",
+            title: getText("menuDonate"),
             isActive: tab === "donate",
             onPress: () => setTab("donate"),
           },
           {
-            title: "Inkomen",
+            title: getText("menuIncome"),
             isActive: tab === "income",
             onPress: () => setTab("income"),
           },

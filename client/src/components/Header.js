@@ -12,13 +12,15 @@ import {
 } from "react-native";
 import Chat from "../components/Chat";
 import { useExpoUpdate } from "../updateHook";
-import { getRank, getStrength, numberFormat } from "../Util";
+import { getRank, getStrength, getTextFunction, numberFormat } from "../Util";
 import Button from "./Button";
 const { width } = Dimensions.get("window");
 
 const isSmallDevice = width < 800;
 
 function Header({ navigation, device, me }) {
+  const getText = getTextFunction(me?.locale);
+
   let updateAvailable = false;
   if (Platform.OS !== "web") {
     updateAvailable = useExpoUpdate();
@@ -39,7 +41,7 @@ function Header({ navigation, device, me }) {
       }}
     >
       <Text style={{ color: device.theme.secondaryText }}>
-        Je account is nog niet geverifieerd!
+        {getText("headerNotVerified")}
       </Text>
       <View
         style={{
@@ -50,12 +52,12 @@ function Header({ navigation, device, me }) {
       >
         <Button
           theme={device.theme}
-          title="Verifiëer"
+          title={getText("headerVerify")}
           onPress={() => navigation.navigate("VerifyPhone")}
         />
         <Button
           theme={device.theme}
-          title="Login op een ander account"
+          title={getText("headerLoginOnAnother")}
           onPress={() => navigation.navigate("Login")}
         />
       </View>
@@ -72,7 +74,7 @@ function Header({ navigation, device, me }) {
       }}
     >
       <Text style={{ color: device.theme.secondaryText }}>
-        Er is een nieuwe update beschikbaar! Klik hier om de app te verversen.
+        {getText("headerUpdateAvailable")}
       </Text>
     </TouchableOpacity>
   );
@@ -114,7 +116,7 @@ function Header({ navigation, device, me }) {
         ) : null}
       </View>
 
-      <Chat device={device} navigation={navigation} />
+      <Chat me={me} device={device} navigation={navigation} />
     </View>
   );
 
@@ -188,7 +190,7 @@ function Header({ navigation, device, me }) {
             <Text
               style={{ color: device.theme.secondaryText, fontWeight: "bold" }}
             >
-              Verifiëer je account
+              {getText("headerVerifyYourAccount")}
             </Text>
           </TouchableOpacity>
         </View>

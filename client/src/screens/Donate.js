@@ -4,6 +4,7 @@ import { ScrollView, Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 class Donate extends Component {
   state = {
@@ -18,14 +19,16 @@ class Donate extends Component {
   }
 
   renderFooter = () => {
-    const { device } = this.props.screenProps;
+    const { device, me } = this.props.screenProps;
     const { to, amount, type } = this.state;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <Button
         theme={this.props.screenProps.device.theme}
         style={{ marginTop: 20 }}
-        title="Doneer"
+        title={getText("donate")}
         onPress={() => {
           fetch(`${Constants.SERVER_ADDR}/donate`, {
             method: "POST",
@@ -54,14 +57,17 @@ class Donate extends Component {
   };
 
   openActionSheet = () => {
+    const { me } = this.props.screenProps;
+    const getText = getTextFunction(me?.locale);
+
     // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
     const options = [
-      "Bank Geld",
-      "Kogels",
-      "Wiet",
-      "Junkies",
-      "Hoeren",
-      "Gamepoints",
+      getText("bankMoney"),
+      getText("bullets"),
+      getText("weed"),
+      getText("junkies"),
+      getText("prostitutes"),
+      getText("gamepoints"),
     ];
     const keys = ["bank", "bullets", "wiet", "junkies", "hoeren", "gamepoints"];
     this.props.showActionSheetWithOptions(
@@ -78,30 +84,31 @@ class Donate extends Component {
 
   renderForm() {
     const {
-      screenProps: { device },
+      screenProps: { device, me },
     } = this.props;
+    const getText = getTextFunction(me?.locale);
 
     const names = {
-      bullets: "Kogels",
-      bank: "Bankgeld",
-      wiet: "Wiet",
-      junkies: "Junkies",
-      hoeren: "Hoeren",
-      gamepoints: "Gamepoints",
+      bullets: getText("bullets"),
+      bank: getText("bankMoney"),
+      wiet: getText("weed"),
+      junkies: getText("junkies"),
+      hoeren: getText("prostitutes"),
+      gamepoints: getText("gamepoints"),
     };
     return (
       <View>
         <TextInput
           style={style(device.theme).textInput}
           placeholderTextColor={device.theme.secondaryTextSoft}
-          placeholder="Aan"
+          placeholder={getText("to")}
           value={this.state.to}
           onChangeText={(to) => this.setState({ to })}
         />
         <TextInput
           style={style(device.theme).textInput}
           placeholderTextColor={device.theme.secondaryTextSoft}
-          placeholder="Hoeveelheid"
+          placeholder={getText("amount")}
           value={this.state.amount}
           onChangeText={(amount) => this.setState({ amount })}
         />
@@ -109,7 +116,9 @@ class Donate extends Component {
           theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
           title={
-            this.state.type ? names[this.state.type] : "Wat wil je doneren?"
+            this.state.type
+              ? names[this.state.type]
+              : getText("whatYouWantToDonate")
           }
           onPress={this.openActionSheet}
         />

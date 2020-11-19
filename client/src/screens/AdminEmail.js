@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 class Status extends Component {
   state = {
@@ -13,8 +14,10 @@ class Status extends Component {
   };
   renderForm() {
     const {
-      screenProps: { device },
+      screenProps: { device, me },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <View>
@@ -22,21 +25,21 @@ class Status extends Component {
         <TextInput
           style={style(device.theme).textInput}
           placeholderTextColor={device.theme.secondaryTextSoft}
-          placeholder="Onderwerp"
+          placeholder={getText("subject")}
           value={this.state.subject}
           onChangeText={(subject) => this.setState({ subject })}
         />
         <TextInput
           placeholderTextColor={device.theme.secondaryTextSoft}
           style={style(device.theme).textInput}
-          placeholder="Bericht"
+          placeholder={getText("message")}
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}
         />
         <Button
           theme={device.theme}
           style={{ marginVertical: 10 }}
-          title="Verzenden"
+          title={getText("send")}
           onPress={this.sendMessage}
         />
       </View>
@@ -73,7 +76,9 @@ class Status extends Component {
       screenProps: { me },
     } = this.props;
 
-    return me.level < 10 ? <T>Geen toegang</T> : this.renderForm();
+    const getText = getTextFunction(me?.locale);
+
+    return me.level < 10 ? <T>{getText("noAccess")}</T> : this.renderForm();
   }
 }
 

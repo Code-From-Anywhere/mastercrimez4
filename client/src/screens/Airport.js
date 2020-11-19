@@ -3,20 +3,23 @@ import React, { Component } from "react";
 import { Text, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 
 class Airport extends Component {
   state = {
     response: null,
   };
   renderFooter = () => {
-    const { device } = this.props.screenProps;
+    const { device, me } = this.props.screenProps;
     const { to } = this.state;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <Button
         theme={device.theme}
         style={{ borderRadius: 10, marginTop: 20 }}
-        title="Vlieg"
+        title={getText("fly")}
         onPress={() => {
           fetch(`${Constants.SERVER_ADDR}/airport`, {
             method: "POST",
@@ -72,11 +75,12 @@ class Airport extends Component {
   };
 
   renderForm() {
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
     return (
       <View>
         <Button
           theme={this.props.screenProps.device.theme}
-          title={this.state.to ? this.state.to : "Kies stad"}
+          title={this.state.to ? this.state.to : getText("chooseCity")}
           onPress={this.openActionSheet}
         />
 

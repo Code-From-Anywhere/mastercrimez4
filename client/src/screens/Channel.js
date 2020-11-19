@@ -16,7 +16,7 @@ import { RefreshControl } from "react-native-web-refresh-control";
 import ImageInput from "../components/ImageInput";
 import Constants from "../Constants";
 import STYLE from "../Style";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
 const isBigDevice = width > 500;
@@ -199,8 +199,11 @@ class ChatScreen extends React.Component {
     const {
       screenProps: {
         device: { theme },
+        me,
       },
     } = this.props;
+    const getText = getTextFunction(me?.locale);
+
     const { image, message, hasEdited, response } = this.state;
     return (
       <View>
@@ -226,7 +229,7 @@ class ChatScreen extends React.Component {
             onEndEditing={this.send}
             style={[STYLE(theme).textInput, { flex: 1 }]}
             value={message}
-            placeholder="Message"
+            placeholder={getText("message")}
             onChangeText={(message) => this.setState({ message })}
           />
 

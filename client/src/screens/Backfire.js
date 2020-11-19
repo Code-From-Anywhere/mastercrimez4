@@ -3,6 +3,7 @@ import { Dimensions, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -14,13 +15,11 @@ class MyProfile extends React.Component {
   render() {
     const { device, me, reloadMe } = this.props.screenProps;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <T>
-          Met backfire schiet je een zeker % van je kogels terug als iemand je
-          aanvalt, maar nooit meer dan 2x de kogels van de aanvaller. Je hebt nu
-          {me?.backfire * 100}% backfie
-        </T>
+        <T>{getText("backfireInfo", me?.backfire * 100)}</T>
 
         {[0, 0.1, 0.25, 0.5, 1].map((bf) => {
           return (
@@ -32,14 +31,14 @@ class MyProfile extends React.Component {
                     this.state.backfire === bf ? "blue" : undefined,
                 }}
               >
-                <T>Zet op {bf * 100}% backfire</T>
+                <T>{getText("backfireSetTo", bf * 100)}</T>
               </View>
             </TouchableOpacity>
           );
         })}
         <Button
           theme={this.props.screenProps.device.theme}
-          title="Opslaan"
+          title={getText("save")}
           onPress={() => {
             fetch(`${Constants.SERVER_ADDR}/updateProfile`, {
               method: "POST",
@@ -58,7 +57,7 @@ class MyProfile extends React.Component {
               })
               .catch((error) => {
                 console.log("upload error", error);
-                alert("Er ging iets mis");
+                alert(getText("somethingWentWrong"));
               });
           }}
         />

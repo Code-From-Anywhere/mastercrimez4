@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, TextInput, View } from "react-native";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 class Chat extends Component {
   state = {
     chat: [],
@@ -35,6 +36,8 @@ class Chat extends Component {
       screenProps: { device, me },
     } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     const { chat, input } = this.state;
 
     return (
@@ -58,7 +61,7 @@ class Chat extends Component {
             padding: 5,
             borderRadius: 5,
           }}
-          placeholder="Je bericht"
+          placeholder={getText("yourMessage")}
           onChangeText={(input) => this.setState({ input })}
           onSubmitEditing={({ nativeEvent: { text } }) => {
             fetch(`${Constants.SERVER_ADDR}/chat`, {

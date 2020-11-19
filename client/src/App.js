@@ -96,7 +96,7 @@ import VIP from "./screens/VIP";
 import Wiet from "./screens/Wiet";
 import Work from "./screens/Work";
 import { persistor, store } from "./Store";
-import { post } from "./Util";
+import { getTextFunction, post } from "./Util";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -251,8 +251,6 @@ const Layout = ({ screenProps, navigation, children }) => {
       },
     },
   }) => {
-    console.log("Wadup", data);
-
     navigation.navigate("Messages", { id: data.body.id });
   };
 
@@ -330,6 +328,9 @@ const Layout = ({ screenProps, navigation, children }) => {
     "Accomplice",
   ];
   const skip = allowedRoutes.includes(navigation.state.routeName);
+
+  const getText = getTextFunction(me?.locale);
+
   return (
     <SafeAreaView
       style={{
@@ -341,17 +342,14 @@ const Layout = ({ screenProps, navigation, children }) => {
       {Platform.OS === "web" && (
         <Helmet>
           <title>MasterCrimeZ - The Ultimate Game</title>
-          <meta name="description" content="Word jij de beste gangster?" />
+          <meta name="description" content={getText("metaDescription")} />
 
-          <meta property="og:url" content="https://mastercrimez.nl/" />
+          <meta property="og:url" content="https://mastercrimez.com/" />
           <meta property="og:type" content="article" />
-          <meta
-            property="og:title"
-            content="MasterCrimeZ - The Ultimate Game"
-          />
+          <meta property="og:title" content={getText("metaOgTitle")} />
           <meta
             property="og:description"
-            content="Word jij de beste gangster?"
+            content={getText("metaOgDescription")}
           />
           <meta property="og:image" content="" />
         </Helmet>

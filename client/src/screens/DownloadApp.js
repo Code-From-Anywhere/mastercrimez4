@@ -37,7 +37,7 @@ const DownloadApp = () => {
 
   return (
     <View>
-      <Text>Download de app!</Text>
+      <Text>Download the app!</Text>
     </View>
   );
 };

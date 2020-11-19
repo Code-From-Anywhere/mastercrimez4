@@ -4,8 +4,9 @@ import md5 from "react-native-md5";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
-class Login extends React.Component {
+class ChangePassword extends React.Component {
   state = {
     password1: "",
     password2: "",
@@ -14,12 +15,14 @@ class Login extends React.Component {
   };
 
   login() {
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
     const token = this.props.screenProps.device.loginToken;
 
     const { password1, password2 } = this.state;
 
     if (password1 !== password2) {
-      this.setState({ error: "Wachtwoorden komen niet overeen" });
+      this.setState({ error: getText("passwordsDontMatch") });
       return;
     }
 
@@ -58,6 +61,7 @@ class Login extends React.Component {
         device: { theme },
       },
     } = this.props;
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -80,7 +84,7 @@ class Login extends React.Component {
             }}
           >
             <Text style={{ fontSize: 20, color: theme.primaryText }}>
-              Nieuw wachtwoord
+              {getText("newPassword")}
             </Text>
 
             <TextInput
@@ -97,7 +101,7 @@ class Login extends React.Component {
             }}
           >
             <Text style={{ fontSize: 20, color: theme.primaryText }}>
-              Herhaal
+              {getText("repeat")}
             </Text>
 
             <TextInput
@@ -119,7 +123,7 @@ class Login extends React.Component {
 
             <Button
               theme={this.props.screenProps.device.theme}
-              title="Verander wachtwoord"
+              title={getText("changePassword")}
               onPress={() => this.login()}
             />
           </View>
@@ -129,4 +133,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default ChangePassword;

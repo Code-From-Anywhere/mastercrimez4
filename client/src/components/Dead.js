@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, View } from "react-native";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 import Button from "./Button";
 class Dead extends React.Component {
   state = {
@@ -12,6 +13,9 @@ class Dead extends React.Component {
       screenProps: { me, device, reloadMe },
       navigation,
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     const sec = Math.round((me.reizenAt - Date.now()) / 1000);
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -27,7 +31,7 @@ class Dead extends React.Component {
           ) : null}
           <Button
             theme={device.theme}
-            title="Word levend"
+            title={getText("deadBecomeAlive")}
             onPress={() => {
               fetch(`${Constants.SERVER_ADDR}/getalive`, {
                 method: "POST",

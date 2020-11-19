@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import CountDown from "react-native-countdown-component";
 import Constants from "../Constants";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 import Button from "./Button";
 import T from "./T";
 class Jail extends React.Component {
@@ -79,17 +79,20 @@ class Jail extends React.Component {
       screenProps: { me, device, reloadMe },
       navigation,
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     const { response } = this.state;
     const sec = Math.round((me.jailAt - Date.now()) / 1000);
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
-        <T>Je zit in de gevangenis</T>
+        <T>{getText("jailYoureInJail")}</T>
 
         <CountDown
           until={sec}
           size={20}
           timeToShow={["M", "S"]}
-          timeLabels={{ m: "Minuten", s: "Seconden" }}
+          timeLabels={{ m: getText("minutes"), s: getText("seconds") }}
         />
 
         <View style={{ height: 15 }} />
@@ -98,13 +101,13 @@ class Jail extends React.Component {
         <Button
           style={{ marginVertical: 15 }}
           theme={device.theme}
-          title="Koop jezelf uit voor 5 credits"
+          title={getText("jailBuyoutCredits")}
           onPress={() => this.buyOut("credits")}
         />
         <Button
           style={{ marginVertical: 15 }}
           theme={device.theme}
-          title="Koop jezelf uit voor 1.000.000 contant"
+          title={getText("jailBuyoutCash")}
           onPress={() => this.buyOut("cash")}
         />
 
