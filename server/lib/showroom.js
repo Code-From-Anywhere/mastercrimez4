@@ -1,4 +1,7 @@
 const cars = require("../assets/cars.json");
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const showroom = async (req, res, User, Garage) => {
   res.json(
@@ -15,6 +18,8 @@ const buycar = async (req, res, User, Garage) => {
   const { id, loginToken } = req.body;
   const user = await User.findOne({ where: { loginToken } });
   if (user) {
+    getText = getTextFunction(user.locale);
+
     const car = cars.find((car1) => Number(car1.id) === Number(id));
     if (car) {
       if (user.cash >= Number(car.waarde) * 3) {
@@ -33,15 +38,15 @@ const buycar = async (req, res, User, Garage) => {
           kogels: car.kogels,
         });
 
-        res.json({ response: "Gekocht" });
+        res.json({ response: getText("showroomSuccess") });
       } else {
-        res.json({ response: "Je hebt niet genoeg geld contant" });
+        res.json({ response: getText("showroomNotEnoughCash") });
       }
     } else {
-      res.json({ response: "Deze auto bestaat niet" });
+      res.json({ response: getText("showroomCarDoesntExist") });
     }
   } else {
-    res.json({ response: "Kan deze gebruiker niet vinden" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 

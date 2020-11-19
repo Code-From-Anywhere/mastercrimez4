@@ -4,8 +4,11 @@ const {
   sendMessageAndPush,
   needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
+  getTextFunction,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
+
+let getText = getTextFunction();
 
 const SECONDS = 30;
 
@@ -13,38 +16,40 @@ const rob = async (req, res, User, Message, Action) => {
   const { token, name, captcha } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldig token" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   if (user.needCaptcha && Number(captcha) !== user.captcha) {
-    return res.json({ response: "Verkeerde code!" });
+    return res.json({ response: getText("wrongCode") });
   }
 
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
   if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
-    return res.json({ response: "Je moet je account eerst verifiëren!" });
+    return res.json({ response: getText("accountNotVerified") });
   }
 
   const user2 = await User.findOne({
@@ -57,34 +62,34 @@ const rob = async (req, res, User, Message, Action) => {
   });
 
   if (!user2) {
-    res.json({ response: "Die persoon bestaat niet" });
+    res.json({ response: getText("personDoesntExist") });
     return;
   }
 
   if (user2.name === user.name) {
-    res.json({ response: "Dat ben je zelf!" });
+    res.json({ response: getText("thatsYourself") });
     return;
   }
 
   if (user.robAt + SECONDS * 1000 > Date.now()) {
     res.json({
-      response: "Je moet nog even wachten voor je weer iemand kan beroven",
+      response: getText("robWait"),
     });
     return;
   }
 
   if (user2.robbedAt + SECONDS * 1000 > Date.now()) {
-    res.json({ response: "Deze persoon is net ook al beroofd" });
+    res.json({ response: getText("robPersonAlreadyRobbed") });
     return;
   }
 
   if (user2.bunkerAt > Date.now()) {
-    res.json({ response: "Deze persoon zit in de schuilkelder" });
+    res.json({ response: getText("robPersonBunker") });
     return;
   }
 
   if (user.bunkerAt > Date.now()) {
-    res.json({ response: "Vanuit de schuilkelder kan je niemand beroven" });
+    res.json({ response: getText("robYoureInBunker") });
     return;
   }
 
@@ -107,7 +112,7 @@ const rob = async (req, res, User, Message, Action) => {
   });
 
   if (probability < random) {
-    res.json({ response: "Het is mislukt" });
+    res.json({ response: getText("fail") });
     User.update(
       {
         robAt: now,
@@ -145,19 +150,19 @@ const rob = async (req, res, User, Message, Action) => {
       sendMessageAndPush(
         user,
         user2,
-        `${user.name} heeft je beroofd en heeft ${stealAmount} van je gejat.`,
+        getText("robMessage", user.name, stealAmount),
         Message,
         true
       );
 
       return res.json({
-        response: `Het is gelukt! Je hebt ${stealAmount},- gejat.`,
+        response: getText("robSuccess", stealAmount),
       });
     }
 
     // console.log("gelukt", gelukt, "gelukt2", gelukt2);
   }
-  return res.json({ response: "Er ging iets mis" });
+  return res.json({ response: getText("somethingWentWrong") });
 };
 
 module.exports = { rob };

@@ -1,6 +1,9 @@
 const items = require("../assets/shop.json");
 const { Op, Sequelize } = require("sequelize");
 const PERCENTAGE_FOR_OWNER = 0.2;
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const current = (type, user) =>
   items.filter((item) => item.type === type)[user[type] - 1];
@@ -15,7 +18,7 @@ const shop = async (req, res, User) => {
   if (user) {
     res.json({ current: current(type, user), next: next(type, user) });
   } else {
-    res.json({ error: "no user found" });
+    res.json({ error: getText("invalidUser") });
   }
 };
 
@@ -23,27 +26,29 @@ const buy = async (req, res, User, City) => {
   const { loginToken, type } = req.body;
   const user = await User.findOne({ where: { loginToken } });
   if (user) {
+    getText = getTextFunction(user.locale);
+
     const item = next(type, user);
 
     if (user.jailAt > Date.now()) {
-      return res.json({ response: "Je zit in de bajes." });
+      return res.json({ response: getText("youreInJail") });
     }
 
     if (user.health === 0) {
-      return res.json({ response: "Je bent dood." });
+      return res.json({ response: getText("youreDead") });
     }
 
     if (user.reizenAt > Date.now()) {
-      return res.json({ response: "Je bent aan het reizen." });
+      return res.json({ response: getText("youreTraveling") });
     }
 
     if (!item) {
-      res.json({ response: "Dat ding bestaat niet" });
+      res.json({ response: getText("itemDoesntExist") });
       return;
     }
 
     if (item.price > user.cash) {
-      res.json({ response: "Je hebt niet genoeg geld contant" });
+      res.json({ response: getText("notEnoughCash", item.price) });
       return;
     }
 
@@ -83,12 +88,12 @@ const buy = async (req, res, User, City) => {
         { where: { city: user.city } }
       );
 
-      res.json({ response: "Gekocht" });
+      res.json({ response: getText("shopSuccess") });
     } else {
-      res.json({ response: "Er ging iets fout" });
+      res.json({ response: getText("somethingWentWrong") });
     }
   } else {
-    res.json({ response: "Kan deze gebruiker niet vinden" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 

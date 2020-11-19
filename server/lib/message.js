@@ -1,19 +1,24 @@
 const { Sequelize, Model, DataTypes, Op } = require("sequelize");
-const { sendMessageAndPush } = require("./util");
+const { sendMessageAndPush, getTextFunction } = require("./util");
+
+let getText = getTextFunction();
+
 const message = async (req, res, User, Message, Action) => {
   const { token, to, message } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Geen user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
+
+  getText = getTextFunction(user.locale);
 
   const user2 = await User.findOne({
     where: {
@@ -25,7 +30,7 @@ const message = async (req, res, User, Message, Action) => {
   });
 
   if (!user2) {
-    res.json({ response: "Die persoon bestaat niet" });
+    res.json({ response: getText("personDoesntExist") });
     return;
   }
 
@@ -37,23 +42,25 @@ const message = async (req, res, User, Message, Action) => {
 
   sendMessageAndPush(user, user2, message, Message);
 
-  res.json({ response: "Bericht verzonden" });
+  res.json({ response: getText("messageSent") });
 };
 
 const messages = async (req, res, User, Message) => {
   const { token } = req.query;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Geen user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
+
+  getText = getTextFunction(user.locale);
 
   const allMessages = await Message.findAll({
     where: { to: user.id },
@@ -63,48 +70,52 @@ const messages = async (req, res, User, Message) => {
     ],
   });
 
-  res.json({ response: "Success", messages: allMessages });
+  res.json({ response: getText("success"), messages: allMessages });
 };
 
 const readMessage = async (req, res, User, Message) => {
   const { token, id } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Geen user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   Message.update({ read: true }, { where: { id, to: user.id } });
 
-  res.json({ response: "Success" });
+  res.json({ response: getText("success") });
 };
 
 const deleteMessage = async (req, res, User, Message) => {
   const { token, id } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Geen user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
+
+  getText = getTextFunction(user.locale);
 
   const mess = await Message.findOne({ where: { id, to: user.id } });
   mess.destroy();
 
-  res.json({ response: "Success" });
+  res.json({ response: getText("success") });
 };
 
 module.exports = { message, messages, readMessage, deleteMessage };

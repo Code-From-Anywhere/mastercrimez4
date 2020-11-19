@@ -1,42 +1,49 @@
 const { Sequelize } = require("sequelize");
-const { needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
+const {
+  needCaptcha,
+  NUM_ACTIONS_UNTIL_VERIFY,
+  getTextFunction,
+} = require("./util");
+let getText = getTextFunction();
 
 const income = async (req, res, sequelize, User, City, Action) => {
   const { token, captcha } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   if (user.needCaptcha && Number(captcha) !== user.captcha) {
-    return res.json({ response: "Verkeerde code!" });
+    return res.json({ response: getText("wrongCode") });
   }
 
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
   if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
-    return res.json({ response: "Je moet je account eerst verifiëren!" });
+    return res.json({ response: getText("accountNotVerified") });
   }
 
   const incomeAt = user.incomeAt ? user.incomeAt : 0;
@@ -63,7 +70,7 @@ const income = async (req, res, sequelize, User, City, Action) => {
   );
 
   if (!updated) {
-    return res.json({ response: "Je kan nu geen inkomen ophalen" });
+    return res.json({ response: getText("somethingWentWrong") });
   }
 
   Action.create({
@@ -81,9 +88,7 @@ const income = async (req, res, sequelize, User, City, Action) => {
     { where: { city: user.city } }
   );
 
-  res.json({
-    response: `Je hebt inkomen opgehaald: ${amount}.`,
-  });
+  res.json({ response: getText("incomeSuccess", amount) });
 };
 
 module.exports = { income };

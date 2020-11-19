@@ -1,7 +1,8 @@
 const { Op, Sequelize } = require("sequelize");
-const { sendMessageAndPush } = require("./util");
+const { sendMessageAndPush, getTextFunction } = require("./util");
 
-const typeStrings = {
+let getText = getTextFunction();
+let typeStrings = {
   bulletFactory: "Kogelfabriek",
   casino: "Casino",
   landlord: "Huisjesmelker",
@@ -57,30 +58,32 @@ const becomeOwner = async (req, res, User, City) => {
   const { city, type, token } = req.body;
 
   if (!token) {
-    return res.json({ response: "Geen logintoken gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   const cityObj = await City.findOne({ where: { city } });
 
   if (!cityObj) {
-    return res.json({ response: "Stad niet gevonden" });
+    return res.json({ response: getText("cityNotFound") });
   }
 
   const key = properties.map((p) => p.name).includes(type)
@@ -88,7 +91,7 @@ const becomeOwner = async (req, res, User, City) => {
     : null;
 
   if (!key) {
-    return res.json({ response: "Ongeldig type" });
+    return res.json({ response: getText("invalidType") });
   }
 
   const [cityUpdated] = await City.update(
@@ -97,23 +100,25 @@ const becomeOwner = async (req, res, User, City) => {
   );
 
   if (!cityUpdated) {
-    return res.json({ response: "Deze bezitting heeft al een eigenaar." });
+    return res.json({ response: getText("objectAlreadyOwner") });
   }
 
-  res.json({ response: "Je bent nu eigenaar" });
+  res.json({ response: getText("objectYoureOwner") });
 };
 
 const giveAway = async (req, res, User, City, Message) => {
   const { city, type, token, to } = req.body;
 
   if (!token) {
-    return res.json({ response: "Geen logintoken gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
+
+  getText = getTextFunction(user.locale);
 
   const user2 = await User.findOne({
     where: {
@@ -126,7 +131,7 @@ const giveAway = async (req, res, User, City, Message) => {
   });
 
   if (!user2) {
-    return res.json({ response: "Deze speler bestaat niet of is dood" });
+    return res.json({ response: getText("playerDoesntExistOrDead") });
   }
 
   const key = properties.map((p) => p.name).includes(type)
@@ -134,13 +139,13 @@ const giveAway = async (req, res, User, City, Message) => {
     : null;
 
   if (!key) {
-    return res.json({ response: "Ongeldig type" });
+    return res.json({ response: getText("invalidType") });
   }
 
   const cityObj = await City.findOne({ where: { city, [key]: user.name } });
 
   if (!cityObj) {
-    return res.json({ response: "Object niet gevonden" });
+    return res.json({ response: getText("objectNotFound") });
   }
 
   const [cityUpdated] = await City.update(
@@ -149,19 +154,33 @@ const giveAway = async (req, res, User, City, Message) => {
   );
 
   if (!cityUpdated) {
-    return res.json({ response: "Je kan deze bezitting niet weggeven." });
+    return res.json({ response: getText("objectCantGiveAway") });
   }
+
+  typeStrings = {
+    bulletFactory: getText("bulletFactory"),
+    casino: getText("casino"),
+    landlord: getText("landlord"),
+    junkies: getText("junkies"),
+    weaponShop: getText("weaponShop"),
+    rld: getText("rld"),
+    airport: getText("airport"),
+    estateAgent: getText("estateAgent"),
+    bank: getText("bank"),
+    jail: getText("jail"),
+    garage: getText("garage"),
+  };
 
   const typeString = typeStrings[type];
   sendMessageAndPush(
     user,
     user2,
-    `${user.name} heeft jou een ${typeString} gegeven in ${city}!`,
+    getText("objectGiveAwayMessage", user.name, typeString, city),
     Message,
     true
   );
 
-  res.json({ response: `De eigenaar is nu ${user2.name}` });
+  res.json({ response: getText("objectGiveAwaySuccess", user2.name) });
 };
 
 const changePrice = async (req, res, User, City) => {
@@ -170,17 +189,19 @@ const changePrice = async (req, res, User, City) => {
   price = Math.round(Number(price));
 
   if (isNaN(price) || price <= 0) {
-    return res.json({ response: "Dat is geen geldig aantal" });
+    return res.json({ response: getText("invalidAmount") });
   }
 
   if (!token) {
-    return res.json({ response: "Geen logintoken gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
+
+  getText = getTextFunction(user.locale);
 
   const key = properties
     .filter((p) => p.changePrice)
@@ -192,7 +213,7 @@ const changePrice = async (req, res, User, City) => {
   const maxPrice = ding ? ding.maxPrice : 0;
 
   if (!key) {
-    return res.json({ response: "Ongeldig type" });
+    return res.json({ response: getText("invalidType") });
   }
 
   const ownerKey = properties
@@ -207,11 +228,11 @@ const changePrice = async (req, res, User, City) => {
   });
 
   if (!cityObj) {
-    return res.json({ response: "Object niet gevonden" });
+    return res.json({ response: getText("objectNotFound") });
   }
 
   if (price > maxPrice) {
-    return res.json({ response: `De maximale prijs is ${maxPrice}` });
+    return res.json({ response: getText("objectMaxPriceIs", maxPrice) });
   }
 
   const [cityUpdated] = await City.update(
@@ -220,30 +241,32 @@ const changePrice = async (req, res, User, City) => {
   );
 
   if (!cityUpdated) {
-    return res.json({ response: "Er ging iets mis." });
+    return res.json({ response: getText("somethingWentWrong") });
   }
 
-  res.json({ response: `De prijs is nu ${price}` });
+  res.json({ response: getText("objectChangePriceSuccess", price) });
 };
 
 const getProfit = async (req, res, sequelize, User, City, Action) => {
   let { city, type, token } = req.body;
 
   if (!token) {
-    return res.json({ response: "Geen logintoken gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
+
+  getText = getTextFunction(user.locale);
 
   const key = properties.map((p) => p.name).includes(type)
     ? `${type}Profit`
     : null;
 
   if (!key) {
-    return res.json({ response: "Ongeldig type" });
+    return res.json({ response: getText("invalidType") });
   }
   const ownerKey = properties.map((p) => p.name).includes(type)
     ? `${type}Owner`
@@ -254,7 +277,7 @@ const getProfit = async (req, res, sequelize, User, City, Action) => {
   });
 
   if (!cityObj) {
-    return res.json({ response: "Object niet gevonden" });
+    return res.json({ response: getText("objectNotFound") });
   }
 
   const [cityUpdated] = await City.update(
@@ -263,7 +286,7 @@ const getProfit = async (req, res, sequelize, User, City, Action) => {
   );
 
   if (!cityUpdated) {
-    return res.json({ response: "Je hebt geen winst." });
+    return res.json({ response: getText("objectNoProfit") });
   }
 
   sequelize.query(
@@ -276,27 +299,43 @@ const getProfit = async (req, res, sequelize, User, City, Action) => {
     timestamp: Date.now(),
   });
 
-  res.json({ response: `Je hebt €${cityObj[key]},- opgehaald` });
+  res.json({ response: getText("objectGetProfitSuccess", cityObj[key]) });
 };
 
 const repairObject = async (req, res, sequelize, User, City, Action) => {
   let { city, type, token } = req.body;
 
   if (!token) {
-    return res.json({ response: "Geen logintoken gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
+
+  getText = getTextFunction(user.locale);
+
+  typeStrings = {
+    bulletFactory: getText("bulletFactory"),
+    casino: getText("casino"),
+    landlord: getText("landlord"),
+    junkies: getText("junkies"),
+    weaponShop: getText("weaponShop"),
+    rld: getText("rld"),
+    airport: getText("airport"),
+    estateAgent: getText("estateAgent"),
+    bank: getText("bank"),
+    jail: getText("jail"),
+    garage: getText("garage"),
+  };
 
   const key = properties.map((p) => p.name).includes(type)
     ? `${type}Damage`
     : null;
 
   if (!key) {
-    return res.json({ response: "Ongeldig type" });
+    return res.json({ response: getText("invalidType") });
   }
   const ownerKey = properties.map((p) => p.name).includes(type)
     ? `${type}Owner`
@@ -307,7 +346,7 @@ const repairObject = async (req, res, sequelize, User, City, Action) => {
   });
 
   if (!cityObj) {
-    return res.json({ response: "Object niet gevonden" });
+    return res.json({ response: getText("objectNotFound") });
   }
 
   const [cityUpdated] = await City.update(
@@ -316,7 +355,7 @@ const repairObject = async (req, res, sequelize, User, City, Action) => {
   );
 
   if (!cityUpdated) {
-    return res.json({ response: "Je hebt geen schade." });
+    return res.json({ response: getText("objectNoDamage") });
   }
 
   Action.create({
@@ -325,20 +364,22 @@ const repairObject = async (req, res, sequelize, User, City, Action) => {
     timestamp: Date.now(),
   });
 
-  res.json({ response: `Je hebt je ${typeStrings[type]} gerepareerd.` });
+  res.json({ response: getText("objectRepairSuccess", typeStrings[type]) });
 };
 
 const putInJail = async (req, res, User, City, Message, Action) => {
   let { city, type, token, who } = req.body;
 
   if (!token) {
-    return res.json({ response: "Geen logintoken gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
+
+  getText = getTextFunction(user.locale);
 
   const user2 = await User.findOne({
     where: {
@@ -351,13 +392,13 @@ const putInJail = async (req, res, User, City, Message, Action) => {
   });
 
   if (!user2) {
-    return res.json({ response: "Deze speler bestaat niet of is dood" });
+    return res.json({ response: getText("playerDoesntExistOrDead") });
   }
 
   const key = ["jail"].includes(type) ? `${type}Profit` : null;
 
   if (!key) {
-    return res.json({ response: "Ongeldig type" });
+    return res.json({ response: getText("invalidtype") });
   }
   const ownerKey = ["jail"].includes(type) ? `${type}Owner` : null;
 
@@ -366,13 +407,13 @@ const putInJail = async (req, res, User, City, Message, Action) => {
   });
 
   if (!cityObj) {
-    return res.json({ response: "Object niet gevonden" });
+    return res.json({ response: getText("objectNotFound") });
   }
 
   if (cityObj.jailPutAt >= Date.now()) {
     const seconds = Math.round((cityObj.jailPutAt - Date.now()) / 1000);
     return res.json({
-      response: `Je moet nog ${seconds} seconden wachten voordat je weer iemand in de gevangenis kan stoppen`,
+      response: getText("objectJailWait", seconds),
     });
   }
 
@@ -392,13 +433,13 @@ const putInJail = async (req, res, User, City, Message, Action) => {
   sendMessageAndPush(
     user,
     user2,
-    `${user.name} heeft jou voor 5 minuten in de gevangenis gestopt`,
+    getText("objectJailMessage", user.name),
     Message,
     true
   );
 
   res.json({
-    response: `Je hebt ${user2.name} in de gevangenis gestopt voor 5 minuten`,
+    response: getText("objectJailSuccess", user2.name),
   });
 };
 

@@ -46,7 +46,7 @@ const mollieWebhook = async (req, res, User, Payment) => {
       // Handle the error
     });
 
-  return res.json({ response: "Er ging iets mis" });
+  return res.json({ response: "Something went wrong" });
 };
 
 module.exports = { mollieWebhook };

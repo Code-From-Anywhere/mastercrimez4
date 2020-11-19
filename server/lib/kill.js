@@ -3,8 +3,10 @@ const {
   getStrength,
   sendMessageAndPush,
   NUM_ACTIONS_UNTIL_VERIFY,
+  getTextFunction,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
+let getText = getTextFunction();
 
 const properties = [
   "bulletFactory",
@@ -26,43 +28,45 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
   const { token, name, bullets } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   if (bullets < 0 || isNaN(bullets)) {
-    res.json({ response: "Ongeldig aantal kogels" });
+    res.json({ response: getText("killInvalidBullets") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldig token" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
   if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
-    return res.json({ response: "Je moet je account eerst verifiëren!" });
+    return res.json({ response: getText("accountNotVerified") });
   }
 
   if (user.bullets < Number(bullets)) {
-    res.json({ response: "Je hebt niet genoeg kogels" });
+    res.json({ response: getText("killNotEnoughBullets") });
     return;
   }
 
@@ -76,49 +80,49 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
   });
 
   if (!user2) {
-    res.json({ response: "Die persoon bestaat niet" });
+    res.json({ response: getText("personDoesntExist") });
     return;
   }
 
   if (user2.name === user.name) {
-    res.json({ response: "Dat ben je zelf!" });
+    res.json({ response: getText("thatsYourself") });
     return;
   }
 
   if (user2.health <= 0) {
-    res.json({ response: `${user2.name} is al dood` });
+    res.json({ response: getText("personAlreadyDead", user2.name) });
     return;
   }
 
   if (user.attackAt + SECONDS * 1000 > Date.now()) {
     res.json({
-      response: "Je moet nog even wachten voor je weer iemand kan aanvallen",
+      response: getText("killWaitSeconds"),
     });
     return;
   }
 
   if (user2.attackedAt + SECONDS * 1000 > Date.now()) {
-    res.json({ response: "Deze persoon is net ook al aangevallen" });
+    res.json({ response: getText("killPersonJustAttacked") });
     return;
   }
 
   if (user.protectionAt > Date.now()) {
-    res.json({ response: "Je staat onder bescherming" });
+    res.json({ response: getText("youreUnderProtection") });
     return;
   }
 
   if (user2.protectionAt > Date.now()) {
-    res.json({ response: "Deze persoon staat onder bescherming" });
+    res.json({ response: getText("personUnderProtection") });
     return;
   }
 
   if (user2.bunkerAt > Date.now()) {
-    res.json({ response: "Deze persoon zit in de schuilkelder" });
+    res.json({ response: getText("personInBunker") });
     return;
   }
 
   if (user.bunkerAt > Date.now()) {
-    res.json({ response: "Vanuit de schuilkelder kan je niemand aanvallen" });
+    res.json({ response: getText("killYoureInBunker") });
     return;
   }
 
@@ -145,12 +149,12 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
   if (!canAttack) {
     // NB: this prevents the spam bug!
     return res.json({
-      response: "Je moet nog even wachten voor je weer iemand kan aanvallen.",
+      response: getText("killWaitABit"),
     });
   }
 
   if (user2.city !== user.city) {
-    res.json({ response: `${user2.name} is in een andere stad` });
+    res.json({ response: getText("personAnotherCity", user2.name) });
     return;
   }
 
@@ -185,8 +189,16 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
   let responseMessageBackfire;
 
   if (damageBackfire >= user.health) {
-    responseBackfire = `${user2.name} schoot terug met ${bulletsBackfire} kogels. Jij ging dood van de schoten.`;
-    responseMessageBackfire = `Met je backfire van ${bulletsBackfire} kogels heb je ${user.name} doodgeschoten!`;
+    responseBackfire = getText(
+      "killResponseBackfire",
+      user2.name,
+      bulletsBackfire
+    );
+    responseMessageBackfire = getText(
+      "killResponseMessageBackfire",
+      user.name,
+      bulletsBackfire
+    );
 
     User.update(
       {
@@ -218,8 +230,17 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
         return updated;
       });
   } else {
-    responseBackfire = `${user2.name} schoot terug met ${bulletsBackfire} kogels. Dit heeft jou ${damageBackfire}% schade toegebracht.`;
-    responseMessageBackfire = `Met je backfire heb je ${user2.name} ${damageBackfire}% schade toegebracht.`;
+    responseBackfire = getText(
+      "responseBackfire2",
+      user2.name,
+      bulletsBackfire,
+      damageBackfire
+    );
+    responseMessageBackfire = getText(
+      "killResponseMessageBackfire2",
+      user2.name,
+      damageBackfire
+    );
 
     User.update(
       { health: user.health - damageBackfire },
@@ -246,7 +267,14 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
     const money = user2.bank + user2.cash;
 
     res.json({
-      response: `Je schoot met ${bullets} kogels op ${user2.name}. Je hebt ${user2.name} vermoord. Je hebt ${money},- gestolen en ${gamepoints} gamepoints. ${responseBackfire}`,
+      response: getText(
+        "killSuccess",
+        bullets,
+        user2.name,
+        money,
+        gamepoints,
+        responseBackfire
+      ),
     });
 
     User.update(
@@ -282,7 +310,7 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
     sendMessageAndPush(
       user,
       user2,
-      `${user.name} schoot op jou met ${bullets} kogels. ${user.name} heeft je vermoord! ${responseMessageBackfire}`,
+      getText("killMessage", user.name, bullets, responseMessageBackfire),
       Message,
       true
     );
@@ -311,7 +339,7 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
       sendMessageAndPush(
         user,
         accomplice,
-        `${user.name} schoot op ${user2.name} met ${bullets} kogels. ${user.name} heeft ${user2.name} vermoord!`,
+        getText("killSuccessAccompliceMessage", user.name, user2.name, bullets),
         Message,
         true
       );
@@ -352,7 +380,13 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
       sendMessageAndPush(
         user,
         accomplice,
-        `${user.name} heeft ${user2.name} aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- gejat!`,
+        getText(
+          "killFailAccompliceMessage",
+          user.name,
+          user2.name,
+          damage,
+          stolenTotal
+        ),
         Message,
         true
       );
@@ -361,13 +395,25 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
     sendMessageAndPush(
       user,
       user2,
-      `${user.name} heeft je aangevallen en heeft ${damage}% schade toegebracht en ${stolenTotal},- van je gejat! ${responseBackfire}`,
+      getText(
+        "killFailMessage",
+        user.name,
+        damage,
+        stolenTotal,
+        responseBackfire
+      ),
       Message,
       true
     );
 
     res.json({
-      response: `Je hebt ${damage}% schade toegebracht aan ${user2.name}. Je hebt ${stolenTotal},- gestolen. ${responseBackfire}`,
+      response: getText(
+        "killFailResponse",
+        damage,
+        user2.name,
+        stolenTotal,
+        responseBackfire
+      ),
     });
   }
 };
@@ -376,19 +422,21 @@ const getalive = async (req, res, User, Message, Garage, Action) => {
   const { token, option } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldig token" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.health > 0) {
-    res.json({ response: "Je bent niet dood" });
+    res.json({ response: getText("youreNotDead") });
 
     return;
   }
@@ -403,7 +451,7 @@ const getalive = async (req, res, User, Message, Garage, Action) => {
     { health: 100, protectionAt: Date.now() + 86400000 },
     { where: { id: user.id } }
   );
-  res.json({ response: "Je bent levend" });
+  res.json({ response: getText("youreAlive") });
 };
 
 module.exports = { kill, getalive };

@@ -1,16 +1,21 @@
 const { Sequelize, Op } = require("sequelize");
-const { getRank, sendMessageAndPush } = require("./util");
+const { getRank, sendMessageAndPush, getTextFunction } = require("./util");
+
+let getText = getTextFunction();
+
 const hospital = async (req, res, User, Message, Action) => {
   const { loginToken, name } = req.body;
   const user = await User.findOne({ where: { loginToken } });
 
   if (user) {
+    getText = getTextFunction(user.locale);
+
     const user2 = await User.findOne({ where: { name: name } });
 
     if (user2) {
       if (user2.health > 0) {
         if (user2.health === 100) {
-          return res.json({ response: "Deze speler is nog helemaal levend" });
+          return res.json({ response: getText("hospitalStillAlive") });
         }
 
         const cost =
@@ -18,7 +23,7 @@ const hospital = async (req, res, User, Message, Action) => {
 
         if (user.cash < cost) {
           res.json({
-            response: `Je hebt niet genoeg geld contant, het kost ${cost},-`,
+            response: getText("notEnoughCash", cost),
           });
           return;
         }
@@ -28,10 +33,10 @@ const hospital = async (req, res, User, Message, Action) => {
         );
 
         if (!updated) {
-          return res.json({ response: "Er ging iets mis" });
+          return res.json({ response: getText("somethingWentWrong") });
         }
         User.update({ health: 100 }, { where: { id: user2.id } });
-        const message = `${user.name} heeft jou naar het ziekenhuis gebracht.`;
+        const message = getText("hospitalMessage", user.name);
         sendMessageAndPush(user, user2, message, Message, true);
 
         Action.create({
@@ -41,16 +46,16 @@ const hospital = async (req, res, User, Message, Action) => {
         });
 
         res.json({
-          response: `Je hebt ${user2.name} naar het ziekenhuis gebracht voor ${cost}`,
+          response: getText("hospitalSuccess", user2.name, cost),
         });
       } else {
-        res.json({ response: "Deze speler is dood" });
+        res.json({ response: getText("thisPlayerIsDead") });
       }
     } else {
-      res.json({ response: "Deze speler bestaat niet" });
+      res.json({ response: getText("cantFindPlayer") });
     }
   } else {
-    res.json({ response: "Kan deze gebruiker niet vinden" });
+    res.json({ response: getText("cantFindPlayer") });
   }
 };
 

@@ -55,39 +55,44 @@ const possibilities = {
 };
 
 const { Op, Sequelize } = require("sequelize");
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const poker = async (req, res, User, City, Action) => {
   const { loginToken, amount } = req.body;
 
   if (!loginToken) {
-    return res.json({ response: "Geen token gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   if (amount <= 0 || isNaN(amount)) {
-    res.json({ response: "Ongeldige hoeveelheid" });
+    res.json({ response: getText("invalidAmount") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   if (user.cash < amount) {
-    return res.json({ response: "Je hebt niet genoeg geld contant" });
+    return res.json({ response: getText("notEnoughCash", amount) });
   }
 
   const [updated] = await User.update(
@@ -96,7 +101,7 @@ const poker = async (req, res, User, City, Action) => {
   );
 
   if (updated !== 1) {
-    return res.json({ response: "Je hebt niet genoeg geld contant" });
+    return res.json({ response: getText("notEnoughCash", amount) });
   }
 
   City.update(
@@ -131,9 +136,7 @@ const poker = async (req, res, User, City, Action) => {
   winnerString = strings[winner];
 
   res.json({
-    response: `Je had een ${winnerString} en verdient ${payout}x je inzet terug: €${
-      payout * amount
-    },-`,
+    response: getText("pokerSuccess", winnerString, payout, payout * amount),
   });
 };
 

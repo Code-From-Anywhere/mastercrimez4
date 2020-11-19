@@ -1,15 +1,19 @@
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
+
 const movementsApp = async (req, res, User, Movement) => {
   const { loginToken, movements } = req.body;
 
   if (!loginToken) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
@@ -21,7 +25,7 @@ const movementsApp = async (req, res, User, Movement) => {
 
   Movement.bulkCreate(bulkMovements);
 
-  res.json({ response: "Gelukt" });
+  res.json({ response: getText("success") });
 };
 
 module.exports = { movementsApp };

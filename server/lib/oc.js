@@ -3,48 +3,53 @@ const {
   getStrength,
   needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
+  getTextFunction,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 const fetch = require("isomorphic-fetch");
 
 const SECONDS = 120;
 
+let getText = getTextFunction();
+
 const oc = async (req, res, User, Message, Action) => {
   const { token, captcha } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldig token" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   if (user.needCaptcha && Number(captcha) !== user.captcha) {
-    return res.json({ response: "Verkeerde code!" });
+    return res.json({ response: getText("wrongCode") });
   }
 
   const isNotVerified = await User.findOne({
     where: { loginToken: token, phoneVerified: false },
   });
   if (isNotVerified) {
-    return res.json({ response: "Je moet je account eerst verifiëren!" });
+    return res.json({ response: getText("accountNotVerified") });
   }
 
   const timeNeeded = 120000;
@@ -67,8 +72,7 @@ const oc = async (req, res, User, Message, Action) => {
 
     if (accomplicesTotal.length === 0) {
       return res.json({
-        response:
-          "Jij hebt nog geen handlangers. Nodig vrienden uit om georganiseerde misdaden met ze te kunnen doen.",
+        response: getText("ocNoAccomplices"),
       });
     }
 
@@ -102,7 +106,7 @@ const oc = async (req, res, User, Message, Action) => {
     );
 
     if (!updated) {
-      return res.json({ response: "Kon user niet updaten" });
+      return res.json({ response: getText("couldntUpdateUser") });
     }
 
     Action.create({
@@ -115,7 +119,7 @@ const oc = async (req, res, User, Message, Action) => {
       const names = accomplicesTotal.map((acc) => acc.name).join(", ");
 
       return res.json({
-        response: `Je bent een OC gestart. Je handlangers hebben 2 minuten om deel te nemen. Vraag ${names} om te spelen!`,
+        response: getText("ocSuccess1", names),
       });
     }
 
@@ -131,13 +135,12 @@ const oc = async (req, res, User, Message, Action) => {
     );
 
     res.json({
-      response: `Je hebt een OC gedaan met ${names}. De OC is gelukt! Je hebt ${random} ${name} verdiend. De komende 2 minuten zal jij je handlangers helpen met alle andere misdaden!`,
+      response: getText("ocSuccess2", names, random, name),
     });
   } else {
+    const sec = Math.round((user[timeKey] + timeNeeded - Date.now()) / 1000);
     res.json({
-      response: `Je moet nog ${Math.round(
-        (user[timeKey] + timeNeeded - Date.now()) / 1000
-      )} seconden wachten voor je weer kunt.`,
+      response: getText("ocWait", sec),
     });
   }
   //create activity with all variables

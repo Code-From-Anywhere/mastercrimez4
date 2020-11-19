@@ -1,6 +1,12 @@
-const { getRank, needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
+const {
+  getRank,
+  needCaptcha,
+  NUM_ACTIONS_UNTIL_VERIFY,
+  getTextFunction,
+} = require("./util");
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
+let getText = getTextFunction();
 
 const hoeren = async (req, res, User, Action) => {
   const { token, captcha } = req.body;
@@ -8,9 +14,8 @@ const hoeren = async (req, res, User, Action) => {
   const timeNeeded = 120000;
   const timeKey = "hoerenAt";
   const valueKey = "hoeren";
-  const name = "hoeren";
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
@@ -18,26 +23,29 @@ const hoeren = async (req, res, User, Action) => {
     where: { loginToken: token, phoneVerified: false },
   });
   if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
-    return res.json({ response: "Je moet je account eerst verifiëren!" });
+    return res.json({ response: getText("accountNotVerified") });
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    getText = getTextFunction(user.locale);
+    const name = getText("hoeren");
+
     if (user.needCaptcha && Number(captcha) !== user.captcha) {
-      return res.json({ response: "Verkeerde code!" });
+      return res.json({ response: getText("wrongCode") });
     }
 
     if (user.jailAt > Date.now()) {
-      return res.json({ response: "Je zit in de bajes." });
+      return res.json({ response: getText("youreInJail") });
     }
 
     if (user.health === 0) {
-      return res.json({ response: "Je bent dood." });
+      return res.json({ response: getText("youreDead") });
     }
 
     if (user.reizenAt > Date.now()) {
-      return res.json({ response: "Je bent aan het reizen." });
+      return res.json({ response: getText("youreTraveling") });
     }
 
     const rang = getRank(user.rank, "number");
@@ -85,13 +93,13 @@ const hoeren = async (req, res, User, Action) => {
       });
 
       res.json({
-        response: `Je hebt ${random} ${name} gepimpt`,
+        response: getText("hoerenSuccess", random, name),
       });
     } else {
+      const sec = Math.round((user[timeKey] + timeNeeded - Date.now()) / 1000);
+
       res.json({
-        response: `Je moet nog ${Math.round(
-          (user[timeKey] + timeNeeded - Date.now()) / 1000
-        )} seconden wachten voor je weer kunt.`,
+        response: getText("hoerenWaitSeconds", sec),
       });
     }
     //create activity with all variables

@@ -1,11 +1,14 @@
 const { Op } = require("sequelize");
 const cars = require("../assets/cars.json");
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const garage = async (req, res, User, Garage) => {
   const { token, auto } = req.query;
 
   if (!token) {
-    res.json({ response: "No token given" });
+    res.json({ response: getText("noToken") });
     return;
   }
   const user = await User.findOne({ where: { loginToken: token } });
@@ -21,7 +24,7 @@ const garage = async (req, res, User, Garage) => {
       res.json(garage);
     });
   } else {
-    res.json({ error: "no user found" });
+    res.json({ error: getText("invalidUser") });
   }
 };
 
@@ -29,7 +32,7 @@ const racecars = async (req, res, User, Garage) => {
   const { token, auto } = req.query;
 
   if (!token) {
-    res.json({ response: "No token given" });
+    res.json({ response: getText("noToken") });
     return;
   }
   const user = await User.findOne({ where: { loginToken: token } });
@@ -45,7 +48,7 @@ const racecars = async (req, res, User, Garage) => {
       res.json(garage);
     });
   } else {
-    res.json({ error: "no user found" });
+    res.json({ error: getText("invalidUser") });
   }
 };
 
@@ -53,7 +56,7 @@ const garageGrouped = async (req, res, User, Garage, sequelize) => {
   const { token } = req.query;
 
   if (!token) {
-    res.json({ response: "No token given" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
@@ -67,7 +70,7 @@ const garageGrouped = async (req, res, User, Garage, sequelize) => {
 
     res.json(grouped);
   } else {
-    res.json({ error: "no user found" });
+    res.json({ error: getText("invalidUser") });
   }
 };
 
@@ -75,11 +78,13 @@ const sellcar = async (req, res, User, Garage, Action) => {
   const { id, loginToken } = req.body;
 
   if (!loginToken) {
-    res.json({ response: "No token given" });
+    res.json({ response: getText("noToken") });
     return;
   }
   const user = await User.findOne({ where: { loginToken } });
   if (user) {
+    getText = getTextFunction(user.locale);
+
     const car = await Garage.findOne({ where: { id, userId: user.id } });
     if (car) {
       const destroy = await car.destroy();
@@ -96,15 +101,15 @@ const sellcar = async (req, res, User, Garage, Action) => {
           timestamp: Date.now(),
         });
 
-        res.json({ response: "Verkocht" });
+        res.json({ response: getText("sellSuccess") });
       } else {
-        res.json({ response: "Kon auto niet verwijderen" });
+        res.json({ response: getText("couldntDeleteCar") });
       }
     } else {
-      res.json({ response: "Deze auto bestaat niet" });
+      res.json({ response: getText("carDoesntExist") });
     }
   } else {
-    res.json({ response: "Kan deze gebruiker niet vinden" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 
@@ -112,41 +117,43 @@ const bulkaction = async (req, res, User, Garage, Action) => {
   const { auto, loginToken, amount, action } = req.body;
 
   if (!action) {
-    res.json({ response: "No action given" });
+    res.json({ response: getText("noAction") });
     return;
   }
 
   if (!loginToken) {
-    res.json({ response: "No token given" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   if (!amount || amount < 1) {
-    res.json({ response: "Geef een aantal op" });
+    res.json({ response: getText("giveAmount") });
     return;
   }
 
   if (!auto) {
-    res.json({ response: "Ongeldige auto" });
+    res.json({ response: getText("invalidCar") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
   if (!user) {
-    res.json({ response: "User niet gevonden" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
+
+  getText = getTextFunction(user.locale);
 
   const cars = await Garage.findAll({
     where: { auto, userId: user.id, power: 0 },
   });
   if (!cars) {
-    res.json({ response: "Ongeldige auto" });
+    res.json({ response: getText("invalidCar") });
     return;
   }
 
   if (amount > cars.length || amount < 0 || isNaN(amount)) {
-    res.json({ response: "Zoveel heb je er niet!" });
+    res.json({ response: getText("youDontHaveSoMany") });
     return;
   }
 
@@ -174,9 +181,9 @@ const bulkaction = async (req, res, User, Garage, Action) => {
       timestamp: Date.now(),
     });
 
-    res.json({ response: "Gelukt" });
+    res.json({ response: getText("success") });
   } else {
-    res.json({ response: "Er ging iets fout" });
+    res.json({ response: getText("somethingWentWrong") });
   }
 };
 
@@ -184,12 +191,14 @@ const crushcar = async (req, res, User, Garage, Action) => {
   const { id, loginToken } = req.body;
 
   if (!loginToken) {
-    res.json({ response: "No token given" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
   if (user) {
+    getText = getTextFunction(user.locale);
+
     const car = await Garage.findOne({ where: { id, userId: user.id } });
     if (car) {
       const destroy = await car.destroy();
@@ -206,15 +215,15 @@ const crushcar = async (req, res, User, Garage, Action) => {
           timestamp: Date.now(),
         });
 
-        res.json({ response: "Gecrushed" });
+        res.json({ response: getText("crushSuccess") });
       } else {
-        res.json({ response: "Kon auto niet verwijderen" });
+        res.json({ response: getText("couldntDeleteCar") });
       }
     } else {
-      res.json({ response: "Deze auto bestaat niet" });
+      res.json({ response: getText("carDoesntExist") });
     }
   } else {
-    res.json({ response: "Kan deze gebruiker niet vinden" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 
@@ -222,19 +231,21 @@ const upgradecar = async (req, res, User, Garage, Action) => {
   const { id, loginToken } = req.body;
 
   if (!loginToken) {
-    res.json({ response: "No token given" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
   if (!user) {
-    res.json({ response: "Kan deze gebruiker niet vinden" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   const car = await Garage.findOne({ where: { id, userId: user.id } });
   if (!car) {
-    res.json({ response: "Deze auto bestaat niet" });
+    res.json({ response: getText("carDoesntExist") });
     return;
   }
 
@@ -242,7 +253,7 @@ const upgradecar = async (req, res, User, Garage, Action) => {
 
   if (user.cash < price) {
     res.json({
-      response: `Je hebt niet genoeg geld contant, het kost €${price},-`,
+      response: getText("notEnoughCash", price),
     });
     return;
   }
@@ -250,12 +261,12 @@ const upgradecar = async (req, res, User, Garage, Action) => {
   const dbCar = cars.find((c) => c.naam === car.auto);
 
   if (!dbCar) {
-    res.json({ response: "Deze auto kan niet langer geupgrade worden" });
+    res.json({ response: getText("invalidDbCar") });
     return;
   }
 
   if (car.power >= dbCar.maxpower) {
-    res.json({ response: "Deze auto heeft het maximale level bereikt" });
+    res.json({ response: getText("carReachedMaxPower") });
     return;
   }
 
@@ -268,7 +279,7 @@ const upgradecar = async (req, res, User, Garage, Action) => {
   User.update({ cash: user.cash - Number(price) }, { where: { id: user.id } });
   Garage.update({ power: car.power + 1 }, { where: { id: car.id } });
 
-  res.json({ response: "Geupgrade" });
+  res.json({ response: getText("upgradeSuccess") });
 };
 
 module.exports = {
