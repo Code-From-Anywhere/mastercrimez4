@@ -1,8 +1,10 @@
 const { Op, Sequelize } = require("sequelize");
 const cars = require("../assets/cars.json");
-const { sendMessageAndPush } = require("./util");
+const { sendMessageAndPush, getTextFunction } = require("./util");
 
 const TYPES = ["highway", "city", "forest"];
+
+let getText = getTextFunction();
 
 const createStreetrace = async (
   req,
@@ -19,52 +21,54 @@ const createStreetrace = async (
   type = TYPES.includes(type) ? type : TYPES[0];
 
   if (!carId) {
-    return res.json({ response: "Geef een auto op" });
+    return res.json({ response: getText("streetraceNoCarId") });
   }
   if (!loginToken) {
-    return res.json({ response: "Geen token gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   if (price <= 0 || isNaN(price)) {
-    res.json({ response: "Ongeldige hoeveelheid" });
+    res.json({ response: getText("invalidAmount") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   const car = await Garage.findOne({ where: { id: carId, userId: user.id } });
 
   if (!car) {
-    return res.json({ response: "Kon auto niet vinden" });
+    return res.json({ response: getText("streetraceNoCar") });
   }
   if (car.power < 1) {
-    return res.json({ response: "Je auto heeft niet genoeg power" });
+    return res.json({ response: getText("streetraceNotEnoughPower") });
   }
 
   const carAsset = cars.find((c) => c.url === car.image);
 
   if (!carAsset) {
-    return res.json({ response: "Met deze auto kan niet meer geraced worden" });
+    return res.json({ response: getText("streetraceNoCarAsset") });
   }
 
   if (user.cash < Number(price)) {
-    return res.json({ response: "Je hebt niet genoeg geld contant." });
+    return res.json({ response: getText("notEnoughCash", price) });
   }
 
   const [updated] = await User.update(
@@ -73,11 +77,11 @@ const createStreetrace = async (
   );
 
   if (updated !== 1) {
-    return res.json({ response: "Je hebt niet genoeg geld contant" });
+    return res.json({ response: getText("notEnoughCash", price) });
   }
 
   if (isNaN(numParticipants) || numParticipants < 2 || numParticipants > 24) {
-    return res.json({ response: "Ongeldig aantal participants" });
+    return res.json({ response: getText("streetraceInvalidParticipants") });
   }
 
   const typePower = carAsset[`power_${type}`];
@@ -104,7 +108,7 @@ const createStreetrace = async (
     timestamp: Date.now(),
   });
 
-  res.json({ response: "De streetrace is aangemaakt", success: true });
+  res.json({ response: getText("streetraceCreateSuccess"), success: true });
 };
 
 const joinStreetrace = async (
@@ -120,68 +124,70 @@ const joinStreetrace = async (
   let { loginToken, streetraceId, carId } = req.body;
 
   if (!carId) {
-    return res.json({ response: "Geef een auto op" });
+    return res.json({ response: getText("streetraceNoCarId") });
   }
 
   if (!streetraceId) {
-    return res.json({ response: "Geef een streetrace op" });
+    return res.json({ response: getText("streetraceNoStreetraceId") });
   }
   if (!loginToken) {
-    return res.json({ response: "Geen token gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   const car = await Garage.findOne({ where: { id: carId, userId: user.id } });
 
   if (!car) {
-    return res.json({ response: "Kon auto niet vinden" });
+    return res.json({ response: getText("streetraceNoCar") });
   }
   if (car.power < 1) {
-    return res.json({ response: "Je auto heeft niet genoeg power" });
+    return res.json({ response: getText("streetraceNotEnoughPower") });
   }
 
   const carAsset = cars.find((c) => c.url === car.image);
 
   if (!carAsset) {
-    return res.json({ response: "Met deze auto kan niet meer geraced worden" });
+    return res.json({ response: getText("streetraceNoCarAsset") });
   }
 
   const streetrace = await Streetrace.findOne({ where: { id: streetraceId } });
 
   if (!streetrace) {
-    return res.json({ response: "Kon streetrace niet vinden" });
+    return res.json({ response: getText("streetraceNoStreetrace") });
   }
 
   const alreadyParticipant = await StreetraceParticipant.findOne({
     where: { streetraceId, name: user.name },
   });
   if (alreadyParticipant) {
-    return res.json({ response: "Je doet al mee aan deze streetrace" });
+    return res.json({ response: getText("streetraceAlreadyParticipant") });
   }
 
   if (streetrace.city !== user.city) {
-    return res.json({ response: "Je bent niet in de goede stad" });
+    return res.json({ response: getText("streetraceWrongCity") });
   }
 
   if (user.cash < Number(streetrace.price)) {
-    return res.json({ response: "Je hebt niet genoeg geld contant." });
+    return res.json({ response: getText("notEnoughCash", streetrace.price) });
   }
 
   const [updated] = await User.update(
@@ -190,7 +196,7 @@ const joinStreetrace = async (
   );
 
   if (updated !== 1) {
-    return res.json({ response: "Je hebt niet genoeg geld contant" });
+    return res.json({ response: getText("notEnoughCash", streetrace.price) });
   }
 
   const typePower = carAsset[`power_${streetrace.type}`];
@@ -209,7 +215,7 @@ const joinStreetrace = async (
     timestamp: Date.now(),
   });
 
-  res.json({ response: "Je hebt deelgenomen", success: true });
+  res.json({ response: getText("streetraceJoinSuccess"), success: true });
 };
 
 const leaveStreetrace = async (
@@ -225,34 +231,36 @@ const leaveStreetrace = async (
   let { loginToken, streetraceId } = req.body;
 
   if (!streetraceId) {
-    return res.json({ response: "Geef een streetrace op" });
+    return res.json({ response: getText("streetraceNoStreetraceId") });
   }
   if (!loginToken) {
-    return res.json({ response: "Geen token gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   const streetrace = await Streetrace.findOne({ where: { id: streetraceId } });
 
   if (!streetrace) {
-    return res.json({ response: "Kon streetrace niet vinden" });
+    return res.json({ response: getText("streetraceNoStreetrace") });
   }
 
   const participant = await StreetraceParticipant.findOne({
@@ -260,7 +268,7 @@ const leaveStreetrace = async (
   });
 
   if (!participant) {
-    return res.json({ response: "Je zit niet in deze streetrace" });
+    return res.json({ response: getText("streetraceNoParticipant") });
   }
 
   const destroyed = await StreetraceParticipant.destroy({
@@ -268,7 +276,7 @@ const leaveStreetrace = async (
   });
 
   if (destroyed === 0) {
-    return res.json({ response: "Je zit niet in deze streetrace" });
+    return res.json({ response: getText("streetraceNoParticipant") });
   }
 
   const [updated] = await User.update(
@@ -285,7 +293,7 @@ const leaveStreetrace = async (
     timestamp: Date.now(),
   });
 
-  res.json({ response: "Je hebt de streetrace verlaten", success: true });
+  res.json({ response: getText("streetraceLeaveSuccess"), success: true });
 };
 
 const startStreetrace = async (
@@ -301,34 +309,35 @@ const startStreetrace = async (
   let { loginToken, streetraceId } = req.body;
 
   if (!streetraceId) {
-    return res.json({ response: "Geef een streetrace op" });
+    return res.json({ response: getText("streetraceNoStreetraceId") });
   }
   if (!loginToken) {
-    return res.json({ response: "Geen token gegeven" });
+    return res.json({ response: getText("noToken") });
   }
 
   const user = await User.findOne({ where: { loginToken } });
 
   if (!user) {
-    return res.json({ response: "Geen user gevonden" });
+    return res.json({ response: getText("invalidUser") });
   }
+  getText = getTextFunction(user.locale);
 
   if (user.jailAt > Date.now()) {
-    return res.json({ response: "Je zit in de bajes." });
+    return res.json({ response: getText("youreInJail") });
   }
 
   if (user.health === 0) {
-    return res.json({ response: "Je bent dood." });
+    return res.json({ response: getText("youreDead") });
   }
 
   if (user.reizenAt > Date.now()) {
-    return res.json({ response: "Je bent aan het reizen." });
+    return res.json({ response: getText("youreTraveling") });
   }
 
   const streetrace = await Streetrace.findOne({ where: { id: streetraceId } });
 
   if (!streetrace) {
-    return res.json({ response: "Kon streetrace niet vinden" });
+    return res.json({ response: getText("streetraceNoStreetrace") });
   }
 
   const participant = await StreetraceParticipant.findOne({
@@ -336,7 +345,7 @@ const startStreetrace = async (
   });
 
   if (!participant) {
-    return res.json({ response: "Je zit niet in deze streetrace" });
+    return res.json({ response: getText("streetraceNoParticipant") });
   }
 
   const participants = await StreetraceParticipant.findAll({
@@ -344,7 +353,7 @@ const startStreetrace = async (
   });
 
   if (participants.length < streetrace.numParticipants) {
-    return res.json({ response: "Deze streetrace zit nog niet vol." });
+    return res.json({ response: getText("streetraceNotFull") });
   }
 
   const participantsCum = participants.map((participant, index) => {
@@ -373,7 +382,7 @@ const startStreetrace = async (
   });
 
   if (participantsDestroyed !== streetrace.numParticipants) {
-    return res.json({ response: "Er ging iets fout" });
+    return res.json({ response: getText("somethingWentWrong") });
   }
 
   const streetraceDestroyed = await Streetrace.destroy({
@@ -381,7 +390,7 @@ const startStreetrace = async (
   });
 
   if (streetraceDestroyed === 0) {
-    return res.json({ response: "Deze streetrace is al gereden." });
+    return res.json({ response: getText("streetraceStartAlready") });
   }
   const prizeMoney = streetrace.price * streetrace.numParticipants;
 
@@ -390,11 +399,13 @@ const startStreetrace = async (
     { where: { name: winner.name } }
   );
 
-  const report = `De streetrace is gereden!
+  const report = `${getText("streetraceReportTitle")}
 
-${participantsCum.map((p) => `${p.name} deed mee met een ${p.car}.`).join("\n")}
+${participantsCum
+  .map((p) => getText("streetraceReportParticipant", p.name, p.car))
+  .join("\n")}
   
-De winnaar is ${winner.name}. ${winner.name} wint €${prizeMoney},-`;
+${getText("streetraceReportConclusion", winner.name, prizeMoney)}`;
 
   participantsCum.forEach(async (p) => {
     const participantUser = await User.findOne({ where: { name: p.name } });
@@ -420,8 +431,7 @@ De winnaar is ${winner.name}. ${winner.name} wint €${prizeMoney},-`;
   });
 
   res.json({
-    response:
-      "Je hebt de streetrace gestart. Ga naar berichten om het resultaat te zien.",
+    response: getText("streetraceStartSuccess"),
     success: true,
   });
 };

@@ -1,5 +1,7 @@
 const { Op } = require("sequelize");
-const { sendMessageAndPush } = require("./util");
+const { sendMessageAndPush, getTextFunction } = require("./util");
+
+let getText = getTextFunction();
 
 const PRICE = 500;
 
@@ -7,24 +9,26 @@ const superMessage = async (req, res, User, Message) => {
   const { token, message } = req.body;
 
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (!user) {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
     return;
   }
 
+  getText = getTextFunction(user.locale);
+
   if (user.credits < PRICE) {
-    res.json({ response: "Je hebt niet genoeg credits" });
+    res.json({ response: getText("notEnoughCredits") });
     return;
   }
 
   if (!message) {
-    res.json({ response: "Vul een bericht in" });
+    res.json({ response: getText("superMessageNo") });
     return;
   }
 
@@ -33,7 +37,7 @@ const superMessage = async (req, res, User, Message) => {
     { where: { loginToken: token, credits: { [Op.gte]: PRICE } } }
   );
   if (!updated) {
-    return res.json({ response: "Je hebt niet genoeg credits" });
+    return res.json({ response: getText("notEnoughCredits") });
   }
 
   const to = await User.findAll({ where: { phoneVerified: true } });
@@ -44,7 +48,7 @@ const superMessage = async (req, res, User, Message) => {
     });
   }
 
-  res.json({ response: "Gelukt" });
+  res.json({ response: getText("success") });
 };
 
 module.exports = { superMessage };

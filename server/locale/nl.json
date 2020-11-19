@@ -99,6 +99,7 @@
   "junkiesCurrency": "junkies",
   "wiet": "wiet",
   "gamepoints": "gamepoints",
+  "weed": "wietplanten",
 
   "donateMessage": "$1 heeft jou $2 $3 overgemaakt",
   "donateSuccess": "Overgemaakt.",
@@ -209,5 +210,39 @@
   "shopSuccess": "Gekocht",
   "showroomSuccess": "Gekocht",
   "showroomNotEnoughCash": "Je hebt niet genoeg geld contant",
-  "showroomCarDoesntExist": "Deze auto bestaat niet"
+  "showroomCarDoesntExist": "Deze auto bestaat niet",
+
+  "stealCarTooManyCars": "Je kan maximaal $1 auto's in je garage, dus je kunt niet meer stelen! Ga naar garage winkel en koop een betere garage voordat je verder gaat.",
+  "stealCarJail": "Mislukt, je zit nu voor $1 seconden in de gevangenis",
+  "stealCarWait": "Je moet een minuut wachten. Nog $1 seconden",
+
+  "streetraceNoCarId": "Geef een auto op",
+  "streetraceNoCar": "Kon auto niet vinden",
+  "streetraceNotEnoughPower": "Je auto heeft niet genoeg power",
+  "streetraceNoCarAsset": "Met deze auto kan niet meer geraced worden",
+  "streetraceInvalidParticipants": "Ongeldig aantal deelnemers",
+  "streetraceCreateSuccess": "De streetrace is aangemaakt",
+  "streetraceNoStreetraceId": "Geef een streetrace op",
+  "streetraceNoStreetrace": "Kon streetrace niet vinden",
+  "streetraceAlreadyParticipant": "Je doet al mee aan deze streetrace",
+  "streetraceNoParticipant": "Je zit niet in deze streetrace",
+  "streetraceWrongCity": "Je bent niet in de goede stad",
+  "streetraceJoinSuccess": "Je hebt deelgenomen",
+  "streetraceLeaveSuccess": "Je hebt de streetrace verlaten",
+  "streetraceNotFull": "Deze streetrace zit nog niet vol.",
+  "streetraceStartAlready": "Deze streetrace is al gereden.",
+  "streetraceReportTitle": "De streetrace is gereden!",
+  "streetraceReportParticipant": "$1 deed mee met een $2",
+  "streetraceReportConclusion": "De winnaar is $1. $1 wint €$2,-",
+  "streetraceStartSuccess": "Je hebt de streetrace gestart. Ga naar berichten om het resultaat te zien.",
+  "superMessageNo": "Vul een bericht in",
+
+  "bankGiven": "gestort",
+  "bankTaken": "opgenomen",
+  "swissBankSuccess": "Je hebt $1 $2 $3",
+  "weedSuccess": "Je hebt $1 $2 geteelt",
+  "weedWait": "Je moet nog $1 seconden wachten voor je weer kunt.",
+  "workWait": "Je moet nog $2 minuten wachten.",
+  "workSuccess": "Gelukt. Je hebt €$1,- gejat",
+  "workFail": "Mislukt, je zit nu voor $1 seconden in de gevangenis"
 }

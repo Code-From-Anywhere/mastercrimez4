@@ -1,8 +1,13 @@
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
-const { needCaptcha, NUM_ACTIONS_UNTIL_VERIFY } = require("./util");
+const {
+  needCaptcha,
+  NUM_ACTIONS_UNTIL_VERIFY,
+  getTextFunction,
+} = require("./util");
 const cars = require("../assets/cars.json");
 const texts = require("../assets/carsTexts.json");
+let getText = getTextFunction();
 
 function randomEntry(array) {
   return array[Math.floor(array.length * Math.random())];
@@ -13,7 +18,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
 
   if (!token) {
     console.log("token", req);
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
@@ -21,31 +26,33 @@ const stealcar = async (req, res, User, Garage, Action) => {
     where: { loginToken: token, phoneVerified: false },
   });
   if (isNotVerified && isNotVerified.numActions > NUM_ACTIONS_UNTIL_VERIFY) {
-    return res.json({ response: "Je moet je account eerst verifiëren!" });
+    return res.json({ response: getText("accountNotVerified") });
   }
 
   if (!option || option <= 0 || option > 15) {
-    res.json({ response: "Ongeldige invoer" + option });
+    res.json({ response: getText("invalidInput") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    getText = getTextFunction(user.locale);
+
     if (user.jailAt > Date.now()) {
-      return res.json({ response: "Je zit in de bajes." });
+      return res.json({ response: getText("youreInJail") });
     }
 
     if (user.health === 0) {
-      return res.json({ response: "Je bent dood." });
+      return res.json({ response: getText("youreDead") });
     }
 
     if (user.reizenAt > Date.now()) {
-      return res.json({ response: "Je bent aan het reizen." });
+      return res.json({ response: getText("youreTraveling") });
     }
 
     if (user.needCaptcha && Number(captcha) !== user.captcha) {
-      return res.json({ response: "Verkeerde code!" });
+      return res.json({ response: getText("wrongCode") });
     }
     const carsAlready = await Garage.findAll({ where: { userId: user.id } });
     const amountCarsAlready = carsAlready.length;
@@ -61,9 +68,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
 
     if (maxCars[user.garage] < amountCarsAlready) {
       return res.json({
-        response: `Je kan maximaal ${
-          maxCars[user.garage]
-        } auto's in je garage, dus je kunt niet meer stelen! Ga naar garage winkel en koop een betere garage voordat je verder gaat.`,
+        response: getText("stealCarTooManyCars", maxCars[user.garage]),
       });
     }
 
@@ -90,7 +95,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
       );
 
       if (!updated) {
-        return res.json({ response: "Kon jou user niet updaten" });
+        return res.json({ response: getText("couldntUpdateUser") });
       }
 
       Action.create({
@@ -143,7 +148,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
         });
 
         res.json({
-          response: "Gelukt",
+          response: getText("success"),
           cars: allCars,
         });
       } else {
@@ -156,7 +161,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
             { where: { id: user.id } }
           );
           res.json({
-            response: `Mislukt, je zit nu voor ${seconden} seconden in de gevangenis`,
+            response: getText("stealCarJail", seconden),
           });
         } else {
           const textsOption = texts.filter(
@@ -167,15 +172,15 @@ const stealcar = async (req, res, User, Garage, Action) => {
         }
       }
     } else {
+      const sec = Math.round((user.autostelenAt + 60000 - Date.now()) / 1000);
+
       res.json({
-        response: `Je moet een minuut wachten.  Nog ${Math.round(
-          (user.autostelenAt + 60000 - Date.now()) / 1000
-        )} seconden`,
+        response: getText("stealCarWait", sec),
       });
     }
     //create activity with all variables
   } else {
-    res.json({ response: "Invalid token" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 

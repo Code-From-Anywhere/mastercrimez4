@@ -1,33 +1,39 @@
 const { Op } = require("sequelize");
+const { getTextFunction } = require("./util");
+
+let getText = getTextFunction();
+
 const swissBank = async (req, res, User, Action) => {
   const { token, amount, deposit, type } = req.body;
 
   if (type !== "bullets" && type !== "bank") {
-    return res.json({ response: "Verkeerde type" });
+    return res.json({ response: getText("invalidType") });
   }
   if (!token) {
-    res.json({ response: "Geen token" });
+    res.json({ response: getText("noToken") });
     return;
   }
 
   if (amount <= 0 || isNaN(amount)) {
-    res.json({ response: "Ongeldig bedrag" });
+    res.json({ response: getText("invalidAmount") });
     return;
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
 
   if (user) {
+    getText = getTextFunction(user.locale);
+
     if (user.jailAt > Date.now()) {
-      return res.json({ response: "Je zit in de bajes." });
+      return res.json({ response: getText("youreInJail") });
     }
 
     if (user.health === 0) {
-      return res.json({ response: "Je bent dood." });
+      return res.json({ response: getText("youreDead") });
     }
 
     if (user.reizenAt > Date.now()) {
-      return res.json({ response: "Je bent aan het reizen." });
+      return res.json({ response: getText("youreTraveling") });
     }
 
     const key =
@@ -63,17 +69,20 @@ const swissBank = async (req, res, User, Action) => {
           timestamp: Date.now(),
         });
 
-        const typeString = type === "bullets" ? "kogels" : "bankgeld";
-        const what = deposit ? "gestort" : "opgenomen";
-        res.json({ response: `Je hebt ${amount} ${typeString} ${what}` });
+        const typeString =
+          type === "bullets" ? getText("bullets") : getText("bankMoney");
+        const what = deposit ? getText("bankGiven") : getText("bankTaken");
+        res.json({
+          response: getText("bankSuccess", amount, typeString, what),
+        });
       } else {
-        res.json({ response: "Er ging iets mis" });
+        res.json({ response: getText("somethingWentWrong") });
       }
     } else {
-      res.json({ response: "Je hebt niet zoveel." });
+      res.json({ response: getText("notEnough") });
     }
   } else {
-    res.json({ response: "Ongeldige user" });
+    res.json({ response: getText("invalidUser") });
   }
 };
 
