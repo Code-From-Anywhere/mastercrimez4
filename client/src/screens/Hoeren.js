@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
 import Constants from "../Constants";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 // import { ReCaptcha } from "react-recaptcha-v3";
 
 class Hoeren extends Component {
@@ -70,9 +70,10 @@ class Hoeren extends Component {
 
   renderFooter = () => {
     const { device, me } = this.props.screenProps;
+    const getText = getTextFunction(me?.locale);
     return (
       <View>
-        {this.keyValue("Hoeren in bezit", me?.hoeren)}
+        {this.keyValue(getText("prostitutesInPossession"), me?.hoeren)}
 
         <Captcha
           screenProps={this.props.screenProps}
@@ -86,7 +87,7 @@ class Hoeren extends Component {
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
-          title="Pimp hoeren"
+          title={getText("pimpProstitutes")}
           onPress={this.submit}
         />
 
@@ -113,7 +114,7 @@ class Hoeren extends Component {
       cities,
     } = this.props.screenProps;
     const { navigation } = this.props;
-
+    const getText = getTextFunction(me?.locale);
     return (
       <>
         <View
@@ -124,7 +125,7 @@ class Hoeren extends Component {
           }}
         >
           <View style={{ flex: 2 }}>
-            <T bold>Stad</T>
+            <T bold>{getText("city")}</T>
           </View>
           <View
             style={{
@@ -133,8 +134,8 @@ class Hoeren extends Component {
               flexDirection: "row",
             }}
           >
-            <T bold>RLD</T>
-            <T bold>Winst</T>
+            <T bold>{getText("RLD")}</T>
+            <T bold>{getText("profit")}</T>
           </View>
         </View>
         {cities?.map((city, index) => {
@@ -167,7 +168,7 @@ class Hoeren extends Component {
                     <TouchableOpacity
                       onPress={() => this.becomeOwner(city.city)}
                     >
-                      <T>(Niemand)</T>
+                      <T>{getText("nobody")}</T>
                     </TouchableOpacity>
                   )}
                   {city.rldOwner === me?.name ? (
@@ -197,10 +198,11 @@ class Hoeren extends Component {
     const {
       screenProps: {
         device: { theme },
+        me,
       },
     } = this.props;
     const number = Math.ceil(Math.random() * 60);
-
+    const getText = getTextFunction(me?.locale);
     return (
       <ScrollView style={{ flex: 1 }}>
         <View style={{ margin: 20 }}>
@@ -219,7 +221,7 @@ class Hoeren extends Component {
 
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="OK"
+                title={getText("ok")}
                 onPress={() => this.setState({ response: null })}
               />
             </View>

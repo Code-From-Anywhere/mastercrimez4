@@ -4,24 +4,8 @@ import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getStrength } from "../Util";
+import { getStrength, getTextFunction } from "../Util";
 // import { ReCaptcha } from "react-recaptcha-v3";
-
-const options = [
-  {
-    id: 1,
-    option: "Doe pullups",
-  },
-  {
-    id: 2,
-    option: "Doe pushups",
-  },
-
-  {
-    id: 3,
-    option: "Doe situps",
-  },
-];
 
 class Gym extends Component {
   constructor(props) {
@@ -54,9 +38,15 @@ class Gym extends Component {
     const {
       screenProps: { me },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View>
-        {this.keyValue("Je moordrang", getStrength(me?.strength, "both"))}
+        {this.keyValue(
+          getText("yourStrength"),
+          getStrength(me?.strength, "both")
+        )}
       </View>
     );
   };
@@ -122,6 +112,8 @@ class Gym extends Component {
   };
 
   renderFooter = () => {
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
     return (
       <View>
         <Captcha
@@ -135,7 +127,7 @@ class Gym extends Component {
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ borderRadius: 10, marginTop: 20 }}
-          title="Train"
+          title={getText("train")}
           onPress={this.submit}
         />
       </View>
@@ -151,6 +143,24 @@ class Gym extends Component {
     } = this.props;
     const { response, selected } = this.state;
 
+    const getText = getTextFunction(me?.locale);
+
+    const options = [
+      {
+        id: 1,
+        option: getText("gymOption1"),
+      },
+      {
+        id: 2,
+        option: getText("gymOption2"),
+      },
+
+      {
+        id: 3,
+        option: getText("gymOption3"),
+      },
+    ];
+
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
         <View style={{ margin: 20, width: 300 }}>
@@ -162,7 +172,7 @@ class Gym extends Component {
 
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="OK"
+                title={getText("ok")}
                 onPress={() => this.setState({ response: null })}
               />
             </View>

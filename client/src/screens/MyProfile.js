@@ -13,6 +13,7 @@ import { TextInput } from "react-native-gesture-handler";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -56,7 +57,9 @@ class MyProfile extends React.Component {
   };
 
   handleUploadPhoto = () => {
-    const { device } = this.props.screenProps;
+    const { device, me } = this.props.screenProps;
+
+    const getText = getTextFunction(me?.locale);
 
     fetch(`${Constants.SERVER_ADDR}/upload`, {
       method: "POST",
@@ -72,12 +75,12 @@ class MyProfile extends React.Component {
       .then((response) => response.json())
       .then((response) => {
         this.fetchImages();
-        alert("Gelukt");
+        alert(getText("success"));
         this.setState({ photo: null });
       })
       .catch((error) => {
         console.log("upload error", error);
-        alert("Er ging iets mis");
+        alert(getText("somethingWentWrong"));
       });
   };
 
@@ -132,12 +135,14 @@ class MyProfile extends React.Component {
   };
 
   renderFooter = () => {
-    const { device } = this.props.screenProps;
+    const { device, me } = this.props.screenProps;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <Button
         theme={this.props.screenProps.device.theme}
-        title="Verwijder"
+        title={getText("delete")}
         onPress={() => {
           if (this.state.selectedImage) {
             fetch(`${Constants.SERVER_ADDR}/deleteimage`, {
@@ -159,7 +164,7 @@ class MyProfile extends React.Component {
                 console.error(error);
               });
           } else {
-            alert("Geen afbeelding geselecteerd");
+            alert(getText("noPictureSelected"));
           }
         }}
       />
@@ -170,8 +175,11 @@ class MyProfile extends React.Component {
     const { photo, images, bio } = this.state;
     const {
       device,
+      me,
       device: { theme },
     } = this.props.screenProps;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <View
@@ -192,7 +200,7 @@ class MyProfile extends React.Component {
         />
         <Button
           theme={this.props.screenProps.device.theme}
-          title="Opslaan"
+          title={getText("save")}
           onPress={() => {
             fetch(`${Constants.SERVER_ADDR}/updateProfile`, {
               method: "POST",
@@ -207,18 +215,18 @@ class MyProfile extends React.Component {
             })
               .then((response) => response.json())
               .then((response) => {
-                alert("Gelukt");
+                alert(getText("success"));
               })
               .catch((error) => {
                 console.log("upload error", error);
-                alert("Er ging iets mis");
+                alert(getText("somethingWentWrong"));
               });
           }}
         />
 
         <Button
           theme={this.props.screenProps.device.theme}
-          title="Kies afbeelding"
+          title={getText("choosePicture")}
           onPress={this.handleChoosePhoto}
         />
 

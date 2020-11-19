@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 
-class Garage extends Component {
+class Racecars extends Component {
   state = {
     selected: null,
     response: null,
@@ -115,9 +116,13 @@ class Garage extends Component {
   renderItem = ({ item, index }) => {
     const {
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View
         key={`item${index}`}
@@ -149,23 +154,25 @@ class Garage extends Component {
 
           <Text style={{ color: theme.primaryText }}>{item.auto}</Text>
           <Text style={{ color: theme.primaryText }}>&euro;{item.cash}</Text>
-          <Text style={{ color: theme.primaryText }}>{item.kogels} kogels</Text>
           <Text style={{ color: theme.primaryText }}>
-            {item.power}.000 power
+            {item.kogels} {getText("bullets")}
+          </Text>
+          <Text style={{ color: theme.primaryText }}>
+            {item.power}.000 {getText("power")}
           </Text>
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Verkoop"
+            title={getText("sell")}
             onPress={() => this.sellCar(item.id)}
           />
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Crush"
+            title={getText("crush")}
             onPress={() => this.crushCar(item.id)}
           />
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Upgrade"
+            title={getText("upgrade")}
             onPress={() => this.upgradeCar(item.id)}
           />
         </View>
@@ -193,4 +200,4 @@ class Garage extends Component {
   }
 }
 
-export default Garage;
+export default Racecars;

@@ -5,7 +5,7 @@ import CountDown from "react-native-countdown-component";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 class Jail extends Component {
   state = {
     jail: [],
@@ -34,8 +34,10 @@ class Jail extends Component {
 
   renderItem = ({ item, index }) => {
     const {
-      screenProps: { device, reloadMe },
+      screenProps: { me, device, reloadMe },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     const seconds = Math.floor((item.jailAt - Date.now()) / 1000);
 
@@ -54,7 +56,7 @@ class Jail extends Component {
         />
         <Button
           theme={this.props.screenProps.device.theme}
-          title="Breek uit"
+          title={getText("breakOut")}
           onPress={() => {
             fetch(`${Constants.SERVER_ADDR}/breakout`, {
               method: "POST",
@@ -104,6 +106,8 @@ class Jail extends Component {
     } = this.props.screenProps;
     const { navigation } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <>
         <View
@@ -116,7 +120,7 @@ class Jail extends Component {
         >
           <View style={{ flex: 2 }}>
             <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              Stad
+              {getText("city")}
             </Text>
           </View>
           <View
@@ -127,10 +131,10 @@ class Jail extends Component {
             }}
           >
             <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              Gevangenis
+              {getText("jail")}
             </Text>
             <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              Winst
+              {getText("profit")}
             </Text>
           </View>
         </View>
@@ -167,7 +171,7 @@ class Jail extends Component {
                     <TouchableOpacity
                       onPress={() => this.becomeOwner(city.city)}
                     >
-                      <T>(Niemand)</T>
+                      <T>{getText("nobody")}</T>
                     </TouchableOpacity>
                   )}
                   {city.jailOwner === me?.name ? (
@@ -200,6 +204,8 @@ class Jail extends Component {
       screenProps: { me },
     } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View style={{ flex: 1 }}>
         <FlatList
@@ -207,7 +213,7 @@ class Jail extends Component {
           renderItem={this.renderItem}
           ListHeaderComponent={this.renderHeader}
           ListFooterComponent={this.renderCities}
-          ListEmptyComponent={<T>Er zit niemand in de gevangenis</T>}
+          ListEmptyComponent={<T>{getText("jailEmpty")}</T>}
         />
       </View>
     );

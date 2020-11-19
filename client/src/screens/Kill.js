@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import Footer from "../components/Footer";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 class Kill extends Component {
   componentDidMount() {
     const name = this.props.navigation.state.params?.name;
@@ -44,21 +45,25 @@ class Kill extends Component {
   renderForm() {
     const {
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View>
         <TextInput
           style={style(theme).textInput}
-          placeholder="Naam"
+          placeholder={getText("name")}
           placeholderTextColor={theme.secondaryTextSoft}
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
         />
         <TextInput
           style={style(theme).textInput}
-          placeholder="Kogels"
+          placeholder={getText("bullets")}
           placeholderTextColor={theme.secondaryTextSoft}
           value={this.state.bullets}
           onChangeText={(bullets) => this.setState({ bullets })}
@@ -71,7 +76,7 @@ class Kill extends Component {
         >
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Vermoord"
+            title={getText("kill")}
             onPress={() => this.kill()}
           />
         </View>

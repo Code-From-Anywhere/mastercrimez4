@@ -3,6 +3,7 @@ import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 class Login extends React.Component {
   state = {
     email: "",
@@ -45,9 +46,13 @@ class Login extends React.Component {
     const { navigation } = this.props;
     const {
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View style={{ flex: 1 }}>
         <View
@@ -69,10 +74,10 @@ class Login extends React.Component {
               padding: 10,
             }}
           >
-            <Text style={{ fontSize: 20 }}>Email</Text>
+            <Text style={{ fontSize: 20 }}>{getText("email")}</Text>
 
             <TextInput
-              placeholder="Email"
+              placeholder={getText("email")}
               placeholderTextColor={theme.secondaryTextSoft}
               onChangeText={(email) => this.setState({ email })}
               value={this.state.email}
@@ -91,7 +96,7 @@ class Login extends React.Component {
 
             <Button
               theme={this.props.screenProps.device.theme}
-              title="Bevestig email"
+              title={getText("confirmEmail")}
               onPress={() => this.login()}
             />
           </View>

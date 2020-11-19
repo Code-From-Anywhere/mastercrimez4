@@ -6,7 +6,7 @@ import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
 import Constants from "../Constants";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 
 class Junkies extends Component {
   constructor(props) {
@@ -55,9 +55,11 @@ class Junkies extends Component {
 
   renderFooter = () => {
     const { device, me } = this.props.screenProps;
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View>
-        {this.keyValue("Junkies in bezit", me?.junkies)}
+        {this.keyValue(getText("junkiesInPossession"), me?.junkies)}
 
         <Captcha
           screenProps={this.props.screenProps}
@@ -71,7 +73,7 @@ class Junkies extends Component {
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
-          title="Train junkies"
+          title={getText("trainJunkies")}
           onPress={this.submit}
         />
 
@@ -115,6 +117,8 @@ class Junkies extends Component {
     } = this.props.screenProps;
     const { navigation } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <>
         <View
@@ -125,7 +129,7 @@ class Junkies extends Component {
           }}
         >
           <View style={{ flex: 2 }}>
-            <T bold>Stad</T>
+            <T bold>{getText("city")}</T>
           </View>
           <View
             style={{
@@ -134,8 +138,8 @@ class Junkies extends Component {
               flexDirection: "row",
             }}
           >
-            <T bold>Leger des Heils</T>
-            <T bold>Winst</T>
+            <T bold>{getText("junkiesObject")}</T>
+            <T bold>{getText("profit")}</T>
           </View>
         </View>
         {cities?.map((city, index) => {
@@ -168,7 +172,7 @@ class Junkies extends Component {
                     <TouchableOpacity
                       onPress={() => this.becomeOwner(city.city)}
                     >
-                      <T>(Niemand)</T>
+                      <T>{getText("nobody")}</T>
                     </TouchableOpacity>
                   )}
                   {city.junkiesOwner === me?.name ? (
@@ -199,9 +203,13 @@ class Junkies extends Component {
     const { response } = this.state;
     const {
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <ScrollView style={{ flex: 1 }}>
         <View style={{ margin: 20 }}>
@@ -213,7 +221,7 @@ class Junkies extends Component {
 
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="Oke"
+                title={getText("ok")}
                 onPress={() => this.setState({ response: null })}
               />
             </View>

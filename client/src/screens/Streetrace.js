@@ -13,7 +13,7 @@ import {
 import Button from "../components/Button";
 import Footer from "../components/Footer";
 import T from "../components/T";
-import { doOnce, get, post } from "../Util";
+import { doOnce, get, getTextFunction, post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
 const Streetrace = ({
@@ -27,6 +27,8 @@ const Streetrace = ({
     device: { theme, loginToken },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
   // if (!__DEV__) return <T>Coming soon</T>;
 
   const [loading, setLoading] = useState(false);
@@ -100,13 +102,19 @@ const Streetrace = ({
         />
 
         <View style={{ marginLeft: 10 }}>
-          <T>Organisator: {item.creator}</T>
-          <T>Plaats: {item.city}</T>
           <T>
-            Deelnemers: {item.streetraceParticipants.length}/
+            {getText("organizer")}: {item.creator}
+          </T>
+          <T>
+            {getText("place")}: {item.city}
+          </T>
+          <T>
+            {getText("participants")}: {item.streetraceParticipants.length}/
             {item.numParticipants}
           </T>
-          <T>Kosten: €{item.price},-</T>
+          <T>
+            {getText("costs")}: €{item.price},-
+          </T>
           {item.streetraceParticipants.length > 0 && (
             <T>{item.streetraceParticipants.map((x) => x.name).join(", ")}</T>
           )}
@@ -115,26 +123,29 @@ const Streetrace = ({
             item.streetraceParticipants.length === item.numParticipants ? (
               <Button
                 theme={theme}
-                title="Starten"
+                title={getText("startCTA")}
                 onPress={() => start(item.id)}
               />
             ) : (
               <Button
                 theme={theme}
-                title="Verlaten"
+                title={getText("leaveCTA")}
                 onPress={() => leave(item.id)}
               />
             )
           ) : (
             <Button
               theme={theme}
-              title="Deelnemen"
+              title={getText("participate")}
               onPress={() => {
                 // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
                 const options = racecars.map(
-                  (racecar) => `${racecar.auto} met ${racecar.power}.000 power`
+                  (racecar) =>
+                    `${racecar.auto} ${getText("with")} ${
+                      racecar.power
+                    }.000 ${getText("power")}`
                 );
-                options.push("Cancel");
+                options.push(getText("cancel"));
                 const destructiveButtonIndex = undefined;
                 const cancelButtonIndex = options.length - 1;
 

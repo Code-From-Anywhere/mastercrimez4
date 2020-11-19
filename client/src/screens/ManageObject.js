@@ -3,23 +3,9 @@ import { ScrollView, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { doOnce, numberFormat, post } from "../Util";
+import { doOnce, getTextFunction, numberFormat, post } from "../Util";
 
-const typeStrings = {
-  bulletFactory: "Kogelfabriek",
-  casino: "Casino",
-  landlord: "Huisjesmelker",
-  junkies: "Leger des Heils",
-  weaponShop: "Wapenwinkel",
-  rld: "Red light district",
-  airport: "Vliegveld",
-  estateAgent: "Makelaarskantoor",
-  bank: "Bank",
-  jail: "Gevangenis",
-  garage: "Garage",
-};
-
-const Bulletfactory = ({
+const ManageObject = ({
   navigation,
   navigation: {
     state: { params },
@@ -33,6 +19,22 @@ const Bulletfactory = ({
     device: { theme },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
+  const typeStrings = {
+    bulletFactory: getText("bulletFactory"),
+    casino: getText("casino"),
+    landlord: getText("landlord"),
+    junkies: getText("junkiesObject"),
+    weaponShop: getText("weaponShop"),
+    rld: getText("rld"),
+    airport: getText("airport"),
+    estateAgent: getText("estateAgent"),
+    bank: getText("bankObject"),
+    jail: getText("jail"),
+    garage: getText("garage"),
+  };
+
   const city = params?.city;
   const type = params?.type;
 
@@ -112,8 +114,9 @@ const Bulletfactory = ({
   const typeString = typeStrings[type];
 
   if (!typeString) {
-    return <T>Ongeldig type</T>;
+    return <T>{getText("invalidType")}</T>;
   }
+
   const profitKey = `${type}Profit`;
   const priceKey = `${type}Price`;
   const ownerKey = `${type}Owner`;
@@ -125,17 +128,17 @@ const Bulletfactory = ({
       {me?.name && theCity?.[ownerKey] === me?.name ? (
         <View>
           <T style={{ fontWeight: "bold" }}>
-            {typeString} in {city}
+            {typeString} {getText("xInX")} {city}
           </T>
 
           <View style={rowStyle}>
-            <T>Winst</T>
+            <T>{getText("profit")}</T>
             <T>€{numberFormat(theCity[profitKey])},-</T>
           </View>
 
           {theCity[priceKey] && (
             <View style={rowStyle}>
-              <T>Prijs</T>
+              <T>{getText("price")}</T>
               <T>{theCity[priceKey]}</T>
             </View>
           )}
@@ -144,18 +147,18 @@ const Bulletfactory = ({
             style={{ marginVertical: 15 }}
             onPress={getProfit}
             theme={theme}
-            title="Haal winst op"
+            title={getText("getProfit")}
           />
 
           <View style={rowStyle}>
-            <T>Schade</T>
+            <T>{getText("damage")}</T>
             <T>{theCity[damageKey]}%</T>
           </View>
           <Button
             style={{ marginVertical: 15 }}
             onPress={repair}
             theme={theme}
-            title="Repareer"
+            title={getText("repair")}
           />
 
           <View
@@ -167,12 +170,12 @@ const Bulletfactory = ({
           >
             <TextInput
               style={{ ...style(theme).textInput, flex: 1 }}
-              placeholder="Naam"
+              placeholder={getText("name")}
               placeholderTextColor={theme.secondaryTextSoft}
               value={giveTo}
               onChangeText={(x) => setGiveTo(x)}
             />
-            <Button onPress={giveAway} theme={theme} title="Geef" />
+            <Button onPress={giveAway} theme={theme} title={getText("give")} />
           </View>
 
           {type === "bulletFactory" && (
@@ -185,7 +188,7 @@ const Bulletfactory = ({
             >
               <TextInput
                 style={{ ...style(theme).textInput, flex: 1 }}
-                placeholder="Prijs per kogel"
+                placeholder={getText("pricePerBullet")}
                 placeholderTextColor={theme.secondaryTextSoft}
                 value={price}
                 onChangeText={(x) => setPrice(x)}
@@ -193,7 +196,7 @@ const Bulletfactory = ({
               <Button
                 onPress={changePrice}
                 theme={theme}
-                title="Verander prijs"
+                title={getText("changePrice")}
               />
             </View>
           )}
@@ -208,12 +211,16 @@ const Bulletfactory = ({
             >
               <TextInput
                 style={{ ...style(theme).textInput, flex: 1 }}
-                placeholder="Naam"
+                placeholder={getText("name")}
                 placeholderTextColor={theme.secondaryTextSoft}
                 value={who}
                 onChangeText={(x) => setWho(x)}
               />
-              <Button onPress={putInJail} theme={theme} title="Zet gevangen" />
+              <Button
+                onPress={putInJail}
+                theme={theme}
+                title={getText("putInJail")}
+              />
             </View>
           )}
         </View>
@@ -222,4 +229,4 @@ const Bulletfactory = ({
   );
 };
 
-export default Bulletfactory;
+export default ManageObject;

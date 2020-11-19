@@ -12,7 +12,7 @@ import * as Icon from "react-native-vector-icons";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getRank, getStrength, getUserColor } from "../Util";
+import { getRank, getStrength, getTextFunction, getUserColor } from "../Util";
 const { height } = Dimensions.get("window");
 const orders = [
   {
@@ -51,14 +51,19 @@ const orders = [
   },
 ];
 class Members extends Component {
-  state = {
-    members: [],
-    search: null,
-    orderBy: {
-      key: "onlineAt",
-      title: "Online",
-    },
-  };
+  constructor(props) {
+    super(props);
+
+    const getText = getTextFunction(props.screenProps.me?.locale);
+    this.state = {
+      members: [],
+      search: null,
+      orderBy: {
+        key: "onlineAt",
+        title: getText("online"),
+      },
+    };
+  }
 
   componentDidMount() {
     const { device } = this.props.screenProps;
@@ -140,10 +145,12 @@ class Members extends Component {
   };
 
   openActionSheet = () => {
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
     // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
     const options = orders.map((o) => o.title);
 
-    options.push("Annuleren");
+    options.push(getText("cancel"));
     this.props.showActionSheetWithOptions(
       {
         options,
@@ -161,6 +168,8 @@ class Members extends Component {
   };
 
   renderHeader = () => {
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
     const { members, search } = this.state;
 
     return (
@@ -169,7 +178,7 @@ class Members extends Component {
       >
         <Button
           theme={this.props.screenProps.device.theme}
-          title="Sorteer"
+          title={getText("sort")}
           onPress={() => this.openActionSheet()}
           icon="filter"
           font="FontAwesome"
@@ -189,7 +198,7 @@ class Members extends Component {
           }}
         >
           <TextInput
-            placeholder="Zoeken"
+            placeholder={getText("search")}
             placeholderTextColor={
               this.props.screenProps.device.theme.secondaryTextSoft
             }
@@ -219,7 +228,7 @@ class Members extends Component {
             paddingHorizontal: 20,
           }}
         >
-          <T style={{ fontWeight: "bold" }}>Naam</T>
+          <T style={{ fontWeight: "bold" }}>{getText("name")}</T>
           <T style={{ fontWeight: "bold" }}>{this.state.orderBy.title}</T>
         </View>
       </View>

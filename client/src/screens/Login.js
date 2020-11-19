@@ -4,6 +4,7 @@ import md5 from "react-native-md5";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 class Login extends React.Component {
   state = {
@@ -54,9 +55,12 @@ class Login extends React.Component {
     const {
       navigation,
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -81,10 +85,10 @@ class Login extends React.Component {
                   justifyContent: "space-between",
                 }}
               >
-                <Text style={{ fontSize: 20 }}>Email</Text>
+                <Text style={{ fontSize: 20 }}>{getText("email")}</Text>
 
                 <TextInput
-                  placeholder="Email"
+                  placeholder={getText("email")}
                   placeholderTextColor={theme.secondaryTextSoft}
                   onChangeText={(email) => this.setState({ email })}
                   value={this.state.email}
@@ -98,7 +102,7 @@ class Login extends React.Component {
                   justifyContent: "space-between",
                 }}
               >
-                <Text style={{ fontSize: 20 }}>Wachtwoord</Text>
+                <Text style={{ fontSize: 20 }}>{getText("password")}</Text>
 
                 <TextInput
                   secureTextEntry
@@ -119,7 +123,7 @@ class Login extends React.Component {
 
                 <Button
                   theme={theme}
-                  title="Login"
+                  title={getText("login")}
                   onPress={() => this.login()}
                 />
               </View>
@@ -142,7 +146,7 @@ class Login extends React.Component {
                       textDecorationLine: "underline",
                     }}
                   >
-                    registreren
+                    {getText("register")}
                   </Text>
                 </TouchableOpacity>
 
@@ -156,7 +160,7 @@ class Login extends React.Component {
                       textDecorationLine: "underline",
                     }}
                   >
-                    wachtwoord vergeten?
+                    {getText("forgotPassword")}
                   </Text>
                 </TouchableOpacity>
               </View>

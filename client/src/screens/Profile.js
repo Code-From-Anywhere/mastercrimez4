@@ -10,7 +10,13 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { get, getRank, getStrength, getUserColor } from "../Util";
+import {
+  get,
+  getRank,
+  getStrength,
+  getTextFunction,
+  getUserColor,
+} from "../Util";
 
 class ProfileScreen extends React.Component {
   state = {
@@ -93,17 +99,20 @@ class ProfileScreen extends React.Component {
     const {
       navigation,
       screenProps: {
+        me,
         device: { theme, loginToken },
       },
     } = this.props;
     const { profile, loading, images } = this.state;
+
+    const getText = getTextFunction(me?.locale);
 
     if (loading) {
       return <ActivityIndicator />;
     }
 
     if (!profile) {
-      return <T>Deze persoon bestaat niet</T>;
+      return <T>{getText("personDoesntExist")}</T>;
     }
 
     const isOnline = Date.now() - profile?.onlineAt < 300000;
@@ -144,20 +153,23 @@ class ProfileScreen extends React.Component {
               </View>
             ) : null}
 
-            {this.keyValue("Online", isOnline ? "✅" : "🛑")}
-            {this.keyValue("Contant", `€${profile?.cash}`)}
-            {this.keyValue("Bank", `€${profile?.bank}`)}
-            {this.keyValue("Rank", getRank(profile?.rank, "both"))}
-            {this.keyValue("Moordrang", getStrength(profile?.strength, "both"))}
-            {this.keyValue("Leven", `${profile?.health}%`)}
-            {this.keyValue("Wiet", profile?.wiet)}
-            {this.keyValue("Junkies", profile?.junkies)}
-            {this.keyValue("Hoeren", profile?.hoeren)}
+            {this.keyValue(getText("online"), isOnline ? "✅" : "🛑")}
+            {this.keyValue(getText("cash"), `€${profile?.cash}`)}
+            {this.keyValue(getText("bank"), `€${profile?.bank}`)}
+            {this.keyValue(getText("rank"), getRank(profile?.rank, "both"))}
+            {this.keyValue(
+              getText("strength"),
+              getStrength(profile?.strength, "both")
+            )}
+            {this.keyValue(getText("health"), `${profile?.health}%`)}
+            {this.keyValue(getText("weed"), profile?.wiet)}
+            {this.keyValue(getText("junkies"), profile?.junkies)}
+            {this.keyValue(getText("prostitutes"), profile?.hoeren)}
 
             {profile?.accomplices?.length > 0 ? (
               <>
                 <T style={{ fontWeight: "bold", marginBottom: 15 }}>
-                  Gang van {profile?.name}: {points} punten
+                  {getText("gangOfX", profile?.name, points)}
                 </T>
                 {profile.accomplices.map((accomplice) => {
                   return this.keyValue(
@@ -170,7 +182,7 @@ class ProfileScreen extends React.Component {
             <View style={styles.row}>
               <Button
                 theme={theme}
-                title="Chat"
+                title={getText("chat")}
                 onPress={async () => {
                   const { id } = await get(
                     `pm?loginToken=${loginToken}&userId=${profile.id}`
@@ -182,7 +194,7 @@ class ProfileScreen extends React.Component {
 
               <Button
                 theme={theme}
-                title="Stuur bericht"
+                title={getText("sendMessage")}
                 onPress={() =>
                   navigation.navigate("Messages", {
                     state: { to: profile.name, newMessage: true },
@@ -192,7 +204,7 @@ class ProfileScreen extends React.Component {
 
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="Beroof"
+                title={getText("rob")}
                 onPress={() =>
                   navigation.navigate("Rob", {
                     name: profile.name,
@@ -201,7 +213,7 @@ class ProfileScreen extends React.Component {
               />
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="Aanvallen"
+                title={getText("attack")}
                 onPress={() =>
                   navigation.navigate("Kill", {
                     name: profile.name,
@@ -210,7 +222,7 @@ class ProfileScreen extends React.Component {
               />
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="Doneren"
+                title={getText("donate")}
                 onPress={() =>
                   navigation.navigate("Donate", {
                     to: profile.name,

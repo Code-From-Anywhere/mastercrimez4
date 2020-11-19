@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { ScrollView } from "react-native";
 import Menu from "../components/Menu";
-import { areYouSure } from "../Util";
+import { areYouSure, getTextFunction } from "../Util";
 
 class Status extends Component {
   render() {
@@ -13,6 +13,8 @@ class Status extends Component {
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <ScrollView>
@@ -35,7 +37,7 @@ class Status extends Component {
             IconFont="Ionicons"
             icon="ios-notifications"
             navigation={navigation}
-            title="Purge"
+            title={getText("purge")}
             onPress={() =>
               areYouSure(() => {
                 dispatch({ type: "PURGE" });
@@ -49,13 +51,13 @@ class Status extends Component {
           IconFont="Entypo"
           icon="phone"
           navigation={navigation}
-          title="Telefoonnummer verifiëren"
+          title={getText("verifyPhone")}
           to="VerifyPhone"
         />
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Wachtwoord veranderen"
+          title={getText("menuChangePassword")}
           to="ChangePassword"
           IconFont="MaterialCommunityIcons"
           icon="onepassword"
@@ -63,7 +65,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Email veranderen"
+          title={getText("signupEmail")}
           to="SignupEmail"
           IconFont="Entypo"
           icon="email"
@@ -71,7 +73,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Naam veranderen"
+          title={getText("changeName")}
           to="ChangeName"
           IconFont="FontAwesome"
           icon="bank"
@@ -79,7 +81,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Layout"
+          title={getText("layout")}
           to="Theme"
           IconFont="Ionicons"
           icon="ios-color-palette"
@@ -87,7 +89,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Login op ander account"
+          title={getText("menuLogin")}
           to="Login"
           IconFont="Entypo"
           icon="login"
@@ -95,7 +97,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Mijn profiel aanpassen"
+          title={getText("menuMyProfile")}
           to="MyProfile"
           IconFont="AntDesign"
           icon="user"
@@ -103,7 +105,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Backfire"
+          title={getText("menuBackfire")}
           to="Backfire"
           IconFont="MaterialCommunityIcons"
           icon="pistol"
@@ -111,7 +113,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Handlanger"
+          title={getText("menuAccomplice")}
           to="Accomplice"
           IconFont="FontAwesome"
           icon="universal-access"

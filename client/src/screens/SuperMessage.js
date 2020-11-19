@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 class SuperMessage extends Component {
   state = {
@@ -13,18 +14,16 @@ class SuperMessage extends Component {
   renderForm() {
     const { me, device } = this.props.screenProps;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <ScrollView style={{ flex: 1, padding: 15 }}>
-        <T>
-          Je hebt {me?.credits} credits. Een superbericht kost 500 credits. Een
-          superbericht word naar alle geverifieerde spelers gestuurd, dood of
-          levend.
-        </T>
+        <T>{getText("superMessageInfo", me?.credits)}</T>
         {this.state.response ? <T>{this.state.response.response}</T> : null}
 
         <TextInput
           style={{ ...style(device.theme).textInput, height: 200 }}
-          placeholder="Bericht"
+          placeholder={getText("message")}
           placeholderTextColor={device.theme.secondaryTextSoft}
           multiline
           value={this.state.message}
@@ -34,7 +33,7 @@ class SuperMessage extends Component {
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
-          title="Verzenden"
+          title={getText("send")}
           onPress={this.sendMessage}
         />
       </ScrollView>

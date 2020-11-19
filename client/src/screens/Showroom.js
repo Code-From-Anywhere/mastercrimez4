@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 
 class Showroom extends Component {
   state = {
@@ -51,9 +52,13 @@ class Showroom extends Component {
   renderItem = ({ item, index }) => {
     const {
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View
         key={`item${index}`}
@@ -85,7 +90,7 @@ class Showroom extends Component {
           <Text style={{ color: theme.primaryText }}>&euro;{item.waarde}</Text>
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Koop"
+            title={getText("buy")}
             onPress={() => this.buyCar(item.id)}
           />
         </View>

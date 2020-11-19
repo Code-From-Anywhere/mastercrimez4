@@ -12,6 +12,8 @@ import Separator from "../components/Separator";
 import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
+
 const { width } = Dimensions.get("window");
 class Garage extends Component {
   state = {
@@ -116,9 +118,11 @@ class Garage extends Component {
       screenProps: {
         device,
         device: { theme },
+        me,
       },
     } = this.props;
 
+    const getText = getTextFunction(me?.locale);
     const value = this.state.amount[item.id];
 
     return (
@@ -156,17 +160,17 @@ class Garage extends Component {
 
               <Text style={{ color: theme.primaryText }}>{item.auto}</Text>
               <Text style={{ color: theme.primaryText }}>
-                In bezit: {item.amount}
+                {getText("inPossession")}: {item.amount}
               </Text>
               <Text style={{ color: theme.primaryText }}>
                 &euro;{item.cash}
               </Text>
               <Text style={{ color: theme.primaryText }}>
-                {item.kogels} kogels
+                {item.kogels} {getText("bullets")}
               </Text>
 
               <T bold style={{ marginTop: 15 }}>
-                Aantal:
+                {getText("amount")}:
               </T>
               <TextInput
                 key={`amount${item.id}`}
@@ -178,14 +182,14 @@ class Garage extends Component {
                   })
                 }
                 placeholderTextColor={theme.secondaryTextSoft}
-                placeholder="Aantal"
+                placeholder={getText("amount")}
               />
             </View>
 
             <View style={{ justifyContent: "space-between", marginBottom: 15 }}>
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="Verkoop"
+                title={getText("sell")}
                 onPress={() =>
                   this.bulkAction("sell", item.auto, this.state.amount[item.id])
                 }
@@ -193,7 +197,7 @@ class Garage extends Component {
 
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="Crush"
+                title={getText("crush")}
                 onPress={() =>
                   this.bulkAction(
                     "crush",
@@ -204,7 +208,7 @@ class Garage extends Component {
               />
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="Upgrade"
+                title={getText("upgrade")}
                 onPress={() => this.upgradeCar(item.id)}
               />
             </View>

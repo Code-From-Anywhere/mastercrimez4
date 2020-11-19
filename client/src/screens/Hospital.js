@@ -3,6 +3,7 @@ import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 class Hospital extends Component {
   state = {
@@ -46,12 +47,14 @@ class Hospital extends Component {
       screenProps: { device, me },
     } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     const { name } = this.state;
     return (
       <View>
         <TextInput
           style={style(device.theme).textInput}
-          placeholder="Naam"
+          placeholder={getText("name")}
           placeholderTextColor={device.theme.secondaryTextSoft}
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
@@ -59,13 +62,13 @@ class Hospital extends Component {
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ marginTop: 20 }}
-          title="Maak beter"
+          title={getText("heal")}
           onPress={() => this.heal(this.state.name)}
         />
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ marginTop: 20 }}
-          title="Maak jezelf beter"
+          title={getText("healYourself")}
           onPress={() => this.heal(me?.name)}
         />
       </View>

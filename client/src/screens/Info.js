@@ -2,6 +2,7 @@ import * as StoreReview from "expo-store-review";
 import React, { Component } from "react";
 import { Linking, Platform, View } from "react-native";
 import Menu from "../components/Menu";
+import { getTextFunction } from "../Util";
 class Status extends Component {
   render() {
     const {
@@ -12,12 +13,14 @@ class Status extends Component {
       },
     } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View>
         {Platform.OS !== "web" && (
           <Menu
             theme={theme}
-            title="Geef een review"
+            title={getText("giveAReview")}
             onPress={() => StoreReview.requestReview()}
             IconFont="AntDesign"
             icon="heart"
@@ -26,7 +29,7 @@ class Status extends Component {
 
         <Menu
           theme={theme}
-          title="Feedback & Contact"
+          title={getText("feedbackAndContact")}
           onPress={() => Linking.openURL("mailto:mastercrimez@karsens.com")}
           IconFont="AntDesign"
           icon="heart"
@@ -34,7 +37,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Spel info"
+          title={getText("gameInfo")}
           to="InfoGame"
           IconFont="AntDesign"
           icon="infocirlce"
@@ -42,7 +45,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Privacy Policy"
+          title={getText("privacyPolicy")}
           to="Privacy"
           IconFont="AntDesign"
           icon="infocirlce"
@@ -50,7 +53,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Regels"
+          title={getText("rules")}
           to="InfoRules"
           IconFont="AntDesign"
           icon="infocirlce"
@@ -58,7 +61,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Draag bij"
+          title={getText("contribute")}
           to="Contribute"
           IconFont="Entypo"
           icon="network"
@@ -66,7 +69,7 @@ class Status extends Component {
         <Menu
           theme={theme}
           navigation={navigation}
-          title="Prijzen"
+          title={getText("prizes")}
           to="Prizes"
           IconFont="AntDesign"
           icon="star"

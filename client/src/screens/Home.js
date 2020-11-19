@@ -18,11 +18,11 @@ import {
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import T from "../components/T";
 import { leftMenu, rightMenu } from "../Menus";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
 const itemWidth = width / 4;
-const amountOfItems = Math.floor((height - 200) / itemWidth) * 4;
+const amountOfItems = Math.floor((height - 150) / itemWidth) * 4;
 
 class Home extends Component {
   state = {
@@ -185,6 +185,8 @@ class Home extends Component {
     ];
     const filtered = menus.filter((menu) => !menu.isHeader && !menu.isStats);
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View style={{ flex: 1 }}>
         {notificationsHeader && (
@@ -209,9 +211,7 @@ class Home extends Component {
                 color="red"
                 style={{ marginRight: 10 }}
               />
-              <T>
-                Zet je notificaties aan zodat je van alles op de hoogte blijft!
-              </T>
+              <T>{getText("turnOnNotificationsText")}</T>
             </View>
           </TouchableOpacity>
         )}
@@ -256,7 +256,13 @@ class Home extends Component {
     );
   }
   render() {
-    const { theme } = this.props.screenProps.device;
+    const {
+      device: { theme },
+      me,
+    } = this.props.screenProps;
+
+    const getText = getTextFunction(me?.locale);
+
     if (Platform.OS === "web") {
       const handleMouseMove = (event) => {
         var x = event.clientX;
@@ -267,7 +273,11 @@ class Home extends Component {
 
       document.onmousemove = handleMouseMove;
 
-      return <Text style={{ color: theme.primaryText }}>Welkom terug.</Text>;
+      return (
+        <Text style={{ color: theme.primaryText }}>
+          {getText("welcomeBack")}
+        </Text>
+      );
     }
     return this.renderCarousel();
   }

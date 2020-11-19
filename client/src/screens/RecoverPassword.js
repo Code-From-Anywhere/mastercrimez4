@@ -1,28 +1,32 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import md5 from "react-native-md5";
-
 import Constants from "../Constants";
-class Login extends React.Component {
+import { getTextFunction } from "../Util";
+
+class RecoverPassword extends React.Component {
   state = {
     password1: "",
     password2: "",
     error: null,
-    success: null
+    success: null,
   };
 
   login() {
+    const { me } = this.props.screenProps;
+
+    const getText = getTextFunction(me?.locale);
+
     const { password1, password2 } = this.state;
 
     const { token } = this.props.navigation.state.params;
 
     if (!token) {
-      this.setState({ error: "Geen token gevonden" });
+      this.setState({ error: getText("noToken") });
       return;
     }
     if (password1 !== password2) {
-      this.setState({ error: "Wachtwoorden komen niet overeen" });
+      this.setState({ error: getText("passwordsDontMatch") });
       return;
     }
 
@@ -30,12 +34,12 @@ class Login extends React.Component {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ password: md5.str_md5(password1), token })
+      body: JSON.stringify({ password: md5.str_md5(password1), token }),
     })
-      .then(response => response.json())
-      .then(responseJson => {
+      .then((response) => response.json())
+      .then((responseJson) => {
         console.log("responseJson", responseJson);
 
         if (responseJson.error) {
@@ -49,13 +53,18 @@ class Login extends React.Component {
 
         return responseJson;
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   }
 
   render() {
-    const { navigation } = this.props;
+    const {
+      navigation,
+      screenProps: { me },
+    } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -65,7 +74,7 @@ class Login extends React.Component {
             padding: 20,
             minWidth: 200,
             backgroundColor: "#CCC",
-            borderRadius: 20
+            borderRadius: 20,
           }}
         >
           {this.state.error ? (
@@ -78,14 +87,14 @@ class Login extends React.Component {
             style={{
               flexDirection: "row",
               padding: 10,
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 20 }}>Nieuw wachtwoord</Text>
+            <Text style={{ fontSize: 20 }}>{getText("newPassword")}</Text>
 
             <TextInput
               secureTextEntry
-              onChangeText={password1 => this.setState({ password1 })}
+              onChangeText={(password1) => this.setState({ password1 })}
               value={this.state.password1}
               style={{ backgroundColor: "white", fontSize: 20 }}
             />
@@ -95,14 +104,14 @@ class Login extends React.Component {
             style={{
               flexDirection: "row",
               padding: 10,
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 20 }}>Herhaal</Text>
+            <Text style={{ fontSize: 20 }}>{getText("repeat")}</Text>
 
             <TextInput
               secureTextEntry
-              onChangeText={password2 => this.setState({ password2 })}
+              onChangeText={(password2) => this.setState({ password2 })}
               value={this.state.password2}
               style={{ backgroundColor: "white", fontSize: 20 }}
             />
@@ -112,7 +121,7 @@ class Login extends React.Component {
             style={{
               flexDirection: "row",
               padding: 10,
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
             <View />
@@ -122,11 +131,13 @@ class Login extends React.Component {
                 backgroundColor: "blue",
                 paddingHorizontal: 30,
                 padding: 10,
-                borderRadius: 30
+                borderRadius: 30,
               }}
               onPress={() => this.login()}
             >
-              <Text style={{ fontSize: 20, color: "white" }}>Reset</Text>
+              <Text style={{ fontSize: 20, color: "white" }}>
+                {getText("reset")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -135,4 +146,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default RecoverPassword;

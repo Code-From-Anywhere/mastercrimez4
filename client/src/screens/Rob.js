@@ -12,6 +12,7 @@ import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 class Bank extends Component {
   componentDidMount() {
@@ -54,15 +55,19 @@ class Bank extends Component {
   renderForm() {
     const {
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View>
         <TextInput
           style={style(theme).textInput}
           placeholderTextColor={theme.secondaryTextSoft}
-          placeholder="Naam"
+          placeholder={getText("name")}
           value={this.state.name}
           onChangeText={(name) => this.setState({ name })}
         />
@@ -82,7 +87,7 @@ class Bank extends Component {
         >
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Beroof"
+            title={getText("rob")}
             onPress={() => this.rob()}
           />
         </View>
@@ -99,6 +104,8 @@ class Bank extends Component {
     } = this.props;
     const { response } = this.state;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <ScrollView style={{ flex: 1 }}>
         <View style={{ margin: 20 }}>
@@ -114,7 +121,7 @@ class Bank extends Component {
             style={{ marginTop: 20 }}
             onPress={() => navigation.navigate("Members", { order: 1 })}
           >
-            <T>Zoek mensen met veel geld</T>
+            <T>{getText("searchPeopleWithMuchMoney")}</T>
           </TouchableOpacity>
         </View>
 

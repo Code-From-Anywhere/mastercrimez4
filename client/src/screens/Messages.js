@@ -13,6 +13,7 @@ import T from "../components/T";
 import Tabs from "../components/Tabs";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 const { width } = Dimensions.get("window");
 class Messages extends Component {
@@ -130,8 +131,10 @@ class Messages extends Component {
 
   renderNew() {
     const {
-      screenProps: { device },
+      screenProps: { me, device },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <ScrollView style={{ flex: 1 }}>
@@ -143,7 +146,7 @@ class Messages extends Component {
 
         <TextInput
           style={style(device.theme).textInput}
-          placeholder="Aan"
+          placeholder={getText("to")}
           placeholderTextColor={device.theme.secondaryTextSoft}
           value={this.state.to}
           onChangeText={(to) => this.setState({ to })}
@@ -159,14 +162,14 @@ class Messages extends Component {
               width: "100%",
             },
           ]}
-          placeholder="Bericht"
+          placeholder={getText("message")}
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}
         />
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
-          title="Verzenden"
+          title={getText("send")}
           onPress={this.sendMessage}
         />
       </ScrollView>
@@ -212,13 +215,19 @@ class Messages extends Component {
   }
 
   readMessage = () => {
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
     const item = this.state.messages?.messages.find(
       (m) => m.id === this.state.readMessage
     );
     return item ? (
       <ScrollView style={{ marginVertical: 20 }}>
-        <T>Van: {item.fromName}</T>
-        <T>Verstuurd: {moment(item.createdAt).format("DD-MM-YYYY HH:mm")}</T>
+        <T>
+          {getText("from")}: {item.fromName}
+        </T>
+        <T>
+          {getText("sent")}: {moment(item.createdAt).format("DD-MM-YYYY HH:mm")}
+        </T>
         <T style={{ marginTop: 10 }}>{item.message}</T>
         <View
           style={{
@@ -229,7 +238,7 @@ class Messages extends Component {
         >
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Terug"
+            title={getText("back")}
             icon="arrow-back"
             font="MaterialIcons"
             onPress={() => {
@@ -239,7 +248,7 @@ class Messages extends Component {
           />
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Antwoord"
+            title={getText("reply")}
             icon="reply"
             font="FontAwesome"
             onPress={() =>
@@ -248,7 +257,7 @@ class Messages extends Component {
           />
           <Button
             theme={this.props.screenProps.device.theme}
-            title="Verwijder"
+            title={getText("delete")}
             icon="delete"
             font="MaterialIcons"
             onPress={() => this.deleteMessage(item.id)}
@@ -256,14 +265,16 @@ class Messages extends Component {
         </View>
       </ScrollView>
     ) : (
-      <T>Bericht niet gevonden</T>
+      <T>{getText("messageNotFound")}</T>
     );
   };
 
   render() {
     const {
-      screenProps: { device },
+      screenProps: { device, me },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     const { newMessage, readMessage } = this.state;
     return (
@@ -271,13 +282,13 @@ class Messages extends Component {
         <Tabs
           tabs={[
             {
-              title: "Berichten",
+              title: getText("messages"),
               isActive: this.state.newMessage === false,
               onPress: () =>
                 this.setState({ newMessage: false, readMessage: false }),
             },
             {
-              title: "Nieuw bericht",
+              title: getText("newMessage"),
               isActive: this.state.newMessage,
               onPress: () => this.setState({ newMessage: true }),
             },

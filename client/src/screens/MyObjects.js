@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollView, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import { doOnce } from "../Util";
+import { doOnce, getTextFunction } from "../Util";
 const properties = [
   {
     name: "bulletFactory",
@@ -39,20 +39,6 @@ const properties = [
   },
 ];
 
-const typeStrings = {
-  bulletFactory: "Kogelfabriek",
-  casino: "Casino",
-  landlord: "Huisjesmelker",
-  rld: "Red light district",
-  junkies: "Leger des Heils",
-  weaponShop: "Wapenwinkel",
-  airport: "Vliegveld",
-  estateAgent: "Makelaarskantoor",
-  bank: "Bank",
-  jail: "Gevangenis",
-  garage: "Garage",
-};
-
 const MyObjects = ({
   navigation,
   screenProps: {
@@ -64,6 +50,22 @@ const MyObjects = ({
     device: { theme },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
+  const typeStrings = {
+    bulletFactory: getText("bulletFactory"),
+    casino: getText("casino"),
+    landlord: getText("landlord"),
+    junkies: getText("junkiesObject"),
+    weaponShop: getText("weaponShop"),
+    rld: getText("rld"),
+    airport: getText("airport"),
+    estateAgent: getText("estateAgent"),
+    bank: getText("bankObject"),
+    jail: getText("jail"),
+    garage: getText("garage"),
+  };
+
   doOnce(reloadCities);
 
   let amount = 0;
@@ -81,7 +83,8 @@ const MyObjects = ({
   return (
     <ScrollView style={{ flex: 1, padding: 15 }}>
       <T bold>
-        Jij hebt {amount} {amount === 1 ? "bezitting" : "bezittingen"}!
+        {getText("youHave")} {amount}{" "}
+        {amount === 1 ? getText("property") : getText("properties")}!
       </T>
 
       {properties
@@ -105,7 +108,7 @@ const MyObjects = ({
                     key={`index${index}${property}`}
                     style={{ marginVertical: 15 }}
                     theme={theme}
-                    title={`Beheer`}
+                    title={getText("manage")}
                     onPress={() =>
                       navigation.navigate("ManageObject", {
                         type: property,

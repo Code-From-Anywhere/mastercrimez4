@@ -12,6 +12,7 @@ import T from "../components/T";
 import Tabs from "../components/Tabs";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 class Messages extends Component {
   state = {
     messages: null,
@@ -123,15 +124,17 @@ class Messages extends Component {
 
   renderNew() {
     const {
-      screenProps: { device },
+      screenProps: { device, me },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <ScrollView style={{ flex: 1 }}>
         {this.state.response ? <T>{this.state.response.response}</T> : null}
         <TextInput
           style={style(device.theme).textInput}
-          placeholder="Titel"
+          placeholder={getText("title")}
           placeholderTextColor={device.theme.secondaryTextSoft}
           value={this.state.title}
           onChangeText={(title) => this.setState({ title })}
@@ -141,14 +144,14 @@ class Messages extends Component {
           placeholderTextColor={device.theme.secondaryTextSoft}
           numberOfLines={4}
           style={{ ...style(device.theme).textInput, height: 150 }}
-          placeholder="Bericht"
+          placeholder={getText("message")}
           value={this.state.message}
           onChangeText={(message) => this.setState({ message })}
         />
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
-          title="Verzenden"
+          title={getText("send")}
           onPress={this.createTopic}
         />
       </ScrollView>
@@ -156,6 +159,12 @@ class Messages extends Component {
   }
 
   renderTopics() {
+    const {
+      screenProps: { me },
+    } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <FlatList
         data={this.state.topics?.topics}
@@ -177,13 +186,19 @@ class Messages extends Component {
                   padding: 20,
                 }}
               >
-                <T>Auteur: {item.name}</T>
-                <T>Titel: {item.title}</T>
                 <T>
-                  Laatste reactie:{" "}
+                  {getText("author")}: {item.name}
+                </T>
+                <T>
+                  {getText("title")}: {item.title}
+                </T>
+                <T>
+                  {getText("lastResponse")}:{" "}
                   {moment(item.updatedAt).format("DD-MM HH:mm")}
                 </T>
-                <T>{item.responses} reacties</T>
+                <T>
+                  {item.responses} {getText("responses")}
+                </T>
               </View>
             </TouchableOpacity>
           );
@@ -195,8 +210,10 @@ class Messages extends Component {
 
   readTopic() {
     const {
-      screenProps: { device },
+      screenProps: { device, me },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     const item = this.state.topic;
     return item ? (
@@ -210,14 +227,20 @@ class Messages extends Component {
             borderColor: "black",
           }}
         >
-          <T>Auteur: {item.topic.name}</T>
-          <T>Titel: {item.topic.title}</T>
+          <T>
+            {getText("author")}: {item.topic.name}
+          </T>
+          <T>
+            {getText("title")}: {item.topic.title}
+          </T>
           <T>{item.topic.message}</T>
-          <T>{item.responses.length} reacties</T>
+          <T>
+            {item.responses.length} {getText("responses")}
+          </T>
         </View>
 
         <View style={{ flex: 1 }}>
-          <T>Reacties:</T>
+          <T>{getText("responses")}:</T>
           {item.responses.map((response) => {
             return (
               <View
@@ -256,27 +279,29 @@ class Messages extends Component {
             numberOfLines={4}
             style={style(device.theme).textInput}
             placeholderTextColor={device.theme.secondaryTextSoft}
-            placeholder="Reageer"
+            placeholder={getText("react")}
             value={this.state.message}
             onChangeText={(message) => this.setState({ message })}
           />
           <Button
             theme={this.props.screenProps.device.theme}
             style={{ marginVertical: 10 }}
-            title="Verzenden"
+            title={getText("send")}
             onPress={this.createMessage}
           />
         </View>
       </ScrollView>
     ) : (
-      <T>Topic niet gevonden</T>
+      <T>{getText("topicNotFound")}</T>
     );
   }
 
   render() {
     const {
-      screenProps: { device },
+      screenProps: { device, me },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     const { newTopic, readTopic } = this.state;
     return (
@@ -284,14 +309,14 @@ class Messages extends Component {
         <Tabs
           tabs={[
             {
-              title: "Nieuw topic",
+              title: getText("newTopic"),
               onPress: () =>
                 this.setState({ newTopic: true, readTopic: false }),
               isActive: this.state.newTopic,
             },
 
             {
-              title: "Topics",
+              title: getText("topics"),
               onPress: () =>
                 this.setState({ newTopic: false, readTopic: false }),
               isActive: this.state.newTopic === false && readTopic === false,

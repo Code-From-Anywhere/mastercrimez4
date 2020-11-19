@@ -6,6 +6,7 @@ import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 
 class Wiet extends Component {
   constructor(props) {
@@ -65,6 +66,7 @@ class Wiet extends Component {
   };
   renderFooter = () => {
     const { device, me } = this.props.screenProps;
+    const getText = getTextFunction(me?.locale);
     return (
       <View>
         <Captcha
@@ -79,7 +81,7 @@ class Wiet extends Component {
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ marginTop: 20 }}
-          title="Doe een OC met je handlangers"
+          title={getText("doOC")}
           onPress={this.submit}
         />
 
@@ -91,9 +93,13 @@ class Wiet extends Component {
     const { response } = this.state;
     const {
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
         <View style={{ margin: 20 }}>
@@ -105,7 +111,7 @@ class Wiet extends Component {
 
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="OK"
+                title={getText("ok")}
                 onPress={() => this.setState({ response: null })}
               />
             </View>

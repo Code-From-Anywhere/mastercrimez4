@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import style from "../Style";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 const Poker = ({
   navigation,
   screenProps: {
@@ -13,6 +13,8 @@ const Poker = ({
     device: { theme },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
   const [response, setResponse] = useState(null);
   const [amount, setAmount] = useState("");
 
@@ -34,7 +36,7 @@ const Poker = ({
           <View>
             <TextInput
               style={{ ...style(theme).textInput, flex: 1 }}
-              placeholder="Hoeveelheid"
+              placeholder={getText("amount")}
               placeholderTextColor={theme.secondaryTextSoft}
               value={amount}
               onChangeText={(amount) => setAmount(amount)}
@@ -42,7 +44,7 @@ const Poker = ({
 
             <Button
               theme={theme}
-              title="Gok"
+              title={getText("gamble")}
               onPress={() => poker()}
               style={{ width: 80 }}
             />

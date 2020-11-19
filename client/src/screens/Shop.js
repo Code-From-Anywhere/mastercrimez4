@@ -12,7 +12,7 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
@@ -83,6 +83,8 @@ class Shop extends Component {
 
     const { type } = this.state;
 
+    const getText = getTextFunction(me?.locale);
+
     const propertyKey =
       type === "weapon"
         ? "weaponShop"
@@ -99,14 +101,14 @@ class Shop extends Component {
 
     const propertyString =
       type === "weapon"
-        ? "Wapenwinkel"
+        ? getText("weaponShop")
         : type === "protection"
-        ? "Wapenwinkel"
+        ? getText("weaponShop")
         : type === "airplane"
-        ? "Vliegveld"
+        ? getText("airport")
         : type === "home"
-        ? "Makelaarskantoor"
-        : "Garage";
+        ? getText("estateAgent")
+        : getText("garage");
     return (
       <View style={{ margin: 15 }}>
         <View
@@ -118,7 +120,7 @@ class Shop extends Component {
         >
           <View style={{ flex: 2 }}>
             <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              Stad
+              {getText("city")}
             </Text>
           </View>
           <View
@@ -132,7 +134,7 @@ class Shop extends Component {
               {propertyString}
             </Text>
             <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              Winst
+              {getText("profit")}
             </Text>
           </View>
         </View>
@@ -166,7 +168,7 @@ class Shop extends Component {
                     <TouchableOpacity
                       onPress={() => this.becomeOwner(city.city)}
                     >
-                      <T>(Niemand)</T>
+                      <T>{getText("nobody")}</T>
                     </TouchableOpacity>
                   )}
                   {city[ownerKey] === me?.name ? (
@@ -223,14 +225,14 @@ class Shop extends Component {
       navigation,
       screenProps: {
         device,
+        me,
         device: { theme },
       },
     } = this.props;
 
     const { response, type, buy } = this.state;
-    /*
 
-*/
+    const getText = getTextFunction(me?.locale);
 
     return (
       <ScrollView>
@@ -241,11 +243,11 @@ class Shop extends Component {
             height: 60,
           }}
         >
-          {this.renderMenu("weapon", "Wapens", 1)}
-          {this.renderMenu("protection", "Bescherming", 2)}
-          {this.renderMenu("airplane", "Vliegtuig", 1)}
-          {this.renderMenu("home", "Makelaar", 1)}
-          {this.renderMenu("garage", "Garage", 1)}
+          {this.renderMenu("weapon", getText("weapons"), 1)}
+          {this.renderMenu("protection", getText("protection"), 2)}
+          {this.renderMenu("airplane", getText("airplane"), 1)}
+          {this.renderMenu("home", getText("homeShop"), 1)}
+          {this.renderMenu("garage", getText("Garage"), 1)}
         </View>
 
         {buy ? (
@@ -253,7 +255,7 @@ class Shop extends Component {
             <T>{buy}</T>
             <Button
               theme={this.props.screenProps.device.theme}
-              title="OK"
+              title={getText("ok")}
               onPress={() => this.setState({ buy: null })}
             />
           </View>
@@ -272,7 +274,7 @@ class Shop extends Component {
               />
             )}
             <T style={{ alignSelf: "center" }}>
-              Je hebt: {response?.current?.name || "Geen"}
+              {getText("youHave")}: {response?.current?.name || getText("none")}
             </T>
 
             {response?.next ? (
@@ -290,14 +292,14 @@ class Shop extends Component {
                   />
                 )}
                 <T style={{ alignSelf: "center" }}>
-                  Koop: {response?.next?.name}
+                  {getText("buy")}: {response?.next?.name}
                 </T>
                 <T style={{ alignSelf: "center" }}>
-                  Voor: &euro;{response?.next?.price},-
+                  {getText("for")}: &euro;{response?.next?.price},-
                 </T>
                 <Button
                   theme={this.props.screenProps.device.theme}
-                  title="Koop"
+                  title={getText("buy")}
                   onPress={() => {
                     fetch(`${Constants.SERVER_ADDR}/buy`, {
                       method: "POST",

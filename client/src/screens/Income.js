@@ -5,6 +5,7 @@ import Captcha from "../components/Captcha";
 import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 class Income extends Component {
   state = {
     response: null,
@@ -21,8 +22,10 @@ class Income extends Component {
   }
 
   renderFooter = () => {
-    const { device } = this.props.screenProps;
+    const { device, me } = this.props.screenProps;
     const { to, amount, type } = this.state;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <View>
@@ -38,7 +41,7 @@ class Income extends Component {
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha}
           style={{ borderRadius: 10, marginTop: 20 }}
-          title="Haal op"
+          title={getText("getCTA")}
           onPress={() => {
             fetch(`${Constants.SERVER_ADDR}/income`, {
               method: "POST",
@@ -86,12 +89,12 @@ class Income extends Component {
 
     return (
       <View>
-        {this.keyValue("Wiet", me?.wiet)}
-        {this.keyValue("Junkies", me?.junkies)}
-        {this.keyValue("Hoeren", me?.hoeren)}
+        {this.keyValue(getText("weed"), me?.wiet)}
+        {this.keyValue(getText("junkies"), me?.junkies)}
+        {this.keyValue(getText("prostitutes"), me?.hoeren)}
 
-        {this.keyValue("Uren", `${uren2} uur`)}
-        {this.keyValue("Totale winst", `${amount},-`)}
+        {this.keyValue(getText("hours"), getText("xHours", uren2))}
+        {this.keyValue(getText("totalProfit"), `${amount},-`)}
         {this.renderFooter()}
       </View>
     );

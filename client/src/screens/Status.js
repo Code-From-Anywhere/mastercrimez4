@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getRank, getStrength } from "../Util";
+import { getRank, getStrength, getTextFunction } from "../Util";
 
 class Status extends Component {
   state = {
@@ -24,6 +24,10 @@ class Status extends Component {
       navigation,
       screenProps: { me, reloadMe, device },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
+
+    const uur = Math.round((me?.protectionAt - Date.now()) / 3600000);
 
     return (
       <View style={{ flex: 1 }}>
@@ -51,26 +55,25 @@ class Status extends Component {
             }}
           >
             <View>
-              <T>
-                Je staat nog{" "}
-                {Math.round((me?.protectionAt - Date.now()) / 3600000)} uur
-                onder bescherming. Klik hier om het weg te halen
-              </T>
+              <T>{getText("protectionInfo", uur)}</T>
             </View>
           </TouchableOpacity>
         ) : null}
 
         <View style={{ marginHorizontal: 20 }}>
-          {this.keyValue("💰 Contant", `€${me?.cash}`)}
-          {this.keyValue("💵 Bank", `€${me?.bank}`)}
-          {this.keyValue("🔥 GamePoints", me?.gamepoints)}
-          {this.keyValue("⭐️ Rank", getRank(me?.rank, "both"))}
-          {this.keyValue("💪 Moordrang", getStrength(me?.strength, "both"))}
-          {this.keyValue("❤️ Leven", `${me?.health}%`)}
-          {this.keyValue("Kogels", me?.bullets)}
-          {this.keyValue("Wiet", me?.wiet)}
-          {this.keyValue("Junkies", me?.junkies)}
-          {this.keyValue("Hoeren", me?.hoeren)}
+          {this.keyValue(getText("cash"), `€${me?.cash}`)}
+          {this.keyValue(getText("bank"), `€${me?.bank}`)}
+          {this.keyValue(getText("gamepoints"), me?.gamepoints)}
+          {this.keyValue(getText("rank"), getRank(me?.rank, "both"))}
+          {this.keyValue(
+            getText("strength"),
+            getStrength(me?.strength, "both")
+          )}
+          {this.keyValue(getText("health"), `${me?.health}%`)}
+          {this.keyValue(getText("bullets"), me?.bullets)}
+          {this.keyValue(getText("weed"), me?.wiet)}
+          {this.keyValue(getText("junkies"), me?.junkies)}
+          {this.keyValue(getText("prostitutes"), me?.hoeren)}
         </View>
       </View>
     );

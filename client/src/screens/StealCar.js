@@ -20,86 +20,10 @@ import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
 
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
-
-const options = [
-  {
-    id: 1,
-    option: "Steel een auto bij de supermarkt",
-  },
-  {
-    id: 2,
-    option: "Steel een auto bij een disco",
-  },
-
-  {
-    id: 3,
-    option: "Ga bij de gevonden voorwerpen langs op zoek naar een autosleutel",
-  },
-
-  {
-    id: 4,
-    option: "Steel een auto uit een arme wijk",
-  },
-
-  {
-    id: 5,
-    option: "Steel een auto van een parkeerplaats",
-  },
-
-  {
-    id: 6,
-    option: "Steel een auto bij een restaurant",
-  },
-
-  {
-    id: 7,
-    option:
-      "Doe alsof je gewond bent, en steel de auto als de automobilist naar je toe komt om je te helpen.",
-  },
-
-  {
-    id: 8,
-    option: "Steel een auto uit een parkeergarage",
-  },
-
-  {
-    id: 9,
-    option: "Steel een auto in het winkelcentrum",
-  },
-
-  {
-    id: 10,
-    option: "Steel een auto van een oprit",
-  },
-
-  {
-    id: 11,
-    option: "Steel een auto bij een showroom",
-  },
-
-  {
-    id: 12,
-    option: "Steel een auto bij een villa",
-  },
-
-  {
-    id: 13,
-    option: "Steel sleutels op de miljonairsclub",
-  },
-
-  {
-    id: 14,
-    option: "Steel een legendarische auto",
-  },
-
-  {
-    id: 15,
-    option: "Jat een auto in een wagenpark",
-  },
-];
 
 class StealCar extends Component {
   constructor(props) {
@@ -192,6 +116,8 @@ class StealCar extends Component {
       },
     } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View>
         <Captcha
@@ -206,7 +132,7 @@ class StealCar extends Component {
           theme={this.props.screenProps.device.theme}
           // disabled={!this.state.captcha || this.state.loading}
           style={{ borderRadius: 10, marginTop: 20 }}
-          title="Steel"
+          title={getText("steal")}
           onPress={this.submit}
         />
 
@@ -255,9 +181,88 @@ class StealCar extends Component {
     } = this.props;
     const { response, selected, type } = this.state;
 
+    const getText = getTextFunction(me?.locale);
+
     const seconds = Math.ceil((me.autostelenAt + 60000 - Date.now()) / 1000);
 
     const typeStart = type === "beginner" ? 0 : type === "serious" ? 6 : 12;
+
+    const options = [
+      {
+        id: 1,
+        option: getText("carOption1"),
+      },
+      {
+        id: 2,
+        option: getText("carOption2"),
+      },
+
+      {
+        id: 3,
+        option: getText("carOption3"),
+      },
+
+      {
+        id: 4,
+        option: getText("carOption4"),
+      },
+
+      {
+        id: 5,
+        option: getText("carOption5"),
+      },
+
+      {
+        id: 6,
+        option: getText("carOption6"),
+      },
+
+      {
+        id: 7,
+        option: getText("carOption7"),
+      },
+
+      {
+        id: 8,
+        option: getText("carOption8"),
+      },
+
+      {
+        id: 9,
+        option: getText("carOption9"),
+      },
+
+      {
+        id: 10,
+        option: getText("carOption10"),
+      },
+
+      {
+        id: 11,
+        option: getText("carOption11"),
+      },
+
+      {
+        id: 12,
+        option: getText("carOption12"),
+      },
+
+      {
+        id: 13,
+        option: getText("carOption13"),
+      },
+
+      {
+        id: 14,
+        option: getText("carOption14"),
+      },
+
+      {
+        id: 15,
+        option: getText("carOption15"),
+      },
+    ];
+
     return (
       <View style={{ flex: 1 }}>
         <View
@@ -267,9 +272,9 @@ class StealCar extends Component {
             height: 60,
           }}
         >
-          {this.renderMenu("beginner", "Beginner")}
-          {this.renderMenu("serious", "Gevorderd")}
-          {this.renderMenu("expert", "Expert")}
+          {this.renderMenu("beginner", getText("beginner"))}
+          {this.renderMenu("serious", getText("advanced"))}
+          {this.renderMenu("expert", getText("expert"))}
         </View>
 
         {response ? (
@@ -296,7 +301,7 @@ class StealCar extends Component {
 
             <Button
               theme={this.props.screenProps.device.theme}
-              title="OK"
+              title={getText("ok")}
               onPress={() => this.setState({ response: null })}
             />
           </ScrollView>
@@ -306,7 +311,7 @@ class StealCar extends Component {
             onFinish={() => this.setState({ finished: true })}
             size={20}
             timeToShow={["M", "S"]}
-            timeLabels={{ m: "Minuten", s: "Seconden" }}
+            timeLabels={{ m: getText("minutes"), s: getText("seconds") }}
           />
         ) : (
           <FlatList
