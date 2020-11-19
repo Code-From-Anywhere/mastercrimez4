@@ -5,7 +5,7 @@ import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
 import Constants from "../Constants";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 
 class Wiet extends Component {
   constructor(props) {
@@ -88,6 +88,8 @@ class Wiet extends Component {
     } = this.props.screenProps;
     const { navigation } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <>
         <View
@@ -99,7 +101,7 @@ class Wiet extends Component {
         >
           <View style={{ flex: 2 }}>
             <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              Stad
+              {getText("city")}
             </Text>
           </View>
           <View
@@ -110,10 +112,10 @@ class Wiet extends Component {
             }}
           >
             <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              Huisjesmelker
+              {getText("landlord")}
             </Text>
             <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              Winst
+              {getText("profit")}
             </Text>
           </View>
         </View>
@@ -147,7 +149,7 @@ class Wiet extends Component {
                     <TouchableOpacity
                       onPress={() => this.becomeOwner(city.city)}
                     >
-                      <T>(Niemand)</T>
+                      <T>{getText("nobody")}</T>
                     </TouchableOpacity>
                   )}
                   {city.landlordOwner === me?.name ? (
@@ -178,9 +180,11 @@ class Wiet extends Component {
       me,
     } = this.props.screenProps;
 
+    const getText = getTextFunction(me?.locale);
+
     return (
       <ScrollView style={{ flex: 1 }}>
-        {this.keyValue("Wiet in bezit", me?.wiet)}
+        {this.keyValue(getText("weedInPossession"), me?.wiet)}
 
         <Captcha
           screenProps={this.props.screenProps}
@@ -193,7 +197,7 @@ class Wiet extends Component {
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ marginTop: 20 }}
-          title="Teel wietplanten"
+          title={getText("teelWeed")}
           onPress={this.submit}
         />
 
@@ -205,9 +209,12 @@ class Wiet extends Component {
     const { response } = this.state;
     const {
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
+    const getText = getTextFunction(me?.locale);
+
     return (
       <View style={{ flex: 1 }}>
         <View style={{ margin: 20, flex: 1 }}>
@@ -219,7 +226,7 @@ class Wiet extends Component {
 
               <Button
                 theme={this.props.screenProps.device.theme}
-                title="OK"
+                title={getText("ok")}
                 onPress={() => this.setState({ response: null })}
               />
             </View>

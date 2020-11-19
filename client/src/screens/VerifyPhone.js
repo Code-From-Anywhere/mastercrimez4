@@ -3,6 +3,7 @@ import { ScrollView, Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 class Login extends React.Component {
   state = {
@@ -46,10 +47,13 @@ class Login extends React.Component {
     const {
       navigation,
       screenProps: {
+        me,
         device: { theme },
       },
     } = this.props;
     const { phone } = this.state;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -70,7 +74,7 @@ class Login extends React.Component {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ fontSize: 20 }}>Telefoonnummer</Text>
+            <Text style={{ fontSize: 20 }}>{getText("phoneNumber")}</Text>
             <TextInput
               placeholder="+31"
               placeholderTextColor={theme.secondaryTextSoft}
@@ -91,7 +95,7 @@ class Login extends React.Component {
 
             <Button
               theme={this.props.screenProps.device.theme}
-              title="Opslaan"
+              title={getText("save")}
               onPress={() => this.save()}
             />
           </View>

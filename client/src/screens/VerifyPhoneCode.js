@@ -3,6 +3,7 @@ import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
+import { getTextFunction } from "../Util";
 
 class Login extends React.Component {
   state = {
@@ -56,8 +57,11 @@ class Login extends React.Component {
       navigation,
       screenProps: {
         device: { theme },
+        me,
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
 
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -81,7 +85,7 @@ class Login extends React.Component {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ color: theme.primaryText }}>Code</Text>
+            <Text style={{ color: theme.primaryText }}>{getText("code")}</Text>
 
             <TextInput
               placeholder="000000"
@@ -103,7 +107,7 @@ class Login extends React.Component {
 
             <Button
               theme={this.props.screenProps.device.theme}
-              title="Valideer"
+              title={getText("validate")}
               onPress={() => this.save()}
             />
           </View>

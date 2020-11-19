@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import Tabs from "../components/Tabs";
+import { getTextFunction } from "../Util";
 import Creditshop from "./Creditshop";
 import Mollie from "./Mollie";
 import SuperMessage from "./SuperMessage";
@@ -8,23 +9,25 @@ import SuperMessage from "./SuperMessage";
 const VIP = (props) => {
   const [tab, setTab] = useState("mollie");
 
+  const getText = getTextFunction(props.screenProps.me?.locale);
+
   return (
     <View style={{ flex: 1 }}>
       <Tabs
         tabs={[
           {
-            title: "Credits Kopen",
+            title: getText("buyCredits"),
             isActive: tab === "mollie",
             onPress: () => setTab("mollie"),
           },
           {
-            title: "Creditshop",
+            title: getText("creditshop"),
             isActive: tab === "creditshop",
             onPress: () => setTab("creditshop"),
           },
 
           {
-            title: "Super bericht",
+            title: getText("superMessage"),
             isActive: tab === "supermessage",
             onPress: () => setTab("supermessage"),
           },

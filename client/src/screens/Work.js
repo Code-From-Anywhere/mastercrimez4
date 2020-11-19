@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import Checkbox from "../components/Checkbox";
 import T from "../components/T";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 /*
 
 Werken;
@@ -15,47 +15,51 @@ Werken;
 
 */
 
-const options = [
-  {
-    title: "Ga vuilnis opruimen",
-    hours: 1,
-  },
-
-  {
-    title: "Ga de wc's schoonmaken op school",
-    hours: 2,
-  },
-
-  {
-    title: "Ga in het leger",
-    hours: 3,
-  },
-
-  {
-    title: "Ga gokken in een gok-café",
-    hours: 4,
-  },
-
-  {
-    title: "Ga werken bij de Mafia in Italië",
-    hours: 5,
-  },
-
-  {
-    title: "Ga politieagentje spelen",
-    hours: 6,
-  },
-
-  {
-    title: "Probeer president te worden",
-    hours: 8,
-  },
-];
 const Work = ({
   screenProps: {
+    me,
     device: { theme },
   },
 }) => {
+  const getText = getTextFunction(me?.locale);
+
+  const options = [
+    {
+      title: getText("workOption1"),
+      hours: 1,
+    },
+
+    {
+      title: getText("workOption2"),
+      hours: 2,
+    },
+
+    {
+      title: getText("workOption3"),
+      hours: 3,
+    },
+
+    {
+      title: getText("workOption4"),
+      hours: 4,
+    },
+
+    {
+      title: getText("workOption5"),
+      hours: 5,
+    },
+
+    {
+      title: getText("workOption6"),
+      hours: 6,
+    },
+
+    {
+      title: getText("workOption7"),
+      hours: 8,
+    },
+  ];
+
   const [selected, setSelected] = useState(0);
   const [response, setResponse] = useState(null);
 
@@ -84,12 +88,14 @@ const Work = ({
                 <Checkbox active={selected === index} />
                 <T style={{ marginLeft: 10 }}>{option.title}</T>
               </View>
-              <T>{option.hours} uur</T>
+              <T>
+                {option.hours} {getText("hours")}
+              </T>
             </TouchableOpacity>
           );
         })}
 
-        <Button theme={theme} title="Ga werken" onPress={submit} />
+        <Button theme={theme} title={getText("workCTA")} onPress={submit} />
       </View>
     </View>
   );

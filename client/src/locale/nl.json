@@ -359,5 +359,39 @@
   "leaveCTA": "Verlaten",
   "participate": "Deelnemen",
 
-  "superMessageInfo": "Je hebt $1 credits. Een superbericht kost 500 credits. Een superbericht word naar alle geverifieerde spelers gestuurd, dood of levend."
+  "superMessageInfo": "Je hebt $1 credits. Een superbericht kost 500 credits. Een superbericht word naar alle geverifieerde spelers gestuurd, dood of levend.",
+
+  "swissBank": "Zwitserse bank",
+  "swissBulletBank": "Zwitserse kogelbank",
+  "swissBankCost": "2% per dag",
+  "swissBulletBankCost": "2% per dag",
+
+  "swissBankNoOwner": "Dit zwitserse bank heeft geen eigenaar.",
+  "swissBankInfo1": "De eigenaar van de zwisterse bank in",
+  "swissBankInfo2": "De eigenaar krijgt 50% van de kosten van de zwitserse bank. Er zijn 5% transactiekosten. De winst is $1",
+
+  "themeLightBrown": "Licht bruin",
+  "themeWhite": "Wit",
+  "themeBlue": "Blauw",
+  "themeBlack": "Zwart",
+  "phoneNumber": "Telefoonnummer",
+  "code": "Code",
+  "validate": "Valideer",
+
+  "buyCredits": "Credits Kopen",
+  "creditshop": "Creditshop",
+  "superMessage": "Super bericht",
+
+  "weedInPossession": "Wiet in bezit",
+  "teelWeed": "Teel wietplanten",
+
+  "workCTA": "Ga werken",
+
+  "workOption1": "Ga vuilnis opruimen",
+  "workOption2": "Ga de wc's schoonmaken op school",
+  "workOption3": "Ga in het leger",
+  "workOption4": "Ga gokken in een gok-café",
+  "workOption5": "Ga werken bij de Mafia in Italië",
+  "workOption6": "Ga politieagentje spelen",
+  "workOption7": "Probeer president te worden"
 }
