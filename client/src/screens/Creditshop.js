@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, View } from "react-native";
 import Button from "../components/Button";
-import { doOnce, get, getTextFunction, post } from "../Util";
+import { doOnce, get, getLocale, getTextFunction, post } from "../Util";
 
 const Creditshop = ({ screenProps }) => {
   const [items, setItems] = useState(null);
@@ -15,7 +15,7 @@ const Creditshop = ({ screenProps }) => {
   } = screenProps;
 
   const getText = getTextFunction(me?.locale);
-
+  const locale = getLocale(me?.locale);
   doOnce(async () => {
     const { items } = await get("creditshop");
     setItems(items);
@@ -29,6 +29,7 @@ const Creditshop = ({ screenProps }) => {
     setResponse(response);
     reloadMe(device.loginToken);
   };
+
   return (
     <View style={{ flex: 1, justifyContent: "space-around" }}>
       <Text style={{ color: device.theme.primaryText, alignSelf: "center" }}>
@@ -45,7 +46,9 @@ const Creditshop = ({ screenProps }) => {
         <Button
           theme={theme}
           style={{ marginHorizontal: 20 }}
-          title={`${item.kooptext} voor ${item.kosten} credits`}
+          title={`${item.kooptext[locale]} ${getText("for")} ${
+            item.kosten
+          } ${getText("credits")}`}
           onPress={() => {
             buy(item.id);
           }}

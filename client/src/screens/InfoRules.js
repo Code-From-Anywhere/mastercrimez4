@@ -6,6 +6,8 @@ import { getLocale } from "../Util";
 
 const PrivacyPage = ({ navigation, screenProps: { me } }) => {
   const strings = {};
+
+  strings.en = `Coming soon`;
   strings.nl = `# Verboden Spelgedrdag
   \n\n
   IN HET SPEL WORD EEN CRIMINELE WERELD NAGEBOOTST. DE BEDOELING IS DAT DE SPELERS VAN HET SPEL HET SPEL PLEZIERIG EN AVONTUURLIJK ERVAREN. HET IS NIET DE BEDOELING DAT BINNEN HET SPEL ETHISCH ONVERANTWOORD GEDRAG PLAATSVINDT. MEER SPECIFIEK BETEKEND DIT:

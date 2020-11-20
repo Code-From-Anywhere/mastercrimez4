@@ -85,7 +85,7 @@ const Accomplice = ({
   }, []);
 
   const rank = getRank(me?.rank, "number");
-  const url = `https://mastercrimez.nl/#/Accomplice?accomplice=${me?.name}`;
+  const url = `https://mastercrimez.com/#/Accomplice?accomplice=${me?.name}`;
   return (
     <ScrollView
       style={{

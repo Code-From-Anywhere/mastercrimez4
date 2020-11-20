@@ -58,8 +58,13 @@ class Home extends Component {
       Platform.OS === "ios"
         ? NativeModules.SettingsManager.settings.AppleLocale ||
           NativeModules.SettingsManager.settings.AppleLanguages[0]
-        : NativeModules.I18nManager.localeIdentifier;
+        : Platform.OS === "android"
+        ? NativeModules.I18nManager.localeIdentifier
+        : Platform.OS === "web"
+        ? navigator.language
+        : null;
 
+    // console.log("locale", locale);
     if (locale !== me?.locale) {
       post("updateProfile", {
         locale,

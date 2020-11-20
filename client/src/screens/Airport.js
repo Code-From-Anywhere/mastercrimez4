@@ -48,18 +48,18 @@ class Airport extends Component {
   openActionSheet = () => {
     // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
     const options = [
-      "Leeuwarden",
-      "Groningen",
-      "Assen",
-      "Haarlem",
-      "Zwolle",
-      "Lelystad",
-      "Utrecht",
-      "Den Haag",
-      "Arnhem",
-      "Winschoten",
-      "s-Hertogenbosh",
-      "Maastricht",
+      "Paris",
+      "Barcelona",
+      "London",
+      "Berlin",
+      "Lisbon",
+      "Rome",
+      "Dublin",
+      "Madrid",
+      "Brussels",
+      "Bali",
+      "New York",
+      "San Fransisco",
       "Amsterdam",
     ];
     this.props.showActionSheetWithOptions(

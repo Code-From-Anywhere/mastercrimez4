@@ -8,6 +8,7 @@ import Helmet from "react-helmet";
 import {
   AppState,
   Dimensions,
+  Linking,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -561,7 +562,14 @@ class _RootContainer extends React.Component {
     }
 
     setInterval(() => this.sendMovements(), 60000);
+
+    Linking.addEventListener("url", this.openWebUrl);
+    Linking.getInitialURL().then((url) => this.openWebUrl(url));
   }
+
+  openWebUrl = (url) => {
+    console.log("should open web url here", url);
+  };
 
   sendMovements() {
     const { dispatch, device } = this.props;

@@ -12,7 +12,7 @@ import {
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getTextFunction, post } from "../Util";
+import { getLocale, getTextFunction, post } from "../Util";
 
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
@@ -233,6 +233,7 @@ class Shop extends Component {
     const { response, type, buy } = this.state;
 
     const getText = getTextFunction(me?.locale);
+    const locale = getLocale(me?.locale);
 
     return (
       <ScrollView>
@@ -247,7 +248,7 @@ class Shop extends Component {
           {this.renderMenu("protection", getText("protection"), 2)}
           {this.renderMenu("airplane", getText("airplane"), 1)}
           {this.renderMenu("home", getText("homeShop"), 1)}
-          {this.renderMenu("garage", getText("Garage"), 1)}
+          {this.renderMenu("garage", getText("garage"), 1)}
         </View>
 
         {buy ? (
@@ -274,7 +275,8 @@ class Shop extends Component {
               />
             )}
             <T style={{ alignSelf: "center" }}>
-              {getText("youHave")}: {response?.current?.name || getText("none")}
+              {getText("youHave")}:{" "}
+              {response?.current?.name?.[locale] || getText("none")}
             </T>
 
             {response?.next ? (
@@ -292,7 +294,7 @@ class Shop extends Component {
                   />
                 )}
                 <T style={{ alignSelf: "center" }}>
-                  {getText("buy")}: {response?.next?.name}
+                  {getText("buy")}: {response?.next?.name?.[locale]}
                 </T>
                 <T style={{ alignSelf: "center" }}>
                   {getText("for")}: &euro;{response?.next?.price},-

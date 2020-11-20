@@ -11,6 +11,11 @@ const PrivacyPage = ({ navigation, screenProps: { me } }) => {
   const locale = getLocale(me?.locale);
 
   const components = {};
+  components.en = (
+    <View>
+      <H1>Coming soon</H1>
+    </View>
+  );
   components.nl = (
     <View style={{ margin: 20 }}>
       <H1>Hoe werkt vermoorden?</H1>

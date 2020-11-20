@@ -21,8 +21,8 @@ function Footer({ navigation, screenProps: { me } }) {
 
   const theme = useSelector((state) => state.device.theme);
   const [text, setText] = useState("");
-  const url = `https://mastercrimez.nl/#/Accomplice?accomplice=${me?.name}`;
-  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmastercrimez.nl%2F#%2FAccomplice%2F?accomplice=${me?.name}`;
+  const url = `https://mastercrimez.com/#/Accomplice?accomplice=${me?.name}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmastercrimez.com%2F#%2FAccomplice%2F?accomplice=${me?.name}`;
 
   const copy = () => {
     Clipboard.setString(url);

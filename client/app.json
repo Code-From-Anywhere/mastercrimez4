@@ -18,12 +18,27 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.wwoessi.mastercrimez",
-      "buildNumber": "12"
+      "buildNumber": "12",
+      "associatedDomains": "applinks:mastercrimez.com"
     },
     "android": {
       "package": "com.wwoessi.mastercrimez",
       "useNextNotificationsApi": true,
-      "versionCode": 12
+      "versionCode": 12,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.mastercrimez.com",
+              "pathPrefix": "/"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     }
   }
 }
