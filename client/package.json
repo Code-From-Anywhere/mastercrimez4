@@ -7,8 +7,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build": "expo build:web",
-    "deploy": "yarn build && vercel --prod",
-    "deployAll": "cd .. && git add . && git commit -m \"Improvements\" && git push && cd client && yarn deploy && expo publish",
+    "deploy": "yarn build && expo publish && cd .. && git add . && git commit -m \"Improvements\" && git push && cd client",
     "eject": "expo eject"
   },
   "dependencies": {
