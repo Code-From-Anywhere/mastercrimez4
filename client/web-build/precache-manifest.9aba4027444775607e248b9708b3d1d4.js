@@ -1,7 +1,7 @@
 self.__precacheManifest = [
   {
-    "revision": "05e41097609ff70edf71",
-    "url": "/static/js/app.d03c70da.chunk.js"
+    "revision": "be3afc7d4965824bcfea",
+    "url": "/static/js/app.17b94a17.chunk.js"
   },
   {
     "revision": "66090dc4495d4ce3dfb9",
@@ -112,8 +112,12 @@ self.__precacheManifest = [
     "url": "/vercel.json"
   },
   {
-    "revision": "4216455ceebbc3038bd0550c85b6a3bf",
-    "url": "/.well-known/hoi.txt"
+    "revision": "e1fd48c7d18735f8a329c8ba11fefe0d",
+    "url": "/.well-known/apple-app-site-association"
+  },
+  {
+    "revision": "9c73bad51c321d8621236b25f26264fd",
+    "url": "/.well-known/assetlinks.json"
   },
   {
     "revision": "ec543248d7b23864564429fc03837190",

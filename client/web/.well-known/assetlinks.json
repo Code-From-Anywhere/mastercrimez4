@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.wwoessi.mastercrimez",
+      "sha256_cert_fingerprints": [
+        "DE:20:37:C4:C1:ED:0C:AA:25:24:2F:A0:B7:98:70:73:F1:6B:C3:FC:56:23:DE:B8:BA:A2:3A:E8:A3:16:45:FF"
+      ]
+    }
+  }
+]

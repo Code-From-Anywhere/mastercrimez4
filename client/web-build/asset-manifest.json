@@ -1,7 +1,7 @@
 {
   "files": {
-    "app.js": "/static/js/app.d03c70da.chunk.js",
-    "app.js.map": "/static/js/app.d03c70da.chunk.js.map",
+    "app.js": "/static/js/app.17b94a17.chunk.js",
+    "app.js.map": "/static/js/app.17b94a17.chunk.js.map",
     "runtime~app.js": "/static/js/runtime~app.2e9f1821.js",
     "runtime~app.js.map": "/static/js/runtime~app.2e9f1821.js.map",
     "static/js/2.4c95e360.chunk.js": "/static/js/2.4c95e360.chunk.js",
@@ -18,7 +18,8 @@
     "fonts/MaterialCommunityIcons.ttf": "/./fonts/MaterialCommunityIcons.ttf",
     "fonts/MaterialIcons.ttf": "/./fonts/MaterialIcons.ttf",
     "fonts/SimpleLineIcons.ttf": "/./fonts/SimpleLineIcons.ttf",
-    ".well-known/hoi.txt": "/.well-known/hoi.txt",
+    ".well-known/apple-app-site-association": "/.well-known/apple-app-site-association",
+    ".well-known/assetlinks.json": "/.well-known/assetlinks.json",
     "favicon-16.png": "/favicon-16.png",
     "favicon-32.png": "/favicon-32.png",
     "favicon.ico": "/favicon.ico",
@@ -43,6 +44,6 @@
   "entrypoints": [
     "static/js/runtime~app.2e9f1821.js",
     "static/js/2.4c95e360.chunk.js",
-    "static/js/app.d03c70da.chunk.js"
+    "static/js/app.17b94a17.chunk.js"
   ]
 }
