@@ -159,9 +159,9 @@ function Header({ navigation, device, me }) {
           <Text style={textStyle}>💪 {getStrength(me?.strength, "both")}</Text>
           <Text
             style={textStyle}
-            onPress={() => navigation.navigate("Messages")}
+            onPress={() => navigation.navigate("Channels")}
           >
-            💬 {me?.messages}
+            💬 {me?.chats}
           </Text>
         </View>
       </TouchableOpacity>

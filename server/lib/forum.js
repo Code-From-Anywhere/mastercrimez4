@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { sendMessageAndPush, getTextFunction } = require("./util");
+const { getTextFunction, sendChatPushMail } = require("./util");
 let getText = getTextFunction();
 
 const newTopic = async (req, res, User, ForumTopic) => {
@@ -90,7 +90,11 @@ const getTopic = async (req, res, User, ForumTopic, ForumResponse) => {
   res.json({ response: getText("success"), topic, responses });
 };
 
-const response = async (req, res, User, ForumTopic, ForumResponse, Message) => {
+const response = async (
+  req,
+  res,
+  { ForumTopic, ForumResponse, Channel, ChannelMessage, ChannelSub, User }
+) => {
   const { token, id, response } = req.body;
 
   if (!token) {
@@ -123,7 +127,18 @@ const response = async (req, res, User, ForumTopic, ForumResponse, Message) => {
     message: response,
   });
   if (creator) {
-    sendMessageAndPush(user, creator, getText("forumMessage"), Message, true);
+    const getUserText = getTextFunction(creator.locale);
+
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      user1: user,
+      user2: creator,
+      isSystem: true,
+      message: getUserText("forumMessage"),
+    });
   }
 
   res.json({ response: getText("success") });

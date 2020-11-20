@@ -1,10 +1,10 @@
 const {
   getRank,
   getStrength,
-  sendMessageAndPush,
   needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
+  sendChatPushMail,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
@@ -12,7 +12,11 @@ let getText = getTextFunction();
 
 const SECONDS = 30;
 
-const rob = async (req, res, User, Message, Action) => {
+const rob = async (
+  req,
+  res,
+  { User, Channel, ChannelMessage, ChannelSub, Action }
+) => {
   const { token, name, captcha } = req.body;
 
   if (!token) {
@@ -147,13 +151,18 @@ const rob = async (req, res, User, Message, Action) => {
     );
 
     if (gelukt2) {
-      sendMessageAndPush(
-        user,
+      const getUserText = getTextFunction(user2.locale);
+
+      sendChatPushMail({
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+        User,
+        isSystem: true,
+        message: getUserText("robMessage", user.name, stealAmount),
+        user1: user,
         user2,
-        getText("robMessage", user.name, stealAmount),
-        Message,
-        true
-      );
+      });
 
       return res.json({
         response: getText("robSuccess", stealAmount),

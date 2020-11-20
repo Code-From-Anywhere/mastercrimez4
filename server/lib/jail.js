@@ -1,9 +1,8 @@
 const { Op, Sequelize } = require("sequelize");
 const {
-  sendMessageAndPush,
-  needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
+  sendChatPushMail,
 } = require("./util");
 
 let getText = getTextFunction();
@@ -17,7 +16,11 @@ const jail = async (req, res, User) => {
   res.json({ jail: people });
 };
 
-const breakout = async (req, res, User, Message, Action) => {
+const breakout = async (
+  req,
+  res,
+  { User, Channel, ChannelMessage, ChannelSub, Action }
+) => {
   const { token, name, captcha } = req.body;
 
   if (!token) {
@@ -109,13 +112,19 @@ const breakout = async (req, res, User, Message, Action) => {
       },
       { where: { id: user.id } }
     );
-    sendMessageAndPush(
-      user,
+
+    const getUserText = getTextFunction(user2.locale);
+
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      isSystem: true,
+      message: getUserText("breakoutMessage", user.name),
+      user1: user,
       user2,
-      getText("breakoutMessage", user.name),
-      Message,
-      true
-    );
+    });
 
     User.update({ jailAt: null }, { where: { id: user2.id } });
   }

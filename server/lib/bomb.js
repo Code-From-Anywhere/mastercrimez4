@@ -1,5 +1,5 @@
 const { Op, Sequelize } = require("sequelize");
-const { needCaptcha, sendMessageAndPush, getTextFunction } = require("./util");
+const { needCaptcha, sendChatPushMail, getTextFunction } = require("./util");
 
 let getText = getTextFunction();
 
@@ -17,7 +17,11 @@ let typeStrings = {
   garage: "Garage",
 };
 
-const bomb = async (req, res, sequelize, User, City, Message, Action) => {
+const bomb = async (
+  req,
+  res,
+  { User, City, Action, Channel, ChannelMessage, ChannelSub }
+) => {
   let { loginToken, bombs, type, captcha } = req.body;
 
   bombs = Math.round(Number(bombs));
@@ -150,10 +154,17 @@ const bomb = async (req, res, sequelize, User, City, Message, Action) => {
   if (city[`${type}Owner`]) {
     const user2 = await User.findOne({ where: { name: city[`${type}Owner`] } });
     if (user2) {
-      sendMessageAndPush(
-        user,
-        user2,
-        getText(
+      const getUserText = getTextFunction(user2.locale);
+
+      sendChatPushMail({
+        // models
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+        User,
+        // other info
+        channelId: undefined,
+        message: getUserText(
           "bombMessage",
           user.name,
           bombs,
@@ -163,9 +174,12 @@ const bomb = async (req, res, sequelize, User, City, Message, Action) => {
           stolenMoney,
           extraMessage
         ),
-        Message,
-        true
-      );
+        pathImage: undefined,
+        user1: user,
+        gang: undefined,
+        isSystem: true,
+        user2,
+      });
     }
   }
   //

@@ -2,6 +2,7 @@ const {
   saveImageIfValid,
   publicUserFields,
   getTextFunction,
+  sendChatPushMail,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
@@ -39,14 +40,14 @@ const getChat = async (req, res, { User, ChannelSub, ChannelMessage }) => {
     include: { model: User, attributes: publicUserFields },
     limit: 100,
   }).then((chat) => {
-    res.json(chat);
+    res.json(chat.reverse());
   });
 };
 
 const postChat = async (
   req,
   res,
-  { User, ChannelSub, ChannelMessage, sequelize }
+  { User, Channel, ChannelSub, ChannelMessage, sequelize }
 ) => {
   const { loginToken, cid, message, image } = req.body;
 
@@ -86,34 +87,25 @@ const postChat = async (
   const { pathImage, invalid } = saveImageIfValid(res, image, false);
   if (invalid) return;
 
-  const chatCreated = await ChannelMessage.create({
-    userId: user.id,
+  sendChatPushMail({
+    // models
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    User,
+    // other info
     channelId: cid,
     message,
-    image: pathImage,
+    pathImage,
+    user1: user,
+    gang: undefined,
+    isSystem: false,
+    user2: undefined,
   });
-
-  User.update({ onlineAt: Date.now() }, { where: { id: user.id } });
-
-  ChannelSub.update(
-    { unread: Sequelize.literal(`unread+1`) },
-    { where: { channelId: cid, userId: { [Op.ne]: user.id } } }
-  );
-
-  ChannelSub.update(
-    {
-      lastmessage:
-        message.length > 80 ? message.substring(0, 80) + ".." : message,
-    },
-    { where: { channelId: cid } }
-  );
-
-  //   console.log(updateUnread, updateLastMessage);
 
   res.json({
     response: getText("postChatSuccess"),
     success: true,
-    chatId: chatCreated.id,
   });
 };
 

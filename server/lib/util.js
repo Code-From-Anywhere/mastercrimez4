@@ -1,4 +1,8 @@
 const fetch = require("node-fetch");
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const EMAIL_FROM = "noreply@mastercrimez.com";
+const { Sequelize, Op } = require("sequelize");
 
 const needCaptcha = () => Math.round(Math.random() * 50) === 1;
 
@@ -55,6 +59,7 @@ const publicUserFields = [
   "onlineAt",
   "creditsTotal",
 ];
+
 const sendMessageAndPush = async (
   user,
   user2,
@@ -88,6 +93,132 @@ const sendMessageAndPush = async (
       .then((result) => console.log("result", result.status))
       .catch((e) => console.log("err", e));
   }
+};
+
+const sendChatPushMail = async ({
+  channelId, // if cid is set, use that
+  gang, // if gang is set, use that
+  user2, // otherwise send to channel [user1][user2]
+  user1, // if not set, use regular systemchannel
+
+  message,
+  pathImage,
+  isSystem,
+
+  User,
+  Channel,
+  ChannelSub,
+  ChannelMessage,
+}) => {
+  let channel;
+  let title;
+  if (gang) {
+    channel = await Channel.findOne({ where: { gang: gang.name } });
+    if (!channel) {
+      channel = await Channel.create({ gang: gang.name });
+    }
+    title = gang.name;
+  } else if (user1 && user2) {
+    const lowest = user1.id < user2.id ? user1.id : user2.id;
+    const highest = user1.id > user2.id ? user1.id : user2.id;
+    const pmUsersField = `[${lowest}][${highest}]`;
+
+    channel = await Channel.findOne({ where: { pmUsers: pmUsersField } });
+    if (!channel) {
+      channel = await Channel.create({ pmUsers: pmUsersField });
+    }
+    title = user1.name;
+  } else if (channelId) {
+    channel = await Channel.findOne({ where: { id: channelId } });
+    title = channel.pmUsers ? user1.name : channel.name; //channel name of gang should be the same as the gang name
+  }
+
+  if (!channel) {
+    console.log("this should never happen. no channel found");
+    return;
+  }
+
+  const chatCreated = await ChannelMessage.create({
+    userId: user1 && user1.id,
+    channelId: channel.id,
+    message,
+    image: pathImage,
+    isSystem,
+  });
+
+  if (user1) {
+    User.update({ onlineAt: Date.now() }, { where: { id: user1.id } });
+  }
+
+  ChannelSub.update(
+    { unread: Sequelize.literal(`unread+1`) },
+    { where: { channelId: channel.id, userId: { [Op.ne]: user1 && user1.id } } }
+  );
+
+  ChannelSub.update(
+    {
+      lastmessage:
+        message.length > 80 ? message.substring(0, 80) + ".." : message,
+    },
+    { where: { channelId: channel.id } }
+  );
+
+  const channelSubs = await ChannelSub.findAll({
+    where: { channelId: channel.id, userId: { [Op.ne]: user1 && user1.id } },
+    include: { model: User },
+  });
+
+  channelSubs.forEach((channelSub) => {
+    if (channelSub.user) {
+      const getText = getTextFunction(channelSub.user.locale);
+
+      const isOnline = (Date.now() - channelSub.user.onlineAt) / 60000 < 5;
+      if (
+        channelSub.user.email &&
+        channelSub.user.activated &&
+        channelSub.user.receiveMessagesMail &&
+        !isOnline
+      ) {
+        //mail
+
+        const html = `<b>${getText(
+          "messageFromX",
+          title
+        )}</b><br /><br />${message}<br /><br />${getText(
+          "mailTurnOffInstructions"
+        )}`;
+
+        const msg = {
+          to: channelSub.user.email,
+          from: EMAIL_FROM,
+          subject: getText("messageMailSubject"),
+          html,
+        };
+
+        sgMail.send(msg).then(() => {}, console.error);
+      }
+
+      if (channelSub.user.pushtoken) {
+        //push notification
+
+        fetch("https://exp.host/--/api/v2/push/send", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            to: channelSub.user.pushtoken,
+            title,
+            body: message,
+            data: { channel: channel.id },
+          }),
+        })
+          .then((result) => console.log("result", result.status))
+          .catch((e) => console.log("err", e));
+      }
+    }
+  });
 };
 
 const ranks = [
@@ -339,6 +470,7 @@ module.exports = {
   getTextFunction,
   getLocale,
   needCaptcha,
+  sendChatPushMail,
   publicUserFields,
   NUM_ACTIONS_UNTIL_VERIFY,
 };

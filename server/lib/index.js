@@ -19,9 +19,9 @@ var cors = require("cors");
 const twilio = require("twilio");
 const {
   getRank,
-  sendMessageAndPush,
   publicUserFields,
   getTextFunction,
+  sendChatPushMail,
 } = require("./util");
 
 var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
@@ -130,6 +130,11 @@ User.init(
     locale: {
       type: DataTypes.STRING,
       defaultValue: "en",
+    },
+
+    receiveMessagesMail: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
 
     credits: {
@@ -549,6 +554,7 @@ Channel.init(
   {
     name: DataTypes.STRING,
     pmUsers: DataTypes.STRING, // format [uid1][uid2]
+    gangName: DataTypes.STRING,
   },
   {
     sequelize,
@@ -580,6 +586,7 @@ ChannelMessage.init(
   {
     message: DataTypes.TEXT,
     image: DataTypes.STRING,
+    isSystem: DataTypes.BOOLEAN,
   },
   {
     sequelize,
@@ -799,7 +806,14 @@ server.post("/buyBullets", (req, res) =>
   require("./buyBullets").buyBullets(req, res, sequelize, User, City, Action)
 );
 server.post("/bomb", (req, res) =>
-  require("./bomb").bomb(req, res, sequelize, User, City, Message, Action)
+  require("./bomb").bomb(req, res, {
+    User,
+    City,
+    Action,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+  })
 );
 
 server.get("/cities", (req, res) => require("./cities").cities(req, res, City));
@@ -842,7 +856,13 @@ server.post("/becomeOwner", (req, res) =>
   require("./manageObject").becomeOwner(req, res, User, City)
 );
 server.post("/giveAway", (req, res) =>
-  require("./manageObject").giveAway(req, res, User, City, Message)
+  require("./manageObject").giveAway(req, res, {
+    User,
+    City,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+  })
 );
 server.post("/changePrice", (req, res) =>
   require("./manageObject").changePrice(req, res, User, City)
@@ -863,7 +883,14 @@ server.post("/repairObject", (req, res) =>
 );
 
 server.post("/putInJail", (req, res) =>
-  require("./manageObject").putInJail(req, res, User, City, Message, Action)
+  require("./manageObject").putInJail(req, res, {
+    User,
+    City,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    Action,
+  })
 );
 
 server.post("/wiet", (req, res) =>
@@ -883,7 +910,13 @@ server.post("/junkies", (req, res) =>
 // );
 
 server.post("/donate", (req, res) =>
-  require("./donate").donate(req, res, User, Message, Action)
+  require("./donate").donate(req, res, {
+    User,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    Action,
+  })
 );
 
 server.post("/bunker", (req, res) =>
@@ -900,7 +933,13 @@ server.post("/creditshopBuy", (req, res) =>
 
 server.get("/jail", (req, res) => require("./jail").jail(req, res, User));
 server.post("/breakout", (req, res) =>
-  require("./jail").breakout(req, res, User, Message, Action)
+  require("./jail").breakout(req, res, {
+    User,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    Action,
+  })
 );
 
 server.post("/buyout", (req, res) =>
@@ -979,16 +1018,15 @@ server.post("/leaveStreetrace", (req, res) =>
 );
 
 server.post("/startStreetrace", (req, res) =>
-  require("./streetrace").startStreetrace(
-    req,
-    res,
+  require("./streetrace").startStreetrace(req, res, {
     User,
     Streetrace,
     StreetraceParticipant,
-    Garage,
-    Message,
-    Action
-  )
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    Action,
+  })
 );
 
 server.post("/income", (req, res) =>
@@ -996,15 +1034,34 @@ server.post("/income", (req, res) =>
 );
 
 server.post("/rob", (req, res) =>
-  require("./rob").rob(req, res, User, Message, Action)
+  require("./rob").rob(req, res, {
+    User,
+    Action,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+  })
 );
 
 server.post("/hospital", (req, res) =>
-  require("./hospital").hospital(req, res, User, Message, Action)
+  require("./hospital").hospital(req, res, {
+    User,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    Action,
+  })
 );
 
 server.post("/kill", (req, res) =>
-  require("./kill").kill(req, res, User, Message, Garage, City, Action)
+  require("./kill").kill(req, res, {
+    User,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    City,
+    Action,
+  })
 );
 
 server.post("/oc", (req, res) =>
@@ -1046,14 +1103,14 @@ server.post("/topic", (req, res) =>
   require("./forum").newTopic(req, res, User, ForumTopic)
 );
 server.post("/response", (req, res) =>
-  require("./forum").response(
-    req,
-    res,
-    User,
+  require("./forum").response(req, res, {
     ForumTopic,
     ForumResponse,
-    Message
-  )
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    User,
+  })
 );
 server.get("/topics", (req, res) =>
   require("./forum").topics(req, res, User, ForumTopic, ForumResponse)
@@ -1075,7 +1132,12 @@ server.post("/mollieWebhook", (req, res) =>
 server.get("/shop", (req, res) => require("./shop").shop(req, res, User));
 
 server.post("/superMessage", (req, res) =>
-  require("./superMessage").superMessage(req, res, User, Message)
+  require("./superMessage").superMessage(req, res, {
+    User,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+  })
 );
 
 server.post("/buy", (req, res) => require("./shop").buy(req, res, User, City));
@@ -1108,6 +1170,7 @@ server
   .post("/channelmessage", (req, res) =>
     require("./channelmessage").postChat(req, res, {
       User,
+      Channel,
       ChannelMessage,
       ChannelSub,
       sequelize,
@@ -1292,13 +1355,20 @@ server.get("/me", (req, res) => {
 
         const rankNow = getRank(user.rank, "number");
         if (rankNow > user.rankKnow) {
-          sendMessageAndPush(
-            { id: null, name: "(System)" },
-            user,
-            getText("yourRankIncreasedTo", getRank(user.rank, "rankname")),
-            Message,
-            true
-          );
+          sendChatPushMail({
+            Channel,
+            ChannelMessage,
+            ChannelSub,
+            User,
+            isSystem: true,
+            message: getText(
+              "yourRankIncreasedTo",
+              getRank(user.rank, "rankname")
+            ),
+            user1: undefined,
+            user2: user,
+          });
+
           User.update({ rankKnow: rankNow }, { where: { id: user.id } });
         }
 

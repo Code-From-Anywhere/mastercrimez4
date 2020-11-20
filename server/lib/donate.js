@@ -1,10 +1,14 @@
 const { Op } = require("sequelize");
-const { sendMessageAndPush, getTextFunction } = require("./util");
+const { getTextFunction, sendChatPushMail } = require("./util");
 const { Sequelize } = require("sequelize");
 
 let getText = getTextFunction();
 
-const donate = async (req, res, User, Message, Action) => {
+const donate = async (
+  req,
+  res,
+  { User, Channel, ChannelMessage, ChannelSub, Action }
+) => {
   const { loginToken, to, amount, type } = req.body;
   const user = await User.findOne({ where: { loginToken } });
   const validTypes = [
@@ -83,7 +87,9 @@ const donate = async (req, res, User, Message, Action) => {
                 { where: { id: user2.id } }
               );
             }
-            const message = getText(
+            const getUserText = getTextFunction(user2.locale);
+
+            const message = getUserText(
               "donateMessage",
               user.name,
               amount2,
@@ -96,7 +102,16 @@ const donate = async (req, res, User, Message, Action) => {
               timestamp: Date.now(),
             });
 
-            sendMessageAndPush(user, user2, message, Message, true);
+            sendChatPushMail({
+              Channel,
+              ChannelMessage,
+              ChannelSub,
+              User,
+              isSystem: true,
+              message,
+              user1: user,
+              user2,
+            });
 
             res.json({ response: getText("donateSuccess") });
           } else {

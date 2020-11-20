@@ -1,5 +1,5 @@
 const { Op, Sequelize } = require("sequelize");
-const { sendMessageAndPush, getTextFunction } = require("./util");
+const { getTextFunction, sendChatPushMail } = require("./util");
 
 let getText = getTextFunction();
 let typeStrings = {
@@ -106,7 +106,11 @@ const becomeOwner = async (req, res, User, City) => {
   res.json({ response: getText("objectYoureOwner") });
 };
 
-const giveAway = async (req, res, User, City, Message) => {
+const giveAway = async (
+  req,
+  res,
+  { User, City, Channel, ChannelMessage, ChannelSub }
+) => {
   const { city, type, token, to } = req.body;
 
   if (!token) {
@@ -172,13 +176,19 @@ const giveAway = async (req, res, User, City, Message) => {
   };
 
   const typeString = typeStrings[type];
-  sendMessageAndPush(
-    user,
+
+  const getUserText = getTextFunction(user2.locale);
+
+  sendChatPushMail({
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    User,
+    isSystem: true,
+    message: getUserText("objectGiveAwayMessage", user.name, typeString, city),
+    user1: user,
     user2,
-    getText("objectGiveAwayMessage", user.name, typeString, city),
-    Message,
-    true
-  );
+  });
 
   res.json({ response: getText("objectGiveAwaySuccess", user2.name) });
 };
@@ -367,7 +377,11 @@ const repairObject = async (req, res, sequelize, User, City, Action) => {
   res.json({ response: getText("objectRepairSuccess", typeStrings[type]) });
 };
 
-const putInJail = async (req, res, User, City, Message, Action) => {
+const putInJail = async (
+  req,
+  res,
+  { User, City, Channel, ChannelMessage, ChannelSub, Action }
+) => {
   let { city, type, token, who } = req.body;
 
   if (!token) {
@@ -430,13 +444,18 @@ const putInJail = async (req, res, User, City, Message, Action) => {
 
   User.update({ jailAt: Date.now() + 300 * 1000 }, { where: { id: user2.id } });
 
-  sendMessageAndPush(
-    user,
+  const getUserText = getTextFunction(user2.locale);
+
+  sendChatPushMail({
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    User,
+    isSystem: true,
+    message: getUserText("objectJailMessage", user.name),
+    user1: user,
     user2,
-    getText("objectJailMessage", user.name),
-    Message,
-    true
-  );
+  });
 
   res.json({
     response: getText("objectJailSuccess", user2.name),

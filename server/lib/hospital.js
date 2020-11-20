@@ -1,9 +1,13 @@
 const { Sequelize, Op } = require("sequelize");
-const { getRank, sendMessageAndPush, getTextFunction } = require("./util");
+const { getRank, getTextFunction, sendChatPushMail } = require("./util");
 
 let getText = getTextFunction();
 
-const hospital = async (req, res, User, Message, Action) => {
+const hospital = async (
+  req,
+  res,
+  { User, Channel, ChannelMessage, ChannelSub, Action }
+) => {
   const { loginToken, name } = req.body;
   const user = await User.findOne({ where: { loginToken } });
 
@@ -36,8 +40,21 @@ const hospital = async (req, res, User, Message, Action) => {
           return res.json({ response: getText("somethingWentWrong") });
         }
         User.update({ health: 100 }, { where: { id: user2.id } });
-        const message = getText("hospitalMessage", user.name);
-        sendMessageAndPush(user, user2, message, Message, true);
+
+        const getUserText = getTextFunction(user2.locale);
+
+        const message = getUserText("hospitalMessage", user.name);
+
+        sendChatPushMail({
+          Channel,
+          ChannelMessage,
+          ChannelSub,
+          User,
+          isSystem: true,
+          message,
+          user1: user,
+          user2,
+        });
 
         Action.create({
           userId: user.id,

@@ -43,14 +43,14 @@ class ChatScreen extends React.Component {
         device: { loginToken },
       },
     } = this.props;
-    this.fetchChat();
+    this.fetchChat({ scrollToEnd: true });
     setInterval(() => {
       this.fetchChat();
       post("setRead", { loginToken, id: params?.subid });
     }, 5000);
   }
 
-  fetchChat = () => {
+  fetchChat = (options) => {
     const {
       screenProps: { device },
       navigation: {
@@ -70,7 +70,13 @@ class ChatScreen extends React.Component {
     )
       .then((response) => response.json())
       .then((chat) => {
-        this.setState({ chat, isFetching: false });
+        this.setState({ chat, isFetching: false }, () => {
+          if (options?.scrollToEnd) {
+            setTimeout(() => {
+              this.flatList.scrollToEnd({ animated: true });
+            }, 200);
+          }
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -88,15 +94,15 @@ class ChatScreen extends React.Component {
       screenProps: { me },
       navigation,
     } = this.props;
-    const isMe = item.user.id === me?.id;
+    const isMe = item.user?.id === me?.id;
     const avatar = (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Profile", { name: item.user.username });
+          navigation.navigate("Profile", { name: item.user?.username });
         }}
       >
         <Image
-          source={{ uri: Constants.SERVER_ADDR + item.user.thumbnail }}
+          source={{ uri: Constants.SERVER_ADDR + item.user?.thumbnail }}
           style={{
             width: IMAGE_SIZE,
             height: IMAGE_SIZE,
@@ -119,9 +125,13 @@ class ChatScreen extends React.Component {
           style={{
             marginVertical: 10,
             marginHorizontal: 10,
-            backgroundColor: isMe ? "#d9f6c2" : "white",
+            backgroundColor: item.isSystem
+              ? "gray"
+              : isMe
+              ? "#d9f6c2"
+              : "white",
             padding: 10,
-            maxWidth: 200,
+            maxWidth: item.isSystem ? undefined : isBigDevice ? 400 : 200,
             borderRadius: 10,
             borderWidth: 0.5,
             borderColor: "#CCC",
@@ -139,7 +149,7 @@ class ChatScreen extends React.Component {
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <Text style={{ fontWeight: "bold" }}>
-              {item.user.name ? item.user.name : item.user.username}
+              {item.user?.name ? item.user?.name : item.user?.username}
             </Text>
           </View>
           {item.image ? (
@@ -147,7 +157,7 @@ class ChatScreen extends React.Component {
               source={{
                 uri: Constants.SERVER_ADDR + item.image,
               }}
-              style={{ width: 200, height: 200 }}
+              style={{ width: 180, height: 180 }}
               resizeMode="cover"
             />
           ) : null}
@@ -168,6 +178,8 @@ class ChatScreen extends React.Component {
     } = this.props;
     const { image, message, hasEdited } = this.state;
 
+    this.setState({ message: "", image: null });
+
     const url = `${Constants.SERVER_ADDR}/channelmessage`;
     fetch(url, {
       method: "POST",
@@ -186,8 +198,7 @@ class ChatScreen extends React.Component {
       .then(({ response, success }) => {
         this.setState({ response });
         if (success) {
-          this.fetchChat();
-          this.setState({ message: "", image: null });
+          this.fetchChat({ scrollToEnd: true });
         }
       })
       .catch((error) => {
@@ -226,7 +237,7 @@ class ChatScreen extends React.Component {
           />
 
           <TextInput
-            onEndEditing={this.send}
+            onSubmitEditing={this.send}
             style={[STYLE(theme).textInput, { flex: 1 }]}
             value={message}
             placeholder={getText("message")}
@@ -249,7 +260,6 @@ class ChatScreen extends React.Component {
           contentContainerStyle={{
             height: Platform.OS === "web" ? height - 200 : undefined,
           }}
-          inverted
           data={chat}
           renderItem={this.renderItem}
           keyExtractor={(item, index) => index.toString()}
@@ -259,6 +269,7 @@ class ChatScreen extends React.Component {
               onRefresh={this.onRefresh}
             />
           }
+          ref={(ref) => (this.flatList = ref)}
         />
         {this.renderFooter()}
       </SafeAreaView>

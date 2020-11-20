@@ -245,5 +245,9 @@
   "weedWait": "You'll have to wait $1 seconds before you can do this again.",
   "workWait": "You'll have to wait $2 minutes.",
   "workSuccess": "Success. You've earned €$1,-",
-  "workFail": "Failed. You're now in jail for $1 seconds"
+  "workFail": "Failed. You're now in jail for $1 seconds",
+
+  "messageMailSubject": "New Message MasterCrimeZ",
+  "messageFromX": "Message from $1",
+  "mailTurnOffInstructions": "Don't you want to receive these emails anymore? Go on MasterCrimeZ to your settings to turn them off."
 }

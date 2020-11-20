@@ -1,11 +1,15 @@
 const { Op } = require("sequelize");
-const { sendMessageAndPush, getTextFunction } = require("./util");
+const { getTextFunction, sendChatPushMail } = require("./util");
 
 let getText = getTextFunction();
 
 const PRICE = 500;
 
-const superMessage = async (req, res, User, Message) => {
+const superMessage = async (
+  req,
+  res,
+  { User, Channel, ChannelMessage, ChannelSub }
+) => {
   const { token, message } = req.body;
 
   if (!token) {
@@ -44,7 +48,16 @@ const superMessage = async (req, res, User, Message) => {
 
   if (to) {
     to.forEach((user2) => {
-      sendMessageAndPush(user, user2, message, Message);
+      sendChatPushMail({
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+        User,
+        isSystem: false,
+        message,
+        user1: user,
+        user2,
+      });
     });
   }
 

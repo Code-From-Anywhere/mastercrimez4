@@ -1,9 +1,9 @@
 const {
   getRank,
   getStrength,
-  sendMessageAndPush,
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
+  sendChatPushMail,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 let getText = getTextFunction();
@@ -24,7 +24,11 @@ const properties = [
 
 const SECONDS = 120;
 
-const kill = async (req, res, User, Message, Garage, City, Action) => {
+const kill = async (
+  req,
+  res,
+  { User, Channel, ChannelMessage, ChannelSub, City, Action }
+) => {
   const { token, name, bullets } = req.body;
 
   if (!token) {
@@ -83,6 +87,8 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
     res.json({ response: getText("personDoesntExist") });
     return;
   }
+
+  const getUserText = getTextFunction(user2.locale);
 
   if (user2.name === user.name) {
     res.json({ response: getText("thatsYourself") });
@@ -307,13 +313,21 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
       { where: { id: user2.id } }
     );
 
-    sendMessageAndPush(
-      user,
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      isSystem: true,
+      message: getUserText(
+        "killMessage",
+        user.name,
+        bullets,
+        responseMessageBackfire
+      ),
+      user1: user,
       user2,
-      getText("killMessage", user.name, bullets, responseMessageBackfire),
-      Message,
-      true
-    );
+    });
 
     properties
       .map((p) => `${p}Owner`)
@@ -336,13 +350,23 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
     });
 
     accomplices.forEach((accomplice) => {
-      sendMessageAndPush(
-        user,
-        accomplice,
-        getText("killSuccessAccompliceMessage", user.name, user2.name, bullets),
-        Message,
-        true
-      );
+      const getAccompliceText = getTextFunction(accomplice.locale);
+
+      sendChatPushMail({
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+        User,
+        isSystem: true,
+        message: getAccompliceText(
+          "killSuccessAccompliceMessage",
+          user.name,
+          user2.name,
+          bullets
+        ),
+        user1: user,
+        user2: accomplice,
+      });
     });
   } else {
     const stolenCash = Math.round((user2.cash * damage) / 100);
@@ -377,34 +401,42 @@ const kill = async (req, res, User, Message, Garage, City, Action) => {
     });
 
     accomplices.forEach((accomplice) => {
-      sendMessageAndPush(
-        user,
-        accomplice,
-        getText(
+      const getAccompliceText = getTextFunction(accomplice.locale);
+
+      sendChatPushMail({
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+        User,
+        isSystem: true,
+        message: getText(
           "killFailAccompliceMessage",
           user.name,
           user2.name,
           damage,
           stolenTotal
         ),
-        Message,
-        true
-      );
+        user1: user,
+        user2: accomplice,
+      });
     });
 
-    sendMessageAndPush(
-      user,
-      user2,
-      getText(
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      isSystem: true,
+      message: getUserText(
         "killFailMessage",
         user.name,
         damage,
         stolenTotal,
         responseBackfire
       ),
-      Message,
-      true
-    );
+      user1: user,
+      user2,
+    });
 
     res.json({
       response: getText(

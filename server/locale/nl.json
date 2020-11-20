@@ -245,5 +245,9 @@
   "weedWait": "Je moet nog $1 seconden wachten voor je weer kunt.",
   "workWait": "Je moet nog $2 minuten wachten.",
   "workSuccess": "Gelukt. Je hebt €$1,- gejat",
-  "workFail": "Mislukt, je zit nu voor $1 seconden in de gevangenis"
+  "workFail": "Mislukt, je zit nu voor $1 seconden in de gevangenis",
+
+  "messageMailSubject": "Nieuw bericht MasterCrimeZ",
+  "messageFromX": "Bericht van $1",
+  "mailTurnOffInstructions": "Wil je deze mails niet meer ontvangen? Ga op MasterCrimeZ naar je instellingen om ze uit te zetten."
 }

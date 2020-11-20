@@ -510,13 +510,6 @@ export const rightMenu = (me, theme) => {
     },
 
     {
-      iconType: "MaterialCommunityIcons",
-      icon: "chat",
-      text: getText("menuMessages", me?.messages),
-      to: "Messages",
-    },
-
-    {
       iconType: "FontAwesome",
       icon: "wechat",
 

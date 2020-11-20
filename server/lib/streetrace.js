@@ -1,6 +1,6 @@
 const { Op, Sequelize } = require("sequelize");
 const cars = require("../assets/cars.json");
-const { sendMessageAndPush, getTextFunction } = require("./util");
+const { getTextFunction, sendChatPushMail } = require("./util");
 
 const TYPES = ["highway", "city", "forest"];
 
@@ -299,12 +299,15 @@ const leaveStreetrace = async (
 const startStreetrace = async (
   req,
   res,
-  User,
-  Streetrace,
-  StreetraceParticipant,
-  Garage,
-  Message,
-  Action
+  {
+    User,
+    Streetrace,
+    StreetraceParticipant,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    Action,
+  }
 ) => {
   let { loginToken, streetraceId } = req.body;
 
@@ -399,24 +402,29 @@ const startStreetrace = async (
     { where: { name: winner.name } }
   );
 
-  const report = `${getText("streetraceReportTitle")}
-
-${participantsCum
-  .map((p) => getText("streetraceReportParticipant", p.name, p.car))
-  .join("\n")}
-  
-${getText("streetraceReportConclusion", winner.name, prizeMoney)}`;
-
   participantsCum.forEach(async (p) => {
     const participantUser = await User.findOne({ where: { name: p.name } });
     if (participantUser) {
-      sendMessageAndPush(
-        { id: 0, name: "(System)" },
-        participantUser,
-        report,
-        Message,
-        true
-      );
+      const getParticipantText = getTextFunction(participantUser.locale);
+
+      const report = `${getParticipantText("streetraceReportTitle")}
+
+${participantsCum
+  .map((p) => getParticipantText("streetraceReportParticipant", p.name, p.car))
+  .join("\n")}
+  
+${getParticipantText("streetraceReportConclusion", winner.name, prizeMoney)}`;
+
+      sendChatPushMail({
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+        User,
+        isSystem: true,
+        message: report,
+        user1: user,
+        user2: participantUser,
+      });
     }
   });
 
