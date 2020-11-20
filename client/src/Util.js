@@ -15,7 +15,7 @@ export const getLocale = (userLocale) => {
   return firstPart === "nl" ? "nl" : "en";
 };
 export const getTextFunction = (userLocale) => (key, ...args) => {
-  const firstPart = userLocale?.split("-")[0];
+  const firstPart = userLocale && userLocale.split("-")[0];
 
   //default
   let languageObject = require("./locale/en.json"); //change default to 'en' later
