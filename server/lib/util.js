@@ -116,6 +116,11 @@ const sendChatPushMail = async ({
     channel = await Channel.findOne({ where: { gang: gang.name } });
     if (!channel) {
       channel = await Channel.create({ gang: gang.name });
+      //add all gang users as channel subs
+      const members = await User.findAll({ gang: gang.name });
+      members.forEach((member) => {
+        ChannelSub.create({ channelId: channel.id, userId: member.id });
+      });
     }
     title = gang.name;
   } else if (user1 && user2) {
@@ -126,6 +131,8 @@ const sendChatPushMail = async ({
     channel = await Channel.findOne({ where: { pmUsers: pmUsersField } });
     if (!channel) {
       channel = await Channel.create({ pmUsers: pmUsersField });
+      ChannelSub.create({ channelId: channel.id, userId: user1.id });
+      ChannelSub.create({ channelId: channel.id, userId: user2.id });
     }
     title = user1.name;
   } else if (channelId) {
