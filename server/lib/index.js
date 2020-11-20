@@ -599,6 +599,84 @@ User.hasMany(ChannelMessage, { constraints: false });
 ChannelMessage.belongsTo(Channel);
 Channel.hasMany(ChannelMessage);
 
+class Gang extends Model {}
+
+Gang.init(
+  {
+    name: DataTypes.STRING,
+    power: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    bank: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    bullets: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    profile: DataTypes.TEXT,
+    image: DataTypes.STRING,
+    thumbnail: DataTypes.STRING,
+    item1: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item2: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item3: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item4: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item5: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item6: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item7: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item8: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item9: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item10: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item11: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    item12: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+  },
+  {
+    sequelize,
+    modelName: "gang",
+  }
+);
+
+Gang.belongsTo(User, { constraints: false });
+User.hasOne(Gang, { constraints: false });
+
 class Movement extends Model {}
 
 Movement.init(

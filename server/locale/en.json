@@ -249,5 +249,7 @@
 
   "messageMailSubject": "New Message MasterCrimeZ",
   "messageFromX": "Message from $1",
-  "mailTurnOffInstructions": "Don't you want to receive these emails anymore? Go on MasterCrimeZ to your settings to turn them off."
+  "mailTurnOffInstructions": "Don't you want to receive these emails anymore? Go on MasterCrimeZ to your settings to turn them off.",
+
+  "forumMessage": "A new message has been placed in a topic of yours"
 }
