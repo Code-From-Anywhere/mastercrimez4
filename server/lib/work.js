@@ -58,85 +58,85 @@ const work = async (req, res, User, Action) => {
       response: getText("workWait", minute),
     });
   }
-};
 
-const kans = Math.round((user.rank + 30) / (option * option));
-const kans2 = kans > 75 ? 75 : kans;
+  const kans = Math.round((user.rank + 30) / (option * option));
+  const kans2 = kans > 75 ? 75 : kans;
 
-const random = Math.ceil(Math.random() * 100);
+  const random = Math.ceil(Math.random() * 100);
 
-const [updated] = await User.update(
-  {
-    crimeAt: Date.now(),
-    onlineAt: Date.now(),
-    captcha: null,
-    needCaptcha: needCaptcha(),
-    numActions: Sequelize.literal(`numActions+1`),
-  },
-  {
-    where: {
-      loginToken: token,
-      crimeAt: { [Op.lt]: Date.now() - 60000 },
-    },
-  }
-);
-
-if (!updated) {
-  return res.json({ response: getText("couldntUpdateUser") });
-}
-
-Action.create({
-  userId: user.id,
-  action: "crime",
-  timestamp: Date.now(),
-});
-
-if (kans2 >= random) {
-  const accomplices = await User.findAll({
-    attributes: ["name"],
-    where: Sequelize.and(
-      { ocAt: { [Op.gt]: Date.now() - 120000 } },
-      Sequelize.or(
-        { accomplice: user.name },
-        { accomplice2: user.name },
-        { accomplice3: user.name },
-        { accomplice4: user.name }
-      )
-    ),
-  });
-
-  const stolen = Math.ceil(
-    Math.random() * option * 10000 * (accomplices.length + 1)
-  );
-  User.update(
+  const [updated] = await User.update(
     {
-      rank: user.rank + option * 3,
-      cash: user.cash + stolen,
-      gamepoints: user.gamepoints + 1,
+      crimeAt: Date.now(),
+      onlineAt: Date.now(),
+      captcha: null,
+      needCaptcha: needCaptcha(),
+      numActions: Sequelize.literal(`numActions+1`),
     },
-    { where: { loginToken: token } }
+    {
+      where: {
+        loginToken: token,
+        crimeAt: { [Op.lt]: Date.now() - 60000 },
+      },
+    }
   );
 
-  res.json({
-    response: getText("workSuccess", stolen),
-  });
-} else {
-  const random2 = Math.ceil(Math.random() * 100);
+  if (!updated) {
+    return res.json({ response: getText("couldntUpdateUser") });
+  }
 
-  if (random2 > 50) {
-    const seconden = 90;
-    User.update(
-      { jailAt: Date.now() + seconden * 1000 },
-      { where: { id: user.id } }
+  Action.create({
+    userId: user.id,
+    action: "crime",
+    timestamp: Date.now(),
+  });
+
+  if (kans2 >= random) {
+    const accomplices = await User.findAll({
+      attributes: ["name"],
+      where: Sequelize.and(
+        { ocAt: { [Op.gt]: Date.now() - 120000 } },
+        Sequelize.or(
+          { accomplice: user.name },
+          { accomplice2: user.name },
+          { accomplice3: user.name },
+          { accomplice4: user.name }
+        )
+      ),
+    });
+
+    const stolen = Math.ceil(
+      Math.random() * option * 10000 * (accomplices.length + 1)
     );
+    User.update(
+      {
+        rank: user.rank + option * 3,
+        cash: user.cash + stolen,
+        gamepoints: user.gamepoints + 1,
+      },
+      { where: { loginToken: token } }
+    );
+
     res.json({
-      response: getText("workFail", seconden),
+      response: getText("workSuccess", stolen),
     });
   } else {
-    res.json({ response: getText("fail") });
-  }
+    const random2 = Math.ceil(Math.random() * 100);
 
-  //create activity with all variables
-}
+    if (random2 > 50) {
+      const seconden = 90;
+      User.update(
+        { jailAt: Date.now() + seconden * 1000 },
+        { where: { id: user.id } }
+      );
+      res.json({
+        response: getText("workFail", seconden),
+      });
+    } else {
+      res.json({ response: getText("fail") });
+    }
+
+    //create activity with all variables
+  }
+};
 
 module.exports = { work };
