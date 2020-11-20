@@ -253,5 +253,28 @@
 
   "forumMessage": "Er is een nieuw bericht geplaatst in een topic van je.",
 
-  "gangCreateSuccess": "Gang succesvol aangemaakt"
+  "gangCreateSuccess": "Gang succesvol aangemaakt",
+  "noNameGiven": "Geef a.u.b. een naam op",
+  "nameWrongLength": "De naam moet tussen de $1 en $2 karakters bevatten.",
+  "gangAlready": "Je zit al in een gang",
+  "gangWelcomeMessage": "Welkom in je gang!",
+  "gangJoinRequest": "$1 heeft gevraagd om $2 te joinen",
+  "gangDoesntExist": "Die gang bestaat niet!",
+  "gangAlreadyRequested": "Je hebt al gevraagd of je in deze gang mag",
+  "gangAlreadyInvited": "Deze persoon in al uitgenodigd",
+  "gangJoinSuccess": "Je hebt gevraagd $1 te joinen",
+  "gangInviteSuccess": "Je hebt $1 uitgenodigd",
+  "gangRequestNotFound": "Dat join verzoek is niet gevonden",
+  "gangInviteGangMessage": "$1 is uitgenodigd om $2 te joinen",
+  "gangRequestRejected": "Je hebt $1 afgewezen",
+  "gangInviteRejected": "Je hebt besloten niet in $1 te gaan",
+  "gangAnswerInviteMessage": "$1 heeft de uitnodiging geaccepteerd en is nu onderdeel van $2",
+  "personAlreadyInGang": "Deze persoon zit al in een gang, dus kan niet uitgenodigd worden",
+  "gangLeaveMessage": "$1 heeft $2 verlaten",
+  "gangLeaveSuccess": "Je hebt de gang verlaten",
+  "gangKickUserNotFound": "Ongeldig persoon",
+  "gangKickMessage": "$1 heeft $2 uit $3 verwijderd",
+  "gangRemoveMessage": "$1 heeft $2 verwijderd. Je zit nu niet meer in een gang.",
+  "gangRemoveSuccess": "Je hebt de gang verwijderd",
+  "gangNotFound": "Gang niet gevonden"
 }

@@ -3,6 +3,14 @@
   "metaOgTitle": "MasterCrimeZ - The Ultimate Game",
   "metaOgDescription": "Will you become the best gangster?",
 
+  "headerGang": "Gangs",
+  "menuGangCreate": "Create gang",
+  "menuGangs": "All Gangs",
+  "menuGangShop": "Gang Shop",
+  "menuGangSettings": "Gang Settings",
+  "menuGangAchievements": "Achievements",
+  "menuGangOc": "OC",
+
   "headerCrime": "Crimes",
   "menuStealCar": "Steal Car",
   "menuCrimes": "Crimes",

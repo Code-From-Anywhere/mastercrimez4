@@ -52,6 +52,13 @@ import Donate from "./screens/Donate";
 import DownloadApp from "./screens/DownloadApp";
 import ForgotPassword from "./screens/ForgotPassword";
 import Forum from "./screens/Forum";
+import Gang from "./screens/Gang";
+import GangAchievements from "./screens/GangAchievements";
+import GangCreate from "./screens/GangCreate";
+import GangOc from "./screens/GangOc";
+import Gangs from "./screens/Gangs";
+import GangSettings from "./screens/GangSettings";
+import GangShop from "./screens/GangShop";
 import Garage from "./screens/Garage";
 import Gym from "./screens/Gym";
 import Hackers from "./screens/Hackers";
@@ -327,6 +334,10 @@ const Layout = ({ screenProps, navigation, children }) => {
     "MyProfile",
     "Backfire",
     "Accomplice",
+    "Gangs",
+    "Gang",
+    "GangSettings",
+    "GangAchievements",
   ];
   const skip = allowedRoutes.includes(navigation.state.routeName);
 
@@ -432,6 +443,15 @@ const Container = rightContainer(
         screen: withLayout(Home),
         path: "",
       },
+
+      GangCreate: withLayout(GangCreate),
+      Gang: withLayout(Gang),
+      Gangs: withLayout(Gangs),
+      GangShop: withLayout(GangShop),
+      GangSettings: withLayout(GangSettings),
+      GangAchievements: withLayout(GangAchievements),
+      GangOc: withLayout(GangOc),
+
       Status: withLayout(Status),
       Hackers: withLayout(Hackers),
       Police: withLayout(Police),

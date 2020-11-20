@@ -459,6 +459,50 @@ export const rightMenu = (me, theme) => {
     },
 
     {
+      iconType: "FontAwesome",
+      icon: "font",
+      isHeader: true,
+      text: me?.gang || getText("headerGang"),
+    },
+
+    {
+      iconType: "Ionicons",
+      icon: "ios-people",
+      text: getText("menuGangCreate"),
+      to: "GangCreate",
+    },
+    {
+      iconType: "Ionicons",
+      icon: "ios-people",
+      text: getText("menuGangs"),
+      to: "Gangs",
+    },
+    {
+      iconType: "Ionicons",
+      icon: "ios-people",
+      text: getText("menuGangShop"),
+      to: "GangShop",
+    },
+    {
+      iconType: "Ionicons",
+      icon: "ios-people",
+      text: getText("menuGangSettings"),
+      to: "GangSettings",
+    },
+    {
+      iconType: "Ionicons",
+      icon: "ios-people",
+      text: getText("menuGangAchievements"),
+      to: "GangAchievements",
+    },
+    {
+      iconType: "Ionicons",
+      icon: "ios-people",
+      text: getText("menuGangOc"),
+      to: "GangOc",
+    },
+
+    {
       iconType: "Ionicons",
       icon: "ios-people",
 

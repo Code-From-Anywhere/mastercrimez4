@@ -253,5 +253,28 @@
 
   "forumMessage": "A new message has been placed in a topic of yours",
 
-  "gangCreateSuccess": "Gang successfully created"
+  "gangCreateSuccess": "Gang successfully created",
+  "noNameGiven": "Please enter a name",
+  "nameWrongLength": "The name should contain between $1 and $2 characters",
+  "gangAlready": "You're already in a gang",
+  "gangWelcomeMessage": "Welcome to your gang!",
+  "gangJoinRequest": "$1 has asked to join $2",
+  "gangDoesntExist": "That gang doesnt exist!",
+  "gangAlreadyRequested": "You've already requested to join this gang",
+  "gangAlreadyInvited": "This person has already been invited",
+  "gangJoinSuccess": "You've successfully asked to join $1",
+  "gangInviteSuccess": "You've successfully invited $1",
+  "gangRequestNotFound": "That join request wasn't found",
+  "gangInviteGangMessage": "$1 was invited to join $2",
+  "gangRequestRejected": "You have rejected $1",
+  "gangInviteRejected": "You have chosen not to join $1",
+  "gangAnswerInviteMessage": "$1 has accepted the invitation and is now part of $2",
+  "personAlreadyInGang": "This person is already in a gang, so can't be invited",
+  "gangLeaveMessage": "$1 has left $2",
+  "gangLeaveSuccess": "You've left",
+  "gangKickUserNotFound": "Invalid person",
+  "gangKickMessage": "$1 has kicked $2 from $3",
+  "gangRemoveMessage": "$1 has deleted $2. You're not in a gang anymore.",
+  "gangRemoveSuccess": "You've deleted the gang",
+  "gangNotFound": "Gang not found"
 }

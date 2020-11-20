@@ -125,6 +125,12 @@ User.init(
     forgotPasswordToken: DataTypes.STRING,
     activated: DataTypes.BOOLEAN,
     level: DataTypes.INTEGER,
+
+    gangLevel: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+    },
+
     pushtoken: DataTypes.STRING,
 
     locale: {
@@ -604,6 +610,10 @@ class Gang extends Model {}
 Gang.init(
   {
     name: DataTypes.STRING,
+    members: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+    },
     power: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -676,6 +686,22 @@ Gang.init(
 
 Gang.belongsTo(User, { constraints: false });
 User.hasOne(Gang, { constraints: false });
+
+class GangRequest extends Model {}
+
+GangRequest.init(
+  {
+    gangName: DataTypes.STRING,
+    isInvite: DataTypes.BOOLEAN,
+  },
+  {
+    sequelize,
+    modelName: "gangRequest",
+  }
+);
+
+GangRequest.belongsTo(User, { constraints: false });
+User.hasMany(GangRequest, { constraints: false });
 
 class Movement extends Model {}
 
@@ -976,6 +1002,21 @@ server.post("/gangCreate", (req, res) =>
     User,
     Gang,
     Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+  })
+);
+
+server.post("/gangJoin", (req, res) =>
+  require("./gang").gangJoin(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
   })
 );
 

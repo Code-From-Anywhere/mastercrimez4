@@ -138,6 +138,17 @@ const sendChatPushMail = async ({
   } else if (channelId) {
     channel = await Channel.findOne({ where: { id: channelId } });
     title = channel.pmUsers ? user1.name : channel.name; //channel name of gang should be the same as the gang name
+  } else {
+    //user1 probably undefined. therefore, it should be a message from system
+    if (user2) {
+      const systemPm = `[system][${user2.id}]`;
+
+      channel = await Channel.findOne({ where: { pmUsers: systemPm } });
+      if (!channel) {
+        channel = await Channel.create({ pmUsers: systemPm });
+        ChannelSub.create({ channelId: channel.id, userId: user2.id });
+      }
+    }
   }
 
   if (!channel) {
