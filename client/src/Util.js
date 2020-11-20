@@ -10,13 +10,17 @@ const replaceAll = (string, search, replacement) =>
   string.split(search).join(replacement);
 
 export const getLocale = (userLocale) => {
-  return userLocale === "nl" ? "nl" : "en";
+  const firstPart = userLocale?.split("-")[0];
+
+  return firstPart === "nl" ? "nl" : "en";
 };
 export const getTextFunction = (userLocale) => (key, ...args) => {
+  const firstPart = userLocale?.split("-")[0];
+
   //default
   let languageObject = require("./locale/en.json"); //change default to 'en' later
 
-  if (userLocale === "nl") {
+  if (firstPart === "nl") {
     languageObject = require("./locale/nl.json");
   }
 

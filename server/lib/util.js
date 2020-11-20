@@ -6,19 +6,23 @@ const replaceAll = (string, search, replacement) =>
   string.split(search).join(replacement);
 
 const getLocale = (userLocale) => {
-  return userLocale === "nl" ? "nl" : "en";
+  const firstPart = userLocale?.split("-")[0];
+
+  return firstPart === "nl" ? "nl" : "en";
 };
 const getTextFunction = (userLocale) => (key, ...args) => {
+  const firstPart = userLocale?.split("-")[0];
+
   //default
   let languageObject = require("../locale/en.json"); //change default to 'en' later
 
-  if (userLocale === "nl") {
+  if (firstPart === "nl") {
     languageObject = require("../locale/nl.json");
   }
 
   let string =
     languageObject[key] ||
-    `Couldn't find key '${key}' for locale '${userLocale}'`;
+    `Couldn't find key '${key}' for locale '${firstPart}'`;
 
   args.forEach((arg, index) => {
     string = replaceAll(string, `$${index + 1}`, arg);
