@@ -251,5 +251,7 @@
   "messageFromX": "Bericht van $1",
   "mailTurnOffInstructions": "Wil je deze mails niet meer ontvangen? Ga op MasterCrimeZ naar je instellingen om ze uit te zetten.",
 
-  "forumMessage": "Er is een nieuw bericht geplaatst in een topic van je."
+  "forumMessage": "Er is een nieuw bericht geplaatst in een topic van je.",
+
+  "gangCreateSuccess": "Gang succesvol aangemaakt"
 }

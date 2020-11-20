@@ -971,6 +971,14 @@ server.post("/putInJail", (req, res) =>
   })
 );
 
+server.post("/gangCreate", (req, res) =>
+  require("./gang").gangCreate(req, res, {
+    User,
+    Gang,
+    Action,
+  })
+);
+
 server.post("/wiet", (req, res) =>
   require("./wiet").wiet(req, res, User, Action)
 );

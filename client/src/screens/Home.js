@@ -22,7 +22,7 @@ import { getTextFunction, post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
 const itemWidth = width / 4;
-const amountOfItems = Math.floor((height - 150) / itemWidth) * 4;
+const amountOfItems = Math.floor((height - 200) / itemWidth) * 4;
 
 class Home extends Component {
   state = {
