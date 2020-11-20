@@ -2,7 +2,7 @@ const emails = require("../assets/emails.json");
 const sgMail = require("@sendgrid/mail");
 const { getTextFunction } = require("./util");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const EMAIL_FROM = "info@mastercrimez.nl";
+const EMAIL_FROM = "noreply@mastercrimez.com";
 
 let getText = getTextFunction();
 function isEmail(email) {

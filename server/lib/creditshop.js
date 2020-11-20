@@ -1,6 +1,6 @@
 const items = require("../assets/creditshop.json");
 const { Op } = require("sequelize");
-const { getTextFunction } = require("./util");
+const { getTextFunction, getLocale } = require("./util");
 
 let getText = getTextFunction();
 

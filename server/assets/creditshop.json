@@ -1,24 +1,33 @@
 [
   {
     "id": "1",
-    "kooptext": { "nl": "koop €7,500,000 euro" },
-    "gekochttext": { "nl": "Je hebt er nu 7,5 miljoen bij op de bank!" },
+    "kooptext": { "nl": "koop €7,500,000 euro", "en": "buy €7,500,000 euro" },
+    "gekochttext": {
+      "nl": "Je hebt er nu 7,5 miljoen bij op de bank!",
+      "en": "We've added 7.5 million to your bank"
+    },
     "wat": "bank",
     "hoeveel": 7500000,
     "kosten": 300
   },
   {
     "id": "2",
-    "kooptext": { "nl": "Krijg moordervaring erbij" },
-    "gekochttext": { "nl": "Je moordervaring is nu flink omhoog!" },
+    "kooptext": { "nl": "Krijg moordervaring erbij", "en": "Get strength" },
+    "gekochttext": {
+      "nl": "Je moordervaring is nu flink omhoog!",
+      "en": "We've increased your strength"
+    },
     "wat": "strength",
     "hoeveel": 4000,
     "kosten": 300
   },
   {
     "id": "3",
-    "kooptext": { "nl": "Koop 100.000 kogels" },
-    "gekochttext": { "nl": "Je hebt nu 100.000 kogels erbij!" },
+    "kooptext": { "nl": "Koop 100.000 kogels", "en": "Buy 100.000 bullets" },
+    "gekochttext": {
+      "nl": "Je hebt nu 100.000 kogels erbij!",
+      "en": "We've added 100.000 bullets to your account."
+    },
     "wat": "bullets",
     "hoeveel": 100000,
     "kosten": 300
@@ -26,16 +35,22 @@
 
   {
     "id": "6",
-    "kooptext": { "nl": "Krijg 3000 gamepoints" },
-    "gekochttext": { "nl": "Je hebt nu 3000 gamepoints erbij!" },
+    "kooptext": { "nl": "Krijg 3000 gamepoints", "en": "Get 3000 gamepoints" },
+    "gekochttext": {
+      "nl": "Je hebt nu 3000 gamepoints erbij!",
+      "en": "We've added 3000 gamepoints to your account"
+    },
     "wat": "gamepoints",
     "hoeveel": 3000,
     "kosten": 1000
   },
   {
     "id": "7",
-    "kooptext": { "nl": "Ga wat rang omhoog!" },
-    "gekochttext": { "nl": "Je bent heel wat rang omhoog gegaan!" },
+    "kooptext": { "nl": "Ga wat rang omhoog!", "en": "Increase you rank" },
+    "gekochttext": {
+      "nl": "Je bent heel wat rang omhoog gegaan!",
+      "en": "We've increased your rank by a whole lot!"
+    },
     "wat": "rank",
     "hoeveel": 10000,
     "kosten": 500

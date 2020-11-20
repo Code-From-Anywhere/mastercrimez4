@@ -53,7 +53,7 @@ const mollieCreate = async (req, res, User, Payment) => {
         currency: "EUR",
       },
       description: `${yourItem.credits} credits`,
-      redirectUrl: `https://mastercrimez.nl/#/mollieComplete`,
+      redirectUrl: `https://mastercrimez.com/#/mollieComplete`,
       webhookUrl: `https://mcz.leckrapi.xyz/mollieWebhook`,
     })
     .then((payment) => {

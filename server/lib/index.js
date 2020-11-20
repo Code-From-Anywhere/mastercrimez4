@@ -30,7 +30,7 @@ var authToken = process.env.TWILIO_AUTH_SECRET; // Your Auth Token from www.twil
 var twilioClient = new twilio(accountSid, authToken);
 
 let getText = getTextFunction();
-const EMAIL_FROM = "info@mastercrimez.nl";
+const EMAIL_FROM = "noreply@mastercrimez.com";
 
 const allUserFields = publicUserFields.concat([
   "activated",
@@ -67,6 +67,7 @@ const allUserFields = publicUserFields.concat([
   "swissBullets",
   "needCaptcha",
   "numActions",
+  "locale",
 ]);
 
 function me(token) {
