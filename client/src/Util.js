@@ -10,7 +10,7 @@ const replaceAll = (string, search, replacement) =>
   string.split(search).join(replacement);
 
 export const getLocale = (userLocale) => {
-  const firstPart = userLocale?.split("-")[0];
+  const firstPart = userLocale && userLocale.split("-")[0];
 
   return firstPart === "nl" ? "nl" : "en";
 };
