@@ -7,7 +7,7 @@
   "menuGangCreate": "Create gang",
   "menuGangs": "All Gangs",
   "menuGangShop": "Gang Shop",
-  "menuGangSettings": "Gang Settings",
+  "menuGangSettings": "Headquarter",
   "menuGangAchievements": "Achievements",
   "menuGangOc": "OC",
 
@@ -309,7 +309,6 @@
 
   "gangOfX": "Gang of $1: $2 points",
   "chat": "Chat",
-  "sendMessage": "Send message",
   "rob": "Rob",
   "attack": "Attack",
   "power": "power",
@@ -325,7 +324,7 @@
   "menuLogin": "Login on another account",
   "menuMyProfile": "Change my profile",
   "menuBackfire": "Backfire",
-  "menuAcccomplice": "Accomplices",
+  "menuAccomplice": "Accomplices",
 
   "weapons": "Weapons",
   "protection": "Protection",
@@ -405,5 +404,29 @@
   "yourMessage": "Your Message",
 
   "gangCreateCTA": "Create gang",
-  "members": "Members"
+  "members": "Members",
+  "gangJoinCTA": "Join",
+  "gangInvitedTo": "You have been invited to join $1",
+  "accept": "Accept",
+  "decline": "Decline",
+  "removeGang": "Delete gang",
+  "gangName": "Gangname",
+  "yes": "Yes",
+  "no": "No",
+  "pleaseFillInGangName": "Please fill in your gang name to delete your gang",
+
+  "youAreWhat": "You are $1",
+  "gangLevelBoss": "Boss",
+  "gangLevelUnderboss": "Accomplice",
+  "gangLevelBank": "Accountant",
+  "gangLevelMember": "Member",
+  "leaveGang": "Leave the gang",
+  "gangJoinRequestsTitle": "Gang join requests",
+  "noJoinRequests": "There are no join requests",
+  "invite": "Invite",
+  "kick": "Kick",
+  "changeRank": "Change Rank",
+
+  "choosePicture": "Choose picture",
+  "weNeedCameraPermission": "Sorry, we need camera roll permissions to make this work!"
 }

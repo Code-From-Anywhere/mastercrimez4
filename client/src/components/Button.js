@@ -1,11 +1,13 @@
 import React from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import * as Icon from "react-native-vector-icons";
+import { useSelector } from "react-redux";
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
 
-const Button = ({ icon, font, title, onPress, disabled, style, theme }) => {
+const Button = ({ icon, font, title, onPress, disabled, style }) => {
   const TheIcon = font && icon ? Icon[font] : View;
+  const theme = useSelector((state) => state.device.theme);
 
   return (
     <TouchableOpacity onPress={disabled ? undefined : onPress}>

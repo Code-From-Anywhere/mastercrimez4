@@ -17,7 +17,6 @@ class Airport extends Component {
 
     return (
       <Button
-        theme={device.theme}
         style={{ borderRadius: 10, marginTop: 20 }}
         title={getText("fly")}
         onPress={() => {
@@ -79,7 +78,6 @@ class Airport extends Component {
     return (
       <View>
         <Button
-          theme={this.props.screenProps.device.theme}
           title={this.state.to ? this.state.to : getText("chooseCity")}
           onPress={this.openActionSheet}
         />

@@ -122,7 +122,6 @@ class ChangePassword extends React.Component {
             <View />
 
             <Button
-              theme={this.props.screenProps.device.theme}
               title={getText("changePassword")}
               onPress={() => this.login()}
             />

@@ -98,7 +98,6 @@ const CreateStreetrace = ({
           {getText("chooseYourCar")}:
         </T>
         <Button
-          theme={theme}
           title={car ? car.auto : getText("chooseACar")}
           onPress={() => {
             // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
@@ -124,7 +123,7 @@ const CreateStreetrace = ({
         />
       </View>
 
-      <Button theme={theme} onPress={submit} title={getText("create")} />
+      <Button onPress={submit} title={getText("create")} />
     </View>
   );
 };

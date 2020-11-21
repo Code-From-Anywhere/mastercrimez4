@@ -259,7 +259,8 @@ const Layout = ({ screenProps, navigation, children }) => {
       },
     },
   }) => {
-    navigation.navigate("Messages", { id: data.body.id });
+    //TODO: Fix dat hij naar chat redirect
+    // navigation.navigate("Channels", { id: data.body.id });
   };
 
   const handleChange = (nextAppState) => {

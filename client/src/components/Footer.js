@@ -47,11 +47,7 @@ function Footer({ navigation, screenProps: { me } }) {
               }}
               onFocus={copy}
             />
-            <Button
-              theme={theme}
-              title={getText("footerCopy")}
-              onPress={copy}
-            />
+            <Button title={getText("footerCopy")} onPress={copy} />
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <T>{getText("footerShare")}</T>

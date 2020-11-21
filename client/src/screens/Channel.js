@@ -73,7 +73,7 @@ class ChatScreen extends React.Component {
         this.setState({ chat, isFetching: false }, () => {
           if (options?.scrollToEnd) {
             setTimeout(() => {
-              this.flatList.scrollToEnd({ animated: true });
+              this.flatList?.scrollToEnd({ animated: true });
             }, 200);
           }
         });

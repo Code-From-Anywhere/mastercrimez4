@@ -37,7 +37,6 @@ class MyProfile extends React.Component {
           );
         })}
         <Button
-          theme={this.props.screenProps.device.theme}
           title={getText("save")}
           onPress={() => {
             fetch(`${Constants.SERVER_ADDR}/updateProfile`, {

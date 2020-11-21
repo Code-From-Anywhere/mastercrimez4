@@ -44,6 +44,7 @@
   "notEnoughCash": "You don't have enough cash, it costs €$1,-",
   "notEnoughMoney": "You don't have enough money.",
   "notEnough": "You don't have enough.",
+
   "airportSuccess": "You're traveling with your airplane to $1. It will take $2 seconds.",
   "invalidAmount": "Invalid amount",
   "youreInJail": "You're in jail.",
@@ -266,6 +267,7 @@
   "gangInviteSuccess": "You've successfully invited $1",
   "gangRequestNotFound": "That join request wasn't found",
   "gangInviteGangMessage": "$1 was invited to join $2",
+  "gangInviteMessage": "You were invited to join $1. Go to all gangs to accept or reject the invitation.",
   "gangRequestRejected": "You have rejected $1",
   "gangInviteRejected": "You have chosen not to join $1",
   "gangAnswerInviteMessage": "$1 has accepted the invitation and is now part of $2",
@@ -277,5 +279,19 @@
   "gangRemoveMessage": "$1 has deleted $2. You're not in a gang anymore.",
   "gangRemoveSuccess": "You've deleted the gang",
   "gangNotFound": "Gang not found",
-  "gangAlreadyExists": "This gang already exists"
+  "gangAlreadyExists": "This gang already exists",
+  "withdrawn": "You have withdrawn $1",
+  "deposited": "You have desposited $1",
+  "gangUpdateMessage": "$1 has updated the profile of $2",
+  "gangUpdateSuccess": "You've updated the gang profile",
+  "gangTransactionMessage": "$1 has $2 $3 $4",
+  "gangTransactionSuccess": "You have $1 $2 $3",
+  "gangNotEnough": "There is not enough in the gangbank",
+  "gangSetRankMessage": "$1 has made $2 $3",
+  "gangSetRankSuccess": "You've made $2 $3",
+  "gangLevelBoss": "Boss",
+  "gangLevelUnderboss": "Accomplice",
+  "gangLevelBank": "Accountant",
+  "gangLevelMember": "Member",
+  "gangSetRankOnlyBoss": "You can't change your own rank, because you're the only boss. Make someone else boss first."
 }

@@ -51,72 +51,14 @@ function Header({ navigation, device, me }) {
         }}
       >
         <Button
-          theme={device.theme}
           title={getText("headerVerify")}
           onPress={() => navigation.navigate("VerifyPhone")}
         />
         <Button
-          theme={device.theme}
           title={getText("headerLoginOnAnother")}
           onPress={() => navigation.navigate("Login")}
         />
       </View>
-    </View>
-  );
-
-  const updateComponent = updateAvailable && (
-    <TouchableOpacity
-      onPress={() => Updates.reloadAsync()}
-      style={{
-        padding: 15,
-        backgroundColor: device.theme.secondary,
-        borderRadius: 5,
-      }}
-    >
-      <Text style={{ color: device.theme.secondaryText }}>
-        {getText("headerUpdateAvailable")}
-      </Text>
-    </TouchableOpacity>
-  );
-
-  const webHeader = (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <View>
-          <Image
-            source={require("../../assets/logo.jpg")}
-            style={{
-              width: isSmallDevice ? 200 : 600,
-              height: isSmallDevice ? 33 : 100,
-            }}
-          />
-        </View>
-        <Text style={{ color: "white" }}>v{Constants.manifest.version}</Text>
-
-        {isSmallDevice ? (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.toggleDrawer();
-            }}
-            style={{ margin: 10 }}
-          >
-            <Feather
-              name="menu"
-              size={32}
-              color="#FFF"
-              style={{ color: "#FFF" }}
-            />
-          </TouchableOpacity>
-        ) : null}
-      </View>
-
-      <Chat me={me} device={device} navigation={navigation} />
     </View>
   );
 
@@ -198,6 +140,62 @@ function Header({ navigation, device, me }) {
         </View>
       )}
     </>
+  );
+  const updateComponent = updateAvailable && (
+    <TouchableOpacity
+      onPress={() => Updates.reloadAsync()}
+      style={{
+        padding: 15,
+        backgroundColor: device.theme.secondary,
+        borderRadius: 5,
+      }}
+    >
+      <Text style={{ color: device.theme.secondaryText }}>
+        {getText("headerUpdateAvailable")}
+      </Text>
+    </TouchableOpacity>
+  );
+
+  const webHeader = (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <View style={{ alignItems: "center" }}>
+          <Image
+            source={require("../../assets/logos/logo5.jpg")}
+            style={{
+              width: isSmallDevice ? 200 : 600,
+              height: isSmallDevice ? 33 : 100,
+            }}
+          />
+          {statsHeader}
+        </View>
+        <Text style={{ color: "white" }}>v{Constants.manifest.version}</Text>
+
+        {isSmallDevice ? (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.toggleDrawer();
+            }}
+            style={{ margin: 10 }}
+          >
+            <Feather
+              name="menu"
+              size={32}
+              color="#FFF"
+              style={{ color: "#FFF" }}
+            />
+          </TouchableOpacity>
+        ) : null}
+      </View>
+
+      <Chat me={me} device={device} navigation={navigation} />
+    </View>
   );
 
   const backButton = (

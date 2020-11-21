@@ -59,7 +59,6 @@ class Bunker extends Component {
         />
 
         <Button
-          theme={this.props.screenProps.device.theme}
           style={{ borderRadius: 10, marginTop: 20 }}
           title={getText("bunkerCTA")}
           onPress={async () => {
@@ -115,7 +114,6 @@ class Bunker extends Component {
             </Text>
 
             <Button
-              theme={theme}
               title={getText("ok")}
               onPress={() => this.setState({ response: null })}
             />

@@ -30,7 +30,6 @@ class Dead extends React.Component {
             </Text>
           ) : null}
           <Button
-            theme={device.theme}
             title={getText("deadBecomeAlive")}
             onPress={() => {
               fetch(`${Constants.SERVER_ADDR}/getalive`, {

@@ -159,7 +159,7 @@ const Accomplice = ({
           </>
         ) : null}
 
-        <Button theme={theme} title={getText("save")} onPress={submit} />
+        <Button title={getText("save")} onPress={submit} />
       </View>
     </ScrollView>
   );

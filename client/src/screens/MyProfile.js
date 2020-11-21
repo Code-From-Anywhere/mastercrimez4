@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
-import React from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -13,30 +13,32 @@ import { TextInput } from "react-native-gesture-handler";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
-import { getTextFunction } from "../Util";
+import { doOnce, getTextFunction } from "../Util";
 
 const { width } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
-class MyProfile extends React.Component {
-  state = {
-    photo: null,
-    images: [],
-    selectedImage: null,
-  };
+const MyProfile = ({
+  screenProps: {
+    me,
+    device,
+    device: { theme },
+    reloadMe,
+  },
+}) => {
+  const getText = getTextFunction(me?.locale);
 
-  componentDidMount() {
-    this.getPermissionAsync();
-    this.fetchImages();
+  const [photo, setPhoto] = useState(null);
+  const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [bio, setBio] = useState(me?.bio || "");
 
-    const { me } = this.props.screenProps;
-    console.log("bio", me?.bio);
-    this.setState({ bio: me?.bio });
-  }
+  doOnce(() => {
+    getPermissionAsync();
+    fetchImages();
+  });
 
-  fetchImages = () => {
-    const { device, me } = this.props.screenProps;
-
+  const fetchImages = () => {
     fetch(
       `${Constants.SERVER_ADDR}/listimages?token=${device.loginToken}&uid=${me.id}`,
       {
@@ -49,18 +51,14 @@ class MyProfile extends React.Component {
     )
       .then((response) => response.json())
       .then(({ images }) => {
-        this.setState({ images });
+        setImages(images);
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  handleUploadPhoto = () => {
-    const { device, me } = this.props.screenProps;
-
-    const getText = getTextFunction(me?.locale);
-
+  const handleUploadPhoto = (pic) => {
     fetch(`${Constants.SERVER_ADDR}/upload`, {
       method: "POST",
       headers: {
@@ -68,15 +66,15 @@ class MyProfile extends React.Component {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        image: this.state.photo.uri,
+        image: pic.uri,
         token: device.loginToken,
       }),
     })
       .then((response) => response.json())
       .then((response) => {
-        this.fetchImages();
+        fetchImages();
         alert(getText("success"));
-        this.setState({ photo: null });
+        setPhoto(null);
       })
       .catch((error) => {
         console.log("upload error", error);
@@ -84,7 +82,7 @@ class MyProfile extends React.Component {
       });
   };
 
-  getPermissionAsync = async () => {
+  const getPermissionAsync = async () => {
     if (Platform.OS === "ios") {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status !== "granted") {
@@ -93,7 +91,7 @@ class MyProfile extends React.Component {
     }
   };
 
-  handleChoosePhoto = async () => {
+  const handleChoosePhoto = async () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -103,27 +101,28 @@ class MyProfile extends React.Component {
         quality: 1,
       });
 
+      console.log("result", result);
+
       if (!result.cancelled) {
-        this.setState({ photo: result }, () => this.handleUploadPhoto());
+        setPhoto(result);
+        handleUploadPhoto(result);
       }
     } catch (e) {
       console.log(e);
     }
   };
 
-  renderItem = ({ item, index }) => {
+  const renderItem = ({ item, index }) => {
     const uri = Constants.SERVER_ADDR + "/" + item.image;
     return (
-      <TouchableOpacity
-        onPress={() => this.setState({ selectedImage: item.id })}
-      >
+      <TouchableOpacity onPress={() => setSelectedImage(item.id)}>
         <View>
           <Image
             source={{ uri }}
             style={{
               width: 200,
               height: 200,
-              ...(this.state.selectedImage === item.id
+              ...(selectedImage === item.id
                 ? { borderWidth: 2, borderColor: "black" }
                 : {}),
             }}
@@ -134,17 +133,12 @@ class MyProfile extends React.Component {
     );
   };
 
-  renderFooter = () => {
-    const { device, me } = this.props.screenProps;
-
-    const getText = getTextFunction(me?.locale);
-
+  const renderFooter = () => {
     return (
       <Button
-        theme={this.props.screenProps.device.theme}
         title={getText("delete")}
         onPress={() => {
-          if (this.state.selectedImage) {
+          if (selectedImage) {
             fetch(`${Constants.SERVER_ADDR}/deleteimage`, {
               method: "POST",
               headers: {
@@ -153,12 +147,12 @@ class MyProfile extends React.Component {
               },
               body: JSON.stringify({
                 token: device.loginToken,
-                id: this.state.selectedImage,
+                id: selectedImage,
               }),
             })
               .then((response) => response.json())
               .then(({ images }) => {
-                this.fetchImages();
+                fetchImages();
               })
               .catch((error) => {
                 console.error(error);
@@ -171,77 +165,66 @@ class MyProfile extends React.Component {
     );
   };
 
-  render() {
-    const { photo, images, bio } = this.state;
-    const {
-      device,
-      me,
-      device: { theme },
-    } = this.props.screenProps;
-
-    const getText = getTextFunction(me?.locale);
-
-    return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          margin: 20,
-        }}
-      >
-        <TextInput
-          placeholderTextColor={theme.secondaryTextSoft}
-          style={{ ...style(theme).textInput, width: "100%", height: 200 }}
-          multiline={true}
-          numberOfLines={4}
-          value={bio}
-          onChangeText={(bio) => this.setState({ bio })}
-        />
-        <Button
-          theme={this.props.screenProps.device.theme}
-          title={getText("save")}
-          onPress={() => {
-            fetch(`${Constants.SERVER_ADDR}/updateProfile`, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                bio: this.state.bio,
-                loginToken: device.loginToken,
-              }),
+  return (
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        margin: 20,
+      }}
+    >
+      <TextInput
+        placeholderTextColor={theme.secondaryTextSoft}
+        style={[style(theme).textInput, { width: "100%", height: 200 }]}
+        multiline={true}
+        numberOfLines={4}
+        value={bio}
+        onChangeText={setBio}
+      />
+      <Button
+        title={getText("save")}
+        style={{ marginVertical: 20 }}
+        onPress={() => {
+          fetch(`${Constants.SERVER_ADDR}/updateProfile`, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bio: bio,
+              loginToken: device.loginToken,
+            }),
+          })
+            .then((response) => response.json())
+            .then((response) => {
+              alert(getText("success"));
+              reloadMe(device.loginToken);
             })
-              .then((response) => response.json())
-              .then((response) => {
-                alert(getText("success"));
-              })
-              .catch((error) => {
-                console.log("upload error", error);
-                alert(getText("somethingWentWrong"));
-              });
-          }}
-        />
+            .catch((error) => {
+              console.log("upload error", error);
+              alert(getText("somethingWentWrong"));
+            });
+        }}
+      />
 
-        <Button
-          theme={this.props.screenProps.device.theme}
-          title={getText("choosePicture")}
-          onPress={this.handleChoosePhoto}
-        />
+      <Button
+        style={{ marginVertical: 20 }}
+        title={getText("choosePicture")}
+        onPress={handleChoosePhoto}
+      />
 
-        <FlatList
-          data={images}
-          extraData={this.state.selectedImage}
-          // contentContainerStyle={{ flexDirection: "row" }}
-          numColumns={isSmallDevice ? 1 : 3}
-          renderItem={this.renderItem}
-          keyExtractor={(item) => `id${item.id}`}
-          ListFooterComponent={this.renderFooter}
-        />
-      </View>
-    );
-  }
-}
+      <FlatList
+        data={images}
+        extraData={selectedImage}
+        numColumns={isSmallDevice ? 1 : 3}
+        renderItem={renderItem}
+        keyExtractor={(item) => `id${item.id}`}
+        ListFooterComponent={renderFooter}
+      />
+    </View>
+  );
+};
 
 export default MyProfile;

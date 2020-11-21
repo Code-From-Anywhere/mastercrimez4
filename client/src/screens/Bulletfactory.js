@@ -69,7 +69,6 @@ const Bulletfactory = ({
           </Text>
           {becomeOwnerResponse && <T>{becomeOwnerResponse}</T>}
           <Button
-            theme={theme}
             title={getText("becomeOwner")}
             onPress={() => becomeOwner(me?.city)}
           />
@@ -119,7 +118,7 @@ const Bulletfactory = ({
             onChangeRandom={(x) => setRandom(x)}
           />
 
-          <Button theme={theme} title={getText("buy")} onPress={submit} />
+          <Button title={getText("buy")} onPress={submit} />
         </>
       )}
 

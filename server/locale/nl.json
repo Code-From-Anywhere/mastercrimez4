@@ -266,6 +266,7 @@
   "gangInviteSuccess": "Je hebt $1 uitgenodigd",
   "gangRequestNotFound": "Dat join verzoek is niet gevonden",
   "gangInviteGangMessage": "$1 is uitgenodigd om $2 te joinen",
+  "gangInviteMessage": "Je bent uitgenodigd om $1 te joinen. Ga naar alle gangs om de uitnodiging te accepteren of af te wijzen.",
   "gangRequestRejected": "Je hebt $1 afgewezen",
   "gangInviteRejected": "Je hebt besloten niet in $1 te gaan",
   "gangAnswerInviteMessage": "$1 heeft de uitnodiging geaccepteerd en is nu onderdeel van $2",
@@ -277,5 +278,19 @@
   "gangRemoveMessage": "$1 heeft $2 verwijderd. Je zit nu niet meer in een gang.",
   "gangRemoveSuccess": "Je hebt de gang verwijderd",
   "gangNotFound": "Gang niet gevonden",
-  "gangAlreadyExists": "Deze gang bestaat al"
+  "gangAlreadyExists": "Deze gang bestaat al",
+  "withdrawn": "Je hebt $1 gepint",
+  "deposited": "Je hebt $1 gestort",
+  "gangUpdateMessage": "$1 heeft het profiel van $2 geupdate.",
+  "gangUpdateSuccess": "Je hebt het gangprofiel aangepast.",
+  "gangTransactionMessage": "$1 heeft $3 $4 $2",
+  "gangTransactionSuccess": "Je hebt $2 $3 $1",
+  "gangNotEnough": "Er is niet genoeg in de gangbank",
+  "gangSetRankMessage": "$1 heeft $2 $3 gemaakt",
+  "gangSetRankSuccess": "Je hebt $2 $3 gemaakt",
+  "gangLevelBoss": "Baas",
+  "gangLevelUnderboss": "Onderbaas",
+  "gangLevelBank": "Bankbeheerder",
+  "gangLevelMember": "Ganglid",
+  "gangSetRankOnlyBoss": "Je kan je eigen rang niet veranderen omdat je de enige baas bent. Maak iemand anders eerst baas."
 }

@@ -124,10 +124,11 @@ class ChatScreen extends React.Component {
 
           <View style={{ marginLeft: 20 }}>
             <T bold>
-              {item.channel.name
-                ? item.channel.name
-                : item.channel.channelsubs.length === 2
-                ? item.channel.channelsubs.find((x) => x.userId !== me?.id)
+              {/* name or other person in chat */}
+              {item.channel?.name
+                ? item.channel?.name
+                : item.channel?.channelsubs.length === 2
+                ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)
                     ?.user.name
                 : "(RAAAR)"}
             </T>

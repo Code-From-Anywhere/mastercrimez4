@@ -52,8 +52,10 @@ const bank = async (req, res, User, Action) => {
           timestamp: Date.now(),
         });
 
-        const what = deposit ? "gestort" : "gepint";
-        res.json({ response: getText("bankSuccess", amount, what) });
+        const what = deposit
+          ? getText("deposited", amount)
+          : getText("withdrawn", amount);
+        res.json({ response: what });
       } else {
         res.json({ response: getText("somethingWentWrong") });
       }

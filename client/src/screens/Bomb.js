@@ -134,7 +134,6 @@ const Bomb = ({
 
           <T style={{ marginVertical: 15 }}>{getText("property")}</T>
           <Button
-            theme={theme}
             onPress={selectType}
             title={type ? typeStrings[type] : getText("whichProperty")}
           />
@@ -161,7 +160,6 @@ const Bomb = ({
 
           <Button
             style={{ marginTop: 15 }}
-            theme={theme}
             title={getText("bombAction")}
             onPress={submit}
           />

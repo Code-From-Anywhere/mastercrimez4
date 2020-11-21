@@ -3,6 +3,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const EMAIL_FROM = "noreply@mastercrimez.com";
 const { Sequelize, Op } = require("sequelize");
+const SEND_EMAIL_NOTIFICATIONS_ON = false;
 
 const needCaptcha = () => Math.round(Math.random() * 50) === 1;
 
@@ -59,6 +60,7 @@ const publicUserFields = [
   "onlineAt",
   "creditsTotal",
   "gangId",
+  "gangLevel",
 ];
 
 const sendMessageAndPush = async (
@@ -114,11 +116,11 @@ const sendChatPushMail = async ({
   let channel;
   let title;
   if (gang) {
-    channel = await Channel.findOne({ where: { gang: gang.name } });
+    channel = await Channel.findOne({ where: { gangName: gang.name } });
     if (!channel) {
-      channel = await Channel.create({ gang: gang.name });
+      channel = await Channel.create({ name: gang.name, gangName: gang.name });
       //add all gang users as channel subs
-      const members = await User.findAll({ gang: gang.name });
+      const members = await User.findAll({ where: { gangId: gang.id } });
       members.forEach((member) => {
         ChannelSub.create({ channelId: channel.id, userId: member.id });
       });
@@ -196,7 +198,8 @@ const sendChatPushMail = async ({
         channelSub.user.email &&
         channelSub.user.activated &&
         channelSub.user.receiveMessagesMail &&
-        !isOnline
+        !isOnline &&
+        SEND_EMAIL_NOTIFICATIONS_ON
       ) {
         //mail
 

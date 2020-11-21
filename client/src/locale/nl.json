@@ -3,6 +3,14 @@
   "metaOgTitle": "MasterCrimeZ - The Ultimate Game",
   "metaOgDescription": "Word jij de beste gangster?",
 
+  "headerGang": "Gangs",
+  "menuGangCreate": "Gang aanmaken",
+  "menuGangs": "Alle gangs",
+  "menuGangShop": "Gang Winkel",
+  "menuGangSettings": "Hoofdkwartier",
+  "menuGangAchievements": "Achievements",
+  "menuGangOc": "OC",
+
   "headerCrime": "Misdaden",
   "menuStealCar": "Auto Stelen",
   "menuCrimes": "Misdaden",
@@ -301,7 +309,6 @@
 
   "gangOfX": "Gang van $1: $2 punten",
   "chat": "Chat",
-  "sendMessage": "Stuur bericht",
   "rob": "Beroof",
   "attack": "Aanvallen",
   "power": "power",
@@ -317,7 +324,7 @@
   "menuLogin": "Login op ander account",
   "menuMyProfile": "Mijn profiel aanpassen",
   "menuBackfire": "Backfire",
-  "menuAcccomplice": "Handlanger",
+  "menuAccomplice": "Handlanger",
 
   "weapons": "Wapens",
   "protection": "Bescherming",
@@ -397,5 +404,29 @@
   "yourMessage": "Jouw bericht",
 
   "gangCreateCTA": "Gang aanmaken",
-  "members": "Leden"
+  "members": "Leden",
+
+  "gangJoinCTA": "Join",
+  "gangInvitedTo": "Je bent uitgenodigd voor $1",
+  "accept": "Accepteer",
+  "decline": "Weiger",
+  "removeGang": "Verwijder gang",
+  "gangName": "Gangnaam",
+  "yes": "Ja",
+  "no": "Nee",
+  "pleaseFillInGangName": "Voer a.u.b. de gangnaam in om je gang te verwijderen",
+  "youAreWhat": "Je bent $1",
+  "gangLevelBoss": "Baas",
+  "gangLevelUnderboss": "Onderbaas",
+  "gangLevelBank": "Bankbeheerder",
+  "gangLevelMember": "Ganglid",
+  "leaveGang": "Verlaat de gang",
+  "gangJoinRequestsTitle": "Gang join verzoeken",
+  "noJoinRequests": "Er zijn geen join verzoeken",
+  "invite": "Nodig uit",
+  "kick": "Verwijder",
+  "changeRank": "Verander rank",
+
+  "choosePicture": "Kies afbeelding",
+  "weNeedCameraPermission": "Sorry, maar we hebben camera toestemming nodig om dit te laten werken!"
 }

@@ -1008,6 +1008,39 @@ server.post("/gangCreate", (req, res) =>
   })
 );
 
+server.post("/gangUpdate", (req, res) =>
+  require("./gang").gangUpdate(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+  })
+);
+
+server.post("/gangTransaction", (req, res) =>
+  require("./gang").gangTransaction(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+  })
+);
+
+server.post("/gangSetRank", (req, res) =>
+  require("./gang").gangSetRank(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+  })
+);
+
 server.post("/gangJoin", (req, res) =>
   require("./gang").gangJoin(req, res, {
     User,
@@ -1060,10 +1093,6 @@ server.get("/gangInvites", (req, res) =>
   require("./gang").gangInvites(req, res, {
     User,
     Gang,
-    Action,
-    Channel,
-    ChannelSub,
-    ChannelMessage,
     GangRequest,
   })
 );
@@ -1082,13 +1111,12 @@ server.post("/gangKick", (req, res) =>
 
 server.post("/gangLeave", (req, res) =>
   require("./gang").gangLeave(req, res, {
-    User,
     Gang,
+    User,
     Action,
     Channel,
     ChannelSub,
     ChannelMessage,
-    GangRequest,
   })
 );
 
@@ -1111,7 +1139,7 @@ server.get("/gangs", (req, res) =>
   })
 );
 
-server.post("/gang", (req, res) =>
+server.get("/gang", (req, res) =>
   require("./gang").gang(req, res, {
     User,
     Gang,

@@ -47,11 +47,7 @@ const ChangeName = ({
             value={name}
             onChangeText={(x) => setName(x)}
           />
-          <Button
-            onPress={changeName}
-            theme={theme}
-            title={getText("change")}
-          />
+          <Button onPress={changeName} title={getText("change")} />
         </View>
       </View>
     </ScrollView>

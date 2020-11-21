@@ -100,13 +100,11 @@ class Jail extends React.Component {
         {response && <T>{response}</T>}
         <Button
           style={{ marginVertical: 15 }}
-          theme={device.theme}
           title={getText("jailBuyoutCredits")}
           onPress={() => this.buyOut("credits")}
         />
         <Button
           style={{ marginVertical: 15 }}
-          theme={device.theme}
           title={getText("jailBuyoutCash")}
           onPress={() => this.buyOut("cash")}
         />

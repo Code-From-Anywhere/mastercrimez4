@@ -44,7 +44,6 @@ const Casino = ({
           </Text>
           {becomeOwnerResponse && <T>{becomeOwnerResponse}</T>}
           <Button
-            theme={theme}
             title={getText("becomeOwner")}
             onPress={() => becomeOwner(me?.city)}
           />
@@ -63,7 +62,6 @@ const Casino = ({
 
           <Button
             onPress={() => navigation.navigate("Poker")}
-            theme={theme}
             title={getText("poker")}
           />
 

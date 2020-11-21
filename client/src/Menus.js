@@ -1,6 +1,6 @@
 import React from "react";
 import CountDown from "react-native-countdown-component";
-import { getRank, getTextFunction, numberFormat } from "./Util";
+import { getTextFunction } from "./Util";
 export const leftMenu = (me, theme) => {
   const stealcarSeconds = Math.ceil(
     (me?.autostelenAt + 60000 - Date.now()) / 1000
@@ -212,10 +212,9 @@ export const leftMenu = (me, theme) => {
         ) : null,
     },
 
-    {
+    me?.level > 1 && {
       iconType: "AntDesign",
       icon: "tool",
-
       text: getText("menuWork"),
       to: "Work",
       component:
@@ -334,7 +333,7 @@ export const leftMenu = (me, theme) => {
       text: getText("menuAirport"),
       to: "Airport",
     },
-  ];
+  ].filter((x) => !!x);
 };
 
 const adminMenu = (me) => {
@@ -399,9 +398,11 @@ export const rightMenu = (me, theme) => {
             icon: "font",
             isHeader: true,
             text: me?.gang?.name || getText("headerGang"),
+            to: "Gang",
+            params: { name: me?.gang?.name },
           },
 
-          {
+          !me?.gangId && {
             iconType: "Ionicons",
             icon: "ios-people",
             text: getText("menuGangCreate"),
@@ -413,91 +414,94 @@ export const rightMenu = (me, theme) => {
             text: getText("menuGangs"),
             to: "Gangs",
           },
-          {
-            iconType: "Ionicons",
-            icon: "ios-people",
-            text: getText("menuGangShop"),
-            to: "GangShop",
-          },
-          {
+
+          me?.gangId && {
             iconType: "Ionicons",
             icon: "ios-people",
             text: getText("menuGangSettings"),
             to: "GangSettings",
           },
-          {
+
+          me?.gangId && {
+            iconType: "Ionicons",
+            icon: "ios-people",
+            text: getText("menuGangShop"),
+            to: "GangShop",
+          },
+
+          me?.gangId && {
             iconType: "Ionicons",
             icon: "ios-people",
             text: getText("menuGangAchievements"),
             to: "GangAchievements",
           },
-          {
+          me?.gangId && {
             iconType: "Ionicons",
             icon: "ios-people",
             text: getText("menuGangOc"),
             to: "GangOc",
           },
-        ]
+        ].filter((x) => !!x)
       : [];
 
   return [
-    {
-      iconType: "FontAwesome",
-      icon: "font",
+    // {
+    //   iconType: "FontAwesome",
+    //   icon: "font",
 
-      isHeader: true,
-      text: me?.name,
-      to: "Profile",
-      params: { name: me?.name },
-    },
+    //   isHeader: true,
+    //   text: me?.name,
+    //   to: "Profile",
+    //   params: { name: me?.name },
+    // },
 
-    {
-      isStats: true,
-      iconType: "FontAwesome",
-      icon: "font",
+    // {
+    //   isStats: true,
+    //   iconType: "FontAwesome",
+    //   icon: "font",
 
-      text: getText("menuCash", numberFormat(me?.cash)),
-    },
+    //   text: getText("menuCash", numberFormat(me?.cash)),
+    // },
 
-    {
-      isStats: true,
+    // {
+    //   isStats: true,
 
-      iconType: "FontAwesome",
-      icon: "font",
+    //   iconType: "FontAwesome",
+    //   icon: "font",
 
-      text: getText("menuBankMoney", numberFormat(me?.bank)),
-    },
-    {
-      isStats: true,
+    //   text: getText("menuBankMoney", numberFormat(me?.bank)),
+    // },
+    // {
+    //   isStats: true,
 
-      iconType: "FontAwesome",
-      icon: "font",
+    //   iconType: "FontAwesome",
+    //   icon: "font",
 
-      text: getText("menuBullets", numberFormat(me?.bullets)),
-    },
-    {
-      isStats: true,
+    //   text: getText("menuBullets", numberFormat(me?.bullets)),
+    // },
+    // {
+    //   isStats: true,
 
-      iconType: "FontAwesome",
-      icon: "font",
-      text: getText("menuRank", getRank(me?.rank, "both")),
-    },
-    {
-      isStats: true,
+    //   iconType: "FontAwesome",
+    //   icon: "font",
+    //   text: getText("menuRank", getRank(me?.rank, "both")),
+    // },
+    // {
+    //   isStats: true,
 
-      iconType: "FontAwesome",
-      icon: "font",
+    //   iconType: "FontAwesome",
+    //   icon: "font",
 
-      text: getText("menuHealth", me?.health),
-    },
-    {
-      isStats: true,
+    //   text: getText("menuHealth", me?.health),
+    // },
+    // {
+    //   isStats: true,
 
-      iconType: "FontAwesome",
-      icon: "font",
+    //   iconType: "FontAwesome",
+    //   icon: "font",
 
-      text: getText("menuCity", me?.city),
-    },
+    //   text: getText("menuCity", me?.city),
+    // },
 
     ...gangMenus,
 

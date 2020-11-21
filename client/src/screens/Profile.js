@@ -193,16 +193,6 @@ class ProfileScreen extends React.Component {
               />
 
               <Button
-                theme={theme}
-                title={getText("sendMessage")}
-                onPress={() =>
-                  navigation.navigate("Messages", {
-                    state: { to: profile.name, newMessage: true },
-                  })
-                }
-              />
-
-              <Button
                 theme={this.props.screenProps.device.theme}
                 title={getText("rob")}
                 onPress={() =>

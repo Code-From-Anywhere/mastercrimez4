@@ -3,6 +3,7 @@ const {
   getTextFunction,
   sendChatPushMail,
   publicUserFields,
+  saveImageIfValid,
 } = require("./util");
 let getText = getTextFunction();
 
@@ -18,24 +19,19 @@ const deleteGang = async (
 ) => {
   console.log("delete gang", gang.name);
 
-  const gangObject = await Gang.findOne({ where: { id: gang.id } });
-
   const allMembers = await User.findAll({ where: { gangId: user.gangId } });
   User.update(
     { gangId: null, gangLevel: 1 },
     { where: { gangId: user.gangId } }
   );
   //delete all channelsubs and channel
-  const gangChannel = await Channel.findAll({ where: { gangName: gang.name } });
-  const channelSubs = await ChannelSub.findAll({
-    where: { channelId: gangChannel.id },
-  });
-  gangChannel.destroy();
-  channelSubs.destroy();
+  const gangChannel = await Channel.findOne({ where: { gangName: gang.name } });
+  if (gangChannel) {
+    await ChannelSub.destroy({ where: { channelId: gangChannel.id } });
+    await gangChannel.destroy();
+  }
 
   const destroyed = await gang.destroy();
-
-  console.log("destroyed", destroyed);
 
   if (destroyed) {
     const [updatedUser] = await User.update(
@@ -46,6 +42,7 @@ const deleteGang = async (
       { where: { id: user.id } }
     );
   }
+
   Action.create({
     userId: user.id,
     action: "gangRemove",
@@ -193,13 +190,14 @@ const gangJoin = async (
     return res.json({ response: getText("gangAlready") });
   }
 
-  const alreadyRequested = GangRequest.findOne({
+  const alreadyRequested = await GangRequest.findOne({
     where: { userId: user.id, gangName: gang.name },
   });
 
   if (alreadyRequested) {
     return res.json({ response: getText("gangAlreadyRequested") });
   }
+
   Action.create({
     userId: user.id,
     action: "gangJoinRequest",
@@ -277,7 +275,7 @@ const gangInvite = async (
     return res.json({ response: getText("personAlreadyInGang") });
   }
 
-  const alreadyRequested = GangRequest.findOne({
+  const alreadyRequested = await GangRequest.findOne({
     where: { userId: user2.id, gangName: gang.name },
   });
 
@@ -554,7 +552,14 @@ const gangLeave = async (
 
       if (otherMembers.length === 0) {
         //delete gang
-        deleteGang(gang, user, { Gang, User });
+        deleteGang(gang, user, {
+          Gang,
+          User,
+          Action,
+          Channel,
+          ChannelSub,
+          ChannelMessage,
+        });
       } else {
         const [updated] = User.update(
           { gangLevel: GANG_LEVEL_BOSS },
@@ -662,6 +667,327 @@ const gangKick = async (
 };
 
 /**
+ * a gang member [token] that's allowed (boss,underboss), updates the gang profile: image, profile, and name.
+ *
+ */
+const gangUpdate = async (
+  req,
+  res,
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
+) => {
+  const { token, profile, image, name } = req.body;
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  if (user.gangLevel < GANG_LEVEL_UNDERBOSS) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  const update = {};
+
+  if (name && name !== gang.name) {
+    if (name.length < 3 || name.length > 24) {
+      return res.json({ response: getText("nameWrongLength", 3, 24) });
+    }
+
+    const already = await Gang.findOne({
+      where: {
+        $and: Sequelize.where(
+          Sequelize.fn("lower", Sequelize.col("name")),
+          Sequelize.fn("lower", name)
+        ),
+      },
+    });
+
+    if (already) {
+      return res.json({ response: getText("gangAlreadyExists") });
+    }
+
+    //namechange
+    update.name = name;
+
+    //also update channel and gangRequests
+    Channel.update(
+      { name, gangName: name },
+      { where: { gangName: gang.name } }
+    );
+    GangRequest.update({ gangName: name }, { where: { gangName: gang.name } });
+  }
+
+  if (profile && profile !== gang.profile) {
+    //profile change
+    update.profile = profile;
+  }
+
+  if (image && image.includes("data:image")) {
+    //image change
+    const { pathImage, pathThumbnail } = saveImageIfValid(res, image, true);
+
+    console.log("image updaten");
+    if (pathImage && pathThumbnail) {
+      update.image = pathImage;
+      update.thumbnail = pathThumbnail;
+    }
+  }
+
+  const updateGang = Gang.update(update, { where: { id: gang.id } });
+
+  Action.create({
+    userId: user.id,
+    action: "gangUpate",
+    timestamp: Date.now(),
+  });
+
+  sendChatPushMail({
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    User,
+    isSystem: true,
+    message: getText("gangUpdateMessage", user.name, gang.name),
+    gang,
+  });
+
+  res.json({ response: getText("gangUpdateSuccess") });
+};
+
+/**
+ *
+ */
+const gangTransaction = async (
+  req,
+  res,
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
+) => {
+  const { token, amount, isToUser, isBullets } = req.body;
+  //isToUser: true or false
+  //isBullets: true or false
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  if (
+    user.gangLevel !== GANG_LEVEL_BOSS &&
+    user.gangLevel !== GANG_LEVEL_BANK &&
+    isToUser
+  ) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  const type = isBullets ? "bullets" : "bank";
+  const typeString = isBullets ? getText("bullets") : getText("bankMoney");
+  const directionString = isToUser
+    ? getText("withdrawn")
+    : getText("deposited");
+
+  const amount2 = Math.round(amount * 0.95);
+
+  if (isToUser) {
+    if (gang[type] < amount) {
+      return res.json({ response: getText("gangNotEnough") });
+    }
+
+    const [updated] = await Gang.update(
+      { [type]: Sequelize.literal(`${type} - ${amount}`) },
+      { where: { id: user.gangId, [type]: { [Op.gte]: amount } } }
+    );
+
+    if (updated === 1) {
+      User.update(
+        {
+          [type]: Sequelize.literal(`${type} + ${amount2}`),
+          numActions: Sequelize.literal(`numActions+1`),
+          onlineAt: Date.now(),
+        },
+        { where: { id: user.id } }
+      );
+    }
+  } else {
+    if (user[type] < amount) {
+      return res.json({ response: getText("notEnough") });
+    }
+
+    const [updated] = await User.update(
+      {
+        [type]: Sequelize.literal(`${type} - ${amount}`),
+        numActions: Sequelize.literal(`numActions+1`),
+        onlineAt: Date.now(),
+      },
+      { where: { id: user.id, [type]: { [Op.gte]: amount } } }
+    );
+
+    if (updated === 1) {
+      Gang.update(
+        { [type]: Sequelize.literal(`${type} + ${amount2}`) },
+        { where: { id: user.gangId } }
+      );
+    }
+  }
+
+  Action.create({
+    userId: user.id,
+    action: "gangTransaction",
+    timestamp: Date.now(),
+  });
+
+  sendChatPushMail({
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    User,
+    isSystem: true,
+    message: getText(
+      "gangTransactionMessage",
+      user.name,
+      directionString,
+      amount,
+      typeString
+    ),
+    gang,
+  });
+
+  res.json({
+    response: getText(
+      "gangTransactionSuccess",
+      directionString,
+      amount,
+      typeString
+    ),
+  });
+};
+
+/**
+ * the boss can do this.
+ */
+const gangSetRank = async (
+  req,
+  res,
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
+) => {
+  const { token, userId, rank } = req.body;
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  if (user.gangLevel !== GANG_LEVEL_BOSS) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  if (!userId) {
+    return res.json({ response: getText("noId") });
+  }
+
+  const user2 = await User.findOne({ where: { id: userId, gangId: gang.id } });
+  if (!user2) {
+    return res.json({ response: getText("personDoesntExist") });
+  }
+
+  const allBosses = await User.findAll({
+    where: { gangId: user.gangId, gangLevel: GANG_LEVEL_BOSS },
+  });
+
+  if (userId === user.id && allBosses.length === 1) {
+    //you're the only one
+    return res.json({ response: getText("gangSetRankOnlyBoss") });
+  }
+
+  const theRank =
+    rank < 1
+      ? 1
+      : rank > GANG_LEVEL_BOSS
+      ? GANG_LEVEL_BOSS
+      : isNaN(rank)
+      ? 1
+      : Math.round(rank);
+
+  const getGangLevel = (gangLevel) =>
+    getText(
+      gangLevel === GANG_LEVEL_BOSS
+        ? "gangLevelBoss"
+        : gangLevel === GANG_LEVEL_UNDERBOSS
+        ? "gangLevelUnderboss"
+        : gangLevel === GANG_LEVEL_BANK
+        ? "gangLevelBank"
+        : "gangLevelMember"
+    );
+
+  const rankString = getGangLevel(theRank);
+
+  User.update({ gangLevel: theRank }, { where: { id: user2.id } });
+  Action.create({
+    userId: user.id,
+    action: "gangSetRank",
+    timestamp: Date.now(),
+  });
+
+  sendChatPushMail({
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    User,
+    isSystem: true,
+    message: getText("gangSetRankMessage", user.name, user2.name, rankString),
+    gang,
+  });
+
+  res.json({
+    response: getText("gangSetRankSuccess", user2.name, rankString),
+  });
+};
+
+/**
  * a gang member [token] that's allowed (boss,underboss), kicks another gang member that's not himself [userId].
  *
  */
@@ -670,7 +996,7 @@ const gangRemove = async (
   res,
   { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
 ) => {
-  const { token, userId } = req.body;
+  const { token } = req.body;
 
   if (!token) {
     res.json({ response: getText("noToken") });
@@ -709,8 +1035,8 @@ const gangRemove = async (
   res.json({ response: getText("gangRemoveSuccess") });
 };
 
-const gangInvites = async (req, res, { User, GangRequest }) => {
-  const { token, isInvite } = req.query;
+const gangInvites = async (req, res, { User, GangRequest, Gang }) => {
+  const { token } = req.query;
 
   if (!token) {
     res.json({ response: getText("noToken") });
@@ -719,10 +1045,6 @@ const gangInvites = async (req, res, { User, GangRequest }) => {
 
   const user = await User.findOne({ where: { loginToken: token } });
   const gang = await Gang.findOne({ where: { id: user.gangId } });
-
-  if (!gang) {
-    return res.json({ response: getText("gangDoesntExist") });
-  }
 
   if (!user) {
     res.json({ response: getText("invalidUser") });
@@ -757,14 +1079,12 @@ const gang = async (req, res, { User, Gang }) => {
   if (!name) {
     return res.json({ response: getText("noNameGiven") });
   }
-  const gang = await Gang.findOne({ where: { name } });
+  const gang = await Gang.findOne({
+    where: { name },
+    include: { model: User, attributes: publicUserFields },
+  });
   if (gang) {
-    gang.members = await User.findAll({
-      where: { gangId: gang.id },
-      attributes: publicUserFields,
-    });
-
-    res.json({ gang, members });
+    res.json(gang);
   } else {
     return res.json({ response: getText("gangNotFound") });
   }
@@ -773,22 +1093,24 @@ const gang = async (req, res, { User, Gang }) => {
 module.exports = {
   //post
   gangCreate,
-  gangJoin,
-  gangInvite,
-  gangAnswerJoin,
-  gangAnswerInvite,
-  gangLeave,
-  gangKick,
-  gangRemove,
-  // gangTransaction,
+  gangAnswerInvite, //gangs
+  gangJoin, //gang
+
+  gangInvite, //gangSettings
+  gangAnswerJoin, //gangSettings
+  gangLeave, //gangSettings
+  gangKick, //gangSettings
+  gangRemove, //gangSettings
+  gangUpdate, //gangSettings
+  gangTransaction, //gangSettings
+  gangSetRank, //gangSettings
+
   // gangShop,
-  // gangUpdate,
-  // gangSetRank,
   // gangOc,
 
   //get
-  gangInvites,
+  gangInvites, //gangs,gangSettings
   gangs,
-  gang,
+  gang, //gang, gangSettings
   // gangAchievements,
 };

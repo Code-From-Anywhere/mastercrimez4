@@ -20,7 +20,6 @@ class Status extends Component {
         </Text>
 
         <Button
-          theme={this.props.screenProps.device.theme}
           title={getText("contributeCodeCTA")}
           onPress={() => {
             Linking.openURL(

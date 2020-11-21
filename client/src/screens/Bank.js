@@ -90,13 +90,11 @@ class Bank extends Component {
               }}
             >
               <Button
-                theme={this.props.screenProps.device.theme}
                 title={getText("in")}
                 onPress={() => this.deposit(true)}
                 style={{ width: 80 }}
               />
               <Button
-                theme={this.props.screenProps.device.theme}
                 title={getText("out")}
                 onPress={() => this.deposit(false)}
                 style={{ width: 80 }}

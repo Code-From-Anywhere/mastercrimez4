@@ -37,7 +37,6 @@ class Status extends Component {
           onChangeText={(message) => this.setState({ message })}
         />
         <Button
-          theme={device.theme}
           style={{ marginVertical: 10 }}
           title={getText("send")}
           onPress={this.sendMessage}
