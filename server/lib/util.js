@@ -58,6 +58,7 @@ const publicUserFields = [
   "level",
   "onlineAt",
   "creditsTotal",
+  "gangId",
 ];
 
 const sendMessageAndPush = async (

@@ -394,5 +394,8 @@
   "workOption6": "Ga politieagentje spelen",
   "workOption7": "Probeer president te worden",
   "credits": "credits",
-  "yourMessage": "Jouw bericht"
+  "yourMessage": "Jouw bericht",
+
+  "gangCreateCTA": "Gang aanmaken",
+  "members": "Leden"
 }

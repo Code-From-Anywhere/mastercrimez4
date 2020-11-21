@@ -276,5 +276,6 @@
   "gangKickMessage": "$1 has kicked $2 from $3",
   "gangRemoveMessage": "$1 has deleted $2. You're not in a gang anymore.",
   "gangRemoveSuccess": "You've deleted the gang",
-  "gangNotFound": "Gang not found"
+  "gangNotFound": "Gang not found",
+  "gangAlreadyExists": "This gang already exists"
 }

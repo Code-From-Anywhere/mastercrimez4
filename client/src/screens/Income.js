@@ -80,6 +80,8 @@ class Income extends Component {
       screenProps: { me },
     } = this.props;
 
+    const getText = getTextFunction(me?.locale);
+
     const incomeAt = me.incomeAt ? me.incomeAt : 0;
     const uren = Math.round((Date.now() - incomeAt) / 3600000);
     const uren2 = uren > 24 ? 24 : uren;

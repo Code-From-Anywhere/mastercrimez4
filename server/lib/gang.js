@@ -1,4 +1,4 @@
-const { Op, Sequelize } = require("sequelize/types");
+const { Op, Sequelize } = require("sequelize");
 const {
   getTextFunction,
   sendChatPushMail,
@@ -20,8 +20,11 @@ const deleteGang = async (
 
   const gangObject = await Gang.findOne({ where: { id: gang.id } });
 
-  const allMembers = await User.findAll({ where: { gang: user.gang } });
-  User.update({ gang: null, gangLevel: 1 }, { where: { gang: gang.name } });
+  const allMembers = await User.findAll({ where: { gangId: user.gangId } });
+  User.update(
+    { gangId: null, gangLevel: 1 },
+    { where: { gangId: user.gangId } }
+  );
   //delete all channelsubs and channel
   const gangChannel = await Channel.findAll({ where: { gangName: gang.name } });
   const channelSubs = await ChannelSub.findAll({
@@ -97,17 +100,32 @@ const gangCreate = async (
     return res.json({ response: getText("nameWrongLength", 3, 24) });
   }
 
-  if (user.gang) {
+  if (user.gangId) {
     return res.json({ response: getText("gangAlready") });
+  }
+
+  const already = await Gang.findOne({
+    where: {
+      $and: Sequelize.where(
+        Sequelize.fn("lower", Sequelize.col("name")),
+        Sequelize.fn("lower", name)
+      ),
+    },
+  });
+
+  if (already) {
+    return res.json({ response: getText("gangAlreadyExists") });
   }
 
   if (user.cash < GANG_CREATE_COST) {
     return res.json({ response: getText("notEnoughCash", GANG_CREATE_COST) });
   }
 
+  const gang = await Gang.create({ name });
+
   const [updated] = await User.update(
     {
-      gang: name,
+      gangId: gang.id,
       gangLevel: GANG_LEVEL_BOSS,
       cash: Sequelize.literal(`cash - ${GANG_CREATE_COST}`),
     },
@@ -117,8 +135,6 @@ const gangCreate = async (
   if (!updated) {
     return res.json({ response: getText("couldntUpdateUser") });
   }
-
-  const gang = await Gang.create({ name });
 
   Action.create({
     userId: user.id,
@@ -173,7 +189,7 @@ const gangJoin = async (
     return res.json({ response: getText("gangDoesntExist") });
   }
 
-  if (user.gang) {
+  if (user.gangId) {
     return res.json({ response: getText("gangAlready") });
   }
 
@@ -234,7 +250,7 @@ const gangInvite = async (
     return res.json({ response: getText("noNameGiven") });
   }
 
-  const gang = await Gang.findOne({ where: { name: user.gang } });
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
 
   if (!gang) {
     return res.json({ response: getText("gangDoesntExist") });
@@ -330,7 +346,7 @@ const gangAnswerJoin = async (
     return res.json({ response: getText("noId") });
   }
 
-  const gang = await Gang.findOne({ where: { name: user.gang } });
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
 
   if (!gang) {
     return res.json({ response: getText("gangDoesntExist") });
@@ -377,7 +393,7 @@ const gangAnswerJoin = async (
     { members: Sequelize.literal(`members+1`) },
     { where: { name: gang.name } }
   );
-  User.update({ gang: gang.name }, { where: { id: user2.id } });
+  User.update({ gangId: gang.id }, { where: { id: user2.id } });
   const gangChannel = await Channel.findOne({ where: { gangName: gang.name } });
   if (gangChannel) {
     await ChannelSub.create({ channelId: gangChannel.id, userId: user2.id });
@@ -453,7 +469,7 @@ const gangAnswerInvite = async (
   const allInvites = GangRequest.findAll({ where: { userId: user.id } });
   allInvites.destroy();
 
-  User.update({ gang: gang.name }, { where: { id: user.id } });
+  User.update({ gangId: gang.id }, { where: { id: user.id } });
   Gang.update(
     { members: Sequelize.literal(`members+1`) },
     { where: { name: gang.name } }
@@ -502,9 +518,9 @@ const gangLeave = async (
 
   getText = getTextFunction(user.locale);
 
-  const gang = await Gang.findOne({ where: { name: user.gang } });
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
 
-  if (!gang || !user.gang) {
+  if (!gang || !user.gangId) {
     return res.json({ response: getText("gangDoesntExist") });
   }
 
@@ -514,10 +530,10 @@ const gangLeave = async (
 
   Gang.update(
     { members: Sequelize.literal(`members-1`) },
-    { where: { gang: gang.name } }
+    { where: { name: gang.name } }
   );
 
-  User.update({ gang: null }, { where: { id: user.id } });
+  User.update({ gangId: null }, { where: { id: user.id } });
   const gangChannel = await Channel.findOne({ where: { gangName: gang.name } });
   const channelSub = await ChannelSub.findOne({
     where: { userId: user.id, channelId: gangChannel.id },
@@ -526,13 +542,13 @@ const gangLeave = async (
 
   if (user.gangLevel === GANG_LEVEL_BOSS) {
     const otherBosses = await User.findAll({
-      where: { gang: user.gang, gangLevel: GANG_LEVEL_BOSS },
+      where: { gangId: user.gangId, gangLevel: GANG_LEVEL_BOSS },
     });
     if (otherBosses.length === 0) {
       //youre the only boss
 
       const otherMembers = await User.findAll({
-        where: { gang: user.gang, name: { [Op.ne]: user.name } },
+        where: { gangId: user.gangId, name: { [Op.ne]: user.name } },
         order: [["gangLevel", "DESC"]],
       });
 
@@ -594,9 +610,9 @@ const gangKick = async (
 
   getText = getTextFunction(user.locale);
 
-  const gang = await Gang.findOne({ where: { name: user.gang } });
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
 
-  if (!gang || !user.gang) {
+  if (!gang || !user.gangId) {
     return res.json({ response: getText("gangDoesntExist") });
   }
 
@@ -605,7 +621,7 @@ const gangKick = async (
   }
 
   const user2 = await User.findOne({
-    where: { id: userId, gang: gang.name, id: { [Op.ne]: user.id } },
+    where: { id: userId, gangId: gang.id, id: { [Op.ne]: user.id } },
   });
 
   if (!user2) {
@@ -616,10 +632,10 @@ const gangKick = async (
 
   Gang.update(
     { members: Sequelize.literal(`members-1`) },
-    { where: { gang: gang.name } }
+    { where: { name: gang.name } }
   );
 
-  User.update({ gang: null, gangLevel: 1 }, { where: { id: user2.id } });
+  User.update({ gangId: null, gangLevel: 1 }, { where: { id: user2.id } });
   const gangChannel = await Channel.findOne({ where: { gangName: gang.name } });
   const channelSub = await ChannelSub.findOne({
     where: { userId: user2.id, channelId: gangChannel.id },
@@ -670,9 +686,9 @@ const gangRemove = async (
 
   getText = getTextFunction(user.locale);
 
-  const gang = await Gang.findOne({ where: { name: user.gang } });
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
 
-  if (!gang || !user.gang) {
+  if (!gang || !user.gangId) {
     return res.json({ response: getText("gangDoesntExist") });
   }
 
@@ -702,6 +718,11 @@ const gangInvites = async (req, res, { User, GangRequest }) => {
   }
 
   const user = await User.findOne({ where: { loginToken: token } });
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
 
   if (!user) {
     res.json({ response: getText("invalidUser") });
@@ -717,7 +738,7 @@ const gangInvites = async (req, res, { User, GangRequest }) => {
 
   if (user.gangLevel >= GANG_LEVEL_UNDERBOSS) {
     requests = await GangRequest.findAll({
-      where: { gangName: user.gang, isInvite: false },
+      where: { gangName: gang.name, isInvite: false },
       include: { model: User, attributes: publicUserFields },
     });
   }
@@ -739,7 +760,7 @@ const gang = async (req, res, { User, Gang }) => {
   const gang = await Gang.findOne({ where: { name } });
   if (gang) {
     gang.members = await User.findAll({
-      where: { gang: name },
+      where: { gangId: gang.id },
       attributes: publicUserFields,
     });
 
@@ -759,15 +780,15 @@ module.exports = {
   gangLeave,
   gangKick,
   gangRemove,
-  gangTransaction,
-  gangShop,
-  gangUpdate,
-  gangSetRank,
-  gangOc,
+  // gangTransaction,
+  // gangShop,
+  // gangUpdate,
+  // gangSetRank,
+  // gangOc,
 
   //get
   gangInvites,
   gangs,
   gang,
-  gangAchievements,
+  // gangAchievements,
 };

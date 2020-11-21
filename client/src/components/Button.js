@@ -4,42 +4,36 @@ import * as Icon from "react-native-vector-icons";
 const { width } = Dimensions.get("window");
 const isSmall = width < 800;
 
-class Button extends React.Component {
-  render() {
-    const { icon, font, title, onPress, disabled, style, theme } = this.props;
+const Button = ({ icon, font, title, onPress, disabled, style, theme }) => {
+  const TheIcon = font && icon ? Icon[font] : View;
 
-    const TheIcon = font && icon ? Icon[font] : View;
+  return (
+    <TouchableOpacity onPress={disabled ? undefined : onPress}>
+      <View
+        style={{
+          flexDirection: "row",
+          backgroundColor: disabled ? `${theme.secondary}55` : theme.secondary,
+          padding: 10,
+          justifyContent: "center",
+          paddingHorizontal: isSmall ? 5 : 20,
+          // borderRadius: 20,
+          ...style,
+        }}
+      >
+        {font && icon ? (
+          <View style={{ marginRight: 20 }}>
+            <TheIcon name={icon} color={theme.secondaryText} size={20} />
+          </View>
+        ) : null}
 
-    return (
-      <TouchableOpacity onPress={disabled ? undefined : onPress}>
-        <View
-          style={{
-            flexDirection: "row",
-            backgroundColor: disabled
-              ? `${theme.secondary}55`
-              : theme.secondary,
-            padding: 10,
-            justifyContent: "center",
-            paddingHorizontal: isSmall ? 5 : 20,
-            // borderRadius: 20,
-            ...style,
-          }}
-        >
-          {font && icon ? (
-            <View style={{ marginRight: 20 }}>
-              <TheIcon name={icon} color={theme.secondaryText} size={20} />
-            </View>
-          ) : null}
-
-          {title && (
-            <Text style={{ textAlign: "center", color: theme.secondaryText }}>
-              {title}
-            </Text>
-          )}
-        </View>
-      </TouchableOpacity>
-    );
-  }
-}
+        {title && (
+          <Text style={{ textAlign: "center", color: theme.secondaryText }}>
+            {title}
+          </Text>
+        )}
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 export default Button;

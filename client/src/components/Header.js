@@ -138,7 +138,9 @@ function Header({ navigation, device, me }) {
             elevation: 5,
           }}
         >
-          <Text style={textStyle}>😎 {me?.name}</Text>
+          <Text style={textStyle}>
+            😎 {me?.name} {me?.gang?.name}
+          </Text>
           <Text style={textStyle}>💰 €{numberFormat(me?.cash)},-</Text>
           <Text style={textStyle}>💵 €{numberFormat(me?.bank)},-</Text>
           <View style={{ flexDirection: "row" }}>

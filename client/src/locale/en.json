@@ -402,5 +402,8 @@
   "workOption6": "Go play police-agent",
   "workOption7": "Try to become president",
   "credits": "credits",
-  "yourMessage": "Your Message"
+  "yourMessage": "Your Message",
+
+  "gangCreateCTA": "Create gang",
+  "members": "Members"
 }

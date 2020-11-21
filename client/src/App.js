@@ -445,7 +445,12 @@ const Container = rightContainer(
       },
 
       GangCreate: withLayout(GangCreate),
-      Gang: withLayout(Gang),
+
+      Gang: {
+        screen: withLayout(Gang),
+        path: "Gang/:name",
+      },
+
       Gangs: withLayout(Gangs),
       GangShop: withLayout(GangShop),
       GangSettings: withLayout(GangSettings),

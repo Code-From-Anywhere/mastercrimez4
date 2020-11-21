@@ -391,6 +391,55 @@ const adminMenu = (me) => {
 export const rightMenu = (me, theme) => {
   const getText = getTextFunction(me?.locale);
 
+  const gangMenus =
+    me?.level > 1
+      ? [
+          {
+            iconType: "FontAwesome",
+            icon: "font",
+            isHeader: true,
+            text: me?.gang?.name || getText("headerGang"),
+          },
+
+          {
+            iconType: "Ionicons",
+            icon: "ios-people",
+            text: getText("menuGangCreate"),
+            to: "GangCreate",
+          },
+          {
+            iconType: "Ionicons",
+            icon: "ios-people",
+            text: getText("menuGangs"),
+            to: "Gangs",
+          },
+          {
+            iconType: "Ionicons",
+            icon: "ios-people",
+            text: getText("menuGangShop"),
+            to: "GangShop",
+          },
+          {
+            iconType: "Ionicons",
+            icon: "ios-people",
+            text: getText("menuGangSettings"),
+            to: "GangSettings",
+          },
+          {
+            iconType: "Ionicons",
+            icon: "ios-people",
+            text: getText("menuGangAchievements"),
+            to: "GangAchievements",
+          },
+          {
+            iconType: "Ionicons",
+            icon: "ios-people",
+            text: getText("menuGangOc"),
+            to: "GangOc",
+          },
+        ]
+      : [];
+
   return [
     {
       iconType: "FontAwesome",
@@ -450,56 +499,14 @@ export const rightMenu = (me, theme) => {
       text: getText("menuCity", me?.city),
     },
 
+    ...gangMenus,
+
     {
       iconType: "FontAwesome",
       icon: "font",
 
       isHeader: true,
       text: getText("headerSociety"),
-    },
-
-    {
-      iconType: "FontAwesome",
-      icon: "font",
-      isHeader: true,
-      text: me?.gang || getText("headerGang"),
-    },
-
-    {
-      iconType: "Ionicons",
-      icon: "ios-people",
-      text: getText("menuGangCreate"),
-      to: "GangCreate",
-    },
-    {
-      iconType: "Ionicons",
-      icon: "ios-people",
-      text: getText("menuGangs"),
-      to: "Gangs",
-    },
-    {
-      iconType: "Ionicons",
-      icon: "ios-people",
-      text: getText("menuGangShop"),
-      to: "GangShop",
-    },
-    {
-      iconType: "Ionicons",
-      icon: "ios-people",
-      text: getText("menuGangSettings"),
-      to: "GangSettings",
-    },
-    {
-      iconType: "Ionicons",
-      icon: "ios-people",
-      text: getText("menuGangAchievements"),
-      to: "GangAchievements",
-    },
-    {
-      iconType: "Ionicons",
-      icon: "ios-people",
-      text: getText("menuGangOc"),
-      to: "GangOc",
     },
 
     {

@@ -684,8 +684,8 @@ Gang.init(
   }
 );
 
-Gang.belongsTo(User, { constraints: false });
-User.hasOne(Gang, { constraints: false });
+User.belongsTo(Gang, { constraints: false });
+Gang.hasMany(User, { constraints: false });
 
 class GangRequest extends Model {}
 
@@ -1017,6 +1017,104 @@ server.post("/gangJoin", (req, res) =>
     ChannelSub,
     ChannelMessage,
     GangRequest,
+  })
+);
+
+server.post("/gangAnswerInvite", (req, res) =>
+  require("./gang").gangAnswerInvite(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.post("/gangAnswerJoin", (req, res) =>
+  require("./gang").gangAnswerJoin(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.post("/gangInvite", (req, res) =>
+  require("./gang").gangInvite(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.get("/gangInvites", (req, res) =>
+  require("./gang").gangInvites(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.post("/gangKick", (req, res) =>
+  require("./gang").gangKick(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.post("/gangLeave", (req, res) =>
+  require("./gang").gangLeave(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.post("/gangRemove", (req, res) =>
+  require("./gang").gangRemove(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.get("/gangs", (req, res) =>
+  require("./gang").gangs(req, res, {
+    User,
+    Gang,
+  })
+);
+
+server.post("/gang", (req, res) =>
+  require("./gang").gang(req, res, {
+    User,
+    Gang,
   })
 );
 
@@ -1436,6 +1534,7 @@ server.get("/me", (req, res) => {
   User.findOne({
     attributes: allUserFields,
     where: { loginToken: String(req.query.token) },
+    include: { model: Gang },
   })
     .then(async (user) => {
       if (user) {
@@ -1515,6 +1614,7 @@ server.get("/me", (req, res) => {
         const newuser = await User.findOne({
           attributes: allUserFields,
           where: { loginToken: String(req.query.token) },
+          include: { model: Gang },
         });
 
         const messages = await Message.findAll({

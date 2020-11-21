@@ -276,5 +276,6 @@
   "gangKickMessage": "$1 heeft $2 uit $3 verwijderd",
   "gangRemoveMessage": "$1 heeft $2 verwijderd. Je zit nu niet meer in een gang.",
   "gangRemoveSuccess": "Je hebt de gang verwijderd",
-  "gangNotFound": "Gang niet gevonden"
+  "gangNotFound": "Gang niet gevonden",
+  "gangAlreadyExists": "Deze gang bestaat al"
 }
