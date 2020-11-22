@@ -1291,12 +1291,15 @@ const gangAchievements = async (
   properties
     .map((p) => p.name)
     .forEach((property) => {
-      return cities?.forEach((city, index) => {
-        const ownerKey = `${property}Owner`;
-        if (members.map((m) => m.name).includes(city[ownerKey])) {
-          propertiesAmount += 1;
-        }
-      });
+      return (
+        cities &&
+        cities.forEach((city, index) => {
+          const ownerKey = `${property}Owner`;
+          if (members.map((m) => m.name).includes(city[ownerKey])) {
+            propertiesAmount += 1;
+          }
+        })
+      );
     });
 
   const averagePropertiesAmount = Math.round(propertiesAmount / members.length);
