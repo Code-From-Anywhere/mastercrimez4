@@ -4,6 +4,10 @@ const {
   sendChatPushMail,
   publicUserFields,
   saveImageIfValid,
+  getRank,
+  ranks,
+  strengthRanks,
+  getStrength,
 } = require("./util");
 let getText = getTextFunction();
 
@@ -673,7 +677,7 @@ const gangKick = async (
 const gangUpdate = async (
   req,
   res,
-  { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage, GangRequest }
 ) => {
   const { token, profile, image, name } = req.body;
 
@@ -988,6 +992,117 @@ const gangSetRank = async (
 };
 
 /**
+ * accountant and boss can do this
+ */
+const gangShop = async (
+  req,
+  res,
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
+) => {
+  const { token, itemId, amount } = req.body;
+
+  console.log(req.body);
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  if (
+    user.gangLevel !== GANG_LEVEL_BOSS &&
+    user.gangLevel !== GANG_LEVEL_BANK
+  ) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  if (!itemId || itemId < 1 || itemId > 12 || isNaN(itemId)) {
+    return res.json({ response: getText("noId") });
+  }
+
+  if (!amount || isNaN(amount) || amount < 1) {
+    return res.json({ response: getText("invalidAmount") });
+  }
+
+  const theItemId = Math.round(Number(itemId));
+  const theAmount = Math.round(Number(amount));
+  const current = gang[`item${theItemId}`];
+
+  if (current === null || current === undefined) {
+    return res.json({ response: getText("itemNotFound") });
+  }
+
+  if (current + theAmount > gang.power) {
+    return res.json({ response: getText("notEnoughPower", gang.power) });
+  }
+
+  const prices = [
+    null,
+    50000,
+    100000,
+    200000,
+    500000,
+    1000000,
+    1500000,
+    2000000,
+    3000000,
+    4000000,
+    5000000,
+    10000000,
+    20000000,
+  ];
+
+  const price = prices[theItemId] * theAmount;
+
+  if (gang.bank < price) {
+    return res.json({ response: getText("notEnoughMoney") });
+  }
+
+  const [updated] = await Gang.update(
+    {
+      bank: Sequelize.literal(`bank-${price}`),
+      [`item${theItemId}`]: Sequelize.literal(`item${theItemId}+${theAmount}`),
+      score: Sequelize.literal(`score + ${theItemId * theAmount}`),
+    },
+    {
+      where: {
+        id: gang.id,
+        power: { [Op.gte]: current + theAmount },
+        bank: { [Op.gte]: price },
+      },
+    }
+  );
+
+  if (updated !== 1) {
+    return res.json({ response: getText("somethingWentWrong") });
+  }
+
+  Action.create({
+    userId: user.id,
+    action: "gangShop",
+    timestamp: Date.now(),
+  });
+
+  res.json({
+    response: getText("gangShopSuccess", theAmount),
+  });
+};
+
+/**
  * a gang member [token] that's allowed (boss,underboss), kicks another gang member that's not himself [userId].
  *
  */
@@ -1069,7 +1184,7 @@ const gangInvites = async (req, res, { User, GangRequest, Gang }) => {
 };
 
 const gangs = async (req, res, { User, Gang }) => {
-  const gangs = await Gang.findAll({});
+  const gangs = await Gang.findAll({ order: [["score", "DESC"]] });
   res.json({ gangs });
 };
 
@@ -1090,6 +1205,209 @@ const gang = async (req, res, { User, Gang }) => {
   }
 };
 
+/**
+ * accountant and boss can do this
+ */
+const gangAchievements = async (
+  req,
+  res,
+  { Gang, User, City, Action, Channel, ChannelSub, ChannelMessage }
+) => {
+  const { token } = req.query;
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  const members = await User.findAll({ where: { gangId: gang.id } });
+
+  if (members.length < 3) {
+    //TODO:set to 3!
+    if (gang.power > 0) {
+      Gang.update({ power: 0 }, { where: { id: gang.id } });
+    }
+    return res.json({ response: getText("notEnoughMembers") });
+  }
+  const cities = await City.findAll({});
+  const properties = [
+    {
+      name: "bulletFactory",
+    },
+    {
+      name: "casino",
+    },
+    {
+      name: "rld",
+    },
+    {
+      name: "landlord",
+    },
+    {
+      name: "junkies",
+    },
+    {
+      name: "weaponShop",
+    },
+    {
+      name: "airport",
+    },
+    {
+      name: "estateAgent",
+    },
+    {
+      name: "garage",
+    },
+    {
+      name: "jail",
+    },
+    {
+      name: "bank",
+    },
+  ];
+
+  let propertiesAmount = 0;
+
+  properties
+    .map((p) => p.name)
+    .forEach((property) => {
+      return cities?.forEach((city, index) => {
+        const ownerKey = `${property}Owner`;
+        if (members.map((m) => m.name).includes(city[ownerKey])) {
+          propertiesAmount += 1;
+        }
+      });
+    });
+
+  const averagePropertiesAmount = Math.round(propertiesAmount / members.length);
+
+  const averageRankNumber = Math.round(
+    members
+      .map((m) => getRank(m.rank, "number"))
+      .reduce((previous, current) => previous + current, 0) / members.length
+  );
+  const averageRank = ranks[averageRankNumber - 1].rank;
+
+  const averageStrengthNumber = Math.round(
+    members
+      .map((m) => getStrength(m.strength, "number"))
+      .reduce((previous, current) => previous + current, 0) / members.length
+  );
+  const averageStrength = strengthRanks[averageStrengthNumber - 1].rank;
+
+  const averageGamepoints = Math.round(
+    members
+      .map((m) => m.gamepoints)
+      .reduce((previous, current) => previous + current, 0) / members.length
+  );
+
+  const propertiesLevels = [0, 0.1, 0.2, 0.5, 0.75, 1, 2, 3, 4, 5]; //10
+  const rankLevels = [1, 3, 5, 7, 9, 11, 13, 14, 15, 16]; //10
+  const strengthLevels = [1, 4, 7, 10, 13, 16, 18, 20, 22, 23]; //10
+  const gamepointsLevels = [
+    0,
+    100,
+    500,
+    1000,
+    2000,
+    4000,
+    6000,
+    8000,
+    10000,
+    25000,
+  ]; //10
+  const membersLevels = [3, 5, 7, 9, 12, 15, 18, 22, 26, 30]; //10
+
+  const propertiesLevel =
+    propertiesLevels.findIndex((value) => value > averagePropertiesAmount) ||
+    propertiesLevels.length;
+
+  const rankLevel =
+    rankLevels.findIndex((value) => value > averageRankNumber) ||
+    rankLevels.length;
+
+  const strengthLevel =
+    strengthLevels.findIndex((value) => value > averageStrengthNumber) ||
+    strengthLevels.length;
+
+  const gamepointsLevel =
+    gamepointsLevels.findIndex((value) => value > averageGamepoints) ||
+    gamepointsLevels.length;
+
+  const membersLevel =
+    membersLevels.findIndex((value) => value > members.length) ||
+    membersLevels.length;
+
+  const achievements = {
+    properties: {
+      current: averagePropertiesAmount,
+      level: propertiesLevel,
+      next: propertiesLevels[propertiesLevel],
+    },
+    rank: {
+      current: averageRank,
+      level: rankLevel,
+      next: ranks[rankLevels[rankLevel]].rank,
+    },
+    strength: {
+      current: averageStrength,
+      level: strengthLevel,
+      next: strengthRanks[strengthLevels[strengthLevel]].rank,
+    },
+    gamepoints: {
+      current: averageGamepoints,
+      level: gamepointsLevel,
+      next: gamepointsLevels[gamepointsLevel],
+    },
+    members: {
+      current: members.length,
+      level: membersLevel,
+      next: membersLevels[membersLevel],
+    },
+  };
+
+  const power =
+    propertiesLevel +
+    rankLevel +
+    strengthLevel +
+    gamepointsLevel +
+    membersLevel;
+
+  if (power !== gang.power) {
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      gang,
+      isSystem: true,
+      message: getText("gangPowerMessage", power),
+    });
+
+    Gang.update({ power }, { where: { id: gang.id } });
+  }
+
+  res.json({
+    achievements,
+    power,
+  });
+};
+
 module.exports = {
   //post
   gangCreate,
@@ -1104,13 +1422,11 @@ module.exports = {
   gangUpdate, //gangSettings
   gangTransaction, //gangSettings
   gangSetRank, //gangSettings
-
-  // gangShop,
-  // gangOc,
+  gangShop,
 
   //get
   gangInvites, //gangs,gangSettings
   gangs,
   gang, //gang, gangSettings
-  // gangAchievements,
+  gangAchievements,
 };

@@ -435,12 +435,12 @@ export const rightMenu = (me, theme) => {
             text: getText("menuGangAchievements"),
             to: "GangAchievements",
           },
-          me?.gangId && {
-            iconType: "Ionicons",
-            icon: "ios-people",
-            text: getText("menuGangOc"),
-            to: "GangOc",
-          },
+          // me?.gangId && {
+          //   iconType: "Ionicons",
+          //   icon: "ios-people",
+          //   text: getText("menuGangOc"),
+          //   to: "GangOc",
+          // },
         ].filter((x) => !!x)
       : [];
 
@@ -503,8 +503,6 @@ export const rightMenu = (me, theme) => {
     //   text: getText("menuCity", me?.city),
     // },
 
-    ...gangMenus,
-
     {
       iconType: "FontAwesome",
       icon: "font",
@@ -541,6 +539,8 @@ export const rightMenu = (me, theme) => {
       text: getText("menuStatus"),
       to: "Status",
     },
+
+    ...gangMenus,
 
     {
       iconType: "Entypo",

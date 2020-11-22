@@ -53,8 +53,8 @@ const bank = async (req, res, User, Action) => {
         });
 
         const what = deposit
-          ? getText("deposited", amount)
-          : getText("withdrawn", amount);
+          ? getText("youHaveDeposited", amount)
+          : getText("youHaveWithdrawn", amount);
         res.json({ response: what });
       } else {
         res.json({ response: getText("somethingWentWrong") });

@@ -485,6 +485,8 @@ const saveImageIfValid = (res, base64, thumbnail) => {
 };
 
 module.exports = {
+  ranks,
+  strengthRanks,
   getRank,
   getStrength,
   sendMessageAndPush,

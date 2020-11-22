@@ -280,8 +280,11 @@
   "gangRemoveSuccess": "You've deleted the gang",
   "gangNotFound": "Gang not found",
   "gangAlreadyExists": "This gang already exists",
-  "withdrawn": "You have withdrawn $1",
-  "deposited": "You have desposited $1",
+  "youHaveWithdrawn": "You have withdrawn $1",
+  "youHaveDeposited": "You have desposited $1",
+  "deposited": "deposited",
+  "withdrawn": "withdrawn",
+
   "gangUpdateMessage": "$1 has updated the profile of $2",
   "gangUpdateSuccess": "You've updated the gang profile",
   "gangTransactionMessage": "$1 has $2 $3 $4",
@@ -293,5 +296,10 @@
   "gangLevelUnderboss": "Accomplice",
   "gangLevelBank": "Accountant",
   "gangLevelMember": "Member",
-  "gangSetRankOnlyBoss": "You can't change your own rank, because you're the only boss. Make someone else boss first."
+  "gangSetRankOnlyBoss": "You can't change your own rank, because you're the only boss. Make someone else boss first.",
+  "itemNotFound": "Item not found",
+  "notEnoughPower": "Your gang has not enough power. You can own just $1",
+  "gangShopSuccess": "You've bought $1",
+  "notEnoughMembers": "There must be minimally 3 members in the gang to get achievements",
+  "gangPowerMessage": "The gang power has just been changed to $1"
 }

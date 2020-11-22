@@ -618,6 +618,10 @@ Gang.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    score: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
     bank: {
       type: DataTypes.BIGINT,
       defaultValue: 0,
@@ -1016,6 +1020,7 @@ server.post("/gangUpdate", (req, res) =>
     Channel,
     ChannelSub,
     ChannelMessage,
+    GangRequest,
   })
 );
 
@@ -1086,6 +1091,29 @@ server.post("/gangInvite", (req, res) =>
     ChannelSub,
     ChannelMessage,
     GangRequest,
+  })
+);
+
+server.post("/gangShop", (req, res) =>
+  require("./gang").gangShop(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+  })
+);
+
+server.get("/gangAchievements", (req, res) =>
+  require("./gang").gangAchievements(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    City,
   })
 );
 

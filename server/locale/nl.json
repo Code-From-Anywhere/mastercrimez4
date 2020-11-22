@@ -279,8 +279,10 @@
   "gangRemoveSuccess": "Je hebt de gang verwijderd",
   "gangNotFound": "Gang niet gevonden",
   "gangAlreadyExists": "Deze gang bestaat al",
-  "withdrawn": "Je hebt $1 gepint",
-  "deposited": "Je hebt $1 gestort",
+  "youHaveWithdrawn": "Je hebt $1 gepint",
+  "youHaveDeposited": "Je hebt $1 gestort",
+  "deposited": "gestort",
+  "withdrawn": "opgenomen",
   "gangUpdateMessage": "$1 heeft het profiel van $2 geupdate.",
   "gangUpdateSuccess": "Je hebt het gangprofiel aangepast.",
   "gangTransactionMessage": "$1 heeft $3 $4 $2",
@@ -292,5 +294,10 @@
   "gangLevelUnderboss": "Onderbaas",
   "gangLevelBank": "Bankbeheerder",
   "gangLevelMember": "Ganglid",
-  "gangSetRankOnlyBoss": "Je kan je eigen rang niet veranderen omdat je de enige baas bent. Maak iemand anders eerst baas."
+  "gangSetRankOnlyBoss": "Je kan je eigen rang niet veranderen omdat je de enige baas bent. Maak iemand anders eerst baas.",
+  "itemNotFound": "Item niet gevonden",
+  "notEnoughPower": "Je gang heeft niet genoeg power. Je kan er slechts $1 in bezit hebben.",
+  "gangShopSuccess": "Je hebt er $1 gekocht",
+  "notEnoughMembers": "Er moeten minimaal 3 leden in de gang zitten om achievements te kunnen hebben",
+  "gangPowerMessage": "De gangkracht is zojuist veranderd naar $1"
 }

@@ -428,5 +428,26 @@
   "changeRank": "Verander rank",
 
   "choosePicture": "Kies afbeelding",
-  "weNeedCameraPermission": "Sorry, maar we hebben camera toestemming nodig om dit te laten werken!"
+  "weNeedCameraPermission": "Sorry, maar we hebben camera toestemming nodig om dit te laten werken!",
+
+  "gangShopItem1": "Fiets",
+  "gangShopItem2": "iPhone",
+  "gangShopItem3": "Drank",
+  "gangShopItem4": "AK74",
+  "gangShopItem5": "Bodyguard Ricardo",
+  "gangShopItem6": "Drugs",
+  "gangShopItem7": "Hoofdkwartier",
+  "gangShopItem8": "Yamaha R1",
+  "gangShopItem9": "Shotgun",
+  "gangShopItem10": "Bodyguard Peter",
+  "gangShopItem11": "Bugatti Veyron",
+  "gangShopItem12": "Bodyguard Bennie",
+
+  "current": "Huidig",
+  "level": "Level",
+  "next": "Volgend level",
+  "maximumLevel": "Je hebt het maximale level bereikt",
+  "loading": "Laden...",
+
+  "gangBank": "Gangbank"
 }

@@ -428,5 +428,25 @@
   "changeRank": "Change Rank",
 
   "choosePicture": "Choose picture",
-  "weNeedCameraPermission": "Sorry, we need camera roll permissions to make this work!"
+  "weNeedCameraPermission": "Sorry, we need camera roll permissions to make this work!",
+
+  "gangShopItem1": "Bicycle",
+  "gangShopItem2": "iPhone",
+  "gangShopItem3": "Alcohol",
+  "gangShopItem4": "AK74",
+  "gangShopItem5": "Bodyguard Ricardo",
+  "gangShopItem6": "Drugs",
+  "gangShopItem7": "Headquarter",
+  "gangShopItem8": "Yamaha R1",
+  "gangShopItem9": "Shotgun",
+  "gangShopItem10": "Bodyguard Peter",
+  "gangShopItem11": "Bugatti Veyron",
+  "gangShopItem12": "Bodyguard Bennie",
+
+  "current": "Current",
+  "level": "Level",
+  "next": "Next",
+  "maximumLevel": "You've reached the maximum level",
+  "loading": "Loading...",
+  "gangBank": "Gangbank"
 }
