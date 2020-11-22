@@ -242,7 +242,7 @@ const GangSettings = ({
       </View>
       <ScrollView
         contentContainerStyle={{
-          height: Platform.OS === "web" && height - 200,
+          height: Platform.OS === "web" ? height - 200 : undefined,
         }}
         style={{ flex: 1, padding: 15 }}
       >
