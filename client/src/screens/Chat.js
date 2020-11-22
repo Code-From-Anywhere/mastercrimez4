@@ -10,7 +10,11 @@ class Chat extends Component {
 
   componentDidMount() {
     this.getChat();
-    setInterval(() => this.getChat(), 5000);
+    this.interval = setInterval(() => this.getChat(), 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   getChat() {

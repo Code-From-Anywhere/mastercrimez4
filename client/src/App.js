@@ -588,12 +588,17 @@ class _RootContainer extends React.Component {
       reloadMe(token);
     }
 
-    setInterval(() => this.sendMovements(), 60000);
+    this.interval = setInterval(() => this.sendMovements(), 60000);
+    this.meInterval = setInterval(() => reloadMe(device.loginToken), 5000);
 
     Linking.addEventListener("url", this.openWebUrl);
     Linking.getInitialURL().then((url) => this.openWebUrl(url));
   }
 
+  componentWillUnmount() {
+    clearInterval(this.interval);
+    clearInterval(this.meInterval);
+  }
   openWebUrl = (url) => {
     console.log("should open web url here", url);
   };

@@ -40,14 +40,19 @@ class ChatScreen extends React.Component {
         state: { params },
       },
       screenProps: {
-        device: { loginToken },
+        device: { loginToken, reloadMe },
       },
     } = this.props;
     this.fetchChat({ scrollToEnd: true });
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.fetchChat();
       post("setRead", { loginToken, id: params?.subid });
+      reloadMe(loginToken);
     }, 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   fetchChat = (options) => {
