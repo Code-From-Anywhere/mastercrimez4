@@ -44,7 +44,7 @@ class ChatScreen extends React.Component {
         reloadMe,
       },
     } = this.props;
-    this.fetchChat({ scrollToEnd: true });
+    this.fetchChat();
     this.interval = setInterval(() => {
       this.fetchChat();
       post("setRead", { loginToken, id: params?.subid });
@@ -56,7 +56,7 @@ class ChatScreen extends React.Component {
     clearInterval(this.interval);
   }
 
-  fetchChat = (options) => {
+  fetchChat = () => {
     const {
       screenProps: { device },
       navigation: {
@@ -76,13 +76,7 @@ class ChatScreen extends React.Component {
     )
       .then((response) => response.json())
       .then((chat) => {
-        this.setState({ chat, isFetching: false }, () => {
-          if (options?.scrollToEnd) {
-            setTimeout(() => {
-              this.flatList?.scrollToEnd({ animated: true });
-            }, 200);
-          }
-        });
+        this.setState({ chat, isFetching: false }, () => {});
       })
       .catch((error) => {
         console.error(error);
@@ -203,7 +197,7 @@ class ChatScreen extends React.Component {
       .then(({ response, success }) => {
         this.setState({ response });
         if (success) {
-          this.fetchChat({ scrollToEnd: true });
+          this.fetchChat();
         }
       })
       .catch((error) => {
@@ -274,6 +268,7 @@ class ChatScreen extends React.Component {
               onRefresh={this.onRefresh}
             />
           }
+          inverted
           ref={(ref) => (this.flatList = ref)}
         />
         {this.renderFooter()}

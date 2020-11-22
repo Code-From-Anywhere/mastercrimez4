@@ -40,7 +40,7 @@ const getChat = async (req, res, { User, ChannelSub, ChannelMessage }) => {
     include: { model: User, attributes: publicUserFields },
     limit: 100,
   }).then((chat) => {
-    res.json(chat.reverse());
+    res.json(chat);
   });
 };
 

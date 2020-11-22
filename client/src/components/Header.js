@@ -63,52 +63,47 @@ function Header({ navigation, device, me }) {
   );
 
   const statsHeader = (
-    <>
-      <TouchableOpacity onPress={() => navigation.navigate("Status")}>
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-        >
-          <Text style={textStyle}>
-            😎 {me?.name} {me?.gang?.name}
-          </Text>
-          <Text style={textStyle}>💰 €{numberFormat(me?.cash)},-</Text>
-          <Text style={textStyle}>💵 €{numberFormat(me?.bank)},-</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Icon.MaterialCommunityIcons
-              name="pistol"
-              size={18}
-              color={device.theme.secondaryText}
-              style={{ marginRight: 5 }}
-            />
-            <Text style={textStyle}>{numberFormat(me?.bullets)}</Text>
-          </View>
-          <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
-          <Text style={textStyle}>🌍 {me?.city}</Text>
-          <Text style={textStyle}>❤️ {me?.health}%</Text>
-          <Text style={textStyle}>
-            ⭐️ {getRank(me?.rank, "both")} ({me?.position}e)
-          </Text>
-          <Text style={textStyle}>💪 {getStrength(me?.strength, "both")}</Text>
-          <Text
-            style={textStyle}
-            onPress={() => navigation.navigate("Channels")}
-          >
-            💬 {me?.chats}
-          </Text>
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
+      >
+        <Text style={textStyle}>
+          😎 {me?.name} {me?.gang?.name}
+        </Text>
+        <Text style={textStyle}>💰 €{numberFormat(me?.cash)},-</Text>
+        <Text style={textStyle}>💵 €{numberFormat(me?.bank)},-</Text>
+        <View style={{ flexDirection: "row" }}>
+          <Icon.MaterialCommunityIcons
+            name="pistol"
+            size={18}
+            color={device.theme.secondaryText}
+            style={{ marginRight: 5 }}
+          />
+          <Text style={textStyle}>{numberFormat(me?.bullets)}</Text>
         </View>
-      </TouchableOpacity>
+        <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
+        <Text style={textStyle}>🌍 {me?.city}</Text>
+        <Text style={textStyle}>❤️ {me?.health}%</Text>
+        <Text style={textStyle}>
+          ⭐️ {getRank(me?.rank, "both")} ({me?.position}e)
+        </Text>
+        <Text style={textStyle}>💪 {getStrength(me?.strength, "both")}</Text>
+        <Text style={textStyle} onPress={() => navigation.navigate("Channels")}>
+          💬 {me?.chats}
+        </Text>
+      </View>
 
       {!me?.phoneVerified && (
         <View
@@ -139,7 +134,7 @@ function Header({ navigation, device, me }) {
           </TouchableOpacity>
         </View>
       )}
-    </>
+    </View>
   );
   const updateComponent = updateAvailable && (
     <TouchableOpacity
@@ -165,7 +160,7 @@ function Header({ navigation, device, me }) {
           alignItems: "center",
         }}
       >
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignItems: "center", flex: 1 }}>
           <Image
             source={require("../../assets/logos/logo5.jpg")}
             style={{
