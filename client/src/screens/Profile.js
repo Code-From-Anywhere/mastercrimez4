@@ -125,8 +125,8 @@ class ProfileScreen extends React.Component {
 
     const color = getUserColor(profile, this.props.screenProps.device.theme);
 
-    const uri = Constants.SERVER_ADDR + "/" + images?.[0]?.image;
-    const hasImage = !!images?.[0]?.image;
+    const uri = Constants.SERVER_ADDR + "/" + profile.image;
+    const hasImage = !!profile.image;
 
     return (
       <ScrollView>
@@ -228,7 +228,7 @@ class ProfileScreen extends React.Component {
           </View>
 
           <View>
-            {images.slice(1, images.length).map((image) => {
+            {images.map((image) => {
               const uri = Constants.SERVER_ADDR + "/" + image.image;
               return (
                 <View>
