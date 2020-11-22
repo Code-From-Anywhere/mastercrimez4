@@ -241,7 +241,9 @@ const GangSettings = ({
         {response && <T>{response}</T>}
       </View>
       <ScrollView
-        contentContainerStyle={{ height: height - 200 }}
+        contentContainerStyle={{
+          height: Platform.OS === "web" && height - 200,
+        }}
         style={{ flex: 1, padding: 15 }}
       >
         {!me?.gang?.id ? (
