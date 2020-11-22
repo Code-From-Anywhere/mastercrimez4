@@ -1,7 +1,7 @@
 self.__precacheManifest = [
   {
-    "revision": "82d5e29ff0e40ba18fad",
-    "url": "/static/js/app.5a029eba.chunk.js"
+    "revision": "60002dc3e32ebf3c65b9",
+    "url": "/static/js/app.9f323c2c.chunk.js"
   },
   {
     "revision": "66090dc4495d4ce3dfb9",

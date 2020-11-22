@@ -227,7 +227,12 @@ const GangSettings = ({
       });
 
       if (!result.cancelled) {
-        setImage(result.uri);
+        // console.log(Object.keys(result));
+        setImage(
+          result.base64
+            ? `data:image/${result.type};base64,${result.base64}`
+            : result.uri //web has the base64 in the uri
+        );
       }
     } catch (e) {
       console.log(e);
