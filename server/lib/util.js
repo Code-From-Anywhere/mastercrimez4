@@ -179,6 +179,7 @@ const sendChatPushMail = async ({
 
   ChannelSub.update(
     {
+      lastmessageDate: Date.now(),
       lastmessage:
         message.length > 80 ? message.substring(0, 80) + ".." : message,
     },

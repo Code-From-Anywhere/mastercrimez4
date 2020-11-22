@@ -77,6 +77,20 @@ class ChatScreen extends React.Component {
       },
     } = this.props;
     // console.log(item);
+
+    const channelTitle = item.channel?.name
+      ? item.channel?.name
+      : item.channel?.channelsubs.length === 2
+      ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user.name
+      : "(RAAAR)";
+
+    const channelThumbnail = item.channel?.image
+      ? item.channel?.image
+      : item.channel?.channelsubs.length === 2
+      ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user
+          .thumbnail
+      : null;
+
     return (
       <TouchableOpacity
         onPress={() => {
@@ -95,18 +109,25 @@ class ChatScreen extends React.Component {
             marginHorizontal: 20,
           }}
         >
-          <View
-            style={{
-              width: 60,
-              height: 60,
-              borderRadius: 30,
-              backgroundColor: "#CCC",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Ionicons name="ios-people" color="white" size={32} />
-          </View>
+          {channelThumbnail ? (
+            <Image
+              source={{ uri: Constants.SERVER_ADDR + channelThumbnail }}
+              style={{ width: 60, height: 60, borderRadius: 30 }}
+            />
+          ) : (
+            <View
+              style={{
+                width: 60,
+                height: 60,
+                borderRadius: 30,
+                backgroundColor: "#CCC",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Ionicons name="ios-people" color="white" size={32} />
+            </View>
+          )}
           {item.unread > 0 ? (
             <View
               style={{
@@ -128,12 +149,7 @@ class ChatScreen extends React.Component {
           <View style={{ marginLeft: 20, flex: 1 }}>
             <T bold>
               {/* name or other person in chat */}
-              {item.channel?.name
-                ? item.channel?.name
-                : item.channel?.channelsubs.length === 2
-                ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)
-                    ?.user.name
-                : "(RAAAR)"}
+              {channelTitle}
             </T>
             {item.lastmessage ? (
               <T numberOfLines={1}>{item.lastmessage}</T>

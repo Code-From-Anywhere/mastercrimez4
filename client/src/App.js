@@ -589,7 +589,7 @@ class _RootContainer extends React.Component {
     }
 
     this.interval = setInterval(() => this.sendMovements(), 60000);
-    this.meInterval = setInterval(() => reloadMe(device.loginToken), 5000);
+    // this.meInterval = setInterval((t) => reloadMe(t), 5000, token);
 
     Linking.addEventListener("url", this.openWebUrl);
     Linking.getInitialURL().then((url) => this.openWebUrl(url));
@@ -597,7 +597,7 @@ class _RootContainer extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.interval);
-    clearInterval(this.meInterval);
+    // clearInterval(this.meInterval);
   }
   openWebUrl = (url) => {
     console.log("should open web url here", url);
@@ -639,8 +639,10 @@ const mapStateToProps = ({ device, me, streetraces, cities }) => {
 }; //
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
-  reloadMe: (loginToken) =>
-    dispatch({ type: "ME_FETCH_REQUESTED", payload: { loginToken } }),
+  reloadMe: (loginToken) => {
+    console.log("reloadMe with loginToken", loginToken);
+    dispatch({ type: "ME_FETCH_REQUESTED", payload: { loginToken } });
+  },
   reloadStreetraces: () =>
     dispatch({ type: "STREETRACES_FETCH_REQUESTED", payload: null }),
   reloadCities: () =>

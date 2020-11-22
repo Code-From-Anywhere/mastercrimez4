@@ -576,6 +576,9 @@ class ChannelSub extends Model {}
 
 ChannelSub.init(
   {
+    lastmessageDate: {
+      type: DataTypes.BIGINT,
+    },
     unread: { type: DataTypes.INTEGER, defaultValue: 0 },
     lastmessage: DataTypes.STRING,
   },

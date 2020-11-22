@@ -24,10 +24,10 @@ const channelsubs = async (req, res, User, ChannelSub, Channel) => {
       include: {
         model: ChannelSub,
         attributes: ["id", "userId"],
-        include: { model: User, attributes: ["name"] },
+        include: { model: User, attributes: ["name", "thumbnail"] },
       },
     },
-    order: [["updatedAt", "DESC"]],
+    order: [["lastmessageDate", "DESC"]],
   }).then((subs) => {
     res.json(subs);
   });
