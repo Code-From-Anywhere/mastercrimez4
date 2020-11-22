@@ -799,6 +799,11 @@ const gangTransaction = async (
 
   getText = getTextFunction(user.locale);
 
+  if (amount <= 0 || isNaN(amount)) {
+    res.json({ response: getText("invalidAmount") });
+    return;
+  }
+
   const gang = await Gang.findOne({ where: { id: user.gangId } });
 
   if (!gang || !user.gangId) {

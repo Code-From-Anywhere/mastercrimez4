@@ -300,41 +300,43 @@ const GangSettings = ({
             </View>
 
             {/* Transactions */}
+            {me?.gangLevel === GANG_LEVEL_BANK ||
+            me?.gangLevel === GANG_LEVEL_BOSS ? (
+              <View style={{ marginVertical: 20 }}>
+                <T>
+                  {getText("bankMoney")}: €{numberFormat(me?.gang?.bank || 0)},-
+                </T>
+                <T>
+                  {getText("bullets")}: {numberFormat(me?.gang?.bullets || 0)}
+                </T>
+                <View style={{ flexDirection: "row" }}>
+                  <TextInput
+                    placeholderTextColor={theme.secondaryTextSoft}
+                    style={styles(theme).textInput}
+                    value={amount}
+                    onChangeText={setAmount}
+                    placeholder={getText("amount")}
+                  />
 
-            <View style={{ marginVertical: 20 }}>
-              <T>
-                {getText("bankMoney")}: €{numberFormat(me?.gang?.bank || 0)},-
-              </T>
-              <T>
-                {getText("bullets")}: {numberFormat(me?.gang?.bullets || 0)}
-              </T>
-              <View style={{ flexDirection: "row" }}>
-                <TextInput
-                  placeholderTextColor={theme.secondaryTextSoft}
-                  style={styles(theme).textInput}
-                  value={amount}
-                  onChangeText={setAmount}
-                  placeholder={getText("amount")}
-                />
+                  <Button
+                    title={isBullets ? getText("bullets") : getText("bank")}
+                    onPress={() => setIsBullets(!isBullets)}
+                    style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
+                  />
 
-                <Button
-                  title={isBullets ? getText("bullets") : getText("bankMoney")}
-                  onPress={() => setIsBullets(!isBullets)}
-                  style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
-                />
-
-                <Button
-                  title={getText("in")}
-                  onPress={() => postGangTransaction(false)}
-                  style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
-                />
-                <Button
-                  title={getText("out")}
-                  onPress={() => postGangTransaction(true)}
-                  style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
-                />
+                  <Button
+                    title={getText("in")}
+                    onPress={() => postGangTransaction(false)}
+                    style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
+                  />
+                  <Button
+                    title={getText("out")}
+                    onPress={() => postGangTransaction(true)}
+                    style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
+                  />
+                </View>
               </View>
-            </View>
+            ) : null}
 
             {/* memberview with kick or change rank, per member */}
             {me?.gangLevel >= GANG_LEVEL_UNDERBOSS && (
