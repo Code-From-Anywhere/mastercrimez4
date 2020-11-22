@@ -125,7 +125,7 @@ class ProfileScreen extends React.Component {
 
     const color = getUserColor(profile, this.props.screenProps.device.theme);
 
-    const uri = Constants.SERVER_ADDR + "/" + profile.image;
+    const uri = Constants.SERVER_ADDR + profile.image;
     const hasImage = !!profile.image;
 
     return (
