@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as React from "react";
 import {
   FlatList,
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,

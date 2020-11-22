@@ -590,6 +590,7 @@ class _RootContainer extends React.Component {
 
     this.interval = setInterval(() => this.sendMovements(), 60000);
     // this.meInterval = setInterval((t) => reloadMe(t), 5000, token);
+    //NB: this causes weird behavior when logging in on another account.
 
     Linking.addEventListener("url", this.openWebUrl);
     Linking.getInitialURL().then((url) => this.openWebUrl(url));
