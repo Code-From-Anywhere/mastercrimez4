@@ -40,7 +40,8 @@ class ChatScreen extends React.Component {
         state: { params },
       },
       screenProps: {
-        device: { loginToken, reloadMe },
+        device: { loginToken },
+        reloadMe,
       },
     } = this.props;
     this.fetchChat({ scrollToEnd: true });

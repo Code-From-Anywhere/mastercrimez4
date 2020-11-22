@@ -80,7 +80,6 @@ class ChatScreen extends React.Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          console.log("HAHH");
           post("setRead", { loginToken, id: item.id });
           navigation.navigate("Channel", {
             id: item.channel.id,
