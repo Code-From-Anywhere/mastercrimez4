@@ -76,6 +76,7 @@ class ProfileScreen extends React.Component {
   fetchImages = () => {
     const { device } = this.props.screenProps;
     const { profile } = this.state;
+
     fetch(
       `${Constants.SERVER_ADDR}/listimages?token=${device.loginToken}&uid=${profile?.id}`,
       {

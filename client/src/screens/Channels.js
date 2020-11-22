@@ -125,7 +125,7 @@ class ChatScreen extends React.Component {
             </View>
           ) : null}
 
-          <View style={{ marginLeft: 20 }}>
+          <View style={{ marginLeft: 20, flex: 1 }}>
             <T bold>
               {/* name or other person in chat */}
               {item.channel?.name
@@ -135,7 +135,9 @@ class ChatScreen extends React.Component {
                     ?.user.name
                 : "(RAAAR)"}
             </T>
-            {item.lastmessage ? <T>{item.lastmessage}</T> : null}
+            {item.lastmessage ? (
+              <T numberOfLines={1}>{item.lastmessage}</T>
+            ) : null}
           </View>
         </View>
       </TouchableOpacity>

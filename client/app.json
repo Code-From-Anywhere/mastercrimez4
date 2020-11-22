@@ -4,7 +4,7 @@
     "slug": "mastercrimez",
     "privacy": "public",
     "platforms": ["ios", "android", "web"],
-    "version": "4.12",
+    "version": "4.14",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -18,13 +18,13 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.wwoessi.mastercrimez",
-      "buildNumber": "12",
+      "buildNumber": "14",
       "associatedDomains": ["applinks:mastercrimez.com"]
     },
     "android": {
       "package": "com.wwoessi.mastercrimez",
       "useNextNotificationsApi": true,
-      "versionCode": 12,
+      "versionCode": 14,
       "intentFilters": [
         {
           "action": "VIEW",

@@ -104,7 +104,7 @@ class ChatScreen extends React.Component {
     const avatar = (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate("Profile", { name: item.user?.username });
+          navigation.navigate("Profile", { name: item.user?.name });
         }}
       >
         <Image
@@ -129,6 +129,7 @@ class ChatScreen extends React.Component {
         {!isMe ? avatar : null}
         <View
           style={{
+            flex: 1,
             marginVertical: 10,
             marginHorizontal: 10,
             backgroundColor: item.isSystem
@@ -154,9 +155,7 @@ class ChatScreen extends React.Component {
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Text style={{ fontWeight: "bold" }}>
-              {item.user?.name ? item.user?.name : item.user?.username}
-            </Text>
+            <Text style={{ fontWeight: "bold" }}>{item.user?.name}</Text>
           </View>
           {item.image ? (
             <Image

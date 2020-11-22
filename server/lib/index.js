@@ -22,6 +22,7 @@ const {
   publicUserFields,
   getTextFunction,
   sendChatPushMail,
+  saveImageIfValid,
 } = require("./util");
 
 var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
@@ -164,7 +165,10 @@ User.init(
 
     email: DataTypes.STRING,
     name: { type: DataTypes.STRING },
+
     image: DataTypes.STRING,
+    thumbnail: DataTypes.STRING,
+
     bio: DataTypes.TEXT,
     accomplice: DataTypes.STRING,
     accomplice2: DataTypes.STRING,
@@ -1924,8 +1928,16 @@ server.post("/updateProfile", async (req, res) => {
   if (locale) {
     update.locale = locale;
   }
-  if (image) {
-    update.image = image;
+
+  if (image && image.includes("data:image")) {
+    //image change
+    const { pathImage, pathThumbnail } = saveImageIfValid(res, image, true);
+
+    console.log("image updaten");
+    if (pathImage && pathThumbnail) {
+      update.image = pathImage;
+      update.thumbnail = pathThumbnail;
+    }
   }
 
   if (bio) {

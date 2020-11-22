@@ -29,6 +29,8 @@ const MyProfile = ({
   const getText = getTextFunction(me?.locale);
 
   const [photo, setPhoto] = useState(null);
+  const [image, setImage] = useState(me?.image);
+
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [bio, setBio] = useState(me?.bio || "");
@@ -58,6 +60,31 @@ const MyProfile = ({
       });
   };
 
+  const handleChooseImage = async () => {
+    await getPermissionAsync();
+
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        // aspect: [4, 3],
+        base64: true,
+        quality: 1,
+      });
+
+      if (!result.cancelled) {
+        // console.log(Object.keys(result));
+        setImage(
+          result.base64
+            ? `data:image/${result.type};base64,${result.base64}`
+            : result.uri //web has the base64 in the uri
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const handleUploadPhoto = (pic) => {
     fetch(`${Constants.SERVER_ADDR}/upload`, {
       method: "POST",
@@ -83,7 +110,7 @@ const MyProfile = ({
   };
 
   const getPermissionAsync = async () => {
-    if (Platform.OS === "ios") {
+    if (Platform.OS === "ios" || Platform.OS === "android") {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status !== "granted") {
         alert("Sorry, we need camera roll permissions to make this work!");
@@ -174,6 +201,26 @@ const MyProfile = ({
         margin: 20,
       }}
     >
+      <TouchableOpacity onPress={handleChooseImage}>
+        {image ? (
+          <Image
+            source={{
+              uri: image.includes("data:image")
+                ? image
+                : Constants.SERVER_ADDR + image,
+            }}
+            style={{ width: 200, height: 200 }}
+            resizeMode="cover"
+          />
+        ) : (
+          <Image
+            source={require("../../assets/icon.png")}
+            style={{ width: 200, height: 200 }}
+            resizeMode="cover"
+          />
+        )}
+      </TouchableOpacity>
+
       <TextInput
         placeholderTextColor={theme.secondaryTextSoft}
         style={[style(theme).textInput, { width: "100%", height: 200 }]}
@@ -194,6 +241,7 @@ const MyProfile = ({
             },
             body: JSON.stringify({
               bio: bio,
+              image,
               loginToken: device.loginToken,
             }),
           })

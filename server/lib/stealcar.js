@@ -4,9 +4,9 @@ const {
   needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
+  getLocale,
 } = require("./util");
 const cars = require("../assets/cars.json");
-const texts = require("../assets/carsTexts.json");
 let getText = getTextFunction();
 
 function randomEntry(array) {
@@ -164,6 +164,14 @@ const stealcar = async (req, res, User, Garage, Action) => {
             response: getText("stealCarJail", seconden),
           });
         } else {
+          const locale = getLocale(user.locale);
+          let texts = [];
+          if (locale === "nl") {
+            texts = require("../assets/carsTexts_nl.json");
+          } else {
+            texts = require("../assets/carTexts_en.json");
+          }
+
           const textsOption = texts.filter(
             (text) => text.optie === String(option)
           );

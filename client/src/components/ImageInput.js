@@ -11,26 +11,29 @@ import {
   View,
 } from "react-native";
 import Constants from "../Constants";
+import { getTextFunction } from "../Util";
+
+const getText = getTextFunction();
 
 class ImageInput extends React.Component {
   state = { hasEdited: false };
   getPermissionAsync = async () => {
-    if (Platform.OS === "ios") {
+    if (Platform.OS === "ios" || Platform.OS === "android") {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
       console.log("granted", status);
 
       if (status !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
+        alert(getText("weNeedCameraPermission"));
         return false;
       }
       return true;
     }
+    return true;
   };
 
   _pickImage = async () => {
     const hasPermission = await this.getPermissionAsync();
-
     if (hasPermission) {
       try {
         this.setState({ loading: true });
