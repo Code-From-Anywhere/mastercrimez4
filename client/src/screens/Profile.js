@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import Button from "../components/Button";
@@ -32,7 +33,7 @@ const ProfileScreen = ({
     device: { theme, loginToken },
   },
 }) => {
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState(null);
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const name = params?.name;
@@ -171,6 +172,24 @@ const ProfileScreen = ({
                 resizeMode="contain"
               />
             </View>
+          ) : null}
+
+          {profile?.gang ? (
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Gang", { name: profile?.gang?.name })
+              }
+            >
+              <T>Gang</T>
+              {profile?.gang?.image && (
+                <Image
+                  source={{ uri: Constants.SERVER_ADDR + profile?.gang?.image }}
+                  style={{ width: 200, height: 200 }}
+                  resizeMode="contain"
+                />
+              )}
+              <T>{profile?.gang?.name}</T>
+            </TouchableOpacity>
           ) : null}
 
           {keyValue(getText("online"), isOnline ? "✅" : "🛑")}

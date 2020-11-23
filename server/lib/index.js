@@ -1537,9 +1537,10 @@ server.post("/chat", async (req, res) => {
 server.get("/profile", (req, res) => {
   User.findOne({
     attributes: publicUserFields,
+    include: { model: Gang, attributes: ["id", "name", "image", "thumbnail"] },
     where: {
       $and: Sequelize.where(
-        Sequelize.fn("lower", Sequelize.col("name")),
+        Sequelize.fn("lower", Sequelize.col("user.name")),
         Sequelize.fn("lower", req.query.name)
       ),
     },
