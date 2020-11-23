@@ -3,7 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { getTextFunction } from "../Util";
 
 export const DEFAULT_THEME = {
-  name: "Origineel",
+  name: "Original",
   secondary: "#222222",
   secondaryText: "#FFFFFF",
   secondaryTextSoft: "#CCCCCC",

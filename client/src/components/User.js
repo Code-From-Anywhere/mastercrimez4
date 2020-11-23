@@ -5,8 +5,7 @@ import Constants from "../Constants";
 import { getLocale, getUserColor } from "../Util";
 import T from "./T";
 
-const SIZE = 60;
-const User = ({ user, navigation }) => {
+const User = ({ user, navigation, size = 60 }) => {
   const theme = useSelector((state) => state.device.theme);
 
   const color = getUserColor(user, theme);
@@ -33,7 +32,7 @@ const User = ({ user, navigation }) => {
       <View
         style={{
           backgroundColor: theme.primary,
-          borderRadius: SIZE / 2,
+          borderRadius: size / 2,
           borderWidth: 1,
           borderColor: theme.secondary,
         }}
@@ -41,12 +40,12 @@ const User = ({ user, navigation }) => {
         {user.thumbnail ? (
           <Image
             source={{ uri: Constants.SERVER_ADDR + user.thumbnail }}
-            style={{ width: SIZE, height: SIZE, borderRadius: SIZE / 2 }}
+            style={{ width: size, height: size, borderRadius: size / 2 }}
           />
         ) : (
           <Image
             source={require("../../assets/icon.png")}
-            style={{ width: SIZE, height: SIZE, borderRadius: SIZE / 2 }}
+            style={{ width: size, height: size, borderRadius: size / 2 }}
           />
         )}
         <View style={{ position: "absolute", top: 0, right: 0 }}>
@@ -60,13 +59,19 @@ const User = ({ user, navigation }) => {
         )}
 
         {user.gang && user.gang.thumbnail && (
-          <View style={{ position: "absolute", top: -8, left: -8 }}>
+          <View
+            style={{
+              position: "absolute",
+              top: -0.1 * size,
+              left: -0.1 * size,
+            }}
+          >
             <Image
               source={{ uri: Constants.SERVER_ADDR + user.gang.thumbnail }}
               style={{
-                width: SIZE / 2,
-                height: SIZE / 2,
-                borderRadius: SIZE / 4,
+                width: size / 2,
+                height: size / 2,
+                borderRadius: size / 4,
               }}
             />
           </View>

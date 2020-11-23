@@ -1,9 +1,12 @@
 import moment from "moment";
 import React, { Component } from "react";
 import { ScrollView, View } from "react-native";
+import Content from "../components/Content";
 import T from "../components/T";
+import User from "../components/User";
 import Constants from "../Constants";
 import { getRank, getStrength, numberFormat } from "../Util";
+
 const keyNames = {
   createdAt: "Nieuwe leden",
   bank: "Bankgeld",
@@ -50,39 +53,63 @@ class Status extends Component {
 
     return (
       <ScrollView style={{ flex: 1 }}>
-        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            padding: 20,
+          }}
+        >
           {this.state.stats?.map((stat, index) => {
             const key = Object.keys(stat)[0];
             const values = Object.values(stat)[0];
             return (
-              <View key={`index${index}`} style={{ width: 300, margin: 20 }}>
-                <T style={{ fontWeight: "bold" }}>{keyNames[key]}</T>
-                {values instanceof Array ? (
-                  values.map((value, i) => {
-                    let v = value[key];
-                    if (key === "bank") v = `€${numberFormat(v)},-`;
-                    if (key === "createdAt")
-                      v = moment(v).format("DD-MM-YYYY HH:mm");
-                    if (key === "strength") v = getStrength(v, "both");
-                    if (key === "rank") v = getRank(v, "both");
+              <Content
+                id={`stat${index}`}
+                key={`stat${index}`}
+                contentWidth={300}
+                title={keyNames[key]}
+              >
+                <View
+                  key={`index${index}`}
+                  style={{ width: 300, marginTop: 20 }}
+                >
+                  {values instanceof Array ? (
+                    values.map((value, i) => {
+                      let v = value[key];
+                      if (key === "bank") v = `€${numberFormat(v)},-`;
+                      if (key === "createdAt")
+                        v = moment(v).format("DD-MM-YYYY HH:mm");
+                      if (key === "strength") v = getStrength(v, "both");
+                      if (key === "rank") v = getRank(v, "both");
 
-                    return (
-                      <View
-                        key={`stat${key}-${i}`}
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <T>{value.name}: </T>
-                        <T key={`stat${key}-${i}`}>{v}</T>
-                      </View>
-                    );
-                  })
-                ) : (
-                  <T>{values}</T>
-                )}
-              </View>
+                      return (
+                        <View
+                          key={`stat${key}-${i}`}
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: 5,
+                          }}
+                        >
+                          <User
+                            navigation={navigation}
+                            user={value}
+                            size={40}
+                          />
+                          <View>
+                            <T key={`stat${key}-${i}`}>{v}</T>
+                          </View>
+                        </View>
+                      );
+                    })
+                  ) : (
+                    <T>{values}</T>
+                  )}
+                </View>
+              </Content>
             );
           })}
         </View>

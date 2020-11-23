@@ -1610,7 +1610,7 @@ server.get("/stats", async (req, res) => {
   const allStats = await Promise.all(
     stats.map(async (stat) => ({
       [stat]: await User.findAll({
-        attributes: ["name", stat],
+        attributes: publicUserFields,
         order: [[stat, "DESC"]],
         limit: 10,
         where: { health: { [Op.gt]: 0 } },
@@ -1653,7 +1653,7 @@ server.get("/me", (req, res) => {
   User.findOne({
     attributes: allUserFields,
     where: { loginToken: String(req.query.token) },
-    include: { model: Gang },
+    include: { model: Gang, attributes: ["name", "thumbnail"] },
   })
     .then(async (user) => {
       if (user) {

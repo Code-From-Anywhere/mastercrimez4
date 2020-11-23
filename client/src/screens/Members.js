@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Dimensions, FlatList, Platform, TextInput, View } from "react-native";
 import * as Icon from "react-native-vector-icons";
 import Button from "../components/Button";
+import Separator from "../components/Separator";
 import T from "../components/T";
 import User from "../components/User";
 import Constants from "../Constants";
@@ -234,8 +235,9 @@ class Members extends Component {
       <View style={{ flex: 1 }}>
         <FlatList
           contentContainerStyle={{
-            height: Platform.OS === "web" ? height - 200 : undefined,
+            height: Platform.OS === "web" ? 0 : undefined,
           }}
+          ItemSeparatorComponent={() => <Separator />}
           ListHeaderComponent={this.renderHeader}
           data={searchedMembers}
           renderItem={this.renderItem}

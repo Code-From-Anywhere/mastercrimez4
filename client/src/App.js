@@ -1,4 +1,5 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
+import * as Icon from "@expo/vector-icons";
 import { createBrowserApp } from "@react-navigation/web";
 import * as ExpoNotifications from "expo-notifications";
 import * as StoreReview from "expo-store-review";
@@ -107,7 +108,7 @@ import Work from "./screens/Work";
 import { persistor, store } from "./Store";
 import { getTextFunction, post } from "./Util";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
 function getMobileOperatingSystem() {
@@ -147,6 +148,8 @@ export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
         padding: 10,
       }
     : {};
+  const TheIcon = Icon[item.iconType];
+
   return (
     <TouchableOpacity
       key={`item${index}`}
@@ -175,15 +178,22 @@ export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
           borderLeftColor: "black",
           borderRightColor: "black",
 
+          height: 40,
+          alignItems: "center",
           borderBottomWidth: 1,
           marginHorizontal: 5,
           padding: 3,
           flexDirection: "row",
           ...isHeaderStyle,
+          paddingLeft: 5,
         }}
       >
+        {TheIcon && (
+          <TheIcon name={item.icon} size={20} color={theme.secondaryText} />
+        )}
         <Text
           style={{
+            marginLeft: 15,
             color: item.isHeader ? theme.secondaryText : theme.primaryText,
             textAlign: item.isHeader ? "center" : undefined,
           }}
@@ -351,7 +361,7 @@ const Layout = ({ screenProps, navigation, children }) => {
     <SafeAreaView
       style={{
         flexDirection: "row",
-        height: "100%",
+        flex: 1,
         backgroundColor: device.theme.primary,
       }}
     >
@@ -372,13 +382,21 @@ const Layout = ({ screenProps, navigation, children }) => {
       )}
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
-          {leftMenu(me, device.theme).map((item, index) =>
-            renderMenu(item, index, navigation, device.theme, dispatch)
-          )}
+          <ScrollView
+            style={{ width: 200 }}
+            contentContainerStyle={{
+              width: 200,
+              height: Platform.OS === "web" ? height - 250 : undefined,
+            }}
+          >
+            {leftMenu(me, device.theme).map((item, index) =>
+              renderMenu(item, index, navigation, device.theme, dispatch)
+            )}
+          </ScrollView>
         </View>
       )}
 
-      <View style={{ flex: 1 }}>
+      <View style={{ height, flex: 1 }}>
         <Header navigation={navigation} device={device} me={me} />
 
         {me?.reizenAt > Date.now() && !skip ? (
@@ -394,9 +412,17 @@ const Layout = ({ screenProps, navigation, children }) => {
       </View>
       {isSmallDevice ? null : (
         <View style={{ width: 200 }}>
-          {rightMenu(me, device.theme).map((item, index) =>
-            renderMenu(item, index, navigation, device.theme, dispatch)
-          )}
+          <ScrollView
+            style={{ width: 200 }}
+            contentContainerStyle={{
+              width: 200,
+              height: Platform.OS === "web" ? height - 250 : undefined,
+            }}
+          >
+            {rightMenu(me, device.theme).map((item, index) =>
+              renderMenu(item, index, navigation, device.theme, dispatch)
+            )}
+          </ScrollView>
         </View>
       )}
     </SafeAreaView>
