@@ -459,5 +459,8 @@
   "whatType": "Welk type",
 
   "requested": "Verzocht",
-  "forSale": "Te koop"
+  "forSale": "Te koop",
+  "yourStatus": "Jouw status",
+  "invitePeople": "Mensen uitnodigen",
+  "gangProfile": "Gang profiel"
 }

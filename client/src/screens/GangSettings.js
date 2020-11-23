@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import Button from "../components/Button";
+import Content from "../components/Content";
 import T from "../components/T";
 import Constants from "../Constants";
 import styles from "../Style";
@@ -239,8 +240,6 @@ const GangSettings = ({
     }
   };
 
-  console.log("gang", me?.gang);
-
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: "row" }}>
@@ -256,69 +255,92 @@ const GangSettings = ({
         {!me?.gang?.id ? (
           <T>{getText("noAccess")}</T>
         ) : (
-          <View>
-            <View style={{ marginVertical: 20 }}>
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            <Content
+              title={getText("yourStatus")}
+              contentWidth={250}
+              id="settingsYourStatus"
+            >
               <T>{getText("youAreWhat", getGangLevel(me?.gangLevel))}</T>
-            </View>
+            </Content>
 
             {/* Answer join */}
-            <View style={{ marginVertical: 20 }}>
-              <T bold>{getText("gangJoinRequestsTitle")}</T>
-              {requests.length > 0 ? (
-                requests.map((request) => {
-                  return (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <T>{request.user?.name}</T>
-                      <View style={{ flexDirection: "row" }}>
-                        <Button
-                          title={getText("accept")}
-                          onPress={() => postGangAnswerJoin(request.id, true)}
-                        />
-                        <Button
-                          title={getText("decline")}
-                          onPress={() => postGangAnswerJoin(request.id, false)}
-                        />
+            {me?.gangLevel >= GANG_LEVEL_UNDERBOSS ? (
+              <Content
+                title={getText("gangJoinRequestsTitle")}
+                contentWidth={250}
+                id="settingsAnswerJoin"
+              >
+                {requests.length > 0 ? (
+                  requests.map((request) => {
+                    return (
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <T>{request.user?.name}</T>
+                        <View style={{ flexDirection: "row" }}>
+                          <Button
+                            title={getText("accept")}
+                            onPress={() => postGangAnswerJoin(request.id, true)}
+                          />
+                          <Button
+                            title={getText("decline")}
+                            onPress={() =>
+                              postGangAnswerJoin(request.id, false)
+                            }
+                          />
+                        </View>
                       </View>
-                    </View>
-                  );
-                })
-              ) : (
-                <T>{getText("noJoinRequests")}</T>
-              )}
-            </View>
+                    );
+                  })
+                ) : (
+                  <T>{getText("noJoinRequests")}</T>
+                )}
+              </Content>
+            ) : null}
 
             {/* Invite */}
-            <View style={{ marginVertical: 20, flexDirection: "row" }}>
-              <TextInput
-                placeholderTextColor={theme.secondaryTextSoft}
-                style={styles(theme).textInput}
-                value={username}
-                onChangeText={setUsername}
-                placeholder={getText("name")}
-              />
-              <Button
-                title={getText("invite")}
-                onPress={postGangInvite}
-                style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
-              />
-            </View>
+            {me?.gangLevel >= GANG_LEVEL_UNDERBOSS ? (
+              <Content
+                title={getText("invitePeople")}
+                contentWidth={250}
+                id="settingsInvite"
+              >
+                <View style={{ flexDirection: "row" }}>
+                  <TextInput
+                    placeholderTextColor={theme.secondaryTextSoft}
+                    style={styles(theme).textInput}
+                    value={username}
+                    onChangeText={setUsername}
+                    placeholder={getText("name")}
+                  />
+                  <Button
+                    title={getText("invite")}
+                    onPress={postGangInvite}
+                    style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
+                  />
+                </View>
+              </Content>
+            ) : null}
 
             {/* Transactions */}
             {me?.gangLevel === GANG_LEVEL_BANK ||
             me?.gangLevel === GANG_LEVEL_BOSS ? (
-              <View style={{ marginVertical: 20 }}>
+              <Content
+                title={getText("gangBank")}
+                contentWidth={250}
+                id="settingsTransactions"
+              >
                 <T>
                   {getText("bankMoney")}: €{numberFormat(me?.gang?.bank || 0)},-
                 </T>
                 <T>
                   {getText("bullets")}: {numberFormat(me?.gang?.bullets || 0)}
                 </T>
-                <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                   <TextInput
                     placeholderTextColor={theme.secondaryTextSoft}
                     style={styles(theme).textInput}
@@ -344,12 +366,16 @@ const GangSettings = ({
                     style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
                   />
                 </View>
-              </View>
+              </Content>
             ) : null}
 
             {/* memberview with kick or change rank, per member */}
             {me?.gangLevel >= GANG_LEVEL_UNDERBOSS && (
-              <View style={{ marginVertical: 20 }}>
+              <Content
+                title={getText("members")}
+                contentWidth="90%"
+                id="memberViewSettings"
+              >
                 {gang?.users?.map((member) => {
                   return (
                     <View
@@ -379,12 +405,16 @@ const GangSettings = ({
                     </View>
                   );
                 })}
-              </View>
+              </Content>
             )}
             {/* update name,profile,image */}
 
             {me?.gangLevel >= GANG_LEVEL_UNDERBOSS && (
-              <View style={{ marginVertical: 20 }}>
+              <Content
+                title={getText("gangProfile")}
+                contentWidth="90%"
+                id="updateProfileSettings"
+              >
                 <TouchableOpacity onPress={handleChoosePhoto}>
                   {image ? (
                     <Image
@@ -430,7 +460,7 @@ const GangSettings = ({
                   title={getText("save")}
                   style={{ marginTop: 10 }}
                 />
-              </View>
+              </Content>
             )}
             {/* transactions */}
 

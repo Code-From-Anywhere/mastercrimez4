@@ -61,7 +61,10 @@ const Content = ({ id, title, children, contentWidth }) => {
         margin: 20,
         padding: 20,
         borderRadius: 20,
-        width: contentWidth + 20 * 4,
+        width:
+          typeof contentWidth === "string"
+            ? contentWidth
+            : contentWidth + 20 * 4,
       }}
     >
       <TouchableOpacity

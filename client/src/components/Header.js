@@ -217,12 +217,7 @@ function Header({ navigation, device, me }) {
     </View>
   );
   return (
-    <View
-      style={{
-        justifyContent: "center",
-        backgroundColor: "#555",
-      }}
-    >
+    <View style={{ justifyContent: "center" }}>
       {Platform.OS === "web" ? (
         webHeader
       ) : (

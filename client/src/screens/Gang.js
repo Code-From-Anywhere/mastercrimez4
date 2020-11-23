@@ -90,7 +90,7 @@ const Gangs = ({
             {getText("bank")}: €{numberFormat(item.bank)},-
           </T>
           <T>
-            {getText("power")}: {item.power}
+            {getText("power")}: {item.score}
           </T>
           {!me?.gang &&
             (response ? (

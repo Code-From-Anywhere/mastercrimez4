@@ -96,8 +96,9 @@ const gangCreate = async (
   if (!name) {
     return res.json({ response: getText("noNameGiven") });
   }
+  var realname = name.replace(/[^a-z0-9]/gi, "");
 
-  if (name.length < 3 || name.length > 24) {
+  if (realname.length < 3 || realname.length > 24) {
     return res.json({ response: getText("nameWrongLength", 3, 24) });
   }
 
@@ -109,7 +110,7 @@ const gangCreate = async (
     where: {
       $and: Sequelize.where(
         Sequelize.fn("lower", Sequelize.col("name")),
-        Sequelize.fn("lower", name)
+        Sequelize.fn("lower", realname)
       ),
     },
   });
@@ -122,7 +123,7 @@ const gangCreate = async (
     return res.json({ response: getText("notEnoughCash", GANG_CREATE_COST) });
   }
 
-  const gang = await Gang.create({ name });
+  const gang = await Gang.create({ name: realname });
 
   const [updated] = await User.update(
     {
@@ -711,7 +712,9 @@ const gangUpdate = async (
   const update = {};
 
   if (name && name !== gang.name) {
-    if (name.length < 3 || name.length > 24) {
+    var realname = name.replace(/[^a-z0-9]/gi, "");
+
+    if (realname.length < 3 || realname.length > 24) {
       return res.json({ response: getText("nameWrongLength", 3, 24) });
     }
 
@@ -719,7 +722,7 @@ const gangUpdate = async (
       where: {
         $and: Sequelize.where(
           Sequelize.fn("lower", Sequelize.col("name")),
-          Sequelize.fn("lower", name)
+          Sequelize.fn("lower", realname)
         ),
       },
     });
@@ -729,14 +732,17 @@ const gangUpdate = async (
     }
 
     //namechange
-    update.name = name;
+    update.name = realname;
 
     //also update channel and gangRequests
     Channel.update(
-      { name, gangName: name },
+      { name: realname, gangName: realname },
       { where: { gangName: gang.name } }
     );
-    GangRequest.update({ gangName: name }, { where: { gangName: gang.name } });
+    GangRequest.update(
+      { gangName: realname },
+      { where: { gangName: gang.name } }
+    );
   }
 
   if (profile && profile !== gang.profile) {

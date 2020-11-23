@@ -33,7 +33,7 @@ const ProfileScreen = ({
     device: { theme, loginToken },
   },
 }) => {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState({});
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const name = params?.name;
@@ -102,16 +102,16 @@ const ProfileScreen = ({
     return <ActivityIndicator />;
   }
 
-  if (!profile) {
-    return <T>{getText("personDoesntExist")}</T>;
-  }
+  // if (!profile) {
+  //   return <T>{getText("personDoesntExist")}</T>;
+  // }
 
   const isOnline = Date.now() - profile?.onlineAt < 300000;
 
   const color = getUserColor(profile, device.theme);
 
-  const uri = Constants.SERVER_ADDR + profile.image;
-  const hasImage = !!profile.image;
+  const uri = Constants.SERVER_ADDR + profile?.image;
+  const hasImage = !!profile?.image;
 
   const properties = [
     {

@@ -188,9 +188,11 @@ export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
           paddingLeft: 5,
         }}
       >
-        {TheIcon && (
-          <TheIcon name={item.icon} size={20} color={theme.secondaryText} />
-        )}
+        <View style={{ width: 30 }}>
+          {TheIcon && (
+            <TheIcon name={item.icon} size={20} color={theme.secondaryText} />
+          )}
+        </View>
         <Text
           style={{
             marginLeft: 15,
@@ -445,7 +447,7 @@ const CustomDrawerContentComponent = (props) => {
   return (
     <ScrollView>
       <SafeAreaView
-        style={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: device.theme.primary }}
         forceInset={{ top: "always", horizontal: "never" }}
       >
         {leftMenu(me, device.theme).map((item, index) =>

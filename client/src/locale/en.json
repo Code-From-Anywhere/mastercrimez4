@@ -456,5 +456,8 @@
   "gangBank": "Gangbank",
   "whatType": "Which type",
   "requested": "Requested",
-  "forSale": "For sale"
+  "forSale": "For sale",
+  "yourStatus": "Your status",
+  "invitePeople": "Invite people",
+  "gangProfile": "Gang profile"
 }
