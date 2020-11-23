@@ -257,7 +257,7 @@ class ChatScreen extends React.Component {
       <SafeAreaView style={styles.container}>
         <FlatList
           contentContainerStyle={{
-            height: Platform.OS === "web" ? height - 200 : undefined,
+            height: Platform.OS === "web" ? height - 250 : undefined,
           }}
           data={chat}
           renderItem={this.renderItem}
@@ -280,7 +280,6 @@ class ChatScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
   },
 });
 

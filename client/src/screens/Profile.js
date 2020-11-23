@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -11,6 +11,7 @@ import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
 import {
+  doOnce,
   get,
   getRank,
   getStrength,
@@ -18,33 +19,34 @@ import {
   getUserColor,
 } from "../Util";
 
-class ProfileScreen extends React.Component {
-  state = {
-    profile: null,
-    images: [],
-    loading: true,
-  };
-  componentDidMount() {
-    const { navigation } = this.props;
+const ProfileScreen = ({
+  navigation,
+  navigation: {
+    state: { params },
+  },
+  screenProps: {
+    device,
+    me,
+    cities,
+    reloadCities,
+    device: { theme, loginToken },
+  },
+}) => {
+  const [profile, setProfile] = useState({});
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const name = params?.name;
 
-    const name = navigation.state.params.name;
+  doOnce(() => {
+    getProfile(name);
+  });
+  doOnce(reloadCities);
 
-    this.getProfile(name);
-  }
+  useEffect(() => {
+    getProfile(name);
+  }, [params]);
 
-  componentDidUpdate(prevProps) {
-    const { navigation } = this.props;
-
-    const name = navigation.state.params.name;
-
-    if (
-      prevProps.navigation.state.params !== this.props.navigation.state.params
-    ) {
-      this.getProfile(name);
-    }
-  }
-
-  getProfile(name) {
+  const getProfile = (name) => {
     return fetch(`${Constants.SERVER_ADDR}/profile?name=${name}`, {
       method: "GET",
       headers: {
@@ -54,29 +56,26 @@ class ProfileScreen extends React.Component {
     })
       .then((response) => response.json())
       .then(async (responseJson) => {
-        this.setState({ profile: responseJson, loading: false }, () => {
-          this.fetchImages();
-        });
+        setProfile(responseJson);
+        setLoading(false);
+        fetchImages();
         return responseJson;
       })
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
-  keyValue(key, value) {
+  const keyValue = (key, value) => {
     return (
       <View style={styles.row}>
         <T>{key}</T>
         <T>{value}</T>
       </View>
     );
-  }
+  };
 
-  fetchImages = () => {
-    const { device } = this.props.screenProps;
-    const { profile } = this.state;
-
+  const fetchImages = () => {
     fetch(
       `${Constants.SERVER_ADDR}/listimages?token=${device.loginToken}&uid=${profile?.id}`,
       {
@@ -89,59 +88,172 @@ class ProfileScreen extends React.Component {
     )
       .then((response) => response.json())
       .then(({ images }) => {
-        this.setState({ images });
+        setImages(images);
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  render() {
-    const {
-      navigation,
-      screenProps: {
-        me,
-        device: { theme, loginToken },
-      },
-    } = this.props;
-    const { profile, loading, images } = this.state;
+  const getText = getTextFunction(me?.locale);
 
-    const getText = getTextFunction(me?.locale);
+  if (loading) {
+    return <ActivityIndicator />;
+  }
 
-    if (loading) {
-      return <ActivityIndicator />;
-    }
+  if (!profile) {
+    return <T>{getText("personDoesntExist")}</T>;
+  }
 
-    if (!profile) {
-      return <T>{getText("personDoesntExist")}</T>;
-    }
+  const isOnline = Date.now() - profile?.onlineAt < 300000;
 
-    const isOnline = Date.now() - profile?.onlineAt < 300000;
+  const color = getUserColor(profile, device.theme);
 
-    const points = profile.accomplices?.reduce(
-      (total, accomplice) => total + accomplice.rank,
-      0
-    );
+  const uri = Constants.SERVER_ADDR + profile.image;
+  const hasImage = !!profile.image;
 
-    const color = getUserColor(profile, this.props.screenProps.device.theme);
+  const properties = [
+    {
+      name: "bulletFactory",
+    },
+    {
+      name: "casino",
+    },
+    {
+      name: "rld",
+    },
+    {
+      name: "landlord",
+    },
+    {
+      name: "junkies",
+    },
+    {
+      name: "weaponShop",
+    },
+    {
+      name: "airport",
+    },
+    {
+      name: "estateAgent",
+    },
+    {
+      name: "garage",
+    },
+    {
+      name: "jail",
+    },
+    {
+      name: "bank",
+    },
+  ];
+  return (
+    <ScrollView>
+      <View style={{ justifyContent: "center" }}>
+        <View
+          style={{
+            backgroundColor: "#444",
+            borderRadius: 10,
+            margin: 20,
+            padding: 20,
+          }}
+        >
+          <Text style={{ fontWeight: "bold", color }}>{profile?.name}</Text>
 
-    const uri = Constants.SERVER_ADDR + profile.image;
-    const hasImage = !!profile.image;
+          {hasImage ? (
+            <View>
+              <Image
+                source={{ uri }}
+                style={{
+                  width: "100%",
+                  height: 400,
+                }}
+                resizeMode="contain"
+              />
+            </View>
+          ) : null}
 
-    return (
-      <ScrollView>
-        <View style={{ justifyContent: "center" }}>
-          <View
-            style={{
-              backgroundColor: "#444",
-              borderRadius: 10,
-              margin: 20,
-              padding: 20,
-            }}
-          >
-            <Text style={{ fontWeight: "bold", color }}>{profile?.name}</Text>
+          {keyValue(getText("online"), isOnline ? "✅" : "🛑")}
+          {keyValue(getText("cash"), `€${profile?.cash}`)}
+          {keyValue(getText("bank"), `€${profile?.bank}`)}
+          {keyValue(getText("rank"), getRank(profile?.rank, "both"))}
+          {keyValue(
+            getText("strength"),
+            getStrength(profile?.strength, "both")
+          )}
+          {keyValue(getText("health"), `${profile?.health}%`)}
+          {keyValue(getText("weed"), profile?.wiet)}
+          {keyValue(getText("junkies"), profile?.junkies)}
+          {keyValue(getText("prostitutes"), profile?.hoeren)}
 
-            {hasImage ? (
+          <T bold>{getText("properties")}</T>
+          {properties
+            .map((p) => p.name)
+            .map((property) => {
+              return (
+                cities &&
+                cities.map((city, index) => {
+                  const ownerKey = `${property}Owner`;
+                  if (profile?.name === city[ownerKey]) {
+                    return (
+                      <T>
+                        {getText(property)} in {city.city}
+                      </T>
+                    );
+                  }
+
+                  return null;
+                })
+              );
+            })}
+
+          <View style={styles.row}>
+            <Button
+              title={getText("chat")}
+              onPress={async () => {
+                const { id } = await get(
+                  `pm?loginToken=${loginToken}&userId=${profile.id}`
+                );
+
+                navigation.navigate("Channel", { id });
+              }}
+            />
+
+            <Button
+              title={getText("rob")}
+              onPress={() =>
+                navigation.navigate("Rob", {
+                  name: profile.name,
+                })
+              }
+            />
+            <Button
+              title={getText("attack")}
+              onPress={() =>
+                navigation.navigate("Kill", {
+                  name: profile.name,
+                })
+              }
+            />
+            <Button
+              title={getText("donate")}
+              onPress={() =>
+                navigation.navigate("Donate", {
+                  to: profile.name,
+                })
+              }
+            />
+          </View>
+        </View>
+
+        <View style={{ marginVertical: 20 }}>
+          <T>{profile?.bio}</T>
+        </View>
+
+        <View>
+          {images.map((image) => {
+            const uri = Constants.SERVER_ADDR + "/" + image.image;
+            return (
               <View>
                 <Image
                   source={{ uri }}
@@ -152,103 +264,13 @@ class ProfileScreen extends React.Component {
                   resizeMode="contain"
                 />
               </View>
-            ) : null}
-
-            {this.keyValue(getText("online"), isOnline ? "✅" : "🛑")}
-            {this.keyValue(getText("cash"), `€${profile?.cash}`)}
-            {this.keyValue(getText("bank"), `€${profile?.bank}`)}
-            {this.keyValue(getText("rank"), getRank(profile?.rank, "both"))}
-            {this.keyValue(
-              getText("strength"),
-              getStrength(profile?.strength, "both")
-            )}
-            {this.keyValue(getText("health"), `${profile?.health}%`)}
-            {this.keyValue(getText("weed"), profile?.wiet)}
-            {this.keyValue(getText("junkies"), profile?.junkies)}
-            {this.keyValue(getText("prostitutes"), profile?.hoeren)}
-
-            {profile?.accomplices?.length > 0 ? (
-              <>
-                <T style={{ fontWeight: "bold", marginBottom: 15 }}>
-                  {getText("gangOfX", profile?.name, points)}
-                </T>
-                {profile.accomplices.map((accomplice) => {
-                  return this.keyValue(
-                    accomplice.name,
-                    getRank(accomplice.rank, "both")
-                  );
-                })}
-              </>
-            ) : null}
-            <View style={styles.row}>
-              <Button
-                theme={theme}
-                title={getText("chat")}
-                onPress={async () => {
-                  const { id } = await get(
-                    `pm?loginToken=${loginToken}&userId=${profile.id}`
-                  );
-
-                  navigation.navigate("Channel", { id });
-                }}
-              />
-
-              <Button
-                theme={this.props.screenProps.device.theme}
-                title={getText("rob")}
-                onPress={() =>
-                  navigation.navigate("Rob", {
-                    name: profile.name,
-                  })
-                }
-              />
-              <Button
-                theme={this.props.screenProps.device.theme}
-                title={getText("attack")}
-                onPress={() =>
-                  navigation.navigate("Kill", {
-                    name: profile.name,
-                  })
-                }
-              />
-              <Button
-                theme={this.props.screenProps.device.theme}
-                title={getText("donate")}
-                onPress={() =>
-                  navigation.navigate("Donate", {
-                    to: profile.name,
-                  })
-                }
-              />
-            </View>
-          </View>
-
-          <View style={{ marginVertical: 20 }}>
-            <T>{profile?.bio}</T>
-          </View>
-
-          <View>
-            {images.map((image) => {
-              const uri = Constants.SERVER_ADDR + "/" + image.image;
-              return (
-                <View>
-                  <Image
-                    source={{ uri }}
-                    style={{
-                      width: "100%",
-                      height: 400,
-                    }}
-                    resizeMode="contain"
-                  />
-                </View>
-              );
-            })}
-          </View>
+            );
+          })}
         </View>
-      </ScrollView>
-    );
-  }
-}
+      </View>
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   row: {

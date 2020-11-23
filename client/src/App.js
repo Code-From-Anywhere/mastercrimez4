@@ -396,7 +396,9 @@ const Layout = ({ screenProps, navigation, children }) => {
         </View>
       )}
 
-      <View style={{ height, flex: 1 }}>
+      <View
+        style={{ height: Platform.OS === "web" ? height : undefined, flex: 1 }}
+      >
         <Header navigation={navigation} device={device} me={me} />
 
         {me?.reizenAt > Date.now() && !skip ? (
