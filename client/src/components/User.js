@@ -60,7 +60,7 @@ const User = ({ user, navigation }) => {
         )}
 
         {user.gang && user.gang.thumbnail && (
-          <View style={{ position: "absolute", top: 0, left: 0 }}>
+          <View style={{ position: "absolute", top: -8, left: -8 }}>
             <Image
               source={{ uri: Constants.SERVER_ADDR + user.gang.thumbnail }}
               style={{
