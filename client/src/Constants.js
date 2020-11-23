@@ -1,5 +1,5 @@
 const serverAddr = "https://mcz.leckrapi.xyz";
-const localAddr = "http://172.20.10.2:4001"; //192.168.1.38
+const localAddr = "http://192.168.1.38:4001"; //192.168.1.38
 const devLocal = true;
 
 const Constants = {

@@ -330,6 +330,8 @@ const gangAnswerJoin = async (
 ) => {
   const { token, id, accepted } = req.body;
 
+  console.log(req.body);
+
   if (!token) {
     res.json({ response: getText("noToken") });
     return;
@@ -358,7 +360,7 @@ const gangAnswerJoin = async (
     return res.json({ response: getText("noAccess") });
   }
 
-  const joinRequest = GangRequest.findOne({
+  const joinRequest = await GangRequest.findOne({
     where: { id, gangName: gang.name },
   });
 
@@ -383,8 +385,9 @@ const gangAnswerJoin = async (
   }
 
   //remove all other gangrequests , including this one
-  const allInvites = GangRequest.findAll({ where: { userId: user2.id } });
-  allInvites.destroy();
+  const destroyInvites = await GangRequest.destroy({
+    where: { userId: user2.id },
+  });
 
   Action.create({
     userId: user.id,
@@ -411,7 +414,7 @@ const gangAnswerJoin = async (
     gang,
   });
 
-  res.json({ response: getText("gangInviteSuccess") });
+  res.json({ response: getText("gangInviteSuccess", user2.name) });
 };
 
 /**
@@ -667,7 +670,7 @@ const gangKick = async (
     gang,
   });
 
-  res.json({ response: getText("gangLeaveSuccess") });
+  res.json({ response: getText("gangKickSuccess", user2.name, gang.name) });
 };
 
 /**

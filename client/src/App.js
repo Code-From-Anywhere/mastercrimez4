@@ -74,6 +74,7 @@ import Junkies from "./screens/Junkies";
 import Kill from "./screens/Kill";
 import Login from "./screens/Login";
 import ManageObject from "./screens/ManageObject";
+import Market from "./screens/Market";
 import Members from "./screens/Members";
 import Messages from "./screens/Messages";
 import MollieComplete from "./screens/MollieComplete";
@@ -340,6 +341,7 @@ const Layout = ({ screenProps, navigation, children }) => {
     "Gang",
     "GangSettings",
     "GangAchievements",
+    "Market",
   ];
   const skip = allowedRoutes.includes(navigation.state.routeName);
 
@@ -508,6 +510,7 @@ const Container = rightContainer(
       Theme: withLayout(Theme),
       DownloadApp: DownloadApp,
       VIP: withLayout(VIP),
+      Market: withLayout(Market),
       Profile: {
         screen: withLayout(Profile),
         path: "Profile/:name",

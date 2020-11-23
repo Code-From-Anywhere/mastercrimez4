@@ -1,18 +1,12 @@
 import { connectActionSheet } from "@expo/react-native-action-sheet";
 import React, { Component } from "react";
-import {
-  Dimensions,
-  FlatList,
-  Platform,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Dimensions, FlatList, Platform, TextInput, View } from "react-native";
 import * as Icon from "react-native-vector-icons";
 import Button from "../components/Button";
 import T from "../components/T";
+import User from "../components/User";
 import Constants from "../Constants";
-import { getRank, getStrength, getTextFunction, getUserColor } from "../Util";
+import { getRank, getStrength, getTextFunction } from "../Util";
 const { height } = Dimensions.get("window");
 const orders = [
   {
@@ -119,26 +113,18 @@ class Members extends Component {
         ? `${getStrength(item.strength, "both")}`
         : `€${item.bank},-`;
 
-    const color = getUserColor(item, this.props.screenProps.device.theme);
-
     return (
       <View
         key={`item${index}`}
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
-          height: 40,
           alignItems: "center",
           paddingHorizontal: 20,
+          paddingVertical: 10,
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Profile", { name: item.name });
-          }}
-        >
-          <T style={{ color }}>{item.name}</T>
-        </TouchableOpacity>
+        <User navigation={navigation} user={item} />
         <T>{secondKey}</T>
       </View>
     );

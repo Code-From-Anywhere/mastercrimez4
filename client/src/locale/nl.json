@@ -25,6 +25,7 @@
   "menuJail": "Gevangenis ($1)",
   "headerSpend": "Uitgeven",
   "menuBank": "Bank",
+  "menuMarket": "Markt",
   "menuBulletfactory": "Kogelfabriek",
   "menuBomb": "Bombarderen",
   "menuCasino": "Casino",
@@ -154,10 +155,14 @@
   "nobody": "(Niemand)",
   "buy": "Koop",
 
+  "price": "Prijs",
+  "submit": "Plaats",
   "city": "Stad",
   "owner": "Eigenaar",
   "bullets": "Kogels",
   "pricePerBullet": "Prijs per kogel",
+  "hoeren": "Hoeren",
+  "wiet": "Wiet",
 
   "bunkerCTA": "Duik onder",
   "bunkerOneMinute": "1 minuut",
@@ -449,5 +454,10 @@
   "maximumLevel": "Je hebt het maximale level bereikt",
   "loading": "Laden...",
 
-  "gangBank": "Gangbank"
+  "gangBank": "Gangbank",
+
+  "whatType": "Welk type",
+
+  "requested": "Verzocht",
+  "forSale": "Te koop"
 }

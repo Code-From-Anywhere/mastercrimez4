@@ -558,6 +558,22 @@ Image.init(
   { sequelize, modelName: "image" }
 );
 
+class Offer extends Model {}
+
+Offer.init(
+  {
+    //userId
+    type: DataTypes.STRING,
+    amount: DataTypes.BIGINT,
+    price: DataTypes.BIGINT,
+    isBuy: DataTypes.BOOLEAN,
+  },
+  { sequelize, modelName: "offer" }
+);
+
+Offer.belongsTo(User, { constraints: false });
+User.hasMany(Offer, { constraints: false });
+
 class Channel extends Model {}
 
 Channel.init(
@@ -1008,6 +1024,45 @@ server.post("/putInJail", (req, res) =>
   })
 );
 
+server.post("/marketCreateOffer", (req, res) =>
+  require("./market").marketCreateOffer(req, res, {
+    User,
+    Offer,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+  })
+);
+
+server.post("/marketRemoveOffer", (req, res) =>
+  require("./market").marketRemoveOffer(req, res, {
+    User,
+    Offer,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+  })
+);
+
+server.post("/marketTransaction", (req, res) =>
+  require("./market").marketTransaction(req, res, {
+    User,
+    Offer,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+  })
+);
+
+server.get("/market", (req, res) =>
+  require("./market").market(req, res, {
+    User,
+    Offer,
+  })
+);
 server.post("/gangCreate", (req, res) =>
   require("./gang").gangCreate(req, res, {
     User,
@@ -1530,6 +1585,7 @@ server.get("/members", (req, res) => {
   User.findAll({
     attributes: publicUserFields,
     order: [[validOrder, "DESC"]],
+    include: { model: Gang },
     limit: 100,
     where: { health: { [Op.gt]: 0 } },
   }).then((user) => {

@@ -25,6 +25,7 @@
   "menuJail": "Jail ($1)",
   "headerSpend": "Spending",
   "menuBank": "Bank",
+  "menuMarket": "Market",
   "menuBulletfactory": "Bulletfactory",
   "menuBomb": "Bombing",
   "menuCasino": "Casino",
@@ -153,7 +154,8 @@
   "is": "is",
   "nobody": "(Nobody)",
   "buy": "Buy",
-
+  "price": "Price",
+  "submit": "Submit",
   "city": "City",
   "owner": "Owner",
   "bullets": "Bullets",
@@ -206,6 +208,9 @@
   "bankMoney": "Bank money",
   "weed": "Weed",
   "junkies": "Junkies",
+  "hoeren": "Prostitutes",
+  "wiet": "Weed",
+
   "prostitutes": "Prostitute",
   "gamepoints": "Gamepoints",
   "to": "To",
@@ -448,5 +453,8 @@
   "next": "Next",
   "maximumLevel": "You've reached the maximum level",
   "loading": "Loading...",
-  "gangBank": "Gangbank"
+  "gangBank": "Gangbank",
+  "whatType": "Which type",
+  "requested": "Requested",
+  "forSale": "For sale"
 }

@@ -42,6 +42,7 @@ const publicUserFields = [
   "id",
   "name",
   "image",
+  "locale",
   "thumbnail",
   "bio",
   "accomplice",

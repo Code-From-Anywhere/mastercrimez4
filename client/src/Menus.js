@@ -253,6 +253,14 @@ export const leftMenu = (me, theme) => {
       text: getText("menuBank"),
       to: "AllBanks",
     },
+
+    me?.level > 1 && {
+      iconType: "FontAwesome",
+      icon: "bank",
+      text: getText("menuMarket"),
+      to: "Market",
+    },
+
     {
       iconType: "MaterialCommunityIcons",
       icon: "pistol",

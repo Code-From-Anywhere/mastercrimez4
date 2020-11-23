@@ -87,7 +87,7 @@
   "notEnoughCredits": "Je hebt niet genoeg credits",
   "invalidOption": "Ongeldige invoer: $1",
   "accountNotVerified": "Je moet je account eerst verifiëren!",
-  "couldntUpdateuser": "Kon jouw user niet updaten",
+  "couldntUpdateUser": "Kon jouw user niet updaten",
   "crimeSuccess": "Gelukt. Je hebt €$1,- gejat",
   "fail": "Mislukt",
   "failAndJail": "Mislukt, je zit nu voor $1 seconden in de gevangenis",
@@ -299,5 +299,22 @@
   "notEnoughPower": "Je gang heeft niet genoeg power. Je kan er slechts $1 in bezit hebben.",
   "gangShopSuccess": "Je hebt er $1 gekocht",
   "notEnoughMembers": "Er moeten minimaal 3 leden in de gang zitten om achievements te kunnen hebben",
-  "gangPowerMessage": "De gangkracht is zojuist veranderd naar $1"
+  "gangPowerMessage": "De gangkracht is zojuist veranderd naar $1",
+
+  "marketCreateOfferSuccess": "Je hebt $1 $2 op de markt $3 voor €$4,-",
+  "marketTransactionSuccess": "Je hebt $1 $2 op de markt $3 voor €$4,- van $5",
+  "marketTransactionMessage": "$1 heeft $2 $3 op de markt van jou $4 voor €$5,-",
+  "invalidValudes": "Niet alle waarden zijn juist ingevuld",
+  "requestPast": "gevraagd",
+  "offerPast": "aangeboden",
+  "request": "verzoek",
+  "offer": "aanbod",
+  "removed": "$1 succesvol verwijderd",
+  "bought": "gekocht",
+  "sold": "verkocht",
+  "couldntFindOffer": "Kon dit aanbod niet vinden",
+  "invalidOffer": "Jij hebt dit niet op de markt geplaatst!",
+
+  "gangAnswerJoinMessage": "$1 is toegelaten in de gang.",
+  "gangKickSuccess": "Je hebt $1 uit $2 verwijderd"
 }

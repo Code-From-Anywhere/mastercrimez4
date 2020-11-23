@@ -88,7 +88,7 @@
   "notEnoughCredits": "You don't have enough credits",
   "invalidOption": "Invalid option: $1",
   "accountNotVerified": "You'll have to verify your account first!",
-  "couldntUpdateuser": "Couldn't update your user",
+  "couldntUpdateUser": "Couldn't update your user",
   "crimeSuccess": "Success. You've stolen €$1,-",
   "fail": "Failed",
   "failAndJail": "Failed, you're now in jail for $1 seconds",
@@ -301,5 +301,23 @@
   "notEnoughPower": "Your gang has not enough power. You can own just $1",
   "gangShopSuccess": "You've bought $1",
   "notEnoughMembers": "There must be minimally 3 members in the gang to get achievements",
-  "gangPowerMessage": "The gang power has just been changed to $1"
+  "gangPowerMessage": "The gang power has just been changed to $1",
+
+  "marketCreateOfferSuccess": "You have $3 $1 $2 for €$4,-",
+  "marketTransactionSuccess": "You have $3 $1 $2 on the market for €$4,- of $5",
+  "marketTransactionMessage": "$1 has $4 your $2 $3 on the market for €$5,-",
+
+  "invalidValudes": "Not all values have been entered correctly",
+  "requestPast": "requested",
+  "offerPast": "offered",
+  "request": "reqeuest",
+  "offer": "offer",
+  "removed": "$1 successfully removed",
+  "bought": "bought",
+  "sold": "sold",
+  "couldntFindOffer": "Couldn't find this offer",
+  "invalidOffer": "You haven't put this on the market!",
+
+  "gangAnswerJoinMessage": "$1 has been accepted into the gang",
+  "gangKickSuccess": "You've kicked $1 from $2"
 }
