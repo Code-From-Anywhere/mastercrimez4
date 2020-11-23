@@ -1585,7 +1585,7 @@ server.get("/members", (req, res) => {
   User.findAll({
     attributes: publicUserFields,
     order: [[validOrder, "DESC"]],
-    include: { model: Gang },
+    include: { model: Gang, attributes: ["id", "name", "thumbnail"] },
     limit: 100,
     where: { health: { [Op.gt]: 0 } },
   }).then((user) => {
@@ -1611,6 +1611,7 @@ server.get("/stats", async (req, res) => {
     stats.map(async (stat) => ({
       [stat]: await User.findAll({
         attributes: publicUserFields,
+        include: { model: Gang, attributes: ["id", "name", "thumbnail"] },
         order: [[stat, "DESC"]],
         limit: 10,
         where: { health: { [Op.gt]: 0 } },
@@ -1653,7 +1654,7 @@ server.get("/me", (req, res) => {
   User.findOne({
     attributes: allUserFields,
     where: { loginToken: String(req.query.token) },
-    include: { model: Gang, attributes: ["name", "thumbnail"] },
+    include: { model: Gang },
   })
     .then(async (user) => {
       if (user) {

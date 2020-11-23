@@ -239,6 +239,8 @@ const GangSettings = ({
     }
   };
 
+  console.log("gang", me?.gang);
+
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: "row" }}>
@@ -247,7 +249,7 @@ const GangSettings = ({
       </View>
       <ScrollView
         contentContainerStyle={{
-          height: Platform.OS === "web" ? 0 : undefined,
+          height: Platform.OS === "web" ? height : undefined,
         }}
         style={{ flex: 1, padding: 15 }}
       >

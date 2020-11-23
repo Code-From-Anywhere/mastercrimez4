@@ -239,7 +239,7 @@ class Home extends Component {
         />
 
         <Pagination
-          dotsLength={2}
+          dotsLength={3}
           activeDotIndex={this.state.activeSlide}
           // containerStyle={{ backgroundColor: "rgba(0, 0, 0, 0.75)" }}
           dotStyle={{
