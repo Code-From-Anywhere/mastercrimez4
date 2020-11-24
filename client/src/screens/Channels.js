@@ -135,14 +135,14 @@ class ChatScreen extends React.Component {
     const channelTitle = item.channel?.name
       ? item.channel?.name
       : item.channel?.channelsubs.length === 2
-      ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user.name
+      ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user?.name
       : "(RAAAR)";
 
     const channelThumbnail = item.channel?.image
       ? item.channel?.image
       : item.channel?.channelsubs.length === 2
       ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user
-          .thumbnail
+          ?.thumbnail
       : null;
 
     return (
