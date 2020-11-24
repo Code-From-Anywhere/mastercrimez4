@@ -4,11 +4,12 @@ import {
   Dimensions,
   FlatList,
   Image,
-  TouchableOpacity,
   View,
 } from "react-native";
+import { Col, Grid } from "react-native-easy-grid";
 import Button from "../components/Button";
 import T from "../components/T";
+import User from "../components/User";
 import Constants from "../Constants";
 import {
   doOnce,
@@ -18,6 +19,10 @@ import {
   numberFormat,
   post,
 } from "../Util";
+
+const GANG_LEVEL_UNDERBOSS = 3;
+const GANG_LEVEL_BANK = 2;
+const GANG_LEVEL_BOSS = 4;
 
 const { width } = Dimensions.get("window");
 const SIZE = 300;
@@ -61,51 +66,67 @@ const Gangs = ({
 
   doOnce(getGang);
 
+  const getGangLevel = (gangLevel) =>
+    getText(
+      gangLevel === GANG_LEVEL_BOSS
+        ? "gangLevelBoss"
+        : gangLevel === GANG_LEVEL_UNDERBOSS
+        ? "gangLevelUnderboss"
+        : gangLevel === GANG_LEVEL_BANK
+        ? "gangLevelBank"
+        : "gangLevelMember"
+    );
+
   return (
     <View style={{ flex: 1, padding: 15 }}>
-      <View style={{ margin: MARGIN, flexDirection: "row", flexWrap: "wrap" }}>
-        <View>
-          {item.image ? (
-            <Image
-              source={{ uri: Constants.SERVER_ADDR + item.image }}
-              style={{ width: SIZE, height: SIZE }}
-              resizeMode="cover"
-            />
-          ) : (
-            <Image
-              source={require("../../assets/icon.png")}
-              style={{ width: SIZE, height: SIZE }}
-            />
-          )}
-        </View>
-        <View style={{ margin: MARGIN }}>
-          {loading ? <ActivityIndicator /> : null}
-          <T>
-            {getText("name")}: {item.name}
-          </T>
-          <T>
-            {getText("members")}: {item.members}
-          </T>
-          <T>
-            {getText("bank")}: €{numberFormat(item.bank)},-
-          </T>
-          <T>
-            {getText("power")}: {item.score}
-          </T>
-          {!me?.gang &&
-            (response ? (
-              <T>{response}</T>
-            ) : (
-              <Button
-                onPress={postGangJoin}
-                title={getText("gangJoinCTA")}
-                theme={theme}
-              />
-            ))}
-        </View>
-      </View>
-
       <FlatList
+        ListHeaderComponent={() => {
+          return (
+            <View
+              style={{ margin: MARGIN, flexDirection: "row", flexWrap: "wrap" }}
+            >
+              <View>
+                {item.image ? (
+                  <Image
+                    source={{ uri: Constants.SERVER_ADDR + item.image }}
+                    style={{ width: SIZE, height: SIZE }}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <Image
+                    source={require("../../assets/icon.png")}
+                    style={{ width: SIZE, height: SIZE }}
+                  />
+                )}
+              </View>
+              <View style={{ margin: MARGIN }}>
+                {loading ? <ActivityIndicator /> : null}
+                <T>
+                  {getText("name")}: {item.name}
+                </T>
+                <T>
+                  {getText("members")}: {item.members}
+                </T>
+                <T>
+                  {getText("bank")}: €{numberFormat(item.bank)},-
+                </T>
+                <T>
+                  {getText("power")}: {item.score}
+                </T>
+                {!me?.gang &&
+                  (response ? (
+                    <T>{response}</T>
+                  ) : (
+                    <Button
+                      onPress={postGangJoin}
+                      title={getText("gangJoinCTA")}
+                      theme={theme}
+                    />
+                  ))}
+              </View>
+            </View>
+          );
+        }}
         data={item.users}
         keyExtractor={(item, index) => `item${index}`}
         renderItem={({ item, index }) => {
@@ -114,26 +135,22 @@ const Gangs = ({
           const color = getUserColor(item, theme);
 
           return (
-            <View
+            <Grid
               key={`item${index}`}
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                height: 40,
-                alignItems: "center",
                 paddingHorizontal: 20,
               }}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("Profile", { name: item.name });
-                }}
-              >
-                <T style={{ color }}>{item.name}</T>
-              </TouchableOpacity>
-              <T>{isOnline ? "✅" : "🛑"}</T>
-              <T>❤️ {item.health}%</T>
-            </View>
+              <Col style={{ marginVertical: 5 }}>
+                <User navigation={navigation} user={item} />
+              </Col>
+              <Col style={{ justifyContent: "center" }}>
+                <T>{getGangLevel(item.gangLevel)}</T>
+              </Col>
+              <Col style={{ justifyContent: "center" }}>
+                <T>❤️ {item.health}%</T>
+              </Col>
+            </Grid>
           );
         }}
       />

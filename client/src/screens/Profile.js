@@ -176,15 +176,7 @@ const ProfileScreen = ({
               />
             </View>
           ) : null}
-          <TouchableOpacity
-            onPress={() =>
-              alert("Title", "Message", [{ text: "OK" }, { text: "Cancel" }], {
-                options: true,
-              })
-            }
-          >
-            <T>TEST ALERT</T>
-          </TouchableOpacity>
+
           {profile?.gang ? (
             <TouchableOpacity
               onPress={() => {

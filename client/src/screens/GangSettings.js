@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { Col, Grid } from "react-native-easy-grid";
 import { AlertContext } from "../components/AlertProvider";
 import Button from "../components/Button";
 import Content from "../components/Content";
@@ -19,6 +20,7 @@ import T from "../components/T";
 import Constants from "../Constants";
 import styles from "../Style";
 import { doOnce, get, getTextFunction, numberFormat, post } from "../Util";
+
 const { height, width } = Dimensions.get("window");
 const GANG_LEVEL_UNDERBOSS = 3;
 const GANG_LEVEL_BANK = 2;
@@ -373,31 +375,39 @@ const GangSettings = ({
               >
                 {gang?.users?.map((member) => {
                   return (
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <T>{member.name}</T>
-                      <T>{getGangLevel(member.gangLevel)}</T>
-                      <View style={{ flexDirection: "row" }}>
-                        {me?.gangLevel >= GANG_LEVEL_UNDERBOSS &&
-                          member.id !== me?.id && (
+                    <Grid>
+                      <Col style={{ justifyContent: "center" }}>
+                        <T>{member.name}</T>
+                      </Col>
+
+                      <Col style={{ justifyContent: "center" }}>
+                        <T>{getGangLevel(member.gangLevel)}</T>
+                      </Col>
+
+                      <Col
+                        style={{
+                          justifyContent: "center",
+                          alignItems: "flex-end",
+                        }}
+                      >
+                        <View style={{ flexDirection: "row" }}>
+                          {me?.gangLevel >= GANG_LEVEL_UNDERBOSS &&
+                            member.id !== me?.id && (
+                              <Button
+                                title={getText("kick")}
+                                onPress={() => postGangKick(member.id)}
+                              />
+                            )}
+                          {me?.gangLevel === GANG_LEVEL_BOSS && (
                             <Button
-                              title={getText("kick")}
-                              onPress={() => postGangKick(member.id)}
+                              title={getText("changeRank")}
+                              style={{ marginLeft: 10 }}
+                              onPress={() => changeRank(member.id)}
                             />
                           )}
-                        {me?.gangLevel === GANG_LEVEL_BOSS && (
-                          <Button
-                            title={getText("changeRank")}
-                            style={{ marginLeft: 10 }}
-                            onPress={() => changeRank(member.id)}
-                          />
-                        )}
-                      </View>
-                    </View>
+                        </View>
+                      </Col>
+                    </Grid>
                   );
                 })}
               </Content>

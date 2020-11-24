@@ -1,5 +1,12 @@
+import * as Updates from "expo-updates";
 import React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import md5 from "react-native-md5";
 import Button from "../components/Button";
 import Constants from "../Constants";
@@ -39,7 +46,11 @@ class Login extends React.Component {
           dispatch({ type: "SET_LOGGED", value: true });
           dispatch({ type: "SET_LOGIN_TOKEN", value: responseJson.loginToken });
 
-          this.props.screenProps.reloadMe(responseJson.loginToken);
+          if (Platform.OS === "web") {
+            location.reload();
+          } else {
+            Updates.reloadAsync();
+          }
 
           this.setState({ error: null, success: responseJson.success });
         }

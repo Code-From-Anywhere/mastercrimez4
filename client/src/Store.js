@@ -23,6 +23,7 @@ const initDevice = {
   loginToken: "",
   logged: false,
   theme: DEFAULT_THEME,
+  isConnected: 2,
   foregrounded: 0,
   movements: [],
 };
@@ -31,6 +32,10 @@ const deviceReducer = (state: Device = initDevice, action) => {
   switch (action.type) {
     case "PURGE": {
       return initDevice;
+    }
+
+    case "SET_IS_CONNECTED": {
+      return { ...state, isConnected: action.value };
     }
 
     case "SET_LOGIN_TOKEN": {

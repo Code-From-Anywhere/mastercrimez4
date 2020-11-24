@@ -877,6 +877,12 @@ server.get("/listimages", async (req, res) => {
   });
 });
 
+server.get("/healthcheck", async (req, res) => {
+  res.json({
+    ok: true,
+  });
+});
+
 server.post("/deleteimage", async (req, res) => {
   const { token, id } = req.body;
 

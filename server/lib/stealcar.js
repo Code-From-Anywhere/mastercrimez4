@@ -169,7 +169,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
           if (locale === "nl") {
             texts = require("../assets/carsTexts_nl.json");
           } else {
-            texts = require("../assets/carTexts_en.json");
+            texts = require("../assets/carsTexts_en.json");
           }
 
           const textsOption = texts.filter(

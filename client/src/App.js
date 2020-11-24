@@ -24,6 +24,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
 import { AlertProvider } from "./components/AlertProvider";
+import ConnectionProvider from "./components/ConnectionProvider";
 import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Header from "./components/Header";
@@ -621,8 +622,8 @@ class _RootContainer extends React.Component {
     }
 
     this.interval = setInterval(() => this.sendMovements(), 60000);
-    // this.meInterval = setInterval((t) => reloadMe(t), 5000, token);
-    //NB: this causes weird behavior when logging in on another account.
+    this.meInterval = setInterval((t) => reloadMe(t), 5000, token);
+    //NB: this causes weird behavior when logging in on another account. Therefore, now, every login goes in hand with a site refresh.
 
     Linking.addEventListener("url", this.openWebUrl);
     Linking.getInitialURL().then((url) => this.openWebUrl(url));
@@ -630,7 +631,7 @@ class _RootContainer extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.interval);
-    // clearInterval(this.meInterval);
+    clearInterval(this.meInterval);
   }
   openWebUrl = (url) => {
     console.log("should open web url here", url);
@@ -661,7 +662,9 @@ class _RootContainer extends React.Component {
     return (
       <AlertProvider>
         <ActionSheetProvider>
-          <Container screenProps={{ ...props }} />
+          <ConnectionProvider>
+            <Container screenProps={{ ...props }} />
+          </ConnectionProvider>
         </ActionSheetProvider>
       </AlertProvider>
     );

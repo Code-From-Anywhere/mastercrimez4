@@ -1,5 +1,6 @@
+import * as Updates from "expo-updates";
 import React from "react";
-import { Text, TextInput, View } from "react-native";
+import { Platform, Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
@@ -41,9 +42,14 @@ class Login extends React.Component {
           dispatch({ type: "SET_LOGGED", value: true });
           dispatch({ type: "SET_LOGIN_TOKEN", value: responseJson.token });
 
-          reloadMe(responseJson.token);
+          if (Platform.OS === "web") {
+            location.reload();
+          } else {
+            Updates.reloadAsync();
+          }
+          // reloadMe(responseJson.token);
 
-          navigation.popToTop();
+          // navigation.popToTop();
         }
         return responseJson;
       })

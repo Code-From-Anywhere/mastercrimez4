@@ -40,6 +40,7 @@ const NUM_ACTIONS_UNTIL_VERIFY = 20;
 
 const publicUserFields = [
   "id",
+  "createdAt",
   "name",
   "image",
   "locale",
