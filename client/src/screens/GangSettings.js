@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { AlertContext } from "../components/AlertProvider";
 import Button from "../components/Button";
 import Content from "../components/Content";
 import T from "../components/T";
@@ -45,12 +46,7 @@ const GangSettings = ({
   const [amount, setAmount] = useState("");
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const [showConfirmGangRemoveForm, setShowConfirmGangRemoveForm] = useState(
-    false
-  );
-  const [showConfirmGangLeaveForm, setShowConfirmGangLeaveForm] = useState(
-    false
-  );
+  const alertAlert = React.useContext(AlertContext);
 
   const getGang = async () => {
     setLoading(true);
@@ -154,7 +150,6 @@ const GangSettings = ({
       alert(getText("pleaseFillInGangName"));
       return;
     }
-    setShowConfirmGangRemoveForm(false);
 
     setLoading(true);
     const { response } = await post("gangRemove", {
@@ -466,67 +461,40 @@ const GangSettings = ({
 
             {/* Leave */}
             <View style={{ marginVertical: 20 }}>
-              {showConfirmGangLeaveForm ? (
-                <View>
-                  <TextInput
-                    placeholderTextColor={theme.secondaryTextSoft}
-                    style={styles(theme).textInput}
-                    value={gangName}
-                    onChangeText={setGangName}
-                    placeholder={getText("gangName")}
-                  />
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Button title={getText("yes")} onPress={postGangLeave} />
-                    <Button
-                      title={getText("no")}
-                      onPress={() => setShowConfirmGangLeaveForm(false)}
-                    />
-                  </View>
-                </View>
-              ) : (
+              {
                 <Button
                   title={getText("leaveGang")}
-                  onPress={() => setShowConfirmGangLeaveForm(true)}
+                  onPress={() =>
+                    alertAlert(
+                      getText("areYouSure"),
+                      getText("leaveGangAlertMessage"),
+                      [
+                        { text: getText("ok"), onPress: postGangLeave },
+                        { text: getText("cancel") },
+                      ]
+                    )
+                  }
                 />
-              )}
+              }
             </View>
 
             {/* Gang delete */}
             <View style={{ marginVertical: 20 }}>
-              {me?.gangLevel === GANG_LEVEL_BOSS &&
-                (showConfirmGangRemoveForm ? (
-                  <View>
-                    <TextInput
-                      placeholderTextColor={theme.secondaryTextSoft}
-                      style={styles(theme).textInput}
-                      value={gangName}
-                      onChangeText={setGangName}
-                      placeholder={getText("gangName")}
-                    />
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Button title={getText("yes")} onPress={postGangRemove} />
-                      <Button
-                        title={getText("no")}
-                        onPress={() => setShowConfirmGangRemoveForm(false)}
-                      />
-                    </View>
-                  </View>
-                ) : (
-                  <Button
-                    title={getText("removeGang")}
-                    onPress={() => setShowConfirmGangRemoveForm(true)}
-                  />
-                ))}
+              {me?.gangLevel === GANG_LEVEL_BOSS && (
+                <Button
+                  title={getText("removeGang")}
+                  onPress={() =>
+                    alertAlert(
+                      getText("areYouSure"),
+                      getText("removeGangAlertMessage"),
+                      [
+                        { text: getText("ok"), onPress: postGangRemove },
+                        { text: getText("cancel") },
+                      ]
+                    )
+                  }
+                />
+              )}
             </View>
 
             <View style={{ height: 80 }} />

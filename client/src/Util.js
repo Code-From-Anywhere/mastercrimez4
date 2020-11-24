@@ -178,9 +178,9 @@ export function ColorLuminance(hex, lum) {
 export const lighterHex = (hex) => ColorLuminance(hex, 0.2);
 
 export const getUserColor = (item, theme) =>
-  item.creditsTotal >= 10000
+  item?.creditsTotal >= 10000
     ? "red"
-    : item.creditsTotal >= 1000
+    : item?.creditsTotal >= 1000
     ? "yellow"
     : theme.primaryText;
 

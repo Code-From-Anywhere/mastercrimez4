@@ -45,7 +45,11 @@ const ProfileScreen = ({
 
   useEffect(() => {
     getProfile(name);
-  }, [params]);
+  }, [params?.name]);
+
+  useEffect(() => {
+    fetchImages();
+  }, [profile?.id]);
 
   const getProfile = (name) => {
     return fetch(`${Constants.SERVER_ADDR}/profile?name=${name}`, {
@@ -59,7 +63,6 @@ const ProfileScreen = ({
       .then(async (responseJson) => {
         setProfile(responseJson);
         setLoading(false);
-        fetchImages();
         return responseJson;
       })
       .catch((error) => {
@@ -173,12 +176,20 @@ const ProfileScreen = ({
               />
             </View>
           ) : null}
-
+          <TouchableOpacity
+            onPress={() =>
+              alert("Title", "Message", [{ text: "OK" }, { text: "Cancel" }], {
+                options: true,
+              })
+            }
+          >
+            <T>TEST ALERT</T>
+          </TouchableOpacity>
           {profile?.gang ? (
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Gang", { name: profile?.gang?.name })
-              }
+              onPress={() => {
+                navigation.navigate("Gang", { name: profile?.gang?.name });
+              }}
             >
               <T>Gang</T>
               {profile?.gang?.image && (

@@ -130,7 +130,7 @@ const breakout = async (
   }
 };
 
-const buyout = async (req, res, User, Message, City, Action) => {
+const buyout = async (req, res, User, City, Action) => {
   const { token, type } = req.body; //type = cash or credits
 
   if (type !== "cash" && type !== "credits") {

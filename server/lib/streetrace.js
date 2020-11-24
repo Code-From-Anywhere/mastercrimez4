@@ -13,7 +13,6 @@ const createStreetrace = async (
   Streetrace,
   StreetraceParticipant,
   Garage,
-  Message,
   Action
 ) => {
   let { loginToken, numParticipants, type, price, carId } = req.body;
@@ -118,7 +117,6 @@ const joinStreetrace = async (
   Streetrace,
   StreetraceParticipant,
   Garage,
-  Message,
   Action
 ) => {
   let { loginToken, streetraceId, carId } = req.body;
@@ -225,7 +223,6 @@ const leaveStreetrace = async (
   Streetrace,
   StreetraceParticipant,
   Garage,
-  Message,
   Action
 ) => {
   let { loginToken, streetraceId } = req.body;

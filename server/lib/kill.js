@@ -450,7 +450,7 @@ const kill = async (
   }
 };
 
-const getalive = async (req, res, User, Message, Garage, Action) => {
+const getalive = async (req, res, User, Action) => {
   const { token, option } = req.body;
 
   if (!token) {

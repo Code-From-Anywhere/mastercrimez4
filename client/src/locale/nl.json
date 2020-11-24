@@ -463,5 +463,8 @@
   "yourStatus": "Jouw status",
   "invitePeople": "Mensen uitnodigen",
   "gangProfile": "Gang profiel",
-  "deleteAllChats": "Verwijder alle berichten"
+  "deleteAllChats": "Verwijder alle berichten",
+  "areYouSure": "Weet je het zeker?",
+  "removeGangAlertMessage": "Weet je zeker dat je de gang wilt verwijderen?",
+  "leaveGangAlertMessage": "Weet je zeker dat je de gang wilt verlaten?"
 }

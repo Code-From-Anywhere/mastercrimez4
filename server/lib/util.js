@@ -65,41 +65,6 @@ const publicUserFields = [
   "gangLevel",
 ];
 
-const sendMessageAndPush = async (
-  user,
-  user2,
-  message,
-  Message,
-  fromSystem
-) => {
-  const created = await Message.create({
-    from: user.id,
-    fromName: fromSystem ? "(System)" : user.name,
-    to: user2.id,
-    message,
-    read: false,
-  });
-
-  if (user2.pushtoken) {
-    fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        to: user2.pushtoken,
-        title: `Nieuw bericht van ${user.name}`,
-        sound: "default",
-        body: message,
-        data: { id: created.id },
-      }),
-    })
-      .then((result) => console.log("result", result.status))
-      .catch((e) => console.log("err", e));
-  }
-};
-
 const sendChatPushMail = async ({
   channelId, // if cid is set, use that
   gang, // if gang is set, use that
@@ -493,7 +458,6 @@ module.exports = {
   strengthRanks,
   getRank,
   getStrength,
-  sendMessageAndPush,
   saveImageIfValid,
   getTextFunction,
   getLocale,

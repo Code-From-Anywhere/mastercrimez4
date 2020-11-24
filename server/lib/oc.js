@@ -12,7 +12,7 @@ const SECONDS = 120;
 
 let getText = getTextFunction();
 
-const oc = async (req, res, User, Message, Action) => {
+const oc = async (req, res, User, Action) => {
   const { token, captcha } = req.body;
 
   if (!token) {

@@ -23,6 +23,7 @@ import { createStackNavigator } from "react-navigation-stack";
 // import { loadReCaptcha } from "react-recaptcha-v3";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
+import { AlertProvider } from "./components/AlertProvider";
 import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Header from "./components/Header";
@@ -658,9 +659,11 @@ class _RootContainer extends React.Component {
     const { props } = this;
 
     return (
-      <ActionSheetProvider>
-        <Container screenProps={{ ...props }} />
-      </ActionSheetProvider>
+      <AlertProvider>
+        <ActionSheetProvider>
+          <Container screenProps={{ ...props }} />
+        </ActionSheetProvider>
+      </AlertProvider>
     );
   }
 }

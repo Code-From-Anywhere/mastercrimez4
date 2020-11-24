@@ -460,5 +460,8 @@
   "yourStatus": "Your status",
   "invitePeople": "Invite people",
   "gangProfile": "Gang profile",
-  "deleteAllChats": "Delete all chats"
+  "deleteAllChats": "Delete all chats",
+  "areYouSure": "Are you sure?",
+  "removeGangAlertMessage": "Are you sure you want to remove the gang?",
+  "leaveGangAlertMessage": "Are you sure you want to leave the gang?"
 }
