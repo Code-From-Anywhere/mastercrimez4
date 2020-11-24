@@ -210,11 +210,7 @@ class ChatScreen extends React.Component {
             ) : null}
           </View>
 
-          <View
-            style={{
-              alignItems: "space-between",
-            }}
-          >
+          <View>
             <TouchableOpacity
               style={{ alignSelf: "flex-end" }}
               onPress={() => this.openMenu(item.id)}

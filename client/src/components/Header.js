@@ -151,26 +151,61 @@ function Header({ navigation, device, me }) {
     </TouchableOpacity>
   );
 
+  const backButton = (
+    <View
+      style={{
+        margin: 10,
+        justifyContent: "space-between",
+        flexDirection: "row",
+      }}
+    >
+      {navigation.state.routeName !== "Home" ? (
+        <TouchableOpacity
+          hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
+          onPress={() => {
+            if (isSmallDevice || Platform.OS !== "web") {
+              navigation.goBack();
+            } else {
+              window.history.back();
+            }
+          }}
+        >
+          <AntDesign
+            name="arrowleft"
+            size={32}
+            color={device.theme.secondaryText}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={{ height: 20 }} />
+      )}
+    </View>
+  );
+
   const webHeader = (
     <View>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "center",
-          alignItems: "center",
         }}
       >
+        <View style={{ width: 50 }}>{backButton}</View>
+
         <View style={{ alignItems: "center", flex: 1 }}>
           <Image
             source={require("../../assets/logos/logo5.jpg")}
             style={{
+              margin: 10,
               width: isSmallDevice ? 200 : 600,
               height: isSmallDevice ? 33 : 100,
             }}
           />
-          {statsHeader}
         </View>
-        <Text style={{ color: "white" }}>v{Constants.manifest.version}</Text>
+
+        <Text style={{ color: "white", marginTop: 20 }}>
+          v{Constants.manifest.version}
+        </Text>
 
         {isSmallDevice ? (
           <TouchableOpacity
@@ -189,33 +224,12 @@ function Header({ navigation, device, me }) {
         ) : null}
       </View>
 
+      {statsHeader}
+
       <Chat me={me} device={device} navigation={navigation} />
     </View>
   );
 
-  const backButton = (
-    <View
-      style={{
-        justifyContent: "space-between",
-        flexDirection: "row",
-      }}
-    >
-      {navigation.state.routeName !== "Home" ? (
-        <TouchableOpacity
-          hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
-          onPress={() => navigation.goBack()}
-        >
-          <AntDesign
-            name="arrowleft"
-            size={32}
-            color={device.theme.secondaryText}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View style={{ height: 20 }} />
-      )}
-    </View>
-  );
   return (
     <View style={{ justifyContent: "center" }}>
       {Platform.OS === "web" ? (

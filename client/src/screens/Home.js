@@ -11,6 +11,7 @@ import {
   Linking,
   NativeModules,
   Platform,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -21,7 +22,9 @@ import { leftMenu, rightMenu } from "../Menus";
 import { getTextFunction, post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
-const itemWidth = width / 4;
+const itemWidth = width / 4 > 100 ? 100 : width / 4;
+const isSmallDevice = width < 800;
+
 const amountOfItems = Math.floor((height - 200) / itemWidth) * 4;
 
 class Home extends Component {
@@ -192,6 +195,14 @@ class Home extends Component {
 
     const getText = getTextFunction(me?.locale);
 
+    const data = [
+      filtered.slice(0, amountOfItems),
+      filtered.slice(amountOfItems, amountOfItems * 2),
+      amountOfItems * 2 > filtered.length
+        ? undefined
+        : filtered.slice(amountOfItems * 2, filtered.length),
+    ].filter((x) => !!x);
+
     return (
       <View style={{ flex: 1 }}>
         {notificationsHeader && (
@@ -225,13 +236,7 @@ class Home extends Component {
           ref={(c) => {
             this._carousel = c;
           }}
-          data={[
-            filtered.slice(0, amountOfItems),
-            filtered.slice(amountOfItems, amountOfItems * 2),
-            amountOfItems * 2 > filtered.length
-              ? undefined
-              : filtered.slice(amountOfItems * 2, filtered.length),
-          ].filter((x) => !!x)}
+          data={data}
           renderItem={this._renderItem}
           sliderWidth={width}
           onSnapToItem={(index) => this.setState({ activeSlide: index })}
@@ -239,7 +244,7 @@ class Home extends Component {
         />
 
         <Pagination
-          dotsLength={3}
+          dotsLength={data.length}
           activeDotIndex={this.state.activeSlide}
           // containerStyle={{ backgroundColor: "rgba(0, 0, 0, 0.75)" }}
           dotStyle={{
@@ -262,27 +267,25 @@ class Home extends Component {
   }
   render() {
     const {
+      device,
       device: { theme },
       me,
     } = this.props.screenProps;
 
     const getText = getTextFunction(me?.locale);
 
+    const menus = [
+      ...leftMenu(me, device.theme),
+      ...rightMenu(me, device.theme),
+    ];
+    const filtered = menus.filter((menu) => !menu.isHeader && !menu.isStats);
+
     if (Platform.OS === "web") {
-      const handleMouseMove = (event) => {
-        var x = event.clientX;
-        var y = event.clientY;
-        var coor = "X coords: " + x + ", Y coords: " + y;
-        // console.log("coor", coor);
-      };
-
-      document.onmousemove = handleMouseMove;
-
-      return (
-        <Text style={{ color: theme.primaryText }}>
-          {getText("welcomeBack")}
-        </Text>
-      );
+      if (isSmallDevice) {
+        return <ScrollView>{this._renderItem({ item: filtered })}</ScrollView>;
+      } else {
+        return <T>{getText("welcomeBack")}</T>;
+      }
     }
     return this.renderCarousel();
   }
