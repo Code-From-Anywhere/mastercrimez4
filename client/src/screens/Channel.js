@@ -14,9 +14,10 @@ import {
 } from "react-native";
 import { RefreshControl } from "react-native-web-refresh-control";
 import ImageInput from "../components/ImageInput";
+import T from "../components/T";
 import Constants from "../Constants";
 import STYLE from "../Style";
-import { getTextFunction, post } from "../Util";
+import { get, getTextFunction, post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
 const isBigDevice = width > 500;
@@ -31,6 +32,7 @@ class ChatScreen extends React.Component {
     this.state = {
       members: [],
       isFetching: true,
+      chat: [],
     };
   }
 
@@ -45,8 +47,10 @@ class ChatScreen extends React.Component {
       },
     } = this.props;
     this.fetchChat();
+
     this.interval = setInterval(() => {
       this.fetchChat();
+      console.log("setRead");
       post("setRead", { loginToken, id: params?.subid });
       reloadMe(loginToken);
     }, 5000);
@@ -56,7 +60,7 @@ class ChatScreen extends React.Component {
     clearInterval(this.interval);
   }
 
-  fetchChat = () => {
+  fetchChat = async () => {
     const {
       screenProps: { device },
       navigation: {
@@ -64,23 +68,11 @@ class ChatScreen extends React.Component {
       },
     } = this.props;
 
-    fetch(
-      `${Constants.SERVER_ADDR}/channelmessage?loginToken=${device.loginToken}&id=${params.id}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((chat) => {
-        this.setState({ chat, isFetching: false }, () => {});
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const url = `channelmessage?loginToken=${device.loginToken}&id=${params.id}`;
+
+    console.log(url);
+    const { chat, response } = await get(url);
+    this.setState({ chat, isFetching: false });
   };
 
   onRefresh = () => {
@@ -236,7 +228,8 @@ class ChatScreen extends React.Component {
           />
 
           <TextInput
-            onSubmitEditing={this.send}
+            multiline
+            // onSubmitEditing={this.send}
             style={[STYLE(theme).textInput, { flex: 1 }]}
             value={message}
             placeholder={getText("message")}
@@ -255,22 +248,26 @@ class ChatScreen extends React.Component {
     const { chat } = this.state;
     return (
       <SafeAreaView style={styles.container}>
-        <FlatList
-          contentContainerStyle={{
-            height: Platform.OS === "web" ? height - 250 : undefined,
-          }}
-          data={chat}
-          renderItem={this.renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isFetching}
-              onRefresh={this.onRefresh}
-            />
-          }
-          inverted
-          ref={(ref) => (this.flatList = ref)}
-        />
+        {Array.isArray(chat) ? (
+          <FlatList
+            contentContainerStyle={{
+              height: Platform.OS === "web" ? height - 250 : undefined,
+            }}
+            data={chat}
+            renderItem={this.renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isFetching}
+                onRefresh={this.onRefresh}
+              />
+            }
+            inverted
+            ref={(ref) => (this.flatList = ref)}
+          />
+        ) : (
+          <T>{chat?.response}</T>
+        )}
         {this.renderFooter()}
       </SafeAreaView>
     );

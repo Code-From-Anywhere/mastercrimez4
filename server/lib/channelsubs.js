@@ -18,7 +18,7 @@ const channelsubs = async (req, res, User, ChannelSub, Channel) => {
   }
 
   ChannelSub.findAll({
-    where: { userId: user.id },
+    where: { userId: user.id, isDeleted: null }, //
     include: {
       model: Channel,
       include: {
@@ -106,4 +106,53 @@ const setRead = async (req, res, User, ChannelSub, Channel) => {
   return res.json({ success: true });
 };
 
-module.exports = { channelsubs, pm, setRead };
+const setDeleted = async (req, res, User, ChannelSub, Channel) => {
+  const { loginToken, id } = req.body;
+  if (!loginToken) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  if (!id || isNaN(id)) {
+    res.json({ response: getText("noId") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  const [updated] = await ChannelSub.update(
+    { isDeleted: true, unread: 0 },
+    { where: { id, userId: user.id } }
+  );
+
+  return res.json({ success: updated === 1 });
+};
+
+const deleteAll = async (req, res, User, ChannelSub, Channel) => {
+  const { loginToken } = req.body;
+  if (!loginToken) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  const [updated] = await ChannelSub.update(
+    { isDeleted: true, unread: 0 },
+    { where: { userId: user.id, isDeleted: null } }
+  );
+
+  return res.json({ success: updated > 0 });
+};
+
+module.exports = { channelsubs, pm, setRead, setDeleted, deleteAll };

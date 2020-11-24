@@ -34,14 +34,14 @@ const getChat = async (req, res, { User, ChannelSub, ChannelMessage }) => {
     return;
   }
 
-  ChannelMessage.findAll({
+  const chat = await ChannelMessage.findAll({
     where: { channelId: id },
     order: [["id", "DESC"]],
     include: { model: User, attributes: publicUserFields },
     limit: 100,
-  }).then((chat) => {
-    res.json(chat);
   });
+
+  res.json({ chat });
 };
 
 const postChat = async (

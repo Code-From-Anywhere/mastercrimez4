@@ -180,6 +180,7 @@ const sendChatPushMail = async ({
 
   ChannelSub.update(
     {
+      isDeleted: null,
       lastmessageDate: Date.now(),
       lastmessage:
         message.length > 80 ? message.substring(0, 80) + ".." : message,

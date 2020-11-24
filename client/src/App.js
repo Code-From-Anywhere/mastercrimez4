@@ -77,7 +77,6 @@ import Login from "./screens/Login";
 import ManageObject from "./screens/ManageObject";
 import Market from "./screens/Market";
 import Members from "./screens/Members";
-import Messages from "./screens/Messages";
 import MollieComplete from "./screens/MollieComplete";
 import MyObjects from "./screens/MyObjects";
 import MyProfile from "./screens/MyProfile";
@@ -522,7 +521,6 @@ const Container = rightContainer(
       Airport: withLayout(Airport),
       Members: withLayout(Members),
       Stats: withLayout(Stats),
-      Messages: withLayout(Messages),
       Chat: withLayout(Chat),
       Gym: withLayout(Gym),
       Wiet: withLayout(Wiet),
@@ -674,7 +672,7 @@ const mapStateToProps = ({ device, me, streetraces, cities }) => {
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
   reloadMe: (loginToken) => {
-    console.log("reloadMe with loginToken", loginToken);
+    //console.log("reloadMe with loginToken", loginToken);
     dispatch({ type: "ME_FETCH_REQUESTED", payload: { loginToken } });
   },
   reloadStreetraces: () =>

@@ -1,4 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
+import { connectActionSheet } from "@expo/react-native-action-sheet";
+import { Entypo, Ionicons } from "@expo/vector-icons";
+import moment from "moment";
 import * as React from "react";
 import {
   FlatList,
@@ -13,7 +15,7 @@ import { RefreshControl } from "react-native-web-refresh-control";
 import Separator from "../components/Separator";
 import T from "../components/T";
 import Constants from "../Constants";
-import { post } from "../Util";
+import { getTextFunction, post } from "../Util";
 
 class ChatScreen extends React.Component {
   constructor(props) {
@@ -69,12 +71,63 @@ class ChatScreen extends React.Component {
     });
   };
 
+  openMenu = (id) => {
+    const { device } = this.props.screenProps;
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
+    // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
+    const options = [getText("delete")];
+
+    options.push(getText("cancel"));
+
+    this.props.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex: options.length - 1,
+        destructiveButtonIndex: null,
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 0) {
+          console.log("delete", id);
+          await post("setDeleted", { loginToken: device.loginToken, id: id });
+          this.fetchChannelsubs();
+        }
+        // Do something here depending on the button index selected
+      }
+    );
+  };
+
+  openGeneralMenu = () => {
+    const { device } = this.props.screenProps;
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
+    // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
+    const options = [getText("deleteAllChats")];
+
+    options.push(getText("cancel"));
+
+    this.props.showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex: options.length - 1,
+        destructiveButtonIndex: null,
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 0) {
+          console.log("deleteAll");
+          await post("deleteAll", { loginToken: device.loginToken });
+          this.fetchChannelsubs();
+        }
+        // Do something here depending on the button index selected
+      }
+    );
+  };
   renderItem = ({ item, index }) => {
     const {
       navigation,
       screenProps: {
         me,
-        device: { loginToken },
+        device: { theme, loginToken },
       },
     } = this.props;
     // console.log(item);
@@ -97,7 +150,7 @@ class ChatScreen extends React.Component {
         onPress={() => {
           post("setRead", { loginToken, id: item.id });
           navigation.navigate("Channel", {
-            id: item.channel.id,
+            id: item.channel?.id,
             subid: item.id,
           });
         }}
@@ -156,17 +209,72 @@ class ChatScreen extends React.Component {
               <T numberOfLines={1}>{item.lastmessage}</T>
             ) : null}
           </View>
+
+          <View
+            style={{
+              alignItems: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              style={{ alignSelf: "flex-end" }}
+              onPress={() => this.openMenu(item.id)}
+              hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+            >
+              <Entypo
+                style={{ marginLeft: 10 }}
+                name="dots-three-horizontal"
+                size={20}
+                color={theme.primaryText}
+              />
+            </TouchableOpacity>
+            <T>
+              {moment(item.lastmessageDate).format(
+                moment(item.lastmessageDate).isAfter(moment().startOf("day"))
+                  ? "HH:mm"
+                  : "DD-MM-YYYY"
+              )}
+            </T>
+          </View>
         </View>
       </TouchableOpacity>
     );
   };
 
   render() {
-    const { navigation } = this.props;
+    const {
+      navigation,
+      screenProps: {
+        device: { theme },
+      },
+    } = this.props;
     const { channelsubs } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
+          ListHeaderComponent={() => {
+            return (
+              <View
+                style={{
+                  justifyContent: "flex-end",
+                  marginRight: 20,
+                  marginTop: 20,
+                }}
+              >
+                <TouchableOpacity
+                  style={{ alignSelf: "flex-end" }}
+                  onPress={() => this.openGeneralMenu()}
+                  hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                >
+                  <Entypo
+                    style={{ marginLeft: 10 }}
+                    name="dots-three-horizontal"
+                    size={20}
+                    color={theme.primaryText}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          }}
           data={channelsubs}
           renderItem={this.renderItem}
           ItemSeparatorComponent={() => <Separator />}
@@ -190,4 +298,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChatScreen;
+export default connectActionSheet(ChatScreen);

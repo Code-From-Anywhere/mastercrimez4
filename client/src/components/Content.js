@@ -47,7 +47,6 @@ const Content = ({ id, title, children, contentWidth }) => {
     (async () => {
       const isExpanded = await getData(`@content=${id}`);
       if (isExpanded !== undefined) {
-        console.log("set", id, " to ", isExpanded, typeof isExpanded);
         setExpanded(isExpanded === "true");
       }
       setLoading(false);

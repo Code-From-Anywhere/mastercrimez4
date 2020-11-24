@@ -595,6 +595,8 @@ ChannelSub.init(
     lastmessageDate: {
       type: DataTypes.BIGINT,
     },
+    isDeleted: DataTypes.BOOLEAN,
+
     unread: { type: DataTypes.INTEGER, defaultValue: 0 },
     lastmessage: DataTypes.STRING,
   },
@@ -752,22 +754,6 @@ Action.init(
     timestamp: DataTypes.BIGINT,
   },
   { sequelize, modelName: "action" }
-);
-
-class Message extends Model {}
-
-Message.init(
-  {
-    from: DataTypes.INTEGER,
-    fromName: DataTypes.STRING,
-    to: DataTypes.INTEGER,
-    message: DataTypes.TEXT,
-    read: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-  },
-  { sequelize, modelName: "message" }
 );
 
 class ForumTopic extends Model {}
@@ -1317,7 +1303,6 @@ server.post("/createStreetrace", (req, res) =>
     Streetrace,
     StreetraceParticipant,
     Garage,
-    Message,
     Action
   )
 );
@@ -1329,8 +1314,7 @@ server.get("/streetraces", (req, res) =>
     User,
     Streetrace,
     StreetraceParticipant,
-    Garage,
-    Message
+    Garage
   )
 );
 
@@ -1342,7 +1326,6 @@ server.post("/joinStreetrace", (req, res) =>
     Streetrace,
     StreetraceParticipant,
     Garage,
-    Message,
     Action
   )
 );
@@ -1355,7 +1338,6 @@ server.post("/leaveStreetrace", (req, res) =>
     Streetrace,
     StreetraceParticipant,
     Garage,
-    Message,
     Action
   )
 );
@@ -1407,12 +1389,10 @@ server.post("/kill", (req, res) =>
   })
 );
 
-server.post("/oc", (req, res) =>
-  require("./oc").oc(req, res, User, Message, Action)
-);
+server.post("/oc", (req, res) => require("./oc").oc(req, res, User, Action));
 
 server.post("/getalive", (req, res) =>
-  require("./kill").getalive(req, res, User, Message, Garage, Action)
+  require("./kill").getalive(req, res, User, Garage, Action)
 );
 
 server.post("/admin/email", (req, res) =>
@@ -1425,20 +1405,6 @@ server.get("/admin/ips", (req, res) =>
 
 server.get("/admin/actions", (req, res) =>
   require("./admin_actions").actions(req, res, User, sequelize)
-);
-
-//messages
-server.post("/message", (req, res) =>
-  require("./message").message(req, res, User, Message, Action)
-);
-server.get("/messages", (req, res) =>
-  require("./message").messages(req, res, User, Message)
-);
-server.post("/readMessage", (req, res) =>
-  require("./message").readMessage(req, res, User, Message)
-);
-server.post("/deleteMessage", (req, res) =>
-  require("./message").deleteMessage(req, res, User, Message)
 );
 
 //forum
@@ -1500,6 +1466,12 @@ server.get("/pm", (req, res) =>
 );
 server.post("/setRead", (req, res) =>
   require("./channelsubs").setRead(req, res, User, ChannelSub, Channel)
+);
+server.post("/setDeleted", (req, res) =>
+  require("./channelsubs").setDeleted(req, res, User, ChannelSub, Channel)
+);
+server.post("/deleteAll", (req, res) =>
+  require("./channelsubs").deleteAll(req, res, User, ChannelSub, Channel)
 );
 
 server
@@ -1659,11 +1631,6 @@ server.get("/me", (req, res) => {
   })
     .then(async (user) => {
       if (user) {
-        const messages = await Message.findAll({
-          attributes: ["id"],
-          where: { to: user.id, read: false },
-        });
-
         const jail = await User.findAll({
           attributes: ["id"],
           where: { jailAt: { [Op.gt]: Date.now() } },
@@ -1695,7 +1662,6 @@ server.get("/me", (req, res) => {
         const userWithMessages = user.dataValues;
         userWithMessages.accomplices = accomplices;
         userWithMessages.position = position.amount + 1;
-        userWithMessages.messages = messages.length;
         userWithMessages.chats = chats.unread || 0;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
@@ -1738,10 +1704,6 @@ server.get("/me", (req, res) => {
           include: { model: Gang },
         });
 
-        const messages = await Message.findAll({
-          where: { to: newuser.id, read: false },
-        });
-
         const jail = await User.findAll({
           attributes: ["id"],
           where: { jailAt: { [Op.gt]: Date.now() } },
@@ -1771,7 +1733,6 @@ server.get("/me", (req, res) => {
         });
 
         const userWithMessages = newuser.dataValues;
-        userWithMessages.messages = messages.length;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
         userWithMessages.accomplices = accomplices;
