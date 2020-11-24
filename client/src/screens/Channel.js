@@ -71,8 +71,11 @@ class ChatScreen extends React.Component {
     const url = `channelmessage?loginToken=${device.loginToken}&id=${params.id}`;
 
     console.log(url);
-    const { chat, response } = await get(url);
-    this.setState({ chat, isFetching: false });
+    const response = await get(url);
+
+    if (response) {
+      this.setState({ chat: response.chat, isFetching: false });
+    }
   };
 
   onRefresh = () => {
