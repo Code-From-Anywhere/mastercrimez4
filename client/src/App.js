@@ -175,7 +175,7 @@ export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                height: 40,
+                minHeight: 25,
                 backgroundColor:
                   isHovered || isCurrent
                     ? lighterHex(theme.primary)

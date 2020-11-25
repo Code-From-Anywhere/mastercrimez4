@@ -519,6 +519,13 @@ export const rightMenu = (me, theme) => {
           text: getText("menuCity", me?.city),
           to: "Airport",
         },
+
+        {
+          iconType: "Ionicons",
+          icon: "ios-chatbubbles",
+          text: getText("menuChannels", me?.chats),
+          to: "Channels",
+        },
       ],
     },
 
@@ -572,13 +579,6 @@ export const rightMenu = (me, theme) => {
           icon: "ios-chatbubbles",
           text: getText("menuChat"),
           to: "Chat",
-        },
-
-        {
-          iconType: "Ionicons",
-          icon: "ios-chatbubbles",
-          text: getText("menuChannels", me?.chats),
-          to: "Channels",
         },
 
         {
