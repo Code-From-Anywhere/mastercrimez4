@@ -136,7 +136,7 @@ class ChatScreen extends React.Component {
       ? item.channel?.name
       : item.channel?.channelsubs.length === 2
       ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user?.name
-      : "(RAAAR)";
+      : "(Invalid chat)";
 
     const channelThumbnail = item.channel?.image
       ? item.channel?.image

@@ -4,11 +4,12 @@ import { createBrowserApp } from "@react-navigation/web";
 import * as ExpoNotifications from "expo-notifications";
 import * as StoreReview from "expo-store-review";
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import {
   AppState,
   Dimensions,
+  Image,
   Linking,
   Platform,
   SafeAreaView,
@@ -17,6 +18,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Accordion from "react-native-collapsible/Accordion";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { createStackNavigator } from "react-navigation-stack";
@@ -28,6 +30,7 @@ import ConnectionProvider from "./components/ConnectionProvider";
 import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Header from "./components/Header";
+import Hoverable from "./components/Hoverable";
 import Jail from "./components/Jail";
 import Constants from "./Constants";
 import { KeyboardAvoidingSpace } from "./KeyboardAvoidingSpace";
@@ -107,7 +110,7 @@ import VIP from "./screens/VIP";
 import Wiet from "./screens/Wiet";
 import Work from "./screens/Work";
 import { persistor, store } from "./Store";
-import { getTextFunction, post } from "./Util";
+import { darkerHex, getTextFunction, lighterHex, post } from "./Util";
 
 const { width, height } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -134,25 +137,12 @@ function getMobileOperatingSystem() {
 }
 
 export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
-  const isHeaderStyle = item.isHeader
-    ? {
-        marginTop: 20,
-        backgroundColor: theme.secondary,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderTopWidth: 1,
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderLeftColor: "black",
-        borderRightColor: "black",
-        borderTopColor: "black",
-        padding: 10,
-      }
-    : {};
   const TheIcon = Icon[item.iconType];
 
+  const isCurrent = navigation.state.routeName === item.to;
+  const TouchOrView = item.isHeader ? View : TouchableOpacity;
   return (
-    <TouchableOpacity
+    <TouchOrView
       key={`item${index}`}
       onPress={(e) => {
         if (item.to) {
@@ -169,103 +159,70 @@ export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
         }
       }}
     >
-      <View
-        style={{
-          borderLeftColor: "black",
-          borderRightColor: "black",
-          borderBottomColor: "black",
-          borderLeftWidth: 1,
-          borderRightWidth: 1,
-          borderLeftColor: "black",
-          borderRightColor: "black",
-
-          height: 40,
-          alignItems: "center",
-          borderBottomWidth: 1,
-          marginHorizontal: 5,
-          padding: 3,
-          flexDirection: "row",
-          ...isHeaderStyle,
-          paddingLeft: 5,
-        }}
-      >
-        <View style={{ width: 30 }}>
-          {TheIcon && (
-            <TheIcon name={item.icon} size={20} color={theme.secondaryText} />
-          )}
-        </View>
-        <Text
-          style={{
-            marginLeft: 15,
-            color: item.isHeader ? theme.secondaryText : theme.primaryText,
-            textAlign: item.isHeader ? "center" : undefined,
-          }}
-        >
-          {item.text}
-        </Text>
-        {item.component}
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-export const renderDrawerMenu = (item, index, navigation, theme, dispatch) => {
-  const isHeaderStyle = item.isHeader
-    ? {
-        marginTop: 20,
-        backgroundColor: theme.secondary,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
-        borderTopWidth: 1,
-        borderTopColor: "black",
-        padding: 10,
-      }
-    : { backgroundColor: theme.primary };
-  return (
-    <TouchableOpacity
-      key={`item${index}`}
-      onPress={(e) => {
-        if (item.to) {
-          navigation.navigate(item.to, item.params);
-
-          const movement = {
-            action: "Web_Menu_" + item.to,
-            locationX: e.nativeEvent.locationX,
-            locationY: e.nativeEvent.locationY,
-            timestamp: Date.now(),
-          };
-
-          dispatch({ type: "ADD_MOVEMENT", value: movement });
-        }
-      }}
-    >
-      <View
-        style={{
-          borderLeftColor: "black",
-          borderRightColor: "black",
-          borderBottomColor: "black",
-          borderBottomWidth: 1,
-          marginHorizontal: 5,
-          flexDirection: "row",
-          padding: 20,
-          ...isHeaderStyle,
-        }}
-      >
-        <Text
-          style={{
-            textAlign: item.isHeader ? "center" : undefined,
-            color: item.isHeader ? theme.secondaryText : theme.primaryText,
-          }}
-        >
-          {item.text}
-        </Text>
-        {item.component}
-      </View>
-    </TouchableOpacity>
+      <Hoverable onHoverIn={null} onHoverOut={null}>
+        {(isHovered) => (
+          <View
+            style={{
+              borderBottomWidth: 0,
+              padding: 3,
+              backgroundColor: item.isHeader
+                ? theme.primary
+                : darkerHex(theme.primary),
+              paddingLeft: 5,
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                height: 40,
+                backgroundColor:
+                  isHovered || isCurrent
+                    ? lighterHex(theme.primary)
+                    : undefined,
+                borderRadius: isHovered || isCurrent ? 15 : undefined,
+              }}
+            >
+              <View style={{ width: 30, alignItems: "center" }}>
+                {TheIcon ? (
+                  <TheIcon
+                    name={item.icon}
+                    size={20}
+                    color={theme.secondaryText}
+                  />
+                ) : item.image ? (
+                  <Image
+                    source={{ uri: item.image }}
+                    style={{ width: 40, height: 40, borderRadius: 20 }}
+                  />
+                ) : null}
+              </View>
+              <Text
+                style={{
+                  marginLeft: 15,
+                  color: theme.primaryText,
+                  fontWeight: item.isHeader ? "bold" : undefined,
+                }}
+              >
+                {item.text}
+              </Text>
+              {item.component}
+            </View>
+          </View>
+        )}
+      </Hoverable>
+    </TouchOrView>
   );
 };
 
 const Layout = ({ screenProps, navigation, children }) => {
+  const { me, device, dispatch } = screenProps;
+
+  const getText = getTextFunction(me?.locale);
+
+  const [leftActive, setLeftActive] = useState(device.menu?.left);
+  const [rightActive, setRightActive] = useState(device.menu?.right);
+
   const _handleNotificationResponse = ({
     notification: {
       request: {
@@ -307,8 +264,6 @@ const Layout = ({ screenProps, navigation, children }) => {
       AppState.removeEventListener("change", handleChange);
     };
   }, []);
-
-  const { me, device, dispatch } = screenProps;
 
   if (Platform.OS === "web") {
     if (getMobileOperatingSystem() === "android") {
@@ -358,8 +313,6 @@ const Layout = ({ screenProps, navigation, children }) => {
   ];
   const skip = allowedRoutes.includes(navigation.state.routeName);
 
-  const getText = getTextFunction(me?.locale);
-
   return (
     <SafeAreaView
       style={{
@@ -392,9 +345,32 @@ const Layout = ({ screenProps, navigation, children }) => {
               height: Platform.OS === "web" ? height - 250 : undefined,
             }}
           >
-            {leftMenu(me, device.theme).map((item, index) =>
-              renderMenu(item, index, navigation, device.theme, dispatch)
-            )}
+            <Accordion
+              expandMultiple
+              sections={leftMenu(me, device.theme)}
+              activeSections={leftActive}
+              onChange={(active) => {
+                setLeftActive(active);
+                dispatch({
+                  type: "MENU_SET_LEFT_ACTIVE_SECTIONS",
+                  value: active,
+                });
+              }}
+              renderHeader={(section, index) =>
+                renderMenu(
+                  section.header,
+                  index,
+                  navigation,
+                  device.theme,
+                  dispatch
+                )
+              }
+              renderContent={(section) =>
+                section.content.map((item, index) =>
+                  renderMenu(item, index, navigation, device.theme, dispatch)
+                )
+              }
+            />
           </ScrollView>
         </View>
       )}
@@ -424,9 +400,32 @@ const Layout = ({ screenProps, navigation, children }) => {
               height: Platform.OS === "web" ? height - 250 : undefined,
             }}
           >
-            {rightMenu(me, device.theme).map((item, index) =>
-              renderMenu(item, index, navigation, device.theme, dispatch)
-            )}
+            <Accordion
+              expandMultiple
+              sections={rightMenu(me, device.theme)}
+              activeSections={rightActive}
+              onChange={(active) => {
+                setRightActive(active);
+                dispatch({
+                  type: "MENU_SET_RIGHT_ACTIVE_SECTIONS",
+                  value: active,
+                });
+              }}
+              renderHeader={(section, index) =>
+                renderMenu(
+                  section.header,
+                  index,
+                  navigation,
+                  device.theme,
+                  dispatch
+                )
+              }
+              renderContent={(section) =>
+                section.content.map((item, index) =>
+                  renderMenu(item, index, navigation, device.theme, dispatch)
+                )
+              }
+            />
           </ScrollView>
         </View>
       )}
@@ -445,18 +444,67 @@ const CustomDrawerContentComponent = (props) => {
     screenProps: { me, device, dispatch },
   } = props;
 
+  const [leftActive, setLeftActive] = useState(device.menu?.left);
+  const [rightActive, setRightActive] = useState(device.menu?.right);
+
   return (
     <ScrollView>
       <SafeAreaView
         style={{ flex: 1, backgroundColor: device.theme.primary }}
         forceInset={{ top: "always", horizontal: "never" }}
       >
-        {leftMenu(me, device.theme).map((item, index) =>
-          renderDrawerMenu(item, index, navigation, device.theme, dispatch)
-        )}
-        {rightMenu(me, device.theme).map((item, index) =>
-          renderDrawerMenu(item, index, navigation, device.theme, dispatch)
-        )}
+        <Accordion
+          expandMultiple
+          sections={leftMenu(me, device.theme)}
+          activeSections={leftActive}
+          onChange={(active) => {
+            setLeftActive(active);
+            dispatch({
+              type: "MENU_SET_LEFT_ACTIVE_SECTIONS",
+              value: active,
+            });
+          }}
+          renderHeader={(section, index) =>
+            renderMenu(
+              section.header,
+              index,
+              navigation,
+              device.theme,
+              dispatch
+            )
+          }
+          renderContent={(section) =>
+            section.content.map((item, index) =>
+              renderMenu(item, index, navigation, device.theme, dispatch)
+            )
+          }
+        />
+        <Accordion
+          expandMultiple
+          sections={rightMenu(me, device.theme)}
+          activeSections={rightActive}
+          onChange={(active) => {
+            setRightActive(active);
+            dispatch({
+              type: "MENU_SET_RIGHT_ACTIVE_SECTIONS",
+              value: active,
+            });
+          }}
+          renderHeader={(section, index) =>
+            renderMenu(
+              section.header,
+              index,
+              navigation,
+              device.theme,
+              dispatch
+            )
+          }
+          renderContent={(section) =>
+            section.content.map((item, index) =>
+              renderMenu(item, index, navigation, device.theme, dispatch)
+            )
+          }
+        />
       </SafeAreaView>
     </ScrollView>
   );

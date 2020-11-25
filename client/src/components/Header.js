@@ -224,7 +224,7 @@ function Header({ navigation, device, me }) {
         ) : null}
       </View>
 
-      {statsHeader}
+      {isSmallDevice && statsHeader}
 
       <Chat me={me} device={device} navigation={navigation} />
     </View>

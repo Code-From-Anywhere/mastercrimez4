@@ -26,12 +26,26 @@ const initDevice = {
   isConnected: 2,
   foregrounded: 0,
   movements: [],
+  menu: {
+    left: [0, 1, 2, 3, 4, 5, 6],
+    right: [0, 1, 2, 3, 4, 5, 6],
+  },
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
   switch (action.type) {
     case "PURGE": {
       return initDevice;
+    }
+
+    case "MENU_SET_RIGHT_ACTIVE_SECTIONS": {
+      return { ...state, menu: { left: state.menu.left, right: action.value } };
+    }
+    case "MENU_SET_LEFT_ACTIVE_SECTIONS": {
+      return {
+        ...state,
+        menu: { right: state.menu.right, left: action.value },
+      };
     }
 
     case "SET_IS_CONNECTED": {

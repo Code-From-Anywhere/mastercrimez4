@@ -176,6 +176,7 @@ export function ColorLuminance(hex, lum) {
 }
 
 export const lighterHex = (hex) => ColorLuminance(hex, 0.2);
+export const darkerHex = (hex) => ColorLuminance(hex, -0.2);
 
 export const getUserColor = (item, theme) =>
   item?.creditsTotal >= 10000

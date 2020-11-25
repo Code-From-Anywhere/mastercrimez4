@@ -188,8 +188,14 @@ class Home extends Component {
     const { notificationsHeader } = this.state;
 
     const menus = [
-      ...leftMenu(me, device.theme),
-      ...rightMenu(me, device.theme),
+      ...leftMenu(me, device.theme).reduce(
+        (previous, current) => [...previous, ...current.content],
+        []
+      ),
+      ...rightMenu(me, device.theme).reduce(
+        (previous, current) => [...previous, ...current.content],
+        []
+      ),
     ];
     const filtered = menus.filter((menu) => !menu.isHeader && !menu.isStats);
 
@@ -275,8 +281,14 @@ class Home extends Component {
     const getText = getTextFunction(me?.locale);
 
     const menus = [
-      ...leftMenu(me, device.theme),
-      ...rightMenu(me, device.theme),
+      ...leftMenu(me, device.theme).reduce(
+        (previous, current) => [...previous, ...current.content],
+        []
+      ),
+      ...rightMenu(me, device.theme).reduce(
+        (previous, current) => [...previous, ...current.content],
+        []
+      ),
     ];
     const filtered = menus.filter((menu) => !menu.isHeader && !menu.isStats);
 

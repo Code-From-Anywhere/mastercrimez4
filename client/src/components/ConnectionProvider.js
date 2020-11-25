@@ -65,7 +65,9 @@ class ConnectionProviderScreen extends React.Component {
   };
 
   componentWillUnmount() {
-    this.unsubscribe();
+    if (Platform.OS !== "web") {
+      this.unsubscribe();
+    }
     clearTimeout(this.interval);
   }
 
