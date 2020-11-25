@@ -53,6 +53,10 @@ const deviceReducer = (state: Device = initDevice, action) => {
     }
 
     case "SET_LOGIN_TOKEN": {
+      return { ...initDevice, loginToken: action.value };
+    }
+
+    case "SET_LOGIN_TOKEN_AND_LOGIN": {
       return { ...initDevice, loginToken: action.value, logged: true };
     }
 

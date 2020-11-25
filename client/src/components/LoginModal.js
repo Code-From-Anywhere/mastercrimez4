@@ -67,7 +67,10 @@ const LoginModal = ({
         setResponse(responseJson.response);
 
         if (responseJson.success) {
-          dispatch({ type: "SET_LOGIN_TOKEN", value: responseJson.token });
+          dispatch({
+            type: "SET_LOGIN_TOKEN_AND_LOGIN",
+            value: responseJson.token,
+          });
 
           if (Platform.OS === "web") {
             location.reload();
@@ -97,7 +100,10 @@ const LoginModal = ({
           setError(responseJson.error);
         } else {
           //go to map
-          dispatch({ type: "SET_LOGIN_TOKEN", value: responseJson.loginToken });
+          dispatch({
+            type: "SET_LOGIN_TOKEN_AND_LOGIN",
+            value: responseJson.loginToken,
+          });
           reloadMe(responseJson.loginToken);
           setError(null);
           setSuccess(responseJson.success);

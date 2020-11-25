@@ -43,7 +43,10 @@ class Login extends React.Component {
           this.setState({ error: responseJson.error });
         } else {
           //go to map
-          dispatch({ type: "SET_LOGIN_TOKEN", value: responseJson.loginToken });
+          dispatch({
+            type: "SET_LOGIN_TOKEN_AND_LOGIN",
+            value: responseJson.loginToken,
+          });
 
           if (Platform.OS === "web") {
             location.reload();
