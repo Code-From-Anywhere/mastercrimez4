@@ -39,7 +39,6 @@ class Login extends React.Component {
         this.setState({ response: responseJson.response });
 
         if (responseJson.success) {
-          dispatch({ type: "SET_LOGGED", value: true });
           dispatch({ type: "SET_LOGIN_TOKEN", value: responseJson.token });
 
           if (Platform.OS === "web") {

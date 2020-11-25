@@ -2157,7 +2157,7 @@ server.post("/updateName", async (req, res) => {
         return updated;
       });
 
-    res.json({ response: getText("updateNameSuccess") });
+    res.json({ response: getText("updateNameSuccess"), success: true });
   }
 });
 

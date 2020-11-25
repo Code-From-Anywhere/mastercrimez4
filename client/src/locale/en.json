@@ -319,7 +319,7 @@
   "power": "power",
   "noToken": "No token found",
   "reset": "Reset",
-  "searchPeopleWithMuchMoney": "Search for people with a lot fo money",
+  "searchPeopleWithMuchMoney": "Search for people with a lot of money",
   "purge": "Reset app data",
   "verifyPhone": "Verify phonenumber",
   "menuChangePassword": "Change password",
@@ -463,5 +463,15 @@
   "deleteAllChats": "Delete all chats",
   "areYouSure": "Are you sure?",
   "removeGangAlertMessage": "Are you sure you want to remove the gang?",
-  "leaveGangAlertMessage": "Are you sure you want to leave the gang?"
+  "leaveGangAlertMessage": "Are you sure you want to leave the gang?",
+  "topicNotFound": "Topic not found",
+  "logout": "Log out",
+
+  "justPlay": "Play now",
+  "loginCurrent": "Just play",
+
+  "loginWithEmail": "Login with your email",
+  "loginWithPhone": "Login with your phonenumber",
+  "waitUntilLoaded": "Please wait until your account has been loaded",
+  "youAre": "You are"
 }

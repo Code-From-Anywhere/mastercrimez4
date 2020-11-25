@@ -96,9 +96,9 @@ const Settings = ({
         theme={theme}
         navigation={navigation}
         title={getText("menuLogin")}
-        to="Login"
         IconFont="Entypo"
         icon="login"
+        onPress={() => dispatch({ type: "SET_LOGGED", value: false })}
       />
       <Menu
         theme={theme}

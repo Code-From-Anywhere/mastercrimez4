@@ -466,5 +466,13 @@
   "deleteAllChats": "Verwijder alle berichten",
   "areYouSure": "Weet je het zeker?",
   "removeGangAlertMessage": "Weet je zeker dat je de gang wilt verwijderen?",
-  "leaveGangAlertMessage": "Weet je zeker dat je de gang wilt verlaten?"
+  "leaveGangAlertMessage": "Weet je zeker dat je de gang wilt verlaten?",
+  "topicNotFound": "Topic niet gevonden",
+  "logout": "Uitloggen",
+  "justPlay": "Speel nu",
+  "loginCurrent": "Gewoon spelen",
+  "loginWithEmail": "Login met je email",
+  "loginWithPhone": "Login met je telefoonnummer",
+  "waitUntilLoaded": "Wacht a.u.b. totdat je account geladen is.",
+  "youAre": "Jij bent"
 }

@@ -22,7 +22,6 @@ import Accordion from "react-native-collapsible/Accordion";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { createStackNavigator } from "react-navigation-stack";
-// import { loadReCaptcha } from "react-recaptcha-v3";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
 import { AlertProvider } from "./components/AlertProvider";
@@ -32,6 +31,8 @@ import Fly from "./components/Fly";
 import Header from "./components/Header";
 import Hoverable from "./components/Hoverable";
 import Jail from "./components/Jail";
+// import { loadReCaptcha } from "react-recaptcha-v3";
+import LoginModal from "./components/LoginModal";
 import Constants from "./Constants";
 import { KeyboardAvoidingSpace } from "./KeyboardAvoidingSpace";
 import { leftMenu, rightMenu } from "./Menus";
@@ -51,6 +52,7 @@ import ChangePassword from "./screens/ChangePassword";
 import Channel from "./screens/Channel";
 import Channels from "./screens/Channels";
 import Chat from "./screens/Chat";
+import Code from "./screens/Code";
 import Contribute from "./screens/Contribute";
 import CreateStreetrace from "./screens/CreateStreetrace";
 import Crimes from "./screens/Crimes";
@@ -313,123 +315,135 @@ const Layout = ({ screenProps, navigation, children }) => {
   ];
   const skip = allowedRoutes.includes(navigation.state.routeName);
 
-  return (
-    <SafeAreaView
-      style={{
-        flexDirection: "row",
-        flex: 1,
-        backgroundColor: device.theme.primary,
-      }}
-    >
-      {Platform.OS === "web" && (
-        <Helmet>
-          <title>MasterCrimeZ - The Ultimate Game</title>
-          <meta name="description" content={getText("metaDescription")} />
+  const renderForWeb = () => (
+    <Helmet>
+      <title>MasterCrimeZ - The Ultimate Game</title>
+      <meta name="description" content={getText("metaDescription")} />
 
-          <meta property="og:url" content="https://mastercrimez.com/" />
-          <meta property="og:type" content="article" />
-          <meta property="og:title" content={getText("metaOgTitle")} />
-          <meta
-            property="og:description"
-            content={getText("metaOgDescription")}
-          />
-          <meta property="og:image" content="" />
-        </Helmet>
-      )}
-      {isSmallDevice ? null : (
-        <View style={{ width: 200 }}>
-          <ScrollView
-            style={{ width: 200 }}
-            contentContainerStyle={{
-              width: 200,
-              height: Platform.OS === "web" ? height - 250 : undefined,
-            }}
-          >
-            <Accordion
-              expandMultiple
-              sections={leftMenu(me, device.theme)}
-              activeSections={leftActive}
-              onChange={(active) => {
-                setLeftActive(active);
-                dispatch({
-                  type: "MENU_SET_LEFT_ACTIVE_SECTIONS",
-                  value: active,
-                });
-              }}
-              renderHeader={(section, index) =>
-                renderMenu(
-                  section.header,
-                  index,
-                  navigation,
-                  device.theme,
-                  dispatch
-                )
-              }
-              renderContent={(section) =>
-                section.content.map((item, index) =>
-                  renderMenu(item, index, navigation, device.theme, dispatch)
-                )
-              }
-            />
-          </ScrollView>
-        </View>
-      )}
+      <meta property="og:url" content="https://mastercrimez.com/" />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content={getText("metaOgTitle")} />
+      <meta property="og:description" content={getText("metaOgDescription")} />
+      <meta property="og:image" content="" />
+    </Helmet>
+  );
 
-      <View
-        style={{ height: Platform.OS === "web" ? height : undefined, flex: 1 }}
+  const renderLeftMenu = () => (
+    <View style={{ width: 200 }}>
+      <ScrollView
+        style={{ width: 200 }}
+        contentContainerStyle={{
+          width: 200,
+          height: Platform.OS === "web" ? height - 250 : undefined,
+        }}
       >
-        <Header navigation={navigation} device={device} me={me} />
+        <Accordion
+          expandMultiple
+          sections={leftMenu(me, device.theme)}
+          activeSections={leftActive}
+          onChange={(active) => {
+            setLeftActive(active);
+            dispatch({
+              type: "MENU_SET_LEFT_ACTIVE_SECTIONS",
+              value: active,
+            });
+          }}
+          renderHeader={(section, index) =>
+            renderMenu(
+              section.header,
+              index,
+              navigation,
+              device.theme,
+              dispatch
+            )
+          }
+          renderContent={(section) =>
+            section.content.map((item, index) =>
+              renderMenu(item, index, navigation, device.theme, dispatch)
+            )
+          }
+        />
+      </ScrollView>
+    </View>
+  );
 
-        {me?.reizenAt > Date.now() && !skip ? (
-          <Fly screenProps={screenProps} navigation={navigation} />
-        ) : (me?.health <= 0 || me?.health === null) && !skip ? (
-          <Dead screenProps={screenProps} navigation={navigation} />
-        ) : me?.jailAt > Date.now() && !skip ? (
-          <Jail screenProps={screenProps} navigation={navigation} />
-        ) : (
-          <View style={{ flex: 1 }}>{children}</View>
-        )}
-        {Platform.OS === "ios" && <KeyboardAvoidingSpace />}
-      </View>
-      {isSmallDevice ? null : (
-        <View style={{ width: 200 }}>
-          <ScrollView
-            style={{ width: 200 }}
-            contentContainerStyle={{
-              width: 200,
-              height: Platform.OS === "web" ? height - 250 : undefined,
-            }}
-          >
-            <Accordion
-              expandMultiple
-              sections={rightMenu(me, device.theme)}
-              activeSections={rightActive}
-              onChange={(active) => {
-                setRightActive(active);
-                dispatch({
-                  type: "MENU_SET_RIGHT_ACTIVE_SECTIONS",
-                  value: active,
-                });
-              }}
-              renderHeader={(section, index) =>
-                renderMenu(
-                  section.header,
-                  index,
-                  navigation,
-                  device.theme,
-                  dispatch
-                )
-              }
-              renderContent={(section) =>
-                section.content.map((item, index) =>
-                  renderMenu(item, index, navigation, device.theme, dispatch)
-                )
-              }
-            />
-          </ScrollView>
+  const renderRightMenu = () => (
+    <View style={{ width: 200 }}>
+      <ScrollView
+        style={{ width: 200 }}
+        contentContainerStyle={{
+          width: 200,
+          height: Platform.OS === "web" ? height - 250 : undefined,
+        }}
+      >
+        <Accordion
+          expandMultiple
+          sections={rightMenu(me, device.theme)}
+          activeSections={rightActive}
+          onChange={(active) => {
+            setRightActive(active);
+            dispatch({
+              type: "MENU_SET_RIGHT_ACTIVE_SECTIONS",
+              value: active,
+            });
+          }}
+          renderHeader={(section, index) =>
+            renderMenu(
+              section.header,
+              index,
+              navigation,
+              device.theme,
+              dispatch
+            )
+          }
+          renderContent={(section) =>
+            section.content.map((item, index) =>
+              renderMenu(item, index, navigation, device.theme, dispatch)
+            )
+          }
+        />
+      </ScrollView>
+    </View>
+  );
+  return (
+    <View style={{ flex: 1 }}>
+      <SafeAreaView
+        style={{
+          flexDirection: "row",
+          flex: 1,
+          backgroundColor: device.theme.primary,
+        }}
+      >
+        {Platform.OS === "web" && renderForWeb()}
+        {isSmallDevice ? null : renderLeftMenu()}
+
+        <View
+          style={{
+            height: Platform.OS === "web" ? height : undefined,
+            flex: 1,
+          }}
+        >
+          <Header navigation={navigation} device={device} me={me} />
+
+          {me?.reizenAt > Date.now() && !skip ? (
+            <Fly screenProps={screenProps} navigation={navigation} />
+          ) : (me?.health <= 0 || me?.health === null) && !skip ? (
+            <Dead screenProps={screenProps} navigation={navigation} />
+          ) : me?.jailAt > Date.now() && !skip ? (
+            <Jail screenProps={screenProps} navigation={navigation} />
+          ) : (
+            <View style={{ flex: 1 }}>{children}</View>
+          )}
+          {Platform.OS === "ios" && <KeyboardAvoidingSpace />}
         </View>
+
+        {isSmallDevice ? null : renderRightMenu()}
+      </SafeAreaView>
+
+      {!device.logged && (
+        <LoginModal navigation={navigation} screenProps={screenProps} />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 export const withLayout = (Component) => (props) => (
@@ -610,6 +624,20 @@ const Container = rightContainer(
         screen: withLayout(RecoverPassword),
         path: "RecoverPassword/:token",
       },
+
+      Code: {
+        screen: withLayout(Code),
+        path: "Code/:code",
+      },
+      Case: {
+        screen: withLayout(Code),
+        path: "Case/:code",
+      },
+      Car: {
+        screen: withLayout(Code),
+        path: "Car/:code",
+      },
+
       ChangePassword: {
         screen: withLayout(ChangePassword),
       },
@@ -706,7 +734,8 @@ class _RootContainer extends React.Component {
 
   render() {
     const { props } = this;
-
+    // NB: we got screenProps here , but not navigation
+    // if you also need navigation, use withLayout/Layout
     return (
       <AlertProvider>
         <ActionSheetProvider>
@@ -740,14 +769,13 @@ const RootContainer = connect(
   mapDispatchToProps
 )(_RootContainer);
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <PersistGate persistor={persistor}>
-        <Provider store={store}>
-          <RootContainer />
-        </Provider>
-      </PersistGate>
-    );
-  }
-}
+const App = () => {
+  return (
+    <PersistGate persistor={persistor}>
+      <Provider store={store}>
+        <RootContainer />
+      </Provider>
+    </PersistGate>
+  );
+};
+export default App;

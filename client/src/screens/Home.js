@@ -34,9 +34,7 @@ class Home extends Component {
     notificationsHeader: false,
   };
 
-  async componentDidMount() {
-    const { device } = this.props.screenProps;
-
+  componentDidMount() {
     AppState.addEventListener("change", this._handleAppStateChange);
 
     this.turnOnNotifications();
