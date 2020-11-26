@@ -1,7 +1,7 @@
-import * as Updates from "expo-updates";
 import React from "react";
-import { Platform, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
+import { withInterval } from "../components/IntervalProvider";
 import Constants from "../Constants";
 import style from "../Style";
 import { getTextFunction } from "../Util";
@@ -44,14 +44,11 @@ class Login extends React.Component {
             value: responseJson.token,
           });
 
-          if (Platform.OS === "web") {
-            location.reload();
-          } else {
-            Updates.reloadAsync();
-          }
-          // reloadMe(responseJson.token);
+          reloadMe(responseJson.loginToken);
 
-          // navigation.popToTop();
+          this.props.intervals.resetIntervalsForToken(responseJson.loginToken);
+
+          // reloadMe(responseJson.token);
         }
         return responseJson;
       })
@@ -125,4 +122,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withInterval(Login);

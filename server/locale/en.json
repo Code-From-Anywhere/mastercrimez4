@@ -90,6 +90,7 @@
   "accountNotVerified": "You'll have to verify your account first!",
   "couldntUpdateUser": "Couldn't update your user",
   "crimeSuccess": "Success. You've stolen €$1,-",
+  "crimeSuccessSuitcase": "Success. You've stolen €$1,-. Also, you found a suitcase! Share with a friend to open the suitcase together!",
   "fail": "Failed",
   "failAndJail": "Failed, you're now in jail for $1 seconds",
   "waitSeconds": "You'll have to wait a minute. $1 more seconds",
@@ -319,5 +320,12 @@
   "invalidOffer": "You haven't put this on the market!",
 
   "gangAnswerJoinMessage": "$1 has been accepted into the gang",
-  "gangKickSuccess": "You've kicked $1 from $2"
+  "gangKickSuccess": "You've kicked $1 from $2",
+  "noCode": "No code",
+  "codeNoLongerValid": "Link is no longer valid",
+  "enterCodeCarMessage": "$1 helped you to steal $2, and it succeeded! This car has been added to his garage.",
+  "enterCodeCarSuccess": "You succeeded to steal $1. This car has been added to your garage.",
+
+  "enterCodeWhatMessage": "You and $1 opened the case together. It contained: $2 $3. You split the profit.",
+  "enterCodeWhatSuccess": "You and $1 opened the case together. It contained: $2 $3. You split the profit."
 }

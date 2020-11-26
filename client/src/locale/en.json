@@ -473,5 +473,7 @@
   "loginWithEmail": "Login with your email",
   "loginWithPhone": "Login with your phonenumber",
   "waitUntilLoaded": "Please wait until your account has been loaded",
-  "youAre": "You are"
+  "youAre": "You are",
+  "crimeSuitcase": "I found a suitcase and would like to open it with you. We share the profit!",
+  "openSuitcaseButton": "Open suitcase"
 }

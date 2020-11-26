@@ -3,6 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import Footer from "../components/Footer";
+import ShareButtons from "../components/ShareButtons";
 import Constants from "../Constants";
 import { getTextFunction } from "../Util";
 
@@ -153,6 +154,14 @@ class Crimes extends Component {
             <Text style={{ color: theme.primaryText }}>
               {response.response}
             </Text>
+
+            {response.code && (
+              <ShareButtons
+                me={me}
+                text={getText("crimeSuitcase")}
+                url={`Case/${response.code}`}
+              />
+            )}
 
             <Button
               theme={theme}

@@ -8,7 +8,7 @@ const {
 
 let getText = getTextFunction();
 
-const crime = async (req, res, User, Action) => {
+const crime = async (req, res, User, Action, Code) => {
   const { token, option, captcha } = req.body;
 
   if (!token) {
@@ -107,7 +107,30 @@ const crime = async (req, res, User, Action) => {
           { where: { loginToken: token } }
         );
 
-        res.json({ response: getText("crimeSuccess", stolen) });
+        let code = null;
+        const suitCase = Math.ceil(Math.random() * 100); //1-100
+        if (suitCase <= 5) {
+          //once every 20 crimes
+          code = `${Math.round(Math.random() * 999999999)}`;
+          const what = "cash";
+          let amount = Math.round(Math.random() * 20) * 100000; //1 mil on average
+          const mega = Math.random() < 0.01;
+          if (mega) {
+            amount = Math.round(Math.random() * 20) * 10000000;
+          }
+          //1% probability on 0-200mil, 99% probability on 0-2mil.. on average, this means 2mil per 20 crimes, so 100k per crime extra.
+          Code.create({
+            userId: user.id,
+            code,
+            title: "crime",
+            validUntil: Date.now() + 86400000,
+            what,
+            amount,
+          });
+          res.json({ response: getText("crimeSuccessSuitcase", stolen), code });
+        } else {
+          res.json({ response: getText("crimeSuccess", stolen) });
+        }
       } else {
         const random2 = Math.ceil(Math.random() * 100);
 

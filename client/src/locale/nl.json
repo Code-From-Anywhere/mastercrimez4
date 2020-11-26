@@ -474,5 +474,7 @@
   "loginWithEmail": "Login met je email",
   "loginWithPhone": "Login met je telefoonnummer",
   "waitUntilLoaded": "Wacht a.u.b. totdat je account geladen is.",
-  "youAre": "Jij bent"
+  "youAre": "Jij bent",
+  "crimeSuitcase": "Ik heb een koffer gevonden en wil deze graag met je openen. We verdelen de winst!",
+  "openSuitcaseButton": "Open koffer"
 }

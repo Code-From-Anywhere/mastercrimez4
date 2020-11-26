@@ -30,6 +30,10 @@ import Dead from "./components/Dead";
 import Fly from "./components/Fly";
 import Header from "./components/Header";
 import Hoverable from "./components/Hoverable";
+import {
+  IntervalContext,
+  IntervalProvider,
+} from "./components/IntervalProvider";
 import Jail from "./components/Jail";
 // import { loadReCaptcha } from "react-recaptcha-v3";
 import LoginModal from "./components/LoginModal";
@@ -112,7 +116,7 @@ import VIP from "./screens/VIP";
 import Wiet from "./screens/Wiet";
 import Work from "./screens/Work";
 import { persistor, store } from "./Store";
-import { darkerHex, getTextFunction, lighterHex, post } from "./Util";
+import { darkerHex, doOnce, getTextFunction, lighterHex } from "./Util";
 
 const { width, height } = Dimensions.get("window");
 const isSmallDevice = width < 800;
@@ -218,7 +222,34 @@ export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
 };
 
 const Layout = ({ screenProps, navigation, children }) => {
-  const { me, device, dispatch } = screenProps;
+  const { me, device, dispatch, reloadMe } = screenProps;
+
+  const { resetIntervalsForToken } = React.useContext(IntervalContext);
+
+  doOnce(() => {
+    let token = device.loginToken;
+
+    if (!token || token.length < 64) {
+      token = makeid(64);
+      dispatch({ type: "SET_LOGIN_TOKEN", value: token });
+
+      resetIntervalsForToken(token);
+      reloadMe(token);
+    } else {
+      reloadMe(token);
+    }
+
+    Linking.addEventListener("url", openWebUrl);
+    Linking.getInitialURL().then((url) => openWebUrl(url));
+  });
+
+  const openWebUrl = (url) => {
+    console.log("should open web url here", url);
+  };
+
+  useEffect(() => {
+    reloadMe(device.loginToken);
+  }, [device.logged]);
 
   const getText = getTextFunction(me?.locale);
 
@@ -683,70 +714,21 @@ function makeid(length) {
   return result;
 }
 
-class _RootContainer extends React.Component {
-  async componentDidMount() {
-    const { device, reloadMe, dispatch } = this.props;
-
-    let token = device.loginToken;
-
-    if (!token || token.length < 64) {
-      token = makeid(64);
-      dispatch({ type: "SET_LOGIN_TOKEN", value: token });
-      reloadMe(token);
-    } else {
-      reloadMe(token);
-    }
-
-    this.interval = setInterval(() => this.sendMovements(), 60000);
-    this.meInterval = setInterval((t) => reloadMe(t), 5000, token);
-    //NB: this causes weird behavior when logging in on another account. Therefore, now, every login goes in hand with a site refresh.
-
-    Linking.addEventListener("url", this.openWebUrl);
-    Linking.getInitialURL().then((url) => this.openWebUrl(url));
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-    clearInterval(this.meInterval);
-  }
-  openWebUrl = (url) => {
-    console.log("should open web url here", url);
-  };
-
-  sendMovements() {
-    const { dispatch, device } = this.props;
-    if (device.movements.length > 0) {
-      post("movementsApp", {
-        loginToken: device.loginToken,
-        movements: device.movements,
-      });
-      dispatch({ type: "CLEAR_MOVEMENTS" });
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    const { reloadMe, device } = this.props;
-    //if login or logout happens
-    if (prevProps.device.logged !== this.props.device.logged) {
-      reloadMe(device.loginToken);
-    }
-  }
-
-  render() {
-    const { props } = this;
-    // NB: we got screenProps here , but not navigation
-    // if you also need navigation, use withLayout/Layout
-    return (
-      <AlertProvider>
+const _RootContainer = (props) => {
+  // NB: we got screenProps here , but not navigation
+  // if you also need navigation, use withLayout/Layout
+  return (
+    <AlertProvider>
+      <IntervalProvider screenProps={{ ...props }}>
         <ActionSheetProvider>
           <ConnectionProvider>
             <Container screenProps={{ ...props }} />
           </ConnectionProvider>
         </ActionSheetProvider>
-      </AlertProvider>
-    );
-  }
-}
+      </IntervalProvider>
+    </AlertProvider>
+  );
+};
 
 const mapStateToProps = ({ device, me, streetraces, cities }) => {
   //console.log("State gets mapped to props... device only");

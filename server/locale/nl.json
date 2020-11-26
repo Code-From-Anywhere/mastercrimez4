@@ -89,6 +89,7 @@
   "accountNotVerified": "Je moet je account eerst verifiëren!",
   "couldntUpdateUser": "Kon jouw user niet updaten",
   "crimeSuccess": "Gelukt. Je hebt €$1,- gejat",
+  "crimeSuccessSuitcase": "Gelukt. Je hebt €$1,- gejat. Ook heb je een koffer gevonden! Deel met een vriend om de koffer samen te openen!",
   "fail": "Mislukt",
   "failAndJail": "Mislukt, je zit nu voor $1 seconden in de gevangenis",
   "waitSeconds": "Je moet een minuut wachten.  Nog $1 seconden",
@@ -316,5 +317,12 @@
   "invalidOffer": "Jij hebt dit niet op de markt geplaatst!",
 
   "gangAnswerJoinMessage": "$1 is toegelaten in de gang.",
-  "gangKickSuccess": "Je hebt $1 uit $2 verwijderd"
+  "gangKickSuccess": "Je hebt $1 uit $2 verwijderd",
+  "noCode": "Geen code ingevuld",
+  "codeNoLongerValid": "Link is niet langer geldig",
+  "enterCodeCarMessage": "$1 heeft je geholpen om $2 te stelen, en het is gelukt. Deze auto is aan zijn garage toegevoegd",
+  "enterCodeCarSuccess": "Het is je gelukt om $1 te stelen. Deze auto staat nu in je garage.",
+
+  "enterCodeWhatMessage": "Jij en $1 openden samen de koffer. Er zat in: $2 $3. Jullie hebben de winst verdeeld.",
+  "enterCodeWhatSuccess": "Jij en $1 openden samen de koffer. Er zat in: $2 $3. Jullie hebben de winst verdeeld."
 }

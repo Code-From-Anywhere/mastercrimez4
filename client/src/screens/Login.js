@@ -1,14 +1,8 @@
-import * as Updates from "expo-updates";
 import React from "react";
-import {
-  Platform,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import md5 from "react-native-md5";
 import Button from "../components/Button";
+import { withInterval } from "../components/IntervalProvider";
 import Constants from "../Constants";
 import style from "../Style";
 import { getTextFunction } from "../Util";
@@ -23,7 +17,7 @@ class Login extends React.Component {
   login() {
     const {
       navigation,
-      screenProps: { dispatch },
+      screenProps: { dispatch, reloadMe },
     } = this.props;
     const { email, password } = this.state;
 
@@ -48,11 +42,9 @@ class Login extends React.Component {
             value: responseJson.loginToken,
           });
 
-          if (Platform.OS === "web") {
-            location.reload();
-          } else {
-            Updates.reloadAsync();
-          }
+          reloadMe(responseJson.loginToken);
+
+          this.props.intervals.resetIntervalsForToken(responseJson.loginToken);
 
           this.setState({ error: null, success: responseJson.success });
         }
@@ -185,4 +177,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withInterval(Login);

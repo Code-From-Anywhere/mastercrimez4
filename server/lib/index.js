@@ -732,6 +732,22 @@ GangRequest.init(
 GangRequest.belongsTo(User, { constraints: false });
 User.hasMany(GangRequest, { constraints: false });
 
+class Code extends Model {}
+
+Code.init(
+  {
+    code: DataTypes.STRING,
+    title: DataTypes.STRING,
+    validUntil: DataTypes.BIGINT, //timestamp
+    carId: DataTypes.INTEGER,
+    what: DataTypes.STRING,
+    amount: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "code" }
+);
+Code.belongsTo(User, { constraints: false });
+User.hasMany(Code, { constraints: false });
+
 class Movement extends Model {}
 
 Movement.init(
@@ -962,7 +978,7 @@ server.post("/removeprotection", (req, res) =>
 );
 
 server.post("/crime", (req, res) =>
-  require("./crime").crime(req, res, User, Action)
+  require("./crime").crime(req, res, User, Action, Code)
 );
 
 server.post("/work", (req, res) =>
@@ -1003,6 +1019,17 @@ server.post("/repairObject", (req, res) =>
     City,
     Action
   )
+);
+
+server.post("/enterCode", (req, res) =>
+  require("./code").enterCode(req, res, {
+    User,
+    Code,
+    Action,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+  })
 );
 
 server.post("/putInJail", (req, res) =>

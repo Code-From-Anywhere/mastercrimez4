@@ -36,7 +36,7 @@ const GangAchievements = ({
         <View>
           <View style={{ marginBottom: 20 }}>
             <H1>
-              {getText("power")}: {result.power}
+              {getText("level")}: {result.power}
             </H1>
           </View>
           {result.achievements &&

@@ -2,7 +2,6 @@ import { Entypo } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Platform,
   Text,
   TextInput,
   TouchableOpacity,
@@ -13,6 +12,7 @@ import Constants from "../Constants";
 import style from "../Style";
 import { getTextFunction, post } from "../Util";
 import Button from "./Button";
+import { IntervalContext } from "./IntervalProvider";
 import T from "./T";
 
 const LoginModal = ({
@@ -50,6 +50,7 @@ const LoginModal = ({
     setName(me?.name);
   }, [me?.name]);
 
+  const { resetIntervalsForToken } = React.useContext(IntervalContext);
   const postVerifyPhone = () => {
     fetch(`${Constants.SERVER_ADDR}/verifyPhone`, {
       method: "POST",
@@ -72,11 +73,8 @@ const LoginModal = ({
             value: responseJson.token,
           });
 
-          if (Platform.OS === "web") {
-            location.reload();
-          } else {
-            Updates.reloadAsync();
-          }
+          reloadMe(responseJson.loginToken);
+          resetIntervalsForToken(responseJson.token);
         }
         return responseJson;
       })
@@ -107,12 +105,7 @@ const LoginModal = ({
           reloadMe(responseJson.loginToken);
           setError(null);
           setSuccess(responseJson.success);
-
-          if (Platform.OS === "web") {
-            location.reload();
-          } else {
-            Updates.reloadAsync();
-          }
+          resetIntervalsForToken(responseJson.token);
         }
 
         return responseJson;
@@ -375,6 +368,7 @@ const LoginModal = ({
       />
     </View>
   );
+
   return (
     <View
       style={{
@@ -402,7 +396,7 @@ const LoginModal = ({
           <Entypo name="cross" color={theme.primaryText} size={24} />
         </TouchableOpacity>
 
-        {!me ? <ActivityIndicator /> : null}
+        {!me?.id ? <ActivityIndicator /> : null}
 
         {view === "emailPass"
           ? renderEmailPassLogin()
