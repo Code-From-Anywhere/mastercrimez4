@@ -37,7 +37,6 @@ import {
 import Jail from "./components/Jail";
 // import { loadReCaptcha } from "react-recaptcha-v3";
 import LoginModal from "./components/LoginModal";
-import Constants from "./Constants";
 import { KeyboardAvoidingSpace } from "./KeyboardAvoidingSpace";
 import { leftMenu, rightMenu } from "./Menus";
 import Accomplice from "./screens/Accomplice";
@@ -298,17 +297,17 @@ const Layout = ({ screenProps, navigation, children }) => {
     };
   }, []);
 
-  if (Platform.OS === "web") {
-    if (getMobileOperatingSystem() === "android") {
-      console.log("is android");
-      window.location.replace(Constants.ANDROID_APP_URL);
-    }
+  // if (Platform.OS === "web") {
+  //   if (getMobileOperatingSystem() === "android") {
+  //     console.log("is android");
+  //     window.location.replace(Constants.ANDROID_APP_URL);
+  //   }
 
-    if (getMobileOperatingSystem() === "ios") {
-      console.log("is ios");
-      window.location.replace(Constants.IOS_APP_URL);
-    }
-  }
+  //   if (getMobileOperatingSystem() === "ios") {
+  //     console.log("is ios");
+  //     window.location.replace(Constants.IOS_APP_URL);
+  //   }
+  // }
 
   const allowedRoutes = [
     "Home",
