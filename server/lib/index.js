@@ -732,6 +732,21 @@ GangRequest.init(
 GangRequest.belongsTo(User, { constraints: false });
 User.hasMany(GangRequest, { constraints: false });
 
+class Prize extends Model {}
+
+Prize.init(
+  {
+    forWhat: DataTypes.STRING, //gang, gamepoints, rank, strength, prizesCarsStolen, prizesCrimes
+    forRank: DataTypes.INTEGER, //1,2,3...
+    prizeWhat: DataTypes.STRING, //500
+    prizeAmount: DataTypes.BIGINT,
+    reset: DataTypes.BOOLEAN, //if true, forWhat will be reset after
+    isRealPrize: DataTypes.BOOLEAN, //if true, prizeWhat/prizeAmount will not be applied. Webmaster will get a message saying who to give what.
+    every: DataTypes.STRING, //"hour", "day", "week", "month"
+  },
+  { sequelize, modelName: "prize" }
+);
+
 class Code extends Model {}
 
 Code.init(
@@ -825,7 +840,9 @@ server.enable("trust proxy");
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, //1minute
-  max: 120, // limit each IP to 100 requests per windowMs
+  max: 240, // limit each IP to 100 requests per windowMs
+  skipFailedRequests: true,
+  message: { response: "Too many requests" },
 });
 
 //  apply to all requests
@@ -1561,8 +1578,18 @@ server.get("/profile", (req, res) => {
         ),
       });
 
+      // const othersOnIp = await User.findAll({
+      //   where: {
+      //     ip: user.ip,
+      //     phoneVerified: true,
+      //     onlineAt: { [Op.gt]: Date.now() - 86400000 },
+      //   },
+      //   attributes: publicUserFields,
+      // });
+
       let extended = user;
       extended.dataValues.accomplices = accomplices;
+      // extended.dataValues.othersOnIp = othersOnIp;
 
       res.json(extended);
     } else {

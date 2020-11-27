@@ -1,12 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as React from "react";
+import React, { useState } from "react";
 import {
   Dimensions,
   FlatList,
   Image,
   Platform,
   SafeAreaView,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -17,78 +16,130 @@ import ImageInput from "../components/ImageInput";
 import T from "../components/T";
 import Constants from "../Constants";
 import STYLE from "../Style";
-import { get, getTextFunction, post } from "../Util";
+import { doOnce, get, getTextFunction, post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
 const isBigDevice = width > 500;
-const maxWidth = isBigDevice ? 500 : width;
 
 const IMAGE_SIZE = 40;
 
-class ChatScreen extends React.Component {
-  constructor(props) {
-    super(props);
+const Footer = ({ me, device, params, fetchChat }) => {
+  const { loginToken, theme } = device;
+  const [image, setImage] = useState(null);
+  const [message, setMessage] = useState("");
+  const [hasEdited, setHasEdited] = useState(false);
+  const getText = getTextFunction(me?.locale);
 
-    this.state = {
-      members: [],
-      isFetching: true,
-      chat: [],
-    };
-  }
-
-  componentDidMount() {
-    const {
-      navigation: {
-        state: { params },
+  const send = () => {
+    setImage(null);
+    setMessage("");
+    const url = `${Constants.SERVER_ADDR}/channelmessage`;
+    fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-      screenProps: {
-        device: { loginToken },
-        reloadMe,
-      },
-    } = this.props;
-    this.fetchChat();
+      body: JSON.stringify({
+        loginToken: loginToken,
+        image: hasEdited ? image : undefined,
+        message,
+        cid: params?.id,
+      }),
+    })
+      .then((response) => response.json())
+      .then(({ success }) => {
+        if (success) {
+          fetchChat();
+        }
+      })
+      .catch((error) => {
+        console.log(error, url);
+      });
+  };
 
-    this.interval = setInterval(() => {
-      this.fetchChat();
-      console.log("setRead");
+  const renderFooter = () => {
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginHorizontal: 10,
+          }}
+        >
+          <ImageInput
+            small
+            value={image}
+            onChange={(base64) => {
+              setImage(base64);
+              setHasEdited(true);
+            }}
+          />
+
+          <TextInput
+            multiline
+            style={[STYLE(theme).textInput, { flex: 1 }]}
+            value={message}
+            placeholder={getText("message")}
+            onChangeText={setMessage}
+          />
+
+          <TouchableOpacity onPress={send}>
+            <Ionicons name="ios-send" size={32} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+
+  return renderFooter();
+};
+
+const ChatScreen = ({
+  navigation: {
+    state: { params },
+  },
+  screenProps: {
+    device: { loginToken },
+    device,
+    me,
+    reloadMe,
+  },
+}) => {
+  const [isFetching, setIsFetching] = useState(true);
+  const [chat, setChat] = useState([]);
+  const [response, setResponse] = useState(null);
+
+  doOnce(() => {
+    fetchChat();
+
+    const interval = setInterval(() => {
+      fetchChat();
       post("setRead", { loginToken, id: params?.subid });
       reloadMe(loginToken);
     }, 5000);
-  }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
+    return () => clearInterval(interval);
+  });
 
-  fetchChat = async () => {
-    const {
-      screenProps: { device },
-      navigation: {
-        state: { params },
-      },
-    } = this.props;
-
+  const fetchChat = async () => {
     const url = `channelmessage?loginToken=${device.loginToken}&id=${params.id}`;
-
-    console.log(url);
     const response = await get(url);
 
     if (response) {
-      this.setState({ chat: response.chat, isFetching: false });
+      setChat(response.chat);
+      setResponse(response.response);
+      setIsFetching(false);
     }
   };
 
-  onRefresh = () => {
-    this.setState({ isFetching: true }, function () {
-      this.fetchChat();
-    });
+  const onRefresh = () => {
+    setIsFetching(true);
+    fetchChat();
   };
 
-  renderItem = ({ item, index }) => {
-    const {
-      screenProps: { me },
-      navigation,
-    } = this.props;
+  const renderItem = ({ item, index }) => {
     const isMe = item.user?.id === me?.id;
     const avatar = (
       <TouchableOpacity
@@ -163,124 +214,30 @@ class ChatScreen extends React.Component {
     );
   };
 
-  send = () => {
-    const {
-      screenProps: { device },
-      navigation: {
-        state: { params },
-      },
-    } = this.props;
-    const { image, message, hasEdited } = this.state;
-
-    this.setState({ message: "", image: null });
-
-    const url = `${Constants.SERVER_ADDR}/channelmessage`;
-    fetch(url, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        loginToken: device.loginToken,
-        image: hasEdited ? image : undefined,
-        message,
-        cid: params?.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then(({ response, success }) => {
-        this.setState({ response });
-        if (success) {
-          this.fetchChat();
-        }
-      })
-      .catch((error) => {
-        console.log(error, url);
-      });
-  };
-
-  renderFooter = () => {
-    const {
-      screenProps: {
-        device: { theme },
-        me,
-      },
-    } = this.props;
-    const getText = getTextFunction(me?.locale);
-
-    const { image, message, hasEdited, response } = this.state;
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginHorizontal: 10,
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      {Array.isArray(chat) ? (
+        <FlatList
+          initialNumToRender={Platform.OS === "web" ? chat.length : undefined}
+          contentContainerStyle={{
+            height: Platform.OS === "web" ? height - 250 : undefined,
           }}
-        >
-          <ImageInput
-            small
-            value={image}
-            onChange={(base64) =>
-              this.setState({
-                hasEdited: true,
-                image: base64,
-              })
-            }
-          />
-
-          <TextInput
-            multiline
-            // onSubmitEditing={this.send}
-            style={[STYLE(theme).textInput, { flex: 1 }]}
-            value={message}
-            placeholder={getText("message")}
-            onChangeText={(message) => this.setState({ message })}
-          />
-
-          <TouchableOpacity onPress={this.send}>
-            <Ionicons name="ios-send" size={32} />
-          </TouchableOpacity>
+          data={chat}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => `index${index}`}
+          refreshControl={
+            <RefreshControl refreshing={isFetching} onRefresh={onRefresh} />
+          }
+          inverted
+        />
+      ) : (
+        <View style={{ flex: 1 }}>
+          <T>{response}</T>
         </View>
-      </View>
-    );
-  };
-
-  render() {
-    const { chat } = this.state;
-    return (
-      <SafeAreaView style={styles.container}>
-        {Array.isArray(chat) ? (
-          <FlatList
-            contentContainerStyle={{
-              height: Platform.OS === "web" ? height - 250 : undefined,
-            }}
-            data={chat}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            refreshControl={
-              <RefreshControl
-                refreshing={this.state.isFetching}
-                onRefresh={this.onRefresh}
-              />
-            }
-            inverted
-            ref={(ref) => (this.flatList = ref)}
-          />
-        ) : (
-          <T>{chat?.response}</T>
-        )}
-        {this.renderFooter()}
-      </SafeAreaView>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+      )}
+      <Footer me={me} device={device} params={params} fetchChat={fetchChat} />
+    </SafeAreaView>
+  );
+};
 
 export default ChatScreen;

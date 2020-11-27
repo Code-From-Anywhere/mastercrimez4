@@ -19,7 +19,7 @@ const ips = async (req, res, User, sequelize) => {
 
   getText = getTextFunction(user.locale);
 
-  if (user.level < 2) {
+  if (user.level < 5) {
     res.json({ response: getText("noAccess") });
     return;
   }

@@ -257,7 +257,6 @@
   "rules": "Regels",
   "contribute": "Draag bij",
   "prizes": "Prijzen",
-
   "breakOut": "Breek uit",
   "jailEmpty": "Er zit niemand in de gevangenis",
   "junkiesInPossession": "Junkies in bezit",
@@ -476,5 +475,8 @@
   "waitUntilLoaded": "Wacht a.u.b. totdat je account geladen is.",
   "youAre": "Jij bent",
   "crimeSuitcase": "Ik heb een koffer gevonden en wil deze graag met je openen. We verdelen de winst!",
-  "openSuitcaseButton": "Open koffer"
+  "openSuitcaseButton": "Open koffer",
+  "downloadTheApp": "MasterCrimeZ is veel beter te spelen met de app. Klik hier om hem te downloaden!",
+  "new": "Nieuw",
+  "lastOnline": "Laatst online"
 }

@@ -256,6 +256,7 @@
   "privacyPolicy": "Privacy Policy",
   "rules": "Rules",
   "contribute": "Contribute",
+
   "prizes": "Prizes",
 
   "breakOut": "Break out",
@@ -302,7 +303,7 @@
   "noPictureSelected": "No picture selected",
   "doOC": "Do an OC with your accomplices",
   "gamble": "Gamble",
-  "policeInfo": "The plice takes care of hackers that misuse the game. The police gets one million bullets daily from the government to handle this.",
+  "policeInfo": "The police takes care of hackers that misuse the game. The police gets one million bullets daily from the government to handle this.",
   "currentPolice": "Current police",
   "policeBulletBank": "Police bulletbank",
   "currentlyNoPrizes": "There are currently no prizes",
@@ -475,5 +476,9 @@
   "waitUntilLoaded": "Please wait until your account has been loaded",
   "youAre": "You are",
   "crimeSuitcase": "I found a suitcase and would like to open it with you. We share the profit!",
-  "openSuitcaseButton": "Open suitcase"
+  "openSuitcaseButton": "Open suitcase",
+  "downloadTheApp": "MasterCrimeZ is much more playable with the app! Click here to download it now.",
+  "new": "New",
+
+  "lastOnline": "Last online"
 }

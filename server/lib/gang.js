@@ -276,7 +276,7 @@ const gangInvite = async (
     return res.json({ response: getText("personDoesntExist") });
   }
 
-  if (user2.gang) {
+  if (user2.gangId) {
     return res.json({ response: getText("personAlreadyInGang") });
   }
 

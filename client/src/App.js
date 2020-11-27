@@ -37,6 +37,7 @@ import {
 import Jail from "./components/Jail";
 // import { loadReCaptcha } from "react-recaptcha-v3";
 import LoginModal from "./components/LoginModal";
+import T from "./components/T";
 import { KeyboardAvoidingSpace } from "./KeyboardAvoidingSpace";
 import { leftMenu, rightMenu } from "./Menus";
 import Accomplice from "./screens/Accomplice";
@@ -120,32 +121,19 @@ import { darkerHex, doOnce, getTextFunction, lighterHex } from "./Util";
 const { width, height } = Dimensions.get("window");
 const isSmallDevice = width < 800;
 
-function getMobileOperatingSystem() {
-  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-  // Windows Phone must come first because its UA also contains "Android"
-  if (/windows phone/i.test(userAgent)) {
-    return "windows";
-  }
-
-  if (/android/i.test(userAgent)) {
-    return "android";
-  }
-
-  // iOS detection from: http://stackoverflow.com/a/9039885/177710
-  if (/iPhone|iPod/.test(userAgent) && !window.MSStream) {
-    //iPad|
-    return "ios";
-  }
-
-  return "unknown";
-}
-
-export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
+export const renderMenu = (
+  item,
+  index,
+  navigation,
+  theme: Theme,
+  dispatch,
+  me
+) => {
   const TheIcon = Icon[item.iconType];
 
   const isCurrent = navigation.state.routeName === item.to;
   const TouchOrView = item.isHeader ? View : TouchableOpacity;
+  const getText = getTextFunction(me?.locale);
   return (
     <TouchOrView
       key={`item${index}`}
@@ -211,6 +199,20 @@ export const renderMenu = (item, index, navigation, theme: Theme, dispatch) => {
               >
                 {item.text}
               </Text>
+              {item.isNew && (
+                <View
+                  style={{
+                    marginLeft: 10,
+                    // backgroundColor: "red",
+                    borderRadius: 10,
+                    borderColor: theme.primaryText,
+                    borderWidth: 1,
+                    padding: 3,
+                  }}
+                >
+                  <T>{getText("new")}</T>
+                </View>
+              )}
               {item.component}
             </View>
           </View>
@@ -297,18 +299,6 @@ const Layout = ({ screenProps, navigation, children }) => {
     };
   }, []);
 
-  // if (Platform.OS === "web") {
-  //   if (getMobileOperatingSystem() === "android") {
-  //     console.log("is android");
-  //     window.location.replace(Constants.ANDROID_APP_URL);
-  //   }
-
-  //   if (getMobileOperatingSystem() === "ios") {
-  //     console.log("is ios");
-  //     window.location.replace(Constants.IOS_APP_URL);
-  //   }
-  // }
-
   const allowedRoutes = [
     "Home",
     "Settings",
@@ -384,12 +374,13 @@ const Layout = ({ screenProps, navigation, children }) => {
               index,
               navigation,
               device.theme,
-              dispatch
+              dispatch,
+              me
             )
           }
           renderContent={(section) =>
             section.content.map((item, index) =>
-              renderMenu(item, index, navigation, device.theme, dispatch)
+              renderMenu(item, index, navigation, device.theme, dispatch, me)
             )
           }
         />
@@ -423,18 +414,20 @@ const Layout = ({ screenProps, navigation, children }) => {
               index,
               navigation,
               device.theme,
-              dispatch
+              dispatch,
+              me
             )
           }
           renderContent={(section) =>
             section.content.map((item, index) =>
-              renderMenu(item, index, navigation, device.theme, dispatch)
+              renderMenu(item, index, navigation, device.theme, dispatch, me)
             )
           }
         />
       </ScrollView>
     </View>
   );
+
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView
@@ -514,12 +507,13 @@ const CustomDrawerContentComponent = (props) => {
               index,
               navigation,
               device.theme,
-              dispatch
+              dispatch,
+              me
             )
           }
           renderContent={(section) =>
             section.content.map((item, index) =>
-              renderMenu(item, index, navigation, device.theme, dispatch)
+              renderMenu(item, index, navigation, device.theme, dispatch, me)
             )
           }
         />
@@ -540,12 +534,13 @@ const CustomDrawerContentComponent = (props) => {
               index,
               navigation,
               device.theme,
-              dispatch
+              dispatch,
+              me
             )
           }
           renderContent={(section) =>
             section.content.map((item, index) =>
-              renderMenu(item, index, navigation, device.theme, dispatch)
+              renderMenu(item, index, navigation, device.theme, dispatch, me)
             )
           }
         />

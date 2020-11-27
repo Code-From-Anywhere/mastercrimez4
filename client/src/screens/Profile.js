@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -52,6 +53,7 @@ const ProfileScreen = ({
   }, [profile?.id]);
 
   const getProfile = (name) => {
+    setLoading(true);
     return fetch(`${Constants.SERVER_ADDR}/profile?name=${name}`, {
       method: "GET",
       headers: {
@@ -196,6 +198,10 @@ const ProfileScreen = ({
           ) : null}
 
           {keyValue(getText("online"), isOnline ? "✅" : "🛑")}
+          {keyValue(
+            getText("lastOnline"),
+            moment(profile?.onlineAt).format("DD-MM-YYYY")
+          )}
           {keyValue(getText("cash"), `€${profile?.cash}`)}
           {keyValue(getText("bank"), `€${profile?.bank}`)}
           {keyValue(getText("rank"), getRank(profile?.rank, "both"))}

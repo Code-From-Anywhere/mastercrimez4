@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import T from "../components/T";
+import Constants from "../Constants";
 import { leftMenu, rightMenu } from "../Menus";
 import { getTextFunction, post } from "../Util";
 
@@ -26,6 +27,27 @@ const itemWidth = width / 4 > 100 ? 100 : width / 4;
 const isSmallDevice = width < 800;
 
 const amountOfItems = Math.floor((height - 200) / itemWidth) * 4;
+
+function getMobileOperatingSystem() {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Windows Phone must come first because its UA also contains "Android"
+  if (/windows phone/i.test(userAgent)) {
+    return "windows";
+  }
+
+  if (/android/i.test(userAgent)) {
+    return "android";
+  }
+
+  // iOS detection from: http://stackoverflow.com/a/9039885/177710
+  if (/iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    //iPad|
+    return "ios";
+  }
+
+  return "unknown";
+}
 
 class Home extends Component {
   state = {
@@ -290,9 +312,43 @@ class Home extends Component {
     ];
     const filtered = menus.filter((menu) => !menu.isHeader && !menu.isStats);
 
+    let appLink = null;
+    if (Platform.OS === "web") {
+      if (getMobileOperatingSystem() === "android") {
+        appLink = Constants.ANDROID_APP_URL;
+      }
+
+      if (getMobileOperatingSystem() === "ios") {
+        appLink = Constants.IOS_APP_URL;
+      }
+    }
+
     if (Platform.OS === "web") {
       if (isSmallDevice) {
-        return <ScrollView>{this._renderItem({ item: filtered })}</ScrollView>;
+        return (
+          <ScrollView>
+            {appLink && (
+              <TouchableOpacity onPress={() => Linking.openURL(appLink)}>
+                <View
+                  style={{
+                    padding: 5,
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <AntDesign
+                    name="exclamationcircleo"
+                    color="red"
+                    style={{ marginRight: 10 }}
+                  />
+                  <T>{getText("downloadTheApp")}</T>
+                </View>
+              </TouchableOpacity>
+            )}
+
+            {this._renderItem({ item: filtered })}
+          </ScrollView>
+        );
       } else {
         return <T>{getText("welcomeBack")}</T>;
       }

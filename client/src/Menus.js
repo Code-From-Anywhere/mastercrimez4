@@ -1,7 +1,31 @@
+import moment from "moment";
 import React from "react";
 import CountDown from "react-native-countdown-component";
 import Constants from "./Constants";
 import { getRank, getTextFunction, numberFormat } from "./Util";
+
+const InactiveScreens = {
+  ACTIONS_BEFORE_BOMB: 60,
+  ACTIONS_BEFORE_CASINO: 70,
+  ACTIONS_BEFORE_BUNKER: 20,
+  ACTIONS_BEFORE_HOSPITAL: 30,
+  ACTIONS_BEFORE_RACECARS: 80,
+  ACTIONS_BEFORE_STREETRACE: 80,
+  ACTIONS_AMOUNT_NEW: 10,
+  ACTIONS_BEFORE_ROB: 20,
+  ACTIONS_BEFORE_KILL: 30,
+  ACTIONS_BEFORE_BULLETFACTORY: 40,
+  ACTIONS_BEFORE_MARKET: 50,
+  ACTIONS_BEFORE_AIRPORT: 30,
+  DAYS_NEW: 14,
+  ACTIONS_BEFORE_POLICE: 100,
+  GANG_RELEASE_DATE: moment("01/12/2020", "DD/MM/YYYY"),
+  MARKET_RELEASE_DATE: moment("15/12/2020", "DD/MM/YYYY"),
+  PRIZES_RELEASE_DATE: moment("01/01/2021", "DD/MM/YYYY"),
+  POLICE_RELEASE_DATE: moment("15/01/2021", "DD/MM/YYYY"),
+  WORK_RELEASE_DATE: moment("15/04/2021", "DD/MM/YYYY"),
+};
+
 export const leftMenu = (me, theme) => {
   const stealcarSeconds = Math.ceil(
     (me?.autostelenAt + 60000 - Date.now()) / 1000
@@ -13,7 +37,6 @@ export const leftMenu = (me, theme) => {
   const attackSeconds = Math.ceil((me?.attackAt + 120000 - Date.now()) / 1000);
 
   const robSeconds = Math.ceil((me?.robAt + 30000 - Date.now()) / 1000);
-  const ocSeconds = Math.ceil((me?.ocAt + 120000 - Date.now()) / 1000);
 
   const gymSeconds = Math.ceil((me?.gymAt + me?.gymTime - Date.now()) / 1000);
   const wietSeconds = Math.ceil((me?.wietAt + 120000 - Date.now()) / 1000);
@@ -73,6 +96,11 @@ export const leftMenu = (me, theme) => {
             ) : null,
         },
         {
+          inactive: !me || me?.numActions < InactiveScreens.ACTIONS_BEFORE_KILL,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_KILL +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
           iconType: "MaterialCommunityIcons",
           icon: "pistol",
           text: getText("menuKill"),
@@ -92,6 +120,11 @@ export const leftMenu = (me, theme) => {
             ) : null,
         },
         {
+          inactive: !me || me?.numActions < InactiveScreens.ACTIONS_BEFORE_ROB,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_ROB +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
           iconType: "MaterialCommunityIcons",
           icon: "pistol",
           text: getText("menuRob"),
@@ -110,29 +143,10 @@ export const leftMenu = (me, theme) => {
               />
             ) : null,
         },
-        {
-          iconType: "Ionicons",
-          icon: "md-cash",
-          text: getText("menuOC"),
-          to: "OrganisedCrime",
-          component:
-            ocSeconds > 0 ? (
-              <CountDown
-                style={{ marginLeft: 10 }}
-                until={ocSeconds}
-                digitStyle={{ backgroundColor: theme.secondary }}
-                digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
-                size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
-              />
-            ) : null,
-        },
+
         {
           iconType: "AntDesign",
           icon: "stepforward",
-
           text: getText("menuGym"),
           to: "Gym",
           component:
@@ -153,7 +167,6 @@ export const leftMenu = (me, theme) => {
         {
           iconType: "MaterialCommunityIcons",
           icon: "tree",
-
           text: getText("menuWiet"),
           to: "Wiet",
           component:
@@ -174,7 +187,6 @@ export const leftMenu = (me, theme) => {
         {
           iconType: "MaterialIcons",
           icon: "people",
-
           text: getText("menuJunkies"),
           to: "Junkies",
           component:
@@ -195,7 +207,6 @@ export const leftMenu = (me, theme) => {
         {
           iconType: "FontAwesome",
           icon: "female",
-
           text: getText("menuProstitutes"),
           to: "Hoeren",
           component:
@@ -213,7 +224,16 @@ export const leftMenu = (me, theme) => {
             ) : null,
         },
 
-        me?.level > 1 && {
+        {
+          inactive:
+            moment().isBefore(InactiveScreens.WORK_RELEASE_DATE) &&
+            !me?.level < 2,
+          isNew: moment().isBefore(
+            InactiveScreens.WORK_RELEASE_DATE.add(
+              InactiveScreens.DAYS_NEW,
+              "days"
+            )
+          ),
           iconType: "AntDesign",
           icon: "tool",
           text: getText("menuWork"),
@@ -236,11 +256,10 @@ export const leftMenu = (me, theme) => {
         {
           iconType: "FontAwesome",
           icon: "bars",
-
           text: getText("menuJail", me?.jail),
           to: "Jail",
         },
-      ].filter((x) => !!x),
+      ].filter((x) => !!x && !x.inactive),
     },
 
     {
@@ -257,7 +276,21 @@ export const leftMenu = (me, theme) => {
           to: "AllBanks",
         },
 
-        me?.level > 1 && {
+        {
+          inactive:
+            ((!me || me.level < 1) &&
+              moment().isBefore(InactiveScreens.MARKET_RELEASE_DATE)) ||
+            me?.numActions < InactiveScreens.ACTIONS_BEFORE_MARKET,
+          isNew:
+            moment().isBefore(
+              InactiveScreens.MARKET_RELEASE_DATE.add(
+                InactiveScreens.DAYS_NEW,
+                "days"
+              )
+            ) ||
+            me?.numActions <
+              InactiveScreens.ACTIONS_BEFORE_MARKET +
+                InactiveScreens.ACTIONS_AMOUNT_NEW,
           iconType: "FontAwesome",
           icon: "bank",
           text: getText("menuMarket"),
@@ -265,6 +298,13 @@ export const leftMenu = (me, theme) => {
         },
 
         {
+          inactive:
+            me?.numActions < InactiveScreens.ACTIONS_BEFORE_BULLETFACTORY,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_BULLETFACTORY +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
           iconType: "MaterialCommunityIcons",
           icon: "pistol",
           text: getText("menuBulletfactory"),
@@ -272,6 +312,12 @@ export const leftMenu = (me, theme) => {
         },
 
         {
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_BOMB,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_BOMB +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
           iconType: "FontAwesome",
           icon: "bomb",
           text: getText("menuBomb"),
@@ -279,6 +325,11 @@ export const leftMenu = (me, theme) => {
         },
 
         {
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_CASINO,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_CASINO +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
           iconType: "FontAwesome5",
           icon: "dice",
           text: getText("menuCasino"),
@@ -286,6 +337,12 @@ export const leftMenu = (me, theme) => {
         },
 
         {
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_BUNKER,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_BUNKER +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
           iconType: "MaterialCommunityIcons",
           icon: "warehouse",
           text: getText("menuBunker"),
@@ -306,6 +363,12 @@ export const leftMenu = (me, theme) => {
         },
 
         {
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_HOSPITAL,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_HOSPITAL +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
           iconType: "FontAwesome5",
           icon: "hospital",
           text: getText("menuHospital"),
@@ -326,12 +389,24 @@ export const leftMenu = (me, theme) => {
           to: "Garage",
         },
         {
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_RACECARS,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_RACECARS +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
           iconType: "MaterialIcons",
           icon: "local-car-wash",
           text: getText("menuRacecars"),
           to: "Racecars",
         },
         {
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_STREETRACE,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_STREETRACE +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
           iconType: "MaterialCommunityIcons",
           icon: "car-key",
           text: getText("menuStreetrace"),
@@ -339,12 +414,18 @@ export const leftMenu = (me, theme) => {
         },
 
         {
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_AIRPORT,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_AIRPORT +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
           iconType: "FontAwesome",
           icon: "plane",
           text: getText("menuAirport"),
           to: "Airport",
         },
-      ].filter((x) => !!x),
+      ].filter((x) => !!x && !x.inactive),
     },
   ];
 };
@@ -353,7 +434,7 @@ const adminMenu = (me) => {
   const getText = getTextFunction(me?.locale);
 
   const gameMod =
-    me?.level > 1
+    me?.level >= 5
       ? [
           {
             iconType: "Entypo",
@@ -361,34 +442,10 @@ const adminMenu = (me) => {
             text: getText("menuUserWatch"),
             to: "AdminUserWatch",
           },
-
-          {
-            iconType: "Entypo",
-            icon: "eye",
-            text: getText("menuHackers"),
-            to: "Hackers",
-          },
-
-          {
-            iconType: "Entypo",
-            icon: "eye",
-            text: getText("menuPolice"),
-            to: "Police",
-          },
         ]
       : [];
 
-  const admin =
-    me?.level >= 10
-      ? [
-          {
-            iconType: "FontAwesome",
-            icon: "font",
-            text: getText("menuAdminEmail"),
-            to: "AdminEmail",
-          },
-        ]
-      : [];
+  const admin = me?.level >= 10 ? [] : [];
 
   return (
     me?.level > 1 && {
@@ -403,9 +460,10 @@ const adminMenu = (me) => {
 
 export const rightMenu = (me, theme) => {
   const getText = getTextFunction(me?.locale);
+  const ocSeconds = Math.ceil((me?.ocAt + 120000 - Date.now()) / 1000);
 
   const gangMenus =
-    me?.level > 1
+    me?.level > 1 || moment().isAfter(InactiveScreens.GANG_RELEASE_DATE)
       ? {
           header: {
             isHeader: true,
@@ -447,6 +505,26 @@ export const rightMenu = (me, theme) => {
               icon: "ios-people",
               text: getText("menuGangAchievements"),
               to: "GangAchievements",
+            },
+
+            me?.gangId && {
+              iconType: "Ionicons",
+              icon: "md-cash",
+              text: getText("menuOC"),
+              to: "OrganisedCrime",
+              component:
+                ocSeconds > 0 ? (
+                  <CountDown
+                    style={{ marginLeft: 10 }}
+                    until={ocSeconds}
+                    digitStyle={{ backgroundColor: theme.secondary }}
+                    digitTxtStyle={{ color: theme.secondaryText }}
+                    onFinish={() => {}}
+                    size={8}
+                    timeToShow={["M", "S"]}
+                    timeLabels={{ m: null, s: null }}
+                  />
+                ) : null,
             },
             // me?.gangId && {
             //   iconType: "Ionicons",
@@ -606,12 +684,56 @@ export const rightMenu = (me, theme) => {
         },
 
         {
+          inactive:
+            ((!me || me?.level < 1) &&
+              moment().isBefore(InactiveScreens.POLICE_RELEASE_DATE)) ||
+            me?.numActions < InactiveScreens.ACTIONS_BEFORE_POLICE,
+          isNew:
+            moment().isBefore(
+              InactiveScreens.POLICE_RELEASE_DATE.add(
+                InactiveScreens.DAYS_NEW,
+                "days"
+              )
+            ) ||
+            me?.numActions <
+              InactiveScreens.ACTIONS_BEFORE_POLICE +
+                InactiveScreens.ACTIONS_AMOUNT_NEW,
+
+          iconType: "Entypo",
+          icon: "eye",
+          text: getText("menuHackers"),
+          to: "Hackers",
+        },
+
+        {
+          inactive:
+            ((!me || me?.level < 1) &&
+              moment().isBefore(InactiveScreens.POLICE_RELEASE_DATE)) ||
+            me?.numActions < InactiveScreens.ACTIONS_BEFORE_POLICE,
+          isNew:
+            moment().isBefore(
+              InactiveScreens.POLICE_RELEASE_DATE.add(
+                InactiveScreens.DAYS_NEW,
+                "days"
+              )
+            ) ||
+            me?.numActions <
+              InactiveScreens.ACTIONS_BEFORE_POLICE +
+                InactiveScreens.ACTIONS_AMOUNT_NEW,
+
+          iconType: "Entypo",
+          icon: "eye",
+          text: getText("menuPolice"),
+          to: "Police",
+        },
+
+        {
           iconType: "FontAwesome",
           icon: "bank",
           text: getText("menuVIP"),
           to: "VIP",
         },
-      ],
+      ].filter((x) => !!x && !x.inactive),
     },
 
     adminMenu(me),
