@@ -271,6 +271,8 @@
   "gangRequestRejected": "Je hebt $1 afgewezen",
   "gangInviteRejected": "Je hebt besloten niet in $1 te gaan",
   "gangAnswerInviteMessage": "$1 heeft de uitnodiging geaccepteerd en is nu onderdeel van $2",
+  "gangAnswerInviteSuccess": "Je bent nu onderdeel van de gang",
+  "gangAnswerJoinSuccess": "Je hebt $1 in de gang gelaten",
   "personAlreadyInGang": "Deze persoon zit al in een gang, dus kan niet uitgenodigd worden",
   "gangLeaveMessage": "$1 heeft $2 verlaten",
   "gangLeaveSuccess": "Je hebt de gang verlaten",
@@ -290,7 +292,7 @@
   "gangTransactionSuccess": "Je hebt $2 $3 $1",
   "gangNotEnough": "Er is niet genoeg in de gangbank",
   "gangSetRankMessage": "$1 heeft $2 $3 gemaakt",
-  "gangSetRankSuccess": "Je hebt $2 $3 gemaakt",
+  "gangSetRankSuccess": "Je hebt $1 $2 gemaakt",
   "gangLevelBoss": "Baas",
   "gangLevelUnderboss": "Onderbaas",
   "gangLevelBank": "Bankbeheerder",
@@ -324,5 +326,6 @@
   "enterCodeCarSuccess": "Het is je gelukt om $1 te stelen. Deze auto staat nu in je garage.",
 
   "enterCodeWhatMessage": "Jij en $1 openden samen de koffer. Er zat in: $2 $3. Jullie hebben de winst verdeeld.",
-  "enterCodeWhatSuccess": "Jij en $1 openden samen de koffer. Er zat in: $2 $3. Jullie hebben de winst verdeeld."
+  "enterCodeWhatSuccess": "Jij en $1 openden samen de koffer. Er zat in: $2 $3. Jullie hebben de winst verdeeld.",
+  "welcomeMessage": "Welkom bij MasterCrimeZ.\n\nIn dit spel is het je doel om zo snel mogelijk de beste gangster te worden, zonder vermoord te worden door je vijanden. Het is slim om sterke banden op te bouwen met je vrienden. Ga misdaden doen, autos stelen, en al het andere. Naarmate je meer speelt komen er meer functies beschikbaar!\n\nVeel succes!"
 }

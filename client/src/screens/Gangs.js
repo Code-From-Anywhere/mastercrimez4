@@ -53,6 +53,7 @@ const Gangs = ({
       accepted,
     });
     setResponse(response);
+    getInvites();
   };
 
   doOnce(getGangs);

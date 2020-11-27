@@ -480,7 +480,7 @@ const getalive = async (req, res, User, Action) => {
   });
 
   User.update(
-    { health: 100, protectionAt: Date.now() + 86400000 },
+    { health: 100, protectionAt: Date.now() + 86400000, rankKnow: 0 },
     { where: { id: user.id } }
   );
   res.json({ response: getText("youreAlive") });

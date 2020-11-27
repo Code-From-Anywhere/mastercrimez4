@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import MarkdownView from "react-native-markdown-renderer";
 import Button from "../components/Button";
 import T from "../components/T";
 import Tabs from "../components/Tabs";
 import Constants from "../Constants";
 import style from "../Style";
 import { getTextFunction } from "../Util";
+
 class Messages extends Component {
   state = {
     messages: null,
@@ -267,7 +269,12 @@ class Messages extends Component {
                     {moment(response.createdAt).format("DD-MM HH:mm")}
                   </T>
                 </View>
-                <T>{response.message}</T>
+
+                <MarkdownView
+                  style={{ text: { color: device.theme.primaryText } }}
+                >
+                  {response.message}
+                </MarkdownView>
               </View>
             );
           })}

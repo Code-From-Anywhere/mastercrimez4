@@ -74,6 +74,7 @@ const GangSettings = ({
     });
     setLoading(false);
     setResponse(response);
+    getGangInvites();
   };
 
   const postGangUpdate = async () => {

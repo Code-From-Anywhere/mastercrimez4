@@ -50,6 +50,7 @@ class Airport extends Component {
       "Paris",
       "Barcelona",
       "London",
+      "Amsterdam",
       "Berlin",
       "Lisbon",
       "Rome",
@@ -59,8 +60,7 @@ class Airport extends Component {
       "Bali",
       "New York",
       "San Fransisco",
-      "Amsterdam",
-    ];
+    ].sort();
     this.props.showActionSheetWithOptions(
       {
         options,

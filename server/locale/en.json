@@ -266,12 +266,14 @@
   "gangAlreadyInvited": "This person has already been invited",
   "gangJoinSuccess": "You've successfully asked to join $1",
   "gangInviteSuccess": "You've successfully invited $1",
+  "gangAnswerJoinSuccess": "You've accepted $1 into the gang",
   "gangRequestNotFound": "That join request wasn't found",
   "gangInviteGangMessage": "$1 was invited to join $2",
   "gangInviteMessage": "You were invited to join $1. Go to all gangs to accept or reject the invitation.",
   "gangRequestRejected": "You have rejected $1",
   "gangInviteRejected": "You have chosen not to join $1",
   "gangAnswerInviteMessage": "$1 has accepted the invitation and is now part of $2",
+  "gangAnswerInviteSuccess": "You're now part of the gang",
   "personAlreadyInGang": "This person is already in a gang, so can't be invited",
   "gangLeaveMessage": "$1 has left $2",
   "gangLeaveSuccess": "You've left",
@@ -292,7 +294,7 @@
   "gangTransactionSuccess": "You have $1 $2 $3",
   "gangNotEnough": "There is not enough in the gangbank",
   "gangSetRankMessage": "$1 has made $2 $3",
-  "gangSetRankSuccess": "You've made $2 $3",
+  "gangSetRankSuccess": "You've made $1 $2",
   "gangLevelBoss": "Boss",
   "gangLevelUnderboss": "Accomplice",
   "gangLevelBank": "Accountant",
@@ -327,5 +329,7 @@
   "enterCodeCarSuccess": "You succeeded to steal $1. This car has been added to your garage.",
 
   "enterCodeWhatMessage": "You and $1 opened the case together. It contained: $2 $3. You split the profit.",
-  "enterCodeWhatSuccess": "You and $1 opened the case together. It contained: $2 $3. You split the profit."
+  "enterCodeWhatSuccess": "You and $1 opened the case together. It contained: $2 $3. You split the profit.",
+
+  "welcomeMessage": "Welcome to MasterCrimeZ.\n\nIn this game, it's your goal to become the best gangster as soon as possible, without being killed by your enemies. It's smart to build strong alliances with other players and your friends. Go ahead and do some crimes, steal cars, and al the other stuff. The more you play, the more features you will unlock. \n\n Good luck!"
 }

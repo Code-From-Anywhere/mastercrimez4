@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import MarkdownView from "react-native-markdown-renderer";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -275,7 +276,9 @@ const ProfileScreen = ({
         </View>
 
         <View style={{ marginVertical: 20 }}>
-          <T>{profile?.bio}</T>
+          <MarkdownView style={{ text: { color: theme.primaryText } }}>
+            {profile?.bio}
+          </MarkdownView>
         </View>
 
         <View>

@@ -399,7 +399,7 @@ const gangAnswerJoin = async (
     { members: Sequelize.literal(`members+1`) },
     { where: { name: gang.name } }
   );
-  User.update({ gangId: gang.id }, { where: { id: user2.id } });
+  User.update({ gangId: gang.id, gangLevel: 0 }, { where: { id: user2.id } });
   const gangChannel = await Channel.findOne({ where: { gangName: gang.name } });
   if (gangChannel) {
     await ChannelSub.create({ channelId: gangChannel.id, userId: user2.id });
@@ -415,7 +415,7 @@ const gangAnswerJoin = async (
     gang,
   });
 
-  res.json({ response: getText("gangInviteSuccess", user2.name) });
+  res.json({ response: getText("gangAnswerJoinSuccess", user2.name) });
 };
 
 /**
@@ -446,7 +446,9 @@ const gangAnswerInvite = async (
     return res.json({ response: getText("noId") });
   }
 
-  const joinRequest = GangRequest.findOne({ where: { id, userId: user.id } });
+  const joinRequest = await GangRequest.findOne({
+    where: { id, userId: user.id },
+  });
 
   if (!joinRequest) {
     return res.json({ response: getText("gangRequestNotFound") });
@@ -472,10 +474,11 @@ const gangAnswerInvite = async (
   //accpeted, so join
 
   //remove all other gangrequests , including this one
-  const allInvites = GangRequest.findAll({ where: { userId: user.id } });
-  allInvites.destroy();
+  const destroyInvites = await GangRequest.destroy({
+    where: { userId: user.id },
+  });
 
-  User.update({ gangId: gang.id }, { where: { id: user.id } });
+  User.update({ gangId: gang.id, gangLevel: 0 }, { where: { id: user.id } });
   Gang.update(
     { members: Sequelize.literal(`members+1`) },
     { where: { name: gang.name } }
@@ -545,6 +548,11 @@ const gangLeave = async (
     where: { userId: user.id, channelId: gangChannel.id },
   });
   channelSub.destroy();
+
+  //remove all other gangrequests , including this one
+  const destroyInvites = await GangRequest.destroy({
+    where: { userId: user.id },
+  });
 
   if (user.gangLevel === GANG_LEVEL_BOSS) {
     const otherBosses = await User.findAll({
@@ -654,6 +662,11 @@ const gangKick = async (
     where: { userId: user2.id, channelId: gangChannel.id },
   });
   channelSub.destroy();
+
+  //remove all other gangrequests , including this one
+  const destroyInvites = await GangRequest.destroy({
+    where: { userId: user2.id },
+  });
 
   Action.create({
     userId: user.id,
@@ -833,6 +846,8 @@ const gangTransaction = async (
     ? getText("withdrawn")
     : getText("deposited");
 
+  const theAmount = Math.round(amount);
+
   const amount2 = Math.round(amount * 0.95);
 
   if (isToUser) {
@@ -841,8 +856,8 @@ const gangTransaction = async (
     }
 
     const [updated] = await Gang.update(
-      { [type]: Sequelize.literal(`${type} - ${amount}`) },
-      { where: { id: user.gangId, [type]: { [Op.gte]: amount } } }
+      { [type]: Sequelize.literal(`${type} - ${theAmount}`) },
+      { where: { id: user.gangId, [type]: { [Op.gte]: theAmount } } }
     );
 
     if (updated === 1) {
@@ -856,17 +871,17 @@ const gangTransaction = async (
       );
     }
   } else {
-    if (user[type] < amount) {
+    if (user[type] < theAmount) {
       return res.json({ response: getText("notEnough") });
     }
 
     const [updated] = await User.update(
       {
-        [type]: Sequelize.literal(`${type} - ${amount}`),
+        [type]: Sequelize.literal(`${type} - ${theAmount}`),
         numActions: Sequelize.literal(`numActions+1`),
         onlineAt: Date.now(),
       },
-      { where: { id: user.id, [type]: { [Op.gte]: amount } } }
+      { where: { id: user.id, [type]: { [Op.gte]: theAmount } } }
     );
 
     if (updated === 1) {
@@ -893,7 +908,7 @@ const gangTransaction = async (
       "gangTransactionMessage",
       user.name,
       directionString,
-      amount,
+      theAmount,
       typeString
     ),
     gang,
@@ -903,7 +918,7 @@ const gangTransaction = async (
     response: getText(
       "gangTransactionSuccess",
       directionString,
-      amount,
+      theAmount,
       typeString
     ),
   });

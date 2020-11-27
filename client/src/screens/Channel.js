@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import MarkdownView from "react-native-markdown-renderer";
 import { RefreshControl } from "react-native-web-refresh-control";
 import ImageInput from "../components/ImageInput";
 import T from "../components/T";
@@ -207,7 +208,7 @@ const ChatScreen = ({
             />
           ) : null}
 
-          <Text>{item.message}</Text>
+          <MarkdownView style={{}}>{item.message}</MarkdownView>
         </View>
         {isMe ? avatar : null}
       </View>

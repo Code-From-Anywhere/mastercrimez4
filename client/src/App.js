@@ -277,7 +277,7 @@ const Layout = ({ screenProps, navigation, children }) => {
 
       if (screenProps.device.foregrounded > 3) {
         StoreReview.isAvailableAsync().then((available) => {
-          console.log("avaiable", available);
+          // console.log("avaiable", available);
           if (available) {
             StoreReview.requestReview();
           }

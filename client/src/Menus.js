@@ -4,7 +4,7 @@ import CountDown from "react-native-countdown-component";
 import Constants from "./Constants";
 import { getRank, getTextFunction, numberFormat } from "./Util";
 
-const InactiveScreens = {
+export const InactiveScreens = {
   ACTIONS_BEFORE_BOMB: 60,
   ACTIONS_BEFORE_CASINO: 70,
   ACTIONS_BEFORE_BUNKER: 20,
@@ -467,6 +467,12 @@ export const rightMenu = (me, theme) => {
       ? {
           header: {
             isHeader: true,
+            isNew: moment().isBefore(
+              InactiveScreens.GANG_RELEASE_DATE.add(
+                InactiveScreens.DAYS_NEW,
+                "days"
+              )
+            ),
             text: me?.gang?.name || getText("headerGang"),
             image: me?.gang?.thumbnail
               ? Constants.SERVER_ADDR + me?.gang?.thumbnail

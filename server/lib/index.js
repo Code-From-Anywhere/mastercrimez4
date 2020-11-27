@@ -1601,7 +1601,9 @@ server.get("/profile", (req, res) => {
 server.get("/members", (req, res) => {
   //return coordinatesets that are located in a square of lat/lng
 
-  const { order } = req.query;
+  const { order, filter } = req.query;
+
+  console.log("order", order, "filter", filter);
   const validOrders = [
     "onlineAt",
     "bank",
@@ -1615,12 +1617,18 @@ server.get("/members", (req, res) => {
   ];
   const validOrder = validOrders.includes(order) ? order : validOrders[0];
 
+  const where =
+    filter === "dead"
+      ? { health: 0 }
+      : filter === "crew"
+      ? { level: { [Op.gt]: 1 } }
+      : { health: { [Op.gt]: 0 } };
   User.findAll({
     attributes: publicUserFields,
     order: [[validOrder, "DESC"]],
     include: { model: Gang, attributes: ["id", "name", "thumbnail"] },
     limit: 100,
-    where: { health: { [Op.gt]: 0 } },
+    where,
   }).then((user) => {
     res.json(user);
   });
@@ -1691,6 +1699,8 @@ server.get("/me", (req, res) => {
   })
     .then(async (user) => {
       if (user) {
+        getText = getTextFunction(user.locale);
+
         const jail = await User.findAll({
           attributes: ["id"],
           where: { jailAt: { [Op.gt]: Date.now() } },
@@ -1755,6 +1765,7 @@ server.get("/me", (req, res) => {
         const name = await getAvailableName();
         const user = await User.create({
           loginToken: String(req.query.token),
+          protectionAt: Date.now() + 86400000,
           name,
         });
 
@@ -1762,6 +1773,17 @@ server.get("/me", (req, res) => {
           attributes: allUserFields,
           where: { loginToken: String(req.query.token) },
           include: { model: Gang },
+        });
+        getText = getTextFunction(newuser.locale);
+
+        sendChatPushMail({
+          Channel,
+          ChannelSub,
+          ChannelMessage,
+          User,
+          isSystem: true,
+          user2: newuser,
+          message: getText("welcomeMessage"),
         });
 
         const jail = await User.findAll({

@@ -7,6 +7,7 @@ import {
   View,
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
+import MarkdownView from "react-native-markdown-renderer";
 import Button from "../components/Button";
 import T from "../components/T";
 import User from "../components/User";
@@ -80,6 +81,13 @@ const Gangs = ({
   return (
     <View style={{ flex: 1, padding: 15 }}>
       <FlatList
+        ListFooterComponent={() => {
+          return (
+            <MarkdownView style={{ text: { color: theme.primaryText } }}>
+              {item?.profile}
+            </MarkdownView>
+          );
+        }}
         ListHeaderComponent={() => {
           return (
             <View
