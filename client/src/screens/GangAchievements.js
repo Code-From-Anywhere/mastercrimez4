@@ -1,8 +1,10 @@
+import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
 import H1 from "../components/H1";
 import T from "../components/T";
 import { doOnce, get, getTextFunction } from "../Util";
+
 const GangAchievements = ({
   navigation,
   screenProps: {
@@ -45,17 +47,60 @@ const GangAchievements = ({
 
               return (
                 <View style={{ marginBottom: 20 }}>
-                  <T bold>{getText(key)}</T>
-                  <T>
-                    {getText("current")}: {stats.current}
+                  <T bold style={{ alignSelf: "center", marginVertical: 20 }}>
+                    {getText(key)}
                   </T>
-                  <T>
-                    {getText("level")}: {stats.level}
-                  </T>
-                  <T>
-                    {getText("next")}:{" "}
-                    {stats.next ? stats.next : getText("maximumLevel")}
-                  </T>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 200,
+                        backgroundColor: theme.secondary,
+                        padding: 20,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <T>
+                        {getText("level")}: {stats.level}
+                      </T>
+
+                      <T>
+                        {getText("average")}: {stats.current}
+                      </T>
+                    </View>
+
+                    <AntDesign
+                      name="arrowright"
+                      color={theme.primaryText}
+                      size={36}
+                    />
+
+                    <View
+                      style={{
+                        width: 200,
+                        backgroundColor: theme.secondary,
+                        padding: 20,
+                        borderRadius: 10,
+                      }}
+                    >
+                      {stats.next && (
+                        <T>
+                          {getText("level")}: {stats.level + 1}
+                        </T>
+                      )}
+                      <T>
+                        {stats.next
+                          ? `${getText("average")}: ${stats.next}`
+                          : getText("maximumLevel")}
+                      </T>
+                    </View>
+                  </View>
                 </View>
               );
             })}

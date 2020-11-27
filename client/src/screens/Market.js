@@ -8,16 +8,27 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { RefreshControl } from "react-native-web-refresh-control";
 import Button from "../components/Button";
 import T from "../components/T";
+import User from "../components/User";
 import styles from "../Style";
-import { doOnce, get, getTextFunction, numberFormat, post } from "../Util";
+import {
+  darkerHex,
+  doOnce,
+  get,
+  getTextFunction,
+  numberFormat,
+  post,
+} from "../Util";
+
 const { height, width } = Dimensions.get("window");
 
-const SIZE = 100;
+const SIZE = 250;
 const MARGIN = 20;
 
 const Market = ({
+  navigation,
   screenProps: {
     device,
     me,
@@ -57,6 +68,20 @@ const Market = ({
     });
     setLoading(false);
     setResponse(response);
+    reloadMe(device.loginToken);
+    getMarket();
+  };
+
+  const postMarketTransaction = async (offerId) => {
+    setLoading(true);
+    const { response } = await post("marketTransaction", {
+      token: device.loginToken,
+      offerId,
+    });
+    setLoading(false);
+    setResponse(response);
+    reloadMe(device.loginToken);
+    getMarket();
   };
 
   doOnce(getMarket);
@@ -78,7 +103,7 @@ const Market = ({
         destructiveButtonIndex,
       },
       (buttonIndex) => {
-        if (buttonIndex < validTypes.length - 1) {
+        if (buttonIndex < validTypes.length) {
           setType(validTypes[buttonIndex]);
         }
         // Do something here depending on the button index selected
@@ -93,7 +118,7 @@ const Market = ({
         {response && <T>{response}</T>}
       </View>
 
-      <View>
+      <View style={{ flex: 1 }}>
         {/* New offer */}
 
         <View style={{ marginVertical: 20 }}>
@@ -137,6 +162,9 @@ const Market = ({
         </View>
 
         <FlatList
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={getMarket} />
+          }
           data={market}
           numColumns={
             Platform.OS === "web"
@@ -154,16 +182,29 @@ const Market = ({
               <View
                 style={{
                   width: SIZE,
+                  backgroundColor: darkerHex(theme.primary),
+                  borderRadius: 15,
+                  padding: MARGIN,
+                  margin: MARGIN,
                 }}
               >
                 <View style={{ flex: 1 }}>
-                  <T>{item.buy ? getText("requested") : getText("forSale")}</T>
+                  <T>
+                    {item.isBuy ? getText("requested") : getText("forSale")}
+                  </T>
                 </View>
+
+                <User navigation={navigation} user={item.user} />
 
                 <T>
                   {item.amount} {getText(item.type)}
                 </T>
                 <T>€{numberFormat(item.price)},-</T>
+
+                <Button
+                  title={item.isBuy ? getText("sell") : getText("buy")}
+                  onPress={() => postMarketTransaction(item.id)}
+                />
               </View>
             );
           }}

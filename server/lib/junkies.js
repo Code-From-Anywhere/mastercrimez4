@@ -31,7 +31,7 @@ const junkies = async (req, res, User, Action) => {
 
   if (user) {
     getText = getTextFunction(user.locale);
-    const name = getText("junkiesCurrency");
+    const name = getText("junkies");
 
     if (user.needCaptcha && Number(captcha) !== user.captcha) {
       return res.json({ response: getText("wrongCode") });

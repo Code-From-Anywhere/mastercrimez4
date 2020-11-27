@@ -3,7 +3,7 @@
   "succeeded": "Gelukt",
   "success": "Gelukt",
   "invalidUser": "Ongeldige gebruiker",
-  "yourRankIncreasedTo": "Je rang is opgehoogd naar $1 en $2 en $1",
+  "yourRankIncreasedTo": "Je rang is opgehoogd naar $1",
   "resetPasswordTitle": "Wachtwoord resetten mastercrimez.com",
   "resetPasswordText": "Klik op de link om je wachtwoord te resetten: https://mastercrimez.com/#/RecoverPassword/$1",
   "resetPasswordSuccess": "Check je mail om je wachtwoord te resetten",
@@ -55,7 +55,7 @@
   "bulletFactory": "Kogelfabriek",
   "casino": "Casino",
   "landlord": "Huisjesmelker",
-  "junkies": "Leger des Heils",
+  "junkies": "Junkies",
   "weaponShop": "Wapenwinkel",
   "rld": "Red light district",
   "airport": "Vliegveld",
@@ -98,7 +98,7 @@
   "bankMoney": "bankgeld",
   "bullets": "kogels",
   "hoeren": "hoeren",
-  "junkiesCurrency": "junkies",
+  "junkiesCurrency": "leger des heils",
   "wiet": "wiet",
   "gamepoints": "gamepoints",
   "weed": "wietplanten",
@@ -327,5 +327,7 @@
 
   "enterCodeWhatMessage": "Jij en $1 openden samen de koffer. Er zat in: $2 $3. Jullie hebben de winst verdeeld.",
   "enterCodeWhatSuccess": "Jij en $1 openden samen de koffer. Er zat in: $2 $3. Jullie hebben de winst verdeeld.",
-  "welcomeMessage": "Welkom bij MasterCrimeZ.\n\nIn dit spel is het je doel om zo snel mogelijk de beste gangster te worden, zonder vermoord te worden door je vijanden. Het is slim om sterke banden op te bouwen met je vrienden. Ga misdaden doen, autos stelen, en al het andere. Naarmate je meer speelt komen er meer functies beschikbaar!\n\nVeel succes!"
+  "welcomeMessage": "Welkom bij MasterCrimeZ.\n\nIn dit spel is het je doel om zo snel mogelijk de beste gangster te worden, zonder vermoord te worden door je vijanden. Het is slim om sterke banden op te bouwen met je vrienden. Ga misdaden doen, autos stelen, en al het andere. Naarmate je meer speelt komen er meer functies beschikbaar!\n\nVeel succes!",
+
+  "cantBuyFromYourself": "Je kan niet handelen met jezelf"
 }

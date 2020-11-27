@@ -9,15 +9,15 @@ const {
   strengthRanks,
   getStrength,
 } = require("./util");
+const moment = require("moment");
 let getText = getTextFunction();
+const releaseDate = moment("15/12/2020", "DD/MM/YYYY");
 
 const marketCreateOffer = async (
   req,
   res,
   { Offer, User, Action, Channel, ChannelSub, ChannelMessage }
 ) => {
-  return res.json({ response: "Not active" });
-
   const { token, type, amount, price, buy } = req.body;
 
   const validTypes = ["junkies", "hoeren", "wiet", "gamepoints", "bullets"];
@@ -35,6 +35,10 @@ const marketCreateOffer = async (
   }
 
   getText = getTextFunction(user.locale);
+
+  if (!user.level > 1 && moment().isBefore(releaseDate)) {
+    return res.json({ response: getText("noAccess") });
+  }
 
   if (
     !type ||
@@ -117,11 +121,7 @@ const marketTransaction = async (
   res,
   { Offer, User, Action, Channel, ChannelSub, ChannelMessage }
 ) => {
-  return res.json({ response: "Not active" });
-
   const { token, offerId } = req.body;
-
-  const validTypes = ["junkies", "hoeren", "wiet", "gamepoints", "bullets"];
 
   if (!token) {
     res.json({ response: getText("noToken") });
@@ -137,6 +137,10 @@ const marketTransaction = async (
 
   getText = getTextFunction(user.locale);
 
+  if (!user.level > 1 && moment().isBefore(releaseDate)) {
+    return res.json({ response: getText("noAccess") });
+  }
+
   if (!offerId) {
     return res.json({ response: getText("invalidValues") });
   }
@@ -150,10 +154,13 @@ const marketTransaction = async (
     return res.json({ response: getText("couldntFindOffer") });
   }
 
+  if (offer.userId === user.id) {
+    return res.json({ response: getText("cantBuyFromYourself") });
+  }
   const typeString = getText(offer.type);
 
-  if (!offer.buy) {
-    //user is buying something
+  if (!offer.isBuy) {
+    //offer is a sale. user is buying something
     if (user.cash < offer.price) {
       return res.json({ response: getText("notEnoughCash", offer.price) });
     }
@@ -169,21 +176,27 @@ const marketTransaction = async (
 
     const destroyed = await Offer.destroy({ where: { id: offer.id } });
 
+    console.log("destroyed", destroyed);
     if (destroyed) {
       await User.update(
-        { [type]: Sequelize.literal(`${type} + ${offer.amount}`) },
+        { [offer.type]: Sequelize.literal(`${offer.type} + ${offer.amount}`) },
         { where: { id: user.id } }
+      );
+
+      const [givenMoneyToOfferer] = await User.update(
+        { bank: Sequelize.literal(`bank + ${offer.price}`) },
+        { where: { id: offer.userId } }
       );
     }
   } else {
-    //user is selling something
-    if (user[type] < offer.amount) {
+    //user is buying something
+    if (user[offer.type] < offer.amount) {
       return res.json({ response: getText("notEnough") });
     }
 
     const [updated] = await User.update(
-      { [type]: Sequelize.literal(`${type} - ${offer.amount}`) },
-      { where: { id: user.id, [type]: { [Op.gte]: offer.amount } } }
+      { [offer.type]: Sequelize.literal(`${offer.type} - ${offer.amount}`) },
+      { where: { id: user.id, [offer.type]: { [Op.gte]: offer.amount } } }
     );
 
     if (updated !== 1) {
@@ -197,10 +210,19 @@ const marketTransaction = async (
         { cash: Sequelize.literal(`cash + ${offer.price}`) },
         { where: { id: user.id } }
       );
+
+      const [giveWhatToOfferer] = await User.update(
+        { [offer.type]: Sequelize.literal(`${offer.type} + ${offer.amount}`) },
+        { where: { id: offer.userId } }
+      );
+    } else {
+      console.log("not destroyed", destroyed);
     }
   }
 
-  const requestOrOfferString = offer.buy ? getText("sold") : getText("bought");
+  const requestOrOfferString = offer.isBuy
+    ? getText("sold")
+    : getText("bought");
 
   Action.create({
     userId: user.id,
@@ -243,11 +265,7 @@ const marketRemoveOffer = async (
   res,
   { Offer, User, Action, Channel, ChannelSub, ChannelMessage }
 ) => {
-  return res.json({ response: "Not active" });
-
   const { token, offerId } = req.body;
-
-  const validTypes = ["junkies", "hoeren", "wiet", "gamepoints", "bullets"];
 
   if (!token) {
     res.json({ response: getText("noToken") });
@@ -262,6 +280,10 @@ const marketRemoveOffer = async (
   }
 
   getText = getTextFunction(user.locale);
+
+  if (!user.level > 1 && moment().isBefore(releaseDate)) {
+    return res.json({ response: getText("noAccess") });
+  }
 
   if (!offerId) {
     return res.json({ response: getText("invalidValues") });
@@ -286,9 +308,7 @@ const marketRemoveOffer = async (
     return res.json({ response: "invalidOffer" });
   }
 
-  console.log("destroyed", destroyed);
-
-  if (offer.buy) {
+  if (offer.isBuy) {
     const [updated] = await User.update(
       { cash: Sequelize.literal(`cash + ${offer.price}`) },
       { where: { id: user.id } }

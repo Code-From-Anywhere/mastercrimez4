@@ -613,7 +613,7 @@ const gangLeave = async (
 const gangKick = async (
   req,
   res,
-  { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage, GangRequest }
 ) => {
   const { token, userId } = req.body;
 
@@ -641,8 +641,12 @@ const gangKick = async (
     return res.json({ response: getText("noAccess") });
   }
 
+  if (userId === user.id) {
+    return res.json({ response: "invalidUser" });
+  }
+
   const user2 = await User.findOne({
-    where: { id: userId, gangId: gang.id, id: { [Op.ne]: user.id } },
+    where: { id: userId, gangId: gang.id },
   });
 
   if (!user2) {
@@ -1333,14 +1337,16 @@ const gangAchievements = async (
       .map((m) => getRank(m.rank, "number"))
       .reduce((previous, current) => previous + current, 0) / members.length
   );
-  const averageRank = ranks[averageRankNumber - 1].rank;
+  const averageRank2 = ranks[averageRankNumber - 1];
+  const averageRank = averageRank2 && averageRank2.rank;
 
   const averageStrengthNumber = Math.round(
     members
       .map((m) => getStrength(m.strength, "number"))
       .reduce((previous, current) => previous + current, 0) / members.length
   );
-  const averageStrength = strengthRanks[averageStrengthNumber - 1].rank;
+  const averageStrength2 = strengthRanks[averageStrengthNumber - 1];
+  const averageStrength = averageStrength2 && averageStrength2.rank;
 
   const averageGamepoints = Math.round(
     members
@@ -1365,9 +1371,11 @@ const gangAchievements = async (
   ]; //10
   const membersLevels = [3, 5, 7, 9, 12, 15, 18, 22, 26, 30]; //10
 
+  const propertiesIndex = propertiesLevels.findIndex(
+    (value) => value > averagePropertiesAmount
+  );
   const propertiesLevel =
-    propertiesLevels.findIndex((value) => value > averagePropertiesAmount) ||
-    propertiesLevels.length;
+    propertiesIndex > 0 ? propertiesIndex : propertiesLevels.length;
 
   const rankLevel =
     rankLevels.findIndex((value) => value > averageRankNumber) ||
@@ -1385,6 +1393,7 @@ const gangAchievements = async (
     membersLevels.findIndex((value) => value > members.length) ||
     membersLevels.length;
 
+  const nextRank = ranks[rankLevels[rankLevel]];
   const achievements = {
     properties: {
       current: averagePropertiesAmount,
@@ -1394,7 +1403,7 @@ const gangAchievements = async (
     rank: {
       current: averageRank,
       level: rankLevel,
-      next: ranks[rankLevels[rankLevel]].rank,
+      next: nextRank && nextRank.rank,
     },
     strength: {
       current: averageStrength,

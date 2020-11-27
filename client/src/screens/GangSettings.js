@@ -135,6 +135,7 @@ const GangSettings = ({
     });
     setLoading(false);
     setResponse(response);
+    getGang();
   };
 
   const getGangLevel = (gangLevel) =>

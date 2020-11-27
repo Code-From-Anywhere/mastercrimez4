@@ -46,7 +46,7 @@ const donate = async (
       bank: getText("bankMoney"),
       bullets: getText("bullets"),
       hoeren: getText("hoeren"),
-      junkies: getText("junkiesCurrency"),
+      junkies: getText("junkies"),
       wiet: getText("wiet"),
       gamepoints: getText("gamepoints"),
     };

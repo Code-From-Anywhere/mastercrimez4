@@ -3,7 +3,7 @@
   "succeeded": "Success",
   "success": "Success",
   "invalidUser": "Invalid user",
-  "yourRankIncreasedTo": "Your rank increased to $1 and $2 and $1",
+  "yourRankIncreasedTo": "Your rank increased to $1",
   "resetPasswordTitle": "Password reset mastercrimez.com",
   "resetPasswordText": "Click the link to reset your password: https://mastercrimez.com/#/RecoverPassword/$1",
   "resetPasswordSuccess": "Check your mail to reset your password",
@@ -56,7 +56,7 @@
   "bulletFactory": "Bulletfactory",
   "casino": "Casino",
   "landlord": "Landlord",
-  "junkies": "Salvation army",
+  "junkies": "Junkies",
   "weaponShop": "Weaponshop",
   "rld": "Red light district",
   "airport": "Airport",
@@ -99,7 +99,7 @@
   "bankMoney": "bankmoney",
   "bullets": "bullets",
   "hoeren": "prostitutes",
-  "junkiesCurrency": "junkies",
+  "junkiesCurrency": "salvation army",
   "wiet": "weed",
   "gamepoints": "gamepoints",
   "weed": "weedplants",
@@ -331,5 +331,7 @@
   "enterCodeWhatMessage": "You and $1 opened the case together. It contained: $2 $3. You split the profit.",
   "enterCodeWhatSuccess": "You and $1 opened the case together. It contained: $2 $3. You split the profit.",
 
-  "welcomeMessage": "Welcome to MasterCrimeZ.\n\nIn this game, it's your goal to become the best gangster as soon as possible, without being killed by your enemies. It's smart to build strong alliances with other players and your friends. Go ahead and do some crimes, steal cars, and al the other stuff. The more you play, the more features you will unlock. \n\n Good luck!"
+  "welcomeMessage": "Welcome to MasterCrimeZ.\n\nIn this game, it's your goal to become the best gangster as soon as possible, without being killed by your enemies. It's smart to build strong alliances with other players and your friends. Go ahead and do some crimes, steal cars, and al the other stuff. The more you play, the more features you will unlock. \n\n Good luck!",
+
+  "cantBuyFromYourself": "You can't do transactions with yourself"
 }
