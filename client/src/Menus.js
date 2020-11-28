@@ -757,9 +757,9 @@ export const rightMenu = (me, theme) => {
         },
 
         {
-          inactive: moment().isBefore(
-            InactiveScreens.PRIZES_NORMAL_RELEASE_DATE
-          ),
+          inactive:
+            me?.level < 2 &&
+            moment().isBefore(InactiveScreens.PRIZES_NORMAL_RELEASE_DATE),
           isNew: moment().isBefore(
             InactiveScreens.PRIZES_RELEASE_DATE.add(
               InactiveScreens.DAYS_NEW,
