@@ -7,6 +7,8 @@ const fs = require("fs");
 const Jimp = require("jimp");
 const { Sequelize, Model, DataTypes, Op } = require("sequelize");
 const cron = require("node-cron");
+const moment = require("moment");
+const { getPrize } = require("./prizes");
 
 const cities = require("../assets/airport.json");
 require("dotenv").config();
@@ -106,6 +108,12 @@ const sequelize = new Sequelize({
     port: "3306",
   },
   logging: null,
+  // benchmark: true,
+  // logging: (sql, timing) => {
+  //   if (timing > 200) {
+  //     console.log(sql, timing);
+  //   }
+  // },
 });
 
 class User extends Model {}
@@ -126,6 +134,15 @@ User.init(
     forgotPasswordToken: DataTypes.STRING,
     activated: DataTypes.BOOLEAN,
     level: DataTypes.INTEGER,
+
+    prizesCarsStolen: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    prizesCrimes: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
 
     gangLevel: {
       type: DataTypes.INTEGER,
@@ -355,6 +372,13 @@ User.init(
     indexes: [
       { unique: true, fields: ["name"] },
       { unique: true, fields: ["loginToken"] },
+      { fields: ["jailAt"] },
+      { fields: ["onlineAt"] },
+      { fields: ["accomplice"] },
+      { fields: ["accomplice2"] },
+      { fields: ["accomplice3"] },
+      { fields: ["accomplice4"] },
+      { fields: ["rank"] },
     ],
   }
 );
@@ -603,6 +627,7 @@ ChannelSub.init(
   {
     sequelize,
     modelName: "channelsub",
+    indexes: [{ fields: ["userId"] }, { fields: ["unread"] }],
   }
 );
 ChannelSub.belongsTo(Channel);
@@ -618,6 +643,7 @@ ChannelMessage.init(
     message: DataTypes.TEXT,
     image: DataTypes.STRING,
     isSystem: DataTypes.BOOLEAN,
+    isShareable: DataTypes.BOOLEAN,
   },
   {
     sequelize,
@@ -639,6 +665,7 @@ Gang.init(
       type: DataTypes.INTEGER,
       defaultValue: 1,
     },
+
     power: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -706,6 +733,10 @@ Gang.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    isPolice: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize,
@@ -736,15 +767,55 @@ class Prize extends Model {}
 
 Prize.init(
   {
-    forWhat: DataTypes.STRING, //gang, gamepoints, rank, strength, prizesCarsStolen, prizesCrimes
-    forRank: DataTypes.INTEGER, //1,2,3...
-    prizeWhat: DataTypes.STRING, //500
-    prizeAmount: DataTypes.BIGINT,
-    reset: DataTypes.BOOLEAN, //if true, forWhat will be reset after
-    isRealPrize: DataTypes.BOOLEAN, //if true, prizeWhat/prizeAmount will not be applied. Webmaster will get a message saying who to give what.
-    every: DataTypes.STRING, //"hour", "day", "week", "month"
+    forWhat: {
+      type: DataTypes.ENUM(
+        "gang",
+        "gamepoints",
+        "rank",
+        "strength",
+        "prizesCarsStolen",
+        "prizesCrimes"
+      ),
+      defaultValue: "rank",
+    },
+    prizeWhat: {
+      type: DataTypes.STRING, //credits (or euro for real money)
+      defaultValue: "credits",
+    },
+    prizeAmount: {
+      type: DataTypes.BIGINT, //500
+      defaultValue: 1000,
+    },
+    amountPrizes: {
+      type: DataTypes.INTEGER, //for example 1 or 3 or 10
+      defaultValue: 1,
+    },
+    reset: {
+      type: DataTypes.BOOLEAN, //if true, forWhat will be reset after
+      defaultValue: false,
+    },
+    isRealPrize: {
+      type: DataTypes.BOOLEAN, //if true, prizeWhat/prizeAmount will not be applied. Webmaster will get a message saying who to give what.
+      defaultValue: false,
+    },
+
+    every: {
+      type: DataTypes.ENUM("hour", "day", "week", "month"), //"hour", "day", "week", "month"
+      defaultValue: "month",
+    },
   },
   { sequelize, modelName: "prize" }
+);
+
+class ScheduledMessage extends Model {}
+
+ScheduledMessage.init(
+  {
+    date: DataTypes.BIGINT,
+    message: DataTypes.TEXT,
+    userId: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "scheduledMessage" }
 );
 
 class Code extends Model {}
@@ -821,7 +892,9 @@ Streetrace.hasMany(StreetraceParticipant, {
 });
 
 try {
-  sequelize.sync({ alter: true }); //{alter}:true}
+  sequelize.sync({
+    alter: true,
+  }); //{alter}:true}
 } catch (e) {
   console.log("e", e);
 }
@@ -1099,6 +1172,14 @@ server.get("/market", (req, res) =>
     Offer,
   })
 );
+server.get("/prizes", (req, res) =>
+  require("./prizes").prizes(req, res, {
+    User,
+    Gang,
+    Prize,
+  })
+);
+
 server.post("/gangCreate", (req, res) =>
   require("./gang").gangCreate(req, res, {
     User,
@@ -1260,6 +1341,13 @@ server.post("/gangRemove", (req, res) =>
 
 server.get("/gangs", (req, res) =>
   require("./gang").gangs(req, res, {
+    User,
+    Gang,
+  })
+);
+
+server.get("/police", (req, res) =>
+  require("./gang").police(req, res, {
     User,
     Gang,
   })
@@ -1436,6 +1524,8 @@ server.post("/kill", (req, res) =>
     ChannelSub,
     City,
     Action,
+    Gang,
+    Offer,
   })
 );
 
@@ -1496,6 +1586,21 @@ server.post("/superMessage", (req, res) =>
     Channel,
     ChannelMessage,
     ChannelSub,
+    ScheduledMessage,
+  })
+);
+
+server.get("/scheduled", (req, res) =>
+  require("./superMessage").scheduled(req, res, {
+    User,
+    ScheduledMessage,
+  })
+);
+
+server.post("/updateScheduled", (req, res) =>
+  require("./superMessage").updateScheduled(req, res, {
+    User,
+    ScheduledMessage,
   })
 );
 
@@ -2335,6 +2440,40 @@ const deadPeopleTax = () => {
   );
 };
 
+const checkScheduledMessages = async () => {
+  const scheduledInPast = await ScheduledMessage.findAll({
+    where: { date: { [Op.lte]: Date.now() } },
+  });
+
+  if (scheduledInPast.length) {
+    const to = await User.findAll({ where: { phoneVerified: true } });
+
+    if (to) {
+      scheduled.map(async (schedule) => {
+        const user = await User.findOne({ where: { id: schedule.userId } });
+
+        to.forEach((user2) => {
+          sendChatPushMail({
+            Channel,
+            ChannelMessage,
+            ChannelSub,
+            User,
+            isSystem: false,
+            message: schedule.message,
+            user1: user,
+            user2,
+            isShareable: true,
+          });
+        });
+
+        const destroyed = await ScheduledMessage.destroy({
+          where: { id: schedule.id },
+        });
+      });
+    }
+  }
+};
+
 const swissBankTax = async () => {
   const TAX = 0.02; //NB profit is 50% of this
   await Promise.all(
@@ -2359,21 +2498,237 @@ const swissBankTax = async () => {
   );
 };
 
+const awardPrizes = async (every) => {
+  const releaseDatePrizes = moment("01/01/2021", "DD/MM/YYYY").set("hours", 17);
+  if (moment().isBefore(releaseDatePrizes)) {
+    return;
+  }
+
+  const prizes = await Prize.findAll({ where: { every } });
+
+  const adminUser = await User.findOne({ where: { level: 10 } });
+
+  if (prizes.length > 0) {
+    prizes.map(async (prize) => {
+      let stats;
+      if (prize.forWhat === "gang") {
+        stats = await Gang.findAll({
+          order: [["score", "DESC"]],
+          limit: prize.amountPrizes,
+          attributes: ["id", "name", "score", "thumbnail"],
+        });
+        stats.forEach(async (stat, index) => {
+          const amount = getPrize(
+            index + 1,
+            prize.amountPrizes,
+            prize.prizeAmount
+          );
+          const what = prize.prizeWhat;
+          const gangMembers = await User.findAll({
+            where: { gangId: stat.id },
+          });
+
+          if (gangMembers.length > 0) {
+            const amountEach = Math.round(amount / gangMembers.length);
+            const getGangText = getTextFunction(gangMembers[0].locale);
+
+            const message = getGangText(
+              "prizeAwardGang",
+              amountEach,
+              getGangText(what),
+              getGangText(every),
+              index + 1
+            );
+
+            sendChatPushMail({
+              Channel,
+              ChannelMessage,
+              ChannelSub,
+              User,
+              gang: stat,
+              isShareable: true,
+              isSystem: true,
+              message,
+            });
+
+            User.update(
+              { [what]: Sequelize.literal(`${what}+ ${amountEach}`) },
+              { where: { gangId: stat.id } }
+            );
+
+            console.log(
+              "award",
+              amountEach,
+              what,
+              "to every member of gang",
+              stat.name,
+              "message:",
+              message
+            );
+          }
+        });
+      } else {
+        stats = await User.findAll({
+          order: [[prize.forWhat, "DESC"]],
+          limit: prize.amountPrizes,
+          attributes: publicUserFields,
+        });
+
+        stats.map((stat, index) => {
+          const amount = getPrize(
+            index + 1,
+            prize.amountPrizes,
+            prize.prizeAmount
+          );
+          const what = prize.prizeWhat;
+          const getUserText = getTextFunction(stat.locale);
+          const message = getUserText(
+            "prizeAwardMessage",
+            amount,
+            getUserText(what),
+            getUserText(every),
+            index + 1,
+            getUserText(prize.forWhat),
+            stat.name
+          );
+
+          sendChatPushMail({
+            Channel,
+            ChannelMessage,
+            ChannelSub,
+            User,
+            isShareable: true,
+            isSystem: true,
+            message,
+            user1: adminUser,
+            user2: stat,
+          });
+
+          User.update(
+            { [what]: Sequelize.literal(`${what}+ ${amount}`) },
+            { where: { id: stat.id } }
+          );
+
+          if (prize.reset) {
+            User.update({ [prize.forWhat]: 0 }); //reset de stat
+          }
+
+          console.log(
+            "award",
+            amount,
+            what,
+            "to ",
+            stat.name,
+            "message",
+            message
+          );
+        });
+      }
+    });
+  }
+};
+
+const givePoliceBullets = () => {
+  Gang.update(
+    { bullets: Sequelize.literal(`bullets+1000000`) },
+    { where: { isPolice: true, bullets: { [Op.lte]: 10000000 } } }
+  ); // give police a million bullets a day, with 10million max.
+};
+
+const cleanupDatabase = async () => {
+  //remove movements and actions older than two days
+  const movementDestroyed = await Movement.destroy({
+    where: { timestamp: { [Op.lte]: Date.now() - 86400000 * 14 } },
+  });
+  const acitonDestroyed = await Action.destroy({
+    where: { timestamp: { [Op.lte]: Date.now() - 86400000 * 14 } },
+  });
+  // console.log(
+  //   "movementDestroyed",
+  //   movementDestroyed,
+  //   "actionDestroyed",
+  //   acitonDestroyed
+  // );
+};
+
 if (process.env.NODE_APP_INSTANCE == 0) {
   console.log("Scheduling CRONS....");
-  //elk uur
-  cron.schedule("0 * * * *", async () => {
-    putBulletsInBulletFactories();
-  });
 
-  cron.schedule("0 20 * * *", function () {
-    giveInterest();
-    deadPeopleTax();
-    swissBankTax();
-  });
-  cron.schedule("0 19 * * *", function () {
-    //send push notification that happy hour is started
-  });
+  /*
+  * * * * * *
+  | | | | | |
+  | | | | | day of week
+  | | | | month
+  | | | day of month
+  | | hour
+  | minute
+  second ( optional )
+  */
+
+  //elke minuut
+  // cron.schedule("* * * * *", async () => {
+  //   checkScheduledMessages();
+  // });
+
+  //elk uur
+  cron.schedule(
+    "0 * * * *",
+    async () => {
+      awardPrizes("hour");
+
+      putBulletsInBulletFactories();
+      checkScheduledMessages();
+    },
+    { timezone: "Europe/Amsterdam" }
+  );
+
+  //elke dag 17:00
+  cron.schedule(
+    "0 17 * * *",
+    function () {
+      awardPrizes("day");
+    },
+    { timezone: "Europe/Amsterdam" }
+  );
+
+  //elke zondag 17:00
+  cron.schedule(
+    "0 17 * * 0",
+    function () {
+      awardPrizes("week");
+    },
+    { timezone: "Europe/Amsterdam" }
+  );
+
+  //elke 0:00 van de 1e van de maand
+  cron.schedule(
+    "0 0 1 * *",
+    function () {
+      awardPrizes("month");
+    },
+    { timezone: "Europe/Amsterdam" }
+  );
+
+  //elke dag 20:00
+  cron.schedule(
+    "0 20 * * *",
+    function () {
+      giveInterest();
+      deadPeopleTax();
+      swissBankTax();
+      givePoliceBullets();
+      cleanupDatabase();
+    },
+    { timezone: "Europe/Amsterdam" }
+  );
+  //elke dag 19:00
+  cron.schedule(
+    "0 19 * * *",
+    function () {
+      //send push notification that happy hour is started
+    },
+    { timezone: "Europe/Amsterdam" }
+  );
 
   //8 uur savonds
 }

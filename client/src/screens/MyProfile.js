@@ -3,13 +3,13 @@ import * as Permissions from "expo-permissions";
 import React, { useState } from "react";
 import {
   Dimensions,
-  FlatList,
   Image,
   Platform,
+  ScrollView,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
 import Button from "../components/Button";
 import Constants from "../Constants";
 import style from "../Style";
@@ -193,11 +193,9 @@ const MyProfile = ({
   };
 
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
         margin: 20,
       }}
     >
@@ -227,7 +225,7 @@ const MyProfile = ({
         multiline={true}
         numberOfLines={4}
         value={bio}
-        onChangeText={setBio}
+        onChangeText={(x) => setBio(x)}
       />
       <Button
         title={getText("save")}
@@ -263,15 +261,10 @@ const MyProfile = ({
         onPress={handleChoosePhoto}
       />
 
-      <FlatList
-        data={images}
-        extraData={selectedImage}
-        numColumns={isSmallDevice ? 1 : 3}
-        renderItem={renderItem}
-        keyExtractor={(item) => `id${item.id}`}
-        ListFooterComponent={renderFooter}
-      />
-    </View>
+      {images.map((image, index) => renderItem({ item: image, index }))}
+
+      {renderFooter()}
+    </ScrollView>
   );
 };
 

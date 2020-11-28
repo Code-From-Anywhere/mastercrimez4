@@ -68,9 +68,7 @@ const AdminUserWatch = ({
               return (
                 <View key={`id${index}`}>
                   {previous?.ip === ip.ip ? null : (
-                    <T bold style={{ marginTop: 20 }}>
-                      {ip.ip}
-                    </T>
+                    <View style={{ marginTop: 20 }} />
                   )}
                   <TouchableOpacity onPress={() => setId(ip.id)}>
                     <T>{ip.name}</T>

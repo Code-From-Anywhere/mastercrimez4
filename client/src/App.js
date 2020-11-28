@@ -213,6 +213,21 @@ export const renderMenu = (
                   <T>{getText("new")}</T>
                 </View>
               )}
+
+              {item.label && (
+                <View
+                  style={{
+                    marginLeft: 10,
+                    // backgroundColor: "red",
+                    borderRadius: 10,
+                    borderColor: theme.primaryText,
+                    borderWidth: 1,
+                    padding: 3,
+                  }}
+                >
+                  <T>{item.label}</T>
+                </View>
+              )}
               {item.component}
             </View>
           </View>

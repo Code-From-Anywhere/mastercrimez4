@@ -305,7 +305,6 @@
   "gamble": "Gamble",
   "policeInfo": "The police takes care of hackers that misuse the game. The police gets one million bullets daily from the government to handle this.",
   "currentPolice": "Current police",
-  "policeBulletBank": "Police bulletbank",
   "currentlyNoPrizes": "There are currently no prizes",
   "personDoesntExist": "This person doesn't exist",
 
@@ -482,5 +481,20 @@
 
   "lastOnline": "Last online",
   "filter": "Filter",
-  "average": "Average"
+  "average": "Average",
+  "scheduled": "Scheduled",
+
+  "prizesText": "# Prizes\n\nBest gang: 2500 credits per gangmember.\n\n Nicest profile: [Tronsmart Earpods](https://www.bol.com/nl/p/tronsmart-onyx-ace-wit-oordopjes-draadloos-earbuds-wireless-bluetooth-5-0-noise-cancellation-qualcomm-chip/9300000008546026/?bltgh=t59CbWyS0X5KCBRj65tBMQ.1_10.12.ProductTitle) worth €47,- or 6000 credits\n\n Design a logo (1024x1024pixels) for MasterCrimeZ for the app Icons. The nicest one will get the earpods like above, or 6000 credits.\n\n Most gamepoints: Solar Powerbank of €95 euro or 12.000 credits. \n\n The end of this round is sunday 27th of december 2020 at 17:00.",
+  "prizesInactiveText": "There are currently no prizes",
+  "prizegamepointstitle": "Most gamepoints",
+  "prizeranktitle": "Highest rank",
+  "prizegangtitle": "Best gang",
+  "prizestrengthtitle": "Highest strength",
+  "prizeprizesCarsStolentitle": "Most cars stolen",
+  "prizeprizesCrimestitle": "Most crimes done",
+  "everyHour": "Every hour",
+  "everyDay5pm": "every afternoon at 5pm",
+  "everyWeekSunday5pm": "Every sunday 5pm",
+  "prizesCarsStolen": "Cars stolen",
+  "prizesCrimes": "Crimes done"
 }

@@ -8,13 +8,15 @@ const {
 } = require("./util");
 const cars = require("../assets/cars.json");
 let getText = getTextFunction();
-
+const { isHappyHour } = require("./util");
 function randomEntry(array) {
   return array[Math.floor(array.length * Math.random())];
 }
 
 const stealcar = async (req, res, User, Garage, Action) => {
   const { token, option, captcha } = req.body;
+
+  const happyHourFactor = isHappyHour() ? 2 : 1;
 
   if (!token) {
     console.log("token", req);
@@ -118,7 +120,11 @@ const stealcar = async (req, res, User, Garage, Action) => {
           ),
         });
 
-        const allCars = accomplices.concat([{ name: user.name }]).map((a) => {
+        const carsArray = [];
+        let n = (accomplices.length + 1) * happyHourFactor;
+        while (n--) carsArray.push({ car: true });
+
+        const allCars = carsArray.map((a) => {
           const car = randomEntry(
             cars.filter(
               (car) =>
@@ -140,6 +146,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
             {
               rank: user.rank + option * 3,
               gamepoints: user.gamepoints + 1,
+              prizesCarsStolen: user.prizesCarsStolen + 1,
             },
             { where: { loginToken: token } }
           );

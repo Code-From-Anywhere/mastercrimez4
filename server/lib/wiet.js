@@ -3,6 +3,7 @@ const {
   needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
+  isHappyHour,
 } = require("./util");
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
@@ -11,6 +12,8 @@ let getText = getTextFunction();
 
 const wiet = async (req, res, User, Action) => {
   const { token, captcha } = req.body;
+
+  const happyHourFactor = isHappyHour() ? 2 : 1;
 
   const timeNeeded = 120000;
   const timeKey = "wietAt";
@@ -67,7 +70,7 @@ const wiet = async (req, res, User, Action) => {
       });
 
       const random = Math.ceil(
-        Math.random() * 10 * rang * (accomplices.length + 1)
+        Math.random() * 10 * rang * (accomplices.length + 1) * happyHourFactor
       );
 
       Action.create({

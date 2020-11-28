@@ -11,7 +11,26 @@ const {
 } = require("./util");
 const moment = require("moment");
 let getText = getTextFunction();
-const releaseDate = moment("15/12/2020", "DD/MM/YYYY");
+const releaseDate = moment("15/12/2020", "DD/MM/YYYY").set("hours", 17);
+
+const removeOffer = async ({ id, Offer, User }) => {
+  const offer = await Offer.findOne({ where: { id } });
+
+  if (offer) {
+    const destroyed = await Offer.destroy({ where: { id } });
+    if (offer.isBuy) {
+      const [updated] = await User.update(
+        { cash: Sequelize.literal(`cash + ${offer.price}`) },
+        { where: { id: offer.userId } }
+      );
+    } else {
+      const [updated] = await User.update(
+        { [offer.type]: Sequelize.literal(`${offer.type} + ${offer.amount}`) },
+        { where: { id: offer.userId } }
+      );
+    }
+  }
+};
 
 const marketCreateOffer = async (
   req,
@@ -34,9 +53,14 @@ const marketCreateOffer = async (
     return;
   }
 
+  if (!user.phoneVerified) {
+    //NB: Verify instantly here because you can otherwise send stuff to your main
+    return res.json({ response: getText("accountNotVerified") });
+  }
+
   getText = getTextFunction(user.locale);
 
-  if (!user.level > 1 && moment().isBefore(releaseDate)) {
+  if (user.level < 2 && moment().isBefore(releaseDate)) {
     return res.json({ response: getText("noAccess") });
   }
 
@@ -89,8 +113,8 @@ const marketCreateOffer = async (
   Offer.create({
     userId: user.id,
     type,
-    amount: theAmount,
-    price: thePrice,
+    amount: buy ? theAmount : Math.round(theAmount * 0.95),
+    price: buy ? Math.round(thePrice * 0.95) : thePrice,
     isBuy: buy,
   });
 
@@ -137,7 +161,7 @@ const marketTransaction = async (
 
   getText = getTextFunction(user.locale);
 
-  if (!user.level > 1 && moment().isBefore(releaseDate)) {
+  if (user.level < 2 && moment().isBefore(releaseDate)) {
     return res.json({ response: getText("noAccess") });
   }
 
@@ -281,7 +305,7 @@ const marketRemoveOffer = async (
 
   getText = getTextFunction(user.locale);
 
-  if (!user.level > 1 && moment().isBefore(releaseDate)) {
+  if (user.level < 2 && moment().isBefore(releaseDate)) {
     return res.json({ response: getText("noAccess") });
   }
 
@@ -319,7 +343,7 @@ const marketRemoveOffer = async (
     }
   } else {
     const [updated] = await User.update(
-      { [type]: Sequelize.literal(`${type} + ${offer.amount}`) },
+      { [offer.type]: Sequelize.literal(`${offer.type} + ${offer.amount}`) },
       { where: { id: user.id } }
     );
 
@@ -334,7 +358,9 @@ const marketRemoveOffer = async (
     timestamp: Date.now(),
   });
 
-  const requestOrOfferString = buy ? getText("request") : getText("offer");
+  const requestOrOfferString = offer.isBuy
+    ? getText("request")
+    : getText("offer");
 
   res.json({
     response: getText("removed", requestOrOfferString),
@@ -349,6 +375,7 @@ const market = async (req, res, { Offer, User }) => {
 };
 
 module.exports = {
+  removeOffer,
   //post
   marketCreateOffer,
   marketTransaction,

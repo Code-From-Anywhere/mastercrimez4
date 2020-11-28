@@ -1,6 +1,6 @@
 import * as Icon from "@expo/vector-icons";
 import React from "react";
-import { Image, Linking, TouchableOpacity, View } from "react-native";
+import { Image, Linking, Platform, TouchableOpacity, View } from "react-native";
 import { getTextFunction } from "../Util";
 import T from "./T";
 
@@ -36,7 +36,11 @@ const ShareButtons = ({ me, url, text }) => {
 
       <TouchableOpacity
         onPress={() => {
-          Linking.openURL(`whatsapp://send?text=${text} ${siteUrl}`);
+          Linking.openURL(
+            Platform.OS === "web"
+              ? `https://wa.me/?text=${text} ${siteUrl}`
+              : `whatsapp://send?text=${text} ${siteUrl}`
+          );
         }}
       >
         <Image

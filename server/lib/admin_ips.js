@@ -24,7 +24,7 @@ const ips = async (req, res, User, sequelize) => {
     return;
   }
 
-  const query = `SELECT id,name,ip FROM users WHERE onlineAt > ${
+  const query = `SELECT id,name,MD5(ip) as ip FROM users WHERE onlineAt > ${
     Date.now() - 86400000
   } AND phoneVerified=1 ORDER BY ip`;
 

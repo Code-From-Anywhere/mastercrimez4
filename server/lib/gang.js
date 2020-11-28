@@ -1217,7 +1217,19 @@ const gangInvites = async (req, res, { User, GangRequest, Gang }) => {
 };
 
 const gangs = async (req, res, { User, Gang }) => {
-  const gangs = await Gang.findAll({ order: [["score", "DESC"]] });
+  const gangs = await Gang.findAll({
+    attributes: { exclude: ["bullets"] },
+    order: [["score", "DESC"]],
+  });
+  res.json({ gangs });
+};
+
+const police = async (req, res, { User, Gang }) => {
+  const gangs = await Gang.findAll({
+    where: { isPolice: true },
+    include: { model: User, attributes: publicUserFields },
+    order: [["score", "DESC"]],
+  });
   res.json({ gangs });
 };
 
@@ -1229,6 +1241,7 @@ const gang = async (req, res, { User, Gang }) => {
   }
   const gang = await Gang.findOne({
     where: { name },
+    attributes: { exclude: ["bullets"] },
     include: { model: User, attributes: publicUserFields },
   });
   if (gang) {
@@ -1468,6 +1481,7 @@ module.exports = {
   //get
   gangInvites, //gangs,gangSettings
   gangs,
+  police,
   gang, //gang, gangSettings
   gangAchievements,
 };

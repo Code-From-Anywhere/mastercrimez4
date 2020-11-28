@@ -5,11 +5,13 @@ const {
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
 } = require("./util");
-
+const moment = require("moment");
+const { isHappyHour } = require("./util");
 let getText = getTextFunction();
 
 const crime = async (req, res, User, Action, Code) => {
   const { token, option, captcha } = req.body;
+  const happyHourFactor = isHappyHour() ? 2 : 1;
 
   if (!token) {
     res.json({ response: getText("noToken") });
@@ -96,13 +98,18 @@ const crime = async (req, res, User, Action, Code) => {
         });
 
         const stolen = Math.ceil(
-          Math.random() * option * 10000 * (accomplices.length + 1)
+          Math.random() *
+            option *
+            10000 *
+            (accomplices.length + 1) *
+            happyHourFactor
         );
         User.update(
           {
             rank: user.rank + option * 3,
             cash: user.cash + stolen,
             gamepoints: user.gamepoints + 1,
+            prizesCrimes: user.prizesCrimes + 1,
           },
           { where: { loginToken: token } }
         );

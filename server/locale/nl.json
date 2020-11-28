@@ -329,5 +329,22 @@
   "enterCodeWhatSuccess": "Jij en $1 openden samen de koffer. Er zat in: $2 $3. Jullie hebben de winst verdeeld.",
   "welcomeMessage": "Welkom bij MasterCrimeZ.\n\nIn dit spel is het je doel om zo snel mogelijk de beste gangster te worden, zonder vermoord te worden door je vijanden. Het is slim om sterke banden op te bouwen met je vrienden. Ga misdaden doen, autos stelen, en al het andere. Naarmate je meer speelt komen er meer functies beschikbaar!\n\nVeel succes!",
 
-  "cantBuyFromYourself": "Je kan niet handelen met jezelf"
+  "cantBuyFromYourself": "Je kan niet handelen met jezelf",
+  "invalidValues": "Vul alle velden juist in!",
+  "killRankDifferenceTooBig": "Je kan deze persoon niet aanvallen, omdat hij een te hoge of te lage rang heeft vergeleken met de jouwe. Er mogen niet meer dan 5 rangen tussen zitten.",
+
+  "killGangMessage": "Ook is er $1% van de gangbank en gangkogels gestolen. Dat was €$2,- en $3 kogels",
+  "killGangSuccess": "Ook heb je $1% van de gangbank en gangkogels gestolen. Dat was €$2,- en $3 kogels",
+  "killSameGang": "Je zit in de zelfde gang!",
+  "prizeAwardGang": "De $3 is voorbij. De beste gangprijs is gevallen op jullie gang! Jullie zijn op plaats $4 ge-eindigd. Hiermee hebben jullie ieder $1 $2 gewonnen. Gefeliciteerd!",
+  "hour": "Uur",
+  "day": "Dag",
+  "week": "Week",
+  "month": "Maand",
+  "credits": "Credits",
+  "prizeAwardMessage": "De prijzen voor $5 van de/het $3 zijn gevallen! \n\n Jij bent $4e geworden! Hiermee win je $1 $2! Gefeliciteerd, $6!",
+  "rank": "Rang",
+  "strength": "Moordervaring",
+  "prizesCrimes": "Misdaden gedaan",
+  "prizesCarsStolen": "Auto's gestolen"
 }

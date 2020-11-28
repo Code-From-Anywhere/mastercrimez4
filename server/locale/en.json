@@ -313,7 +313,7 @@
   "invalidValudes": "Not all values have been entered correctly",
   "requestPast": "requested",
   "offerPast": "offered",
-  "request": "reqeuest",
+  "request": "request",
   "offer": "offer",
   "removed": "$1 successfully removed",
   "bought": "bought",
@@ -333,5 +333,23 @@
 
   "welcomeMessage": "Welcome to MasterCrimeZ.\n\nIn this game, it's your goal to become the best gangster as soon as possible, without being killed by your enemies. It's smart to build strong alliances with other players and your friends. Go ahead and do some crimes, steal cars, and al the other stuff. The more you play, the more features you will unlock. \n\n Good luck!",
 
-  "cantBuyFromYourself": "You can't do transactions with yourself"
+  "cantBuyFromYourself": "You can't do transactions with yourself",
+  "invalidValues": "Invalid values",
+  "killRankDifferenceTooBig": "You can't attack this person, because he/she has a too low or too high rank compared to yours. There cannot be more than 5 ranks difference.",
+  "killGangMessage": "Also there was stolen $1% of the gang bank and gang bullets. That was €$2,- and $3 bullets",
+  "killGangSuccess": "Also you have stolen $1% of the gang bank and gang bullets. That was €$2,- and $3 bullets",
+  "killSameGang": "You can't kill your gangmember",
+
+  "prizeAwardGang": "The $3 has passed. The best gang prize is awarded to your gang. You finished in place $4. Wit this, every one of you has been awarded $1 $2. Congratulations!",
+  "hour": "Hour",
+  "day": "Day",
+  "week": "Week",
+  "month": "Month",
+  "credits": "Credits",
+  "prizeAwardMessage": "The prizes $5 of the $3 are known! \n\n You became place $4! With this, you win $1 $2! Congratulations, $6!",
+  "rank": "Rank",
+  "strength": "Strength",
+
+  "prizesCrimes": "Crimes done",
+  "prizesCarsStolen": "Cars stolen"
 }

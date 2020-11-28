@@ -3,12 +3,15 @@ const {
   needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
+  isHappyHour,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 let getText = getTextFunction();
 
 const gym = async (req, res, User, Action) => {
   const { token, option, captcha } = req.body;
+
+  const happyHourFactor = isHappyHour() ? 2 : 1;
 
   if (option < 1 || option > 3 || isNaN(option)) {
     res.json({ response: getText("invalidChoice") });
@@ -49,7 +52,11 @@ const gym = async (req, res, User, Action) => {
 
     if (user.gymAt + user.gymTime < Date.now()) {
       const random = Math.ceil(
-        Math.random() * 10 * option * getRank(user.rank, "number")
+        Math.random() *
+          10 *
+          option *
+          getRank(user.rank, "number") *
+          happyHourFactor
       );
 
       User.update(

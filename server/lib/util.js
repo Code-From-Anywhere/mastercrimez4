@@ -2,6 +2,7 @@ const fetch = require("node-fetch");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const EMAIL_FROM = "noreply@mastercrimez.com";
+const moment = require("moment");
 const { Sequelize, Op } = require("sequelize");
 const SEND_EMAIL_NOTIFICATIONS_ON = false;
 
@@ -64,6 +65,8 @@ const publicUserFields = [
   "creditsTotal",
   "gangId",
   "gangLevel",
+  "prizesCarsStolen",
+  "prizesCrimes",
 ];
 
 const sendChatPushMail = async ({
@@ -75,6 +78,7 @@ const sendChatPushMail = async ({
   message,
   pathImage,
   isSystem,
+  isShareable,
 
   User,
   Channel,
@@ -133,6 +137,7 @@ const sendChatPushMail = async ({
     message,
     image: pathImage,
     isSystem,
+    isShareable,
   });
 
   if (user1) {
@@ -454,7 +459,17 @@ const saveImageIfValid = (res, base64, thumbnail) => {
   }
 };
 
+const isHappyHour = () => {
+  const isSunday = moment().day() === 0; //sunday
+  const is7pm = moment().hour() === 19; //19pm
+  const isHappyHourReleased = moment().isAfter(
+    moment("01/02/2021", "DD/MM/YYYY").set("hour", 17)
+  );
+  return isHappyHourReleased && (isSunday || is7pm);
+};
+
 module.exports = {
+  isHappyHour,
   ranks,
   strengthRanks,
   getRank,

@@ -1,11 +1,12 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   Dimensions,
   FlatList,
   Platform,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { RefreshControl } from "react-native-web-refresh-control";
@@ -84,6 +85,18 @@ const Market = ({
     getMarket();
   };
 
+  const postMarketRemoveOffer = async (offerId) => {
+    setLoading(true);
+    const { response } = await post("marketRemoveOffer", {
+      token: device.loginToken,
+      offerId,
+    });
+    setLoading(false);
+    setResponse(response);
+    reloadMe(device.loginToken);
+    getMarket();
+  };
+
   doOnce(getMarket);
 
   const chooseType = () => {
@@ -114,7 +127,6 @@ const Market = ({
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: "row" }}>
-        {loading && <ActivityIndicator />}
         {response && <T>{response}</T>}
       </View>
 
@@ -188,6 +200,14 @@ const Market = ({
                   margin: MARGIN,
                 }}
               >
+                {item.userId === me?.id && (
+                  <TouchableOpacity
+                    style={{ alignSelf: "flex-end" }}
+                    onPress={() => postMarketRemoveOffer(item.id)}
+                  >
+                    <Entypo name="cross" color={theme.primaryText} size={24} />
+                  </TouchableOpacity>
+                )}
                 <View style={{ flex: 1 }}>
                   <T>
                     {item.isBuy ? getText("requested") : getText("forSale")}

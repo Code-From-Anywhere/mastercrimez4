@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -14,10 +14,11 @@ import {
 import MarkdownView from "react-native-markdown-renderer";
 import { RefreshControl } from "react-native-web-refresh-control";
 import ImageInput from "../components/ImageInput";
+import ShareButtons from "../components/ShareButtons";
 import T from "../components/T";
 import Constants from "../Constants";
 import STYLE from "../Style";
-import { doOnce, get, getTextFunction, post } from "../Util";
+import { get, getTextFunction, post } from "../Util";
 
 const { width, height } = Dimensions.get("window");
 const isBigDevice = width > 500;
@@ -98,6 +99,7 @@ const Footer = ({ me, device, params, fetchChat }) => {
 };
 
 const ChatScreen = ({
+  navigation,
   navigation: {
     state: { params },
   },
@@ -112,7 +114,7 @@ const ChatScreen = ({
   const [chat, setChat] = useState([]);
   const [response, setResponse] = useState(null);
 
-  doOnce(() => {
+  useEffect(() => {
     fetchChat();
 
     const interval = setInterval(() => {
@@ -122,7 +124,7 @@ const ChatScreen = ({
     }, 5000);
 
     return () => clearInterval(interval);
-  });
+  }, []);
 
   const fetchChat = async () => {
     const url = `channelmessage?loginToken=${device.loginToken}&id=${params.id}`;
@@ -208,7 +210,11 @@ const ChatScreen = ({
             />
           ) : null}
 
-          <MarkdownView style={{}}>{item.message}</MarkdownView>
+          <MarkdownView>{item.message}</MarkdownView>
+
+          {item.isShareable && (
+            <ShareButtons me={me} text={item.message} url={``} />
+          )}
         </View>
         {isMe ? avatar : null}
       </View>

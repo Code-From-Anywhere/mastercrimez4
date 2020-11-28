@@ -108,9 +108,9 @@ const ProfileScreen = ({
     return <ActivityIndicator />;
   }
 
-  // if (!profile) {
-  //   return <T>{getText("personDoesntExist")}</T>;
-  // }
+  if (!profile) {
+    return <T>{getText("personDoesntExist")}</T>;
+  }
 
   const isOnline = Date.now() - profile?.onlineAt < 300000;
 

@@ -4,6 +4,15 @@ import CountDown from "react-native-countdown-component";
 import Constants from "./Constants";
 import { getRank, getTextFunction, numberFormat } from "./Util";
 
+export const isHappyHour = () => {
+  const isSunday = moment().day() === 0; //sunday
+  const is7pm = moment().hour() === 19; //19pm
+  const isHappyHourReleased = moment().isAfter(
+    moment("01/02/2021", "DD/MM/YYYY").set("hour", 17)
+  );
+  return isHappyHourReleased && (isSunday || is7pm);
+};
+
 export const InactiveScreens = {
   ACTIONS_BEFORE_BOMB: 60,
   ACTIONS_BEFORE_CASINO: 70,
@@ -19,11 +28,17 @@ export const InactiveScreens = {
   ACTIONS_BEFORE_AIRPORT: 30,
   DAYS_NEW: 14,
   ACTIONS_BEFORE_POLICE: 100,
-  GANG_RELEASE_DATE: moment("01/12/2020", "DD/MM/YYYY"),
-  MARKET_RELEASE_DATE: moment("15/12/2020", "DD/MM/YYYY"),
-  PRIZES_RELEASE_DATE: moment("01/01/2021", "DD/MM/YYYY"),
-  POLICE_RELEASE_DATE: moment("15/01/2021", "DD/MM/YYYY"),
-  WORK_RELEASE_DATE: moment("15/04/2021", "DD/MM/YYYY"),
+  PRIZES_NORMAL_RELEASE_DATE: moment("01/12/2020", "DD/MM/YYYY").set(
+    "hours",
+    17
+  ),
+  GANG_RELEASE_DATE: moment("01/12/2020", "DD/MM/YYYY").set("hours", 17),
+  MARKET_RELEASE_DATE: moment("15/12/2020", "DD/MM/YYYY").set("hours", 17),
+  PRIZES_RELEASE_DATE: moment("01/01/2021", "DD/MM/YYYY").set("hours", 17),
+  POLICE_RELEASE_DATE: moment("15/01/2021", "DD/MM/YYYY").set("hours", 17),
+  //happy hour 1 feb
+
+  WORK_RELEASE_DATE: moment("15/04/2021", "DD/MM/YYYY").set("hours", 17),
 };
 
 export const leftMenu = (me, theme) => {
@@ -53,6 +68,7 @@ export const leftMenu = (me, theme) => {
       header: {
         isHeader: true,
         text: getText("headerCrime"),
+        label: isHappyHour() ? "Happy Hour" : undefined,
       },
 
       content: [
@@ -738,6 +754,22 @@ export const rightMenu = (me, theme) => {
           icon: "bank",
           text: getText("menuVIP"),
           to: "VIP",
+        },
+
+        {
+          inactive: moment().isBefore(
+            InactiveScreens.PRIZES_NORMAL_RELEASE_DATE
+          ),
+          isNew: moment().isBefore(
+            InactiveScreens.PRIZES_RELEASE_DATE.add(
+              InactiveScreens.DAYS_NEW,
+              "days"
+            )
+          ),
+          iconType: "AntDesign",
+          icon: "star",
+          text: getText("prizes"),
+          to: "Prizes",
         },
       ].filter((x) => !!x && !x.inactive),
     },

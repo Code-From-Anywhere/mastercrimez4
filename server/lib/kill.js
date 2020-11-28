@@ -6,6 +6,8 @@ const {
   sendChatPushMail,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
+
+const { removeOffer } = require("./market");
 let getText = getTextFunction();
 
 const properties = [
@@ -27,7 +29,7 @@ const SECONDS = 120;
 const kill = async (
   req,
   res,
-  { User, Channel, ChannelMessage, ChannelSub, City, Action }
+  { User, Channel, ChannelMessage, ChannelSub, City, Action, Gang, Offer }
 ) => {
   const { token, name, bullets } = req.body;
 
@@ -74,7 +76,7 @@ const kill = async (
     return;
   }
 
-  const user2 = await User.findOne({
+  let user2 = await User.findOne({
     where: {
       $and: Sequelize.where(
         Sequelize.fn("lower", Sequelize.col("name")),
@@ -86,6 +88,17 @@ const kill = async (
   if (!user2) {
     res.json({ response: getText("personDoesntExist") });
     return;
+  }
+
+  const meRankNumber = getRank(user.rank, "number");
+  const heRankNumber = getRank(user2.rank, "number");
+
+  if (meRankNumber - heRankNumber > 5 || heRankNumber - meRankNumber > 5) {
+    return res.json({ response: getText("killRankDifferenceTooBig") });
+  }
+
+  if (user2.gangId === user.gangId && user.gangId !== null) {
+    return res.json({ response: getText("killSameGang") });
   }
 
   const getUserText = getTextFunction(user2.locale);
@@ -165,13 +178,9 @@ const kill = async (
   }
 
   const meRank =
-    getRank(user.rank, "number") +
-    getStrength(user.strength, "number") +
-    user.weapon;
+    meRankNumber + getStrength(user.strength, "number") + user.weapon;
   const heRank =
-    getRank(user2.rank, "number") +
-    getStrength(user2.strength, "number") +
-    user2.protection;
+    heRankNumber + getStrength(user2.strength, "number") + user2.protection;
 
   const bulletsNeeded = Math.round(
     Math.sqrt(heRank / meRank) * 50000 * getRank(user2.rank, "number")
@@ -195,6 +204,10 @@ const kill = async (
   let responseMessageBackfire;
 
   if (damageBackfire >= user.health) {
+    Offer.findAll({ where: { userId: user.id } }).then((offers) =>
+      offers.map((offer) => removeOffer({ id: offer.id, Offer, User }))
+    );
+
     responseBackfire = getText(
       "killResponseBackfire",
       user2.name,
@@ -269,8 +282,83 @@ const kill = async (
   );
 
   if (damage >= user2.health) {
+    //user2 gaat dood
+    const offers = await Offer.findAll({ where: { userId: user2.id } });
+    await Promise.all(
+      offers.map((offer) => removeOffer({ id: offer.id, Offer, User }))
+    );
+
+    //find user2 again because his stuff changed.
+
+    user2 = await User.findOne({ where: { id: user2.id } });
+
     const gamepoints = Math.round(user2.gamepoints * 0.1);
     const money = user2.bank + user2.cash;
+
+    let amountBulletsStolenGangbank = 0;
+    let amountCashStolenGangbank = 0;
+    let responseGang = "";
+    let responseMessageGang = "";
+
+    if (user2.gangId) {
+      const MAX_PERCENTAGE_GANGBANK = 0.1;
+      const PERCENTAGE_GANG_DEAD = 0.5;
+      const gang = await Gang.findOne({ where: { id: user2.gangId } });
+      const gangMembersDead = (
+        await User.findAll({ where: { health: 0, gangId: user2.gangId } })
+      ).length;
+      const gangMembers = await User.findAll({
+        where: { gangId: user2.gangId },
+      });
+      const percentageDead = gangMembersDead / gangMembers.length;
+
+      const percentageOfGangBank =
+        percentageDead > PERCENTAGE_GANG_DEAD
+          ? MAX_PERCENTAGE_GANGBANK
+          : (percentageDead / PERCENTAGE_GANG_DEAD) * MAX_PERCENTAGE_GANGBANK;
+
+      amountCashStolenGangbank = gang.bank * percentageOfGangBank;
+      amountBulletsStolenGangbank = gang.bullets * percentageOfGangBank;
+
+      responseMessageGang = getText(
+        "killGangMessage",
+        percentageOfGangBank * 100,
+        amountCashStolenGangbank,
+        amountBulletsStolenGangbank
+      );
+      responseGang = getText(
+        "killGangSuccess",
+        percentageOfGangBank * 100,
+        amountCashStolenGangbank,
+        amountBulletsStolenGangbank
+      );
+
+      Gang.update(
+        {
+          bank: Sequelize.literal(`bank - ${amountCashStolenGangbank}`),
+          bullets: Sequelize.literal(
+            `bullets - ${amountBulletsStolenGangbank}`
+          ),
+        },
+        { where: { id: gang.id } }
+      );
+
+      sendChatPushMail({
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+        User,
+        isSystem: true,
+        message: getAccompliceText(
+          "killSuccessAccompliceMessage",
+          user.name,
+          user2.name,
+          bullets
+        ),
+        user1: user,
+        gang,
+      });
+    }
 
     res.json({
       response: getText(
@@ -279,15 +367,18 @@ const kill = async (
         user2.name,
         money,
         gamepoints,
-        responseBackfire
+        responseBackfire,
+        responseGang
       ),
     });
 
     User.update(
       {
-        cash: user.cash + user2.cash,
-        bank: user.bank + user2.bank,
-        gamepoints: user.gamepoints + gamepoints,
+        cash: Sequelize.literal(
+          `cash + ${user2.cash} + ${user2.bank} + ${amountCashStolenGangbank}`
+        ),
+        bullets: Sequelize.literal(`bullets +${amountBulletsStolenGangbank}`),
+        gamepoints: Sequelize.literal(`gamepoints + ${gamepoints}`),
       },
       { where: { id: user.id } }
     );
@@ -323,7 +414,8 @@ const kill = async (
         "killMessage",
         user.name,
         bullets,
-        responseMessageBackfire
+        responseMessageBackfire,
+        responseMessageGang
       ),
       user1: user,
       user2,
@@ -369,8 +461,10 @@ const kill = async (
       });
     });
   } else {
+    //user2 gaat niet dood maar krijgt schade
+
     const stolenCash = Math.round((user2.cash * damage) / 100);
-    const stolenBank = Math.round((user2.cash * damage) / 100);
+    const stolenBank = Math.round((user2.bank * damage) / 100);
     const stolenTotal = stolenCash + stolenBank;
 
     User.update(

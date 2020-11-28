@@ -66,14 +66,6 @@ class Status extends Component {
           IconFont="Entypo"
           icon="network"
         />
-        <Menu
-          theme={theme}
-          navigation={navigation}
-          title={getText("prizes")}
-          to="Prizes"
-          IconFont="AntDesign"
-          icon="star"
-        />
       </View>
     );
   }

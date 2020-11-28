@@ -303,7 +303,6 @@
   "gamble": "Gok",
   "policeInfo": "De politie zorgt ervoor dat de hackers zich niet teveel kunnen misdragen. De politie krijgt elke dag 1 miljoen kogels van de overheid om hackers tegen te gaan.",
   "currentPolice": "Huidige politie",
-  "policeBulletBank": "Politie Kogelbank",
   "currentlyNoPrizes": "Er zijn momenteel geen prijzen",
   "personDoesntExist": "Deze persoon bestaat niet",
 
@@ -480,5 +479,19 @@
   "new": "Nieuw",
   "lastOnline": "Laatst online",
   "filter": "Filter",
-  "average": "Gemiddelde"
+  "average": "Gemiddelde",
+  "scheduled": "Gepland",
+  "prizesText": "# Prijzen\n\nBeste gang: 2500 credits per ganglid.\n\nMooiste profiel: [Tronsmart Earpods](https://www.bol.com/nl/p/tronsmart-onyx-ace-wit-oordopjes-draadloos-earbuds-wireless-bluetooth-5-0-noise-cancellation-qualcomm-chip/9300000008546026/?bltgh=t59CbWyS0X5KCBRj65tBMQ.1_10.12.ProductTitle) t.w.v. €47,- of 6000 credits\n\nDesign een logo (1024x1024pixels) voor MasterCrimeZ voor de app iconen. De mooiste krijgt de earpods zoals boven, of 6000 credits.\n\nMeeste gamepoints: Solar Powerbank t.w.v. €95 euro of 12.000 credits. \n\n Het eind van deze ronde is zondag 27 december 2020 om 17:00.",
+  "prizesInactiveText": "Er zijn momenteel geen prijzen",
+  "prizegamepointstitle": "Meeste gamepoints",
+  "prizeranktitle": "Hoogste rang",
+  "prizegangtitle": "Beste gang",
+  "prizestrengthtitle": "Hoogste moordervaring",
+  "prizeprizesCarsStolentitle": "Meeste auto's gestolen",
+  "prizeprizesCrimestitle": "Meeste misdaden gedaan",
+  "everyHour": "Elk uur",
+  "everyDay5pm": "Elke middag om 17:00",
+  "everyWeekSunday5pm": "Elke zondag 17:00",
+  "prizesCarsStolen": "Auto's gestolen",
+  "prizesCrimes": "Misdaden gedaan"
 }
