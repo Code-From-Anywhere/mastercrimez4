@@ -4,6 +4,7 @@ const {
   needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
+  getSpecial,
 } = require("./util");
 const moment = require("moment");
 const { isHappyHour } = require("./util");
@@ -41,7 +42,8 @@ const crime = async (req, res, User, Action, Code) => {
     }
     if (user.crimeAt + 60000 < Date.now()) {
       const kans = Math.round((user.rank + 30) / (option * option));
-      const kans2 = kans > 75 ? 75 : kans;
+      const maxChance = user.profession === "thief" ? 99 : 75;
+      const kans2 = kans > maxChance ? maxChance : kans;
 
       const random = Math.ceil(Math.random() * 100);
 
@@ -97,6 +99,8 @@ const crime = async (req, res, User, Action, Code) => {
           ),
         });
 
+        const specialText = getSpecial(User, user);
+
         const stolen = Math.ceil(
           Math.random() *
             option *
@@ -134,7 +138,10 @@ const crime = async (req, res, User, Action, Code) => {
             what,
             amount,
           });
-          res.json({ response: getText("crimeSuccessSuitcase", stolen), code });
+          res.json({
+            response: getText("crimeSuccessSuitcase", stolen) + specialText,
+            code,
+          });
         } else {
           res.json({ response: getText("crimeSuccess", stolen) });
         }

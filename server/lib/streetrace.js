@@ -15,7 +15,7 @@ const createStreetrace = async (
   Garage,
   Action
 ) => {
-  let { loginToken, numParticipants, type, price, carId } = req.body;
+  let { loginToken, numParticipants, type, price, prize, carId } = req.body;
   numParticipants = Math.round(numParticipants);
   type = TYPES.includes(type) ? type : TYPES[0];
 
@@ -27,6 +27,11 @@ const createStreetrace = async (
   }
 
   if (price <= 0 || isNaN(price)) {
+    res.json({ response: getText("invalidAmount") });
+    return;
+  }
+
+  if (prize < 0 || isNaN(prize)) {
     res.json({ response: getText("invalidAmount") });
     return;
   }
@@ -65,18 +70,18 @@ const createStreetrace = async (
   if (!carAsset) {
     return res.json({ response: getText("streetraceNoCarAsset") });
   }
-
-  if (user.cash < Number(price)) {
-    return res.json({ response: getText("notEnoughCash", price) });
+  const cost = Number(price) + Number(prize);
+  if (user.cash < cost) {
+    return res.json({ response: getText("notEnoughCash", cost) });
   }
 
   const [updated] = await User.update(
-    { cash: user.cash - price, onlineAt: Date.now() },
-    { where: { id: user.id, cash: { [Op.gte]: price } } }
+    { cash: user.cash - cost, onlineAt: Date.now() },
+    { where: { id: user.id, cash: { [Op.gte]: cost } } }
   );
 
   if (updated !== 1) {
-    return res.json({ response: getText("notEnoughCash", price) });
+    return res.json({ response: getText("notEnoughCash", cost) });
   }
 
   if (isNaN(numParticipants) || numParticipants < 2 || numParticipants > 24) {
@@ -90,6 +95,7 @@ const createStreetrace = async (
     numParticipants,
     type,
     price,
+    prize,
     creator: user.name,
   });
 
@@ -392,7 +398,8 @@ const startStreetrace = async (
   if (streetraceDestroyed === 0) {
     return res.json({ response: getText("streetraceStartAlready") });
   }
-  const prizeMoney = streetrace.price * streetrace.numParticipants;
+  const prizeMoney =
+    streetrace.price * streetrace.numParticipants + streetrace.prize;
 
   User.update(
     { bank: Sequelize.literal(`bank + ${prizeMoney}`) },

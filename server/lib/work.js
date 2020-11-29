@@ -4,18 +4,22 @@ const {
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
 } = require("./util");
-
+const moment = require("moment");
 let getText = getTextFunction();
 
+const workReleaseDate = moment("15/04/2021", "DD/MM/YYYY").set("hour", 17);
+
 const work = async (req, res, User, Action) => {
-  const { token, option, captcha } = req.body;
+  let { token, option, captcha } = req.body;
+
+  option = Math.round(option);
 
   if (!token) {
     res.json({ response: getText("noToken") });
     return;
   }
 
-  if (!option || option <= 0 || option > 15) {
+  if (!option || option < 1 || option > 7) {
     res.json({ response: getText("invalidInput") });
     return;
   }
@@ -36,6 +40,10 @@ const work = async (req, res, User, Action) => {
 
   getText = getTextFunction(user.locale);
 
+  if (moment().isBefore(workReleaseDate) && user.level < 2) {
+    return res.json({ response: getText("noAccess") });
+  }
+
   if (user.needCaptcha && Number(captcha) !== user.captcha) {
     return res.json({ response: getText("wrongCode") });
   }
@@ -52,21 +60,22 @@ const work = async (req, res, User, Action) => {
     return res.json({ response: getText("youreTraveling") });
   }
 
-  if (user.workAt > Date.now()) {
-    const minute = Math.round((user.workAt - Date.now()) / (60 * 1000));
+  if (user.workEndsAt > Date.now()) {
+    const minute = Math.round((user.workEndsAt - Date.now()) / (60 * 1000));
     return res.json({
       response: getText("workWait", minute),
     });
   }
 
-  const kans = Math.round((user.rank + 30) / (option * option));
-  const kans2 = kans > 75 ? 75 : kans;
-
-  const random = Math.ceil(Math.random() * 100);
+  if (user.isWorkingOption) {
+    return res.json({ response: getText("stillWorking") });
+  }
+  const hours = option <= 6 ? option : 8; //lol
 
   const [updated] = await User.update(
     {
-      crimeAt: Date.now(),
+      workEndsAt: Date.now() + 3600000 * hours,
+      isWorkingOption: option,
       onlineAt: Date.now(),
       captcha: null,
       needCaptcha: needCaptcha(),
@@ -75,7 +84,7 @@ const work = async (req, res, User, Action) => {
     {
       where: {
         loginToken: token,
-        crimeAt: { [Op.lt]: Date.now() - 60000 },
+        workEndsAt: { [Op.lt]: Date.now() },
       },
     }
   );
@@ -86,57 +95,11 @@ const work = async (req, res, User, Action) => {
 
   Action.create({
     userId: user.id,
-    action: "crime",
+    action: "work",
     timestamp: Date.now(),
   });
 
-  if (kans2 >= random) {
-    const accomplices = await User.findAll({
-      attributes: ["name"],
-      where: Sequelize.and(
-        { ocAt: { [Op.gt]: Date.now() - 120000 } },
-        Sequelize.or(
-          { accomplice: user.name },
-          { accomplice2: user.name },
-          { accomplice3: user.name },
-          { accomplice4: user.name }
-        )
-      ),
-    });
-
-    const stolen = Math.ceil(
-      Math.random() * option * 10000 * (accomplices.length + 1)
-    );
-    User.update(
-      {
-        rank: user.rank + option * 3,
-        cash: user.cash + stolen,
-        gamepoints: user.gamepoints + 1,
-      },
-      { where: { loginToken: token } }
-    );
-
-    res.json({
-      response: getText("workSuccess", stolen),
-    });
-  } else {
-    const random2 = Math.ceil(Math.random() * 100);
-
-    if (random2 > 50) {
-      const seconden = 90;
-      User.update(
-        { jailAt: Date.now() + seconden * 1000 },
-        { where: { id: user.id } }
-      );
-      res.json({
-        response: getText("workFail", seconden),
-      });
-    } else {
-      res.json({ response: getText("fail") });
-    }
-
-    //create activity with all variables
-  }
+  res.json({ response: getText("workSuccess") });
 };
 
 module.exports = { work };

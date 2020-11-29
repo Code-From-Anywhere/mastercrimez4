@@ -496,5 +496,30 @@
   "everyDay5pm": "every afternoon at 5pm",
   "everyWeekSunday5pm": "Every sunday 5pm",
   "prizesCarsStolen": "Cars stolen",
-  "prizesCrimes": "Crimes done"
+  "prizesCrimes": "Crimes done",
+
+  "addedPrizeMoney": "Added prizemoney",
+
+  "killerAdvantage": "You need 10% less bullets to kill someone",
+  "jailbreakerAdvantage": "You break out people twice as easy from jail",
+  "carthiefAdvantage": "You steal cars a third faster and your car rank increases faster",
+  "bankerAdvantage": "You get 7% rent",
+  "thiefAdvantage": "You got more chance on crimes.",
+  "pimpAdvantage": "You pimp 30% more prostitutes",
+  "weedgrowerAdvantage": "You grow 30% more weed",
+  "killer": "Murderer",
+  "jailbreaker": "Jailbreaker",
+  "carthief": "Carthief",
+  "banker": "Banker",
+  "thief": "Thief",
+  "pimp": "Pimp",
+  "weedgrower": "Weed-grower",
+  "choose": "Choose",
+  "youAreProfession": "You are $1",
+  "statusCanChooseProfessionText": "You can choose a new profession!",
+  "statusCanChooseProfessionButton": "Choose profession",
+  "workWait": "You have to wait $1 minutes",
+  "menuSint": "Put your shoe",
+  "sintCTA": "Put your shoe under the fireplace",
+  "sintWait": "You have to wait $1 minutes."
 }

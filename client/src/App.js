@@ -56,6 +56,7 @@ import ChangePassword from "./screens/ChangePassword";
 import Channel from "./screens/Channel";
 import Channels from "./screens/Channels";
 import Chat from "./screens/Chat";
+import ChooseProfession from "./screens/ChooseProfession";
 import Code from "./screens/Code";
 import Contribute from "./screens/Contribute";
 import CreateStreetrace from "./screens/CreateStreetrace";
@@ -104,6 +105,7 @@ import Settings from "./screens/Settings";
 import Shop from "./screens/Shop";
 import SignupEmail from "./screens/SignupEmail";
 import SignupEmail2 from "./screens/SignupEmail2";
+import Sint from "./screens/Sint";
 import Stats from "./screens/Stats";
 import Status from "./screens/Status";
 import StealCar from "./screens/StealCar";
@@ -643,6 +645,8 @@ const Container = rightContainer(
       DownloadApp: DownloadApp,
       VIP: withLayout(VIP),
       Market: withLayout(Market),
+      Sint: withLayout(Sint),
+      ChooseProfession: withLayout(ChooseProfession),
       Profile: {
         screen: withLayout(Profile),
         path: "Profile/:name",

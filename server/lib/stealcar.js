@@ -5,6 +5,7 @@ const {
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
   getLocale,
+  getSpecial,
 } = require("./util");
 const cars = require("../assets/cars.json");
 let getText = getTextFunction();
@@ -124,6 +125,8 @@ const stealcar = async (req, res, User, Garage, Action) => {
         let n = (accomplices.length + 1) * happyHourFactor;
         while (n--) carsArray.push({ car: true });
 
+        const carthiefAdvantage = user.profession === "carthief" ? 2 : 1;
+
         const allCars = carsArray.map((a) => {
           const car = randomEntry(
             cars.filter(
@@ -144,7 +147,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
 
           User.update(
             {
-              rank: user.rank + option * 3,
+              rank: user.rank + option * 3 * carthiefAdvantage,
               gamepoints: user.gamepoints + 1,
               prizesCarsStolen: user.prizesCarsStolen + 1,
             },
@@ -155,7 +158,7 @@ const stealcar = async (req, res, User, Garage, Action) => {
         });
 
         res.json({
-          response: getText("success"),
+          response: getText("success") + getSpecial(User, user),
           cars: allCars,
         });
       } else {

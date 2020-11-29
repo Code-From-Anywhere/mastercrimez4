@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MarkdownView from "react-native-markdown-renderer";
+import MarkdownView from "react-native-markdown-display";
 import Button from "../components/Button";
 import T from "../components/T";
 import Tabs from "../components/Tabs";

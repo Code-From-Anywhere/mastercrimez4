@@ -182,8 +182,13 @@ const kill = async (
   const heRank =
     heRankNumber + getStrength(user2.strength, "number") + user2.protection;
 
+  const killerAdvantage = user.profession === "killer" ? 0.9 : 1;
+
   const bulletsNeeded = Math.round(
-    Math.sqrt(heRank / meRank) * 50000 * getRank(user2.rank, "number")
+    Math.sqrt(heRank / meRank) *
+      50000 *
+      getRank(user2.rank, "number") *
+      killerAdvantage
   );
 
   const backfireBulletsNeeded = Math.round(
@@ -574,7 +579,12 @@ const getalive = async (req, res, User, Action) => {
   });
 
   User.update(
-    { health: 100, protectionAt: Date.now() + 86400000, rankKnow: 0 },
+    {
+      canChooseProfession: true,
+      health: 100,
+      protectionAt: Date.now() + 86400000,
+      rankKnow: 0,
+    },
     { where: { id: user.id } }
   );
   res.json({ response: getText("youreAlive") });

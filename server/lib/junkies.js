@@ -4,6 +4,7 @@ const {
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
   isHappyHour,
+  getSpecial,
 } = require("./util");
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
@@ -97,7 +98,8 @@ const junkies = async (req, res, User, Action) => {
       );
 
       res.json({
-        response: getText("junkiesSuccess", random, name),
+        response:
+          getText("junkiesSuccess", random, name) + getSpecial(User, user),
       });
     } else {
       const sec = Math.round((user[timeKey] + timeNeeded - Date.now()) / 1000);

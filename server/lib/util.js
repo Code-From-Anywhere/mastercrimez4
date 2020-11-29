@@ -67,6 +67,7 @@ const publicUserFields = [
   "gangLevel",
   "prizesCarsStolen",
   "prizesCrimes",
+  "profession",
 ];
 
 const sendChatPushMail = async ({
@@ -468,7 +469,40 @@ const isHappyHour = () => {
   return isHappyHourReleased && (isSunday || is7pm);
 };
 
+const getSpecial = (User, user) => {
+  const getText = getTextFunction(user.locale);
+  const isEaster = moment().month() === 3 && moment().date() < 15; //1-4 tot 15-4
+  const isChristmas =
+    moment().year() > 2020 && moment().month() === 11 && moment().date() > 15;
+  const isHalloween = moment().month() === 9 && moment().date() > 15;
+  const isSpecial = isEaster || isChristmas || isHalloween;
+  if (!isSpecial) {
+    return "";
+  }
+  const chance = Math.random();
+  const probability = 0.1;
+  const success = chance < probability;
+  const presentCredits = Math.round(Math.random() * 20); //10 average, 10% kans = 1 average
+
+  const text = isEaster
+    ? "youFoundPresentEaster"
+    : isChristmas
+    ? "youFoundPresentChristmas"
+    : "youFoundPresentHalloween";
+
+  const speciality = success ? "\n\n" + getText(text, presentCredits) : "";
+
+  if (success) {
+    User.update(
+      { credits: Sequelize.literal(`credits+${presentCredits}`) },
+      { where: { id: user.id } }
+    );
+  }
+  return speciality;
+};
+
 module.exports = {
+  getSpecial,
   isHappyHour,
   ranks,
   strengthRanks,

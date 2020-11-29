@@ -36,7 +36,7 @@
     "react-native-countdown-component": "^2.7.1",
     "react-native-easy-grid": "^0.2.2",
     "react-native-gesture-handler": "~1.6.0",
-    "react-native-markdown-renderer": "^3.2.8",
+    "react-native-markdown-display": "^7.0.0-alpha.2",
     "react-native-marquee": "^0.3.2",
     "react-native-md5": "^1.0.0",
     "react-native-reanimated": "~1.9.0",

@@ -25,6 +25,7 @@ const CreateStreetrace = ({
   const [numParticipants, setNumParticipants] = useState("4");
   const [type, setType] = useState("highway");
   const [price, setPrice] = useState("");
+  const [prize, setPrize] = useState("0");
   const [car, setCar] = useState();
 
   const fetchRacecars = async () => {
@@ -42,6 +43,7 @@ const CreateStreetrace = ({
       numParticipants,
       type,
       price,
+      prize,
       carId: car?.id,
     });
     reloadMe(loginToken);
@@ -92,6 +94,13 @@ const CreateStreetrace = ({
           style={style(theme).textInput}
           value={price}
           onChangeText={(x) => setPrice(x)}
+        />
+
+        <T style={{ marginTop: 15 }}>{getText("addedPrizeMoney")}</T>
+        <TextInput
+          style={style(theme).textInput}
+          value={prize}
+          onChangeText={(x) => setPrize(x)}
         />
 
         <T style={{ marginTop: 15, marginBottom: 10 }}>

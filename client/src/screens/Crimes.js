@@ -26,7 +26,8 @@ class Crimes extends Component {
     } = this.props.screenProps;
 
     const kans = Math.round((me?.rank + 30) / (item.id * item.id));
-    const kans2 = kans > 75 ? 75 : kans;
+    const maxChance = me?.profession === "thief" ? 99 : 75;
+    const kans2 = kans > maxChance ? maxChance : kans;
 
     const backgroundColor =
       this.state.selected === item.id ? "#2c98f0" : undefined;

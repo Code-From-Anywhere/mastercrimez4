@@ -245,8 +245,7 @@
   "swissBankSuccess": "You have $1 $2 $3",
   "weedSuccess": "You have grown $1 $2",
   "weedWait": "You'll have to wait $1 seconds before you can do this again.",
-  "workWait": "You'll have to wait $2 minutes.",
-  "workSuccess": "Success. You've earned €$1,-",
+  "workWait": "You'll have to wait $1 minutes.",
   "workFail": "Failed. You're now in jail for $1 seconds",
 
   "messageMailSubject": "New Message MasterCrimeZ",
@@ -351,5 +350,23 @@
   "strength": "Strength",
 
   "prizesCrimes": "Crimes done",
-  "prizesCarsStolen": "Cars stolen"
+  "prizesCarsStolen": "Cars stolen",
+  "cantChooseProfession": "You can't choose your profession",
+  "chooseProfessionSuccess": "You are now $1",
+  "youFoundPresentEaster": "You also found an egg with $1 in it!",
+  "youFoundPresentChristmas": "You also found a present with $1 credits inside!",
+  "youFoundPresentHalloween": "You also found a present with $1 credits inside!",
+  "stillWorking": "You're still working",
+  "worked1": "You cleaned up the trash and earned €$1,-",
+  "worked2": "You cleaned the toilets and earned €$1,-",
+  "worked3": "You went in the army and earned €$1,-",
+  "worked4": "You gambled in a gamble café and earned €$1,-",
+  "worked5": "You worked with the mafia in Italy and earned €$1,-",
+  "worked6": "You worked as a police and earned €$1,-",
+  "worked7": "You tried to become president and earned €$1,-",
+
+  "sinted": "You have put your shoe under the fireplace. Sint dropped €$1,- in it",
+
+  "workSuccess": "You're now working. Come back when you're finished.",
+  "sintSuccess": "You've put your shoe under the fireplace. It takes 24 hours for sint to respond."
 }

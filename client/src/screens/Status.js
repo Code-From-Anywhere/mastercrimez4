@@ -1,9 +1,16 @@
+import moment from "moment";
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
 import { getRank, getStrength, getTextFunction } from "../Util";
+
+const professionReleaseDate = moment("15/03/2021", "DD/MM/YYYY").set(
+  "hour",
+  17
+);
 
 class Status extends Component {
   state = {
@@ -32,6 +39,7 @@ class Status extends Component {
     return (
       <View style={{ flex: 1 }}>
         {response ? <T>{response}</T> : null}
+
         {me?.protectionAt > Date.now() ? (
           <TouchableOpacity
             onPress={() => {
@@ -59,6 +67,17 @@ class Status extends Component {
             </View>
           </TouchableOpacity>
         ) : null}
+
+        {me?.canChooseProfession &&
+          (moment().isAfter(professionReleaseDate) || me?.level > 1) && (
+            <View>
+              <T>{getText("statusCanChooseProfessionText")}</T>
+              <Button
+                title={getText("statusCanChooseProfessionButton")}
+                onPress={() => navigation.navigate("ChooseProfession")}
+              />
+            </View>
+          )}
 
         <View style={{ marginHorizontal: 20 }}>
           {this.keyValue(getText("cash"), `€${me?.cash}`)}

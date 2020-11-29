@@ -64,13 +64,15 @@ const allUserFields = publicUserFields.concat([
   "ocAt",
   "bombAt",
   "protectionAt",
-  "workAt",
+  "workEndsAt",
+  "sintEndsAt",
   "swissBank",
   "rankKnow",
   "swissBullets",
   "needCaptcha",
   "numActions",
   "locale",
+  "canChooseProfession",
 ]);
 
 function me(token) {
@@ -134,6 +136,15 @@ User.init(
     forgotPasswordToken: DataTypes.STRING,
     activated: DataTypes.BOOLEAN,
     level: DataTypes.INTEGER,
+
+    profession: {
+      type: DataTypes.STRING,
+      defaultValue: "thief",
+    },
+    canChooseProfession: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
 
     prizesCarsStolen: {
       type: DataTypes.INTEGER,
@@ -205,9 +216,22 @@ User.init(
       type: DataTypes.BIGINT,
       defaultValue: 0,
     },
-    workAt: {
+    workEndsAt: {
       type: DataTypes.BIGINT,
       defaultValue: 0,
+    },
+    isWorkingOption: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
+    sintEndsAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    isSint: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     reizenAt: {
       type: DataTypes.BIGINT,
@@ -390,7 +414,11 @@ Streetrace.init(
     city: DataTypes.STRING,
     numParticipants: DataTypes.INTEGER,
     type: DataTypes.STRING,
-    price: DataTypes.INTEGER,
+    price: DataTypes.BIGINT,
+    prize: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
     creator: DataTypes.STRING,
   },
   { sequelize, modelName: "streetrace" }
@@ -1075,12 +1103,19 @@ server.post("/work", (req, res) =>
   require("./work").work(req, res, User, Action)
 );
 
+server.post("/sint", (req, res) =>
+  require("./sinterklaas").sint(req, res, User, Action)
+);
+
 server.post("/gym", (req, res) => require("./gym").gym(req, res, User, Action));
 
 server.post("/hoeren", (req, res) =>
   require("./hoeren").hoeren(req, res, User, Action)
 );
 
+server.post("/chooseProfession", (req, res) =>
+  require("./profession").chooseProfession(req, res, User, Action)
+);
 server.post("/becomeOwner", (req, res) =>
   require("./manageObject").becomeOwner(req, res, User, City)
 );
@@ -2431,7 +2466,12 @@ const putBulletsInBulletFactories = async () => {
 
 const giveInterest = () => {
   console.log("rente", new Date());
-  sequelize.query(`UPDATE users SET bank=ROUND(bank*1.05) WHERE health > 0`);
+  sequelize.query(
+    `UPDATE users SET bank=ROUND(bank*1.05) WHERE health > 0 AND profession != 'banker'`
+  );
+  sequelize.query(
+    `UPDATE users SET bank=ROUND(bank*1.07) WHERE health > 0 AND profession = 'banker'`
+  );
 };
 
 const deadPeopleTax = () => {
@@ -2635,6 +2675,83 @@ const givePoliceBullets = () => {
   ); // give police a million bullets a day, with 10million max.
 };
 
+const createStreetraces = async (period) => {
+  const releaseDate = moment("01/03/2021", "DD/MM/YYYY").set("hour", 17);
+  const isReleased = moment().isAfter(releaseDate);
+  if (!isReleased) {
+    return;
+  }
+  const citiesArr = (await City.findAll({})).map((city) => city.city);
+  const randomCity = () =>
+    citiesArr[Math.floor(Math.random() * citiesArr.length)];
+  const TYPES = ["highway", "city", "forest"];
+  const randomType = () => TYPES[Math.floor(Math.random() * TYPES.length)];
+  const creatorName = (await User.findOne({ where: { level: 10 } })).name;
+
+  const allRaces = {
+    week: [
+      {
+        city: randomCity(),
+        numParticipants: 20,
+        type: randomType(),
+        price: 500000,
+        prize: 4500000,
+        creator: creatorName,
+      },
+
+      {
+        city: randomCity(),
+        numParticipants: 20,
+        type: randomType(),
+        price: 3000000,
+        prize: 30000000,
+        creator: creatorName,
+      },
+
+      {
+        city: randomCity(),
+        numParticipants: 20,
+        type: randomType(),
+        price: 30000000,
+        prize: 300000000,
+        creator: creatorName,
+      },
+    ],
+    day: [
+      {
+        city: randomCity(),
+        numParticipants: 6,
+        type: randomType(),
+        price: 100000,
+        prize: 300000,
+        creator: creatorName,
+      },
+
+      {
+        city: randomCity(),
+        numParticipants: 6,
+        type: randomType(),
+        price: 1000000,
+        prize: 3000000,
+        creator: creatorName,
+      },
+
+      {
+        city: randomCity(),
+        numParticipants: 6,
+        type: randomType(),
+        price: 10000000,
+        prize: 30000000,
+        creator: creatorName,
+      },
+    ],
+  };
+
+  allRaces[period].map((race) => {
+    Streetrace.create(race);
+  });
+};
+
 const cleanupDatabase = async () => {
   //remove movements and actions older than two days
   const movementDestroyed = await Movement.destroy({
@@ -2651,7 +2768,72 @@ const cleanupDatabase = async () => {
   // );
 };
 
-if (process.env.NODE_APP_INSTANCE == 0) {
+const awardForWork = async () => {
+  const worked = await User.findAll({
+    where: {
+      isWorkingOption: { [Op.gte]: 1 },
+      workEndsAt: { [Op.lte]: Date.now() },
+    },
+  });
+
+  worked.forEach((user) => {
+    const hours = user.isWorkingOption <= 6 ? user.isWorkingOption : 8;
+    let earned = Math.round(Math.random() * hours * 200000);
+    if (Math.random() < 0.1) earned = earned * 10;
+    if (Math.random() < 0.01) earned = earned * 10;
+
+    //gemiddeld 300k per uur
+
+    User.update(
+      { cash: Sequelize.literal(`cash+${earned}`), isWorkingOption: 0 },
+      { where: { id: user.id } }
+    );
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      isShareable: true,
+      isSystem: true,
+      message: getText("worked" + user.isWorkingOption, earned),
+      user2: user,
+    });
+  });
+};
+
+const awardForSint = async () => {
+  const sinted = await User.findAll({
+    where: {
+      isSint: true,
+      sintEndsAt: { [Op.lte]: Date.now() },
+    },
+  });
+
+  sinted.forEach((user) => {
+    let earned = Math.round(Math.random() * 24 * 200000);
+    if (Math.random() < 0.1) earned = earned * 10;
+    if (Math.random() < 0.01) earned = earned * 10;
+
+    //gemiddeld 300k per uur
+
+    User.update(
+      { cash: Sequelize.literal(`cash+${earned}`), isSint: 0 },
+      { where: { id: user.id } }
+    );
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      isShareable: true,
+      isSystem: true,
+      message: getText("sinted", earned),
+      user2: user,
+    });
+  });
+};
+
+if (true || process.env.NODE_APP_INSTANCE == 0) {
   console.log("Scheduling CRONS....");
 
   /*
@@ -2665,10 +2847,11 @@ if (process.env.NODE_APP_INSTANCE == 0) {
   second ( optional )
   */
 
-  //elke minuut
-  // cron.schedule("* * * * *", async () => {
-  //   checkScheduledMessages();
-  // });
+  // elke minuut
+  cron.schedule("* * * * *", async () => {
+    awardForWork();
+    awardForSint();
+  });
 
   //elk uur
   cron.schedule(
@@ -2696,6 +2879,7 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     "0 17 * * 0",
     function () {
       awardPrizes("week");
+      createStreetraces("week");
     },
     { timezone: "Europe/Amsterdam" }
   );
@@ -2726,6 +2910,16 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     "0 19 * * *",
     function () {
       //send push notification that happy hour is started
+    },
+    { timezone: "Europe/Amsterdam" }
+  );
+
+  //elke dag 10:00
+  cron.schedule(
+    "0 10 * * *",
+    function () {
+      //send push notification that happy hour is started
+      createStreetraces("day");
     },
     { timezone: "Europe/Amsterdam" }
   );

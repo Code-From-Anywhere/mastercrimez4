@@ -493,5 +493,29 @@
   "everyDay5pm": "Elke middag om 17:00",
   "everyWeekSunday5pm": "Elke zondag 17:00",
   "prizesCarsStolen": "Auto's gestolen",
-  "prizesCrimes": "Misdaden gedaan"
+  "prizesCrimes": "Misdaden gedaan",
+
+  "addedPrizeMoney": "Toegevoegd prijzengeld",
+
+  "killerAdvantage": "Je hebt 10% minder kogels nodig om iemand te vermoorden",
+  "jailbreakerAdvantage": "Je breekt 2x zo makkelijk mensen uit",
+  "carthiefAdvantage": "Je steelt een derde sneller auto's, en je autorang stijgt sneller",
+  "bankerAdvantage": "Je krijgt 7% rente",
+  "thiefAdvantage": "Je hebt meer kans op misdaden.",
+  "pimpAdvantage": "Je pimpt 30% meer hoeren",
+  "weedgrowerAdvantage": "Je teelt 30% meer wietplanten",
+  "killer": "Moordenaar",
+  "jailbreaker": "Uitbreker",
+  "carthief": "Autodief",
+  "banker": "Bankier",
+  "thief": "Dief",
+  "pimp": "Pimp",
+  "weedgrower": "Wiet-teler",
+  "choose": "Kies",
+  "youAreProfession": "Jij bent $1",
+  "statusCanChooseProfessionText": "Je kan een nieuw beroep kiezen!",
+  "statusCanChooseProfessionButton": "Kies beroep",
+  "workWait": "Je moet nog $1 minuten wachten",
+  "menuSint": "Schoentje zetten",
+  "sintWait": "Je moet nog $1 minuten wachten."
 }

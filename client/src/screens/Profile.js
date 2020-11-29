@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MarkdownView from "react-native-markdown-renderer";
+import Markdown from "react-native-markdown-display";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -22,6 +22,11 @@ import {
   getUserColor,
 } from "../Util";
 
+const Bio = ({ bio, theme }) => {
+  return (
+    <Markdown style={{ text: { color: theme.primaryText } }}>{bio}</Markdown>
+  );
+};
 const ProfileScreen = ({
   navigation,
   navigation: {
@@ -39,6 +44,7 @@ const ProfileScreen = ({
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const name = params?.name;
+  const getText = getTextFunction(me?.locale);
 
   doOnce(() => {
     getProfile(name);
@@ -102,8 +108,6 @@ const ProfileScreen = ({
       });
   };
 
-  const getText = getTextFunction(me?.locale);
-
   if (loading) {
     return <ActivityIndicator />;
   }
@@ -154,6 +158,34 @@ const ProfileScreen = ({
       name: "bank",
     },
   ];
+
+  const PROFESSIONS = [
+    { type: "thief", image: require("../../assets/profession/thief.jpg") },
+    {
+      type: "carthief",
+      image: require("../../assets/profession/carthief.jpg"),
+    },
+    {
+      type: "weedgrower",
+      image: require("../../assets/profession/weedgrower.jpg"),
+    },
+    { type: "killer", image: require("../../assets/profession/killer.jpg") },
+    { type: "pimp", image: require("../../assets/profession/pimp.jpg") },
+    { type: "banker", image: require("../../assets/profession/banker.jpg") },
+    {
+      type: "jailbreaker",
+      image: require("../../assets/profession/jailbreaker.jpg"),
+    },
+  ];
+  const profession = profile?.profession
+    ? PROFESSIONS.find((p) => p.type === profile.profession)
+    : null;
+
+  const professionReleaseDate = moment("15/03/2021", "DD/MM/YYYY").set(
+    "hour",
+    17
+  );
+
   return (
     <ScrollView>
       <View style={{ justifyContent: "center" }}>
@@ -197,6 +229,19 @@ const ProfileScreen = ({
               <T>{profile?.gang?.name}</T>
             </TouchableOpacity>
           ) : null}
+
+          {profession && moment().isAfter(professionReleaseDate) && (
+            <View style={{ width: 100, margin: 20 }}>
+              <Image
+                source={profession.image}
+                style={{ width: 100, height: 100 }}
+                resizeMode="contain"
+              />
+              <View>
+                <T bold>{getText(profession.type)}</T>
+              </View>
+            </View>
+          )}
 
           {keyValue(getText("online"), isOnline ? "✅" : "🛑")}
           {keyValue(
@@ -276,9 +321,7 @@ const ProfileScreen = ({
         </View>
 
         <View style={{ marginVertical: 20 }}>
-          <MarkdownView style={{ text: { color: theme.primaryText } }}>
-            {profile?.bio}
-          </MarkdownView>
+          <Bio theme={theme} bio={profile?.bio} />
         </View>
 
         <View>

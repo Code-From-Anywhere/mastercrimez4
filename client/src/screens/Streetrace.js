@@ -97,11 +97,11 @@ const Streetrace = ({
               ? require("../../assets/highway.jpeg")
               : require("../../assets/forest.jpeg")
           }
-          style={{ width: 150, height: 110 }}
+          style={{ width: 170, height: 140 }}
           resizeMode={"contain"}
         />
 
-        <View style={{ marginLeft: 10 }}>
+        <View style={{ marginLeft: 10, flex: 1 }}>
           <T>
             {getText("organizer")}: {item.creator}
           </T>
@@ -114,6 +114,9 @@ const Streetrace = ({
           </T>
           <T>
             {getText("costs")}: €{item.price},-
+          </T>
+          <T>
+            {getText("addedPrizeMoney")}: €{item.prize},-
           </T>
           {item.streetraceParticipants.length > 0 && (
             <T>{item.streetraceParticipants.map((x) => x.name).join(", ")}</T>

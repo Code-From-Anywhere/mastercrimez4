@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import MarkdownView from "react-native-markdown-renderer";
+import MarkdownView from "react-native-markdown-display";
 import { RefreshControl } from "react-native-web-refresh-control";
 import ImageInput from "../components/ImageInput";
 import ShareButtons from "../components/ShareButtons";

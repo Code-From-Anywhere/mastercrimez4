@@ -244,8 +244,7 @@
   "swissBankSuccess": "Je hebt $1 $2 $3",
   "weedSuccess": "Je hebt $1 $2 geteelt",
   "weedWait": "Je moet nog $1 seconden wachten voor je weer kunt.",
-  "workWait": "Je moet nog $2 minuten wachten.",
-  "workSuccess": "Gelukt. Je hebt €$1,- gejat",
+  "workWait": "Je moet nog $1 minuten wachten.",
   "workFail": "Mislukt, je zit nu voor $1 seconden in de gevangenis",
 
   "messageMailSubject": "Nieuw bericht MasterCrimeZ",
@@ -346,5 +345,22 @@
   "rank": "Rang",
   "strength": "Moordervaring",
   "prizesCrimes": "Misdaden gedaan",
-  "prizesCarsStolen": "Auto's gestolen"
+  "prizesCarsStolen": "Auto's gestolen",
+  "cantChooseProfession": "Je kan je beroep niet kiezen",
+  "chooseProfessionSuccess": "Je bent nu $1",
+  "youFoundPresentEaster": "Je hebt ook een ei gevonden met daarin $1 credits!",
+  "youFoundPresentChristmas": "Je hebt ook een cadeau gevonden met daarin $1 credits!",
+  "youFoundPresentHalloween": "Je hebt ook een cadeau gevonden met daarin $1 credits!",
+  "stillWorking": "Je bent nog aan het werk!",
+  "worked1": "Je hebt de vuilnis opgeruimt en hebt €$1,- verdiend.",
+  "worked2": "Je hebt de toiletten schoongemaakt en hebt €$1,- verdiend",
+  "worked3": "Je bent in het leger gegaan en hebt €$1,- verdiend",
+  "worked4": "Je hebt gegokt in een gok-café en hebt €$1,- verdiend",
+  "worked5": "Je hebt met de mafia in Italië gewerkt en hebt €$1,- verdiend",
+  "worked6": "Je hebt als politieagent gewerkt en hebt €$1,- verdiend",
+  "worked7": "Je bent president proberen te worden en hebt €$1,- verdiend",
+  "sinted": "Je hebt je schoentje gezet. Sint heeft er €$1,- in gestopt",
+
+  "workSuccess": "Je bent nu aan het werk. Kom terug als je klaar bent.",
+  "sintSuccess": "Je hebt je schoentje gezet. Het duurt 24 uur tot sint er iets in stopt"
 }

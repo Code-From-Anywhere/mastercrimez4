@@ -59,7 +59,6 @@ export const leftMenu = (me, theme) => {
     (me?.junkiesAt + 120000 - Date.now()) / 1000
   );
   const hoerenSeconds = Math.ceil((me?.hoerenAt + 120000 - Date.now()) / 1000);
-  const workSeconds = Math.ceil((me?.workAt - Date.now()) / 1000);
 
   const getText = getTextFunction(me?.locale);
 
@@ -243,7 +242,7 @@ export const leftMenu = (me, theme) => {
         {
           inactive:
             moment().isBefore(InactiveScreens.WORK_RELEASE_DATE) &&
-            !me?.level < 2,
+            me?.level < 2,
           isNew: moment().isBefore(
             InactiveScreens.WORK_RELEASE_DATE.add(
               InactiveScreens.DAYS_NEW,
@@ -254,19 +253,6 @@ export const leftMenu = (me, theme) => {
           icon: "tool",
           text: getText("menuWork"),
           to: "Work",
-          component:
-            workSeconds > 0 ? (
-              <CountDown
-                style={{ marginLeft: 10 }}
-                until={workSeconds}
-                digitStyle={{ backgroundColor: theme.secondary }}
-                digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
-                size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
-              />
-            ) : null,
         },
 
         {
@@ -274,6 +260,19 @@ export const leftMenu = (me, theme) => {
           icon: "bars",
           text: getText("menuJail", me?.jail),
           to: "Jail",
+        },
+
+        {
+          inactive:
+            me?.level < 2 &&
+            moment().year() > 2020 &&
+            ((moment().month() === 10 && moment().date() > 15) ||
+              (moment().month() === 11 && moment().date() < 6)),
+          isNew: true,
+          iconType: "AntDesign",
+          icon: "star",
+          text: getText("menuSint"),
+          to: "Sint",
         },
       ].filter((x) => !!x && !x.inactive),
     },

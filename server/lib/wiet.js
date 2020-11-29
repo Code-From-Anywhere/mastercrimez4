@@ -4,6 +4,7 @@ const {
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
   isHappyHour,
+  getSpecial,
 } = require("./util");
 const fetch = require("isomorphic-fetch");
 const { Sequelize, Op } = require("sequelize");
@@ -69,8 +70,15 @@ const wiet = async (req, res, User, Action) => {
         ),
       });
 
+      const professionFactor = user.profession === "weedgrower" ? 1.3 : 1;
+
       const random = Math.ceil(
-        Math.random() * 10 * rang * (accomplices.length + 1) * happyHourFactor
+        Math.random() *
+          10 *
+          rang *
+          (accomplices.length + 1) *
+          happyHourFactor *
+          professionFactor
       );
 
       Action.create({
@@ -98,7 +106,7 @@ const wiet = async (req, res, User, Action) => {
       );
 
       res.json({
-        response: getText("weedSuccess", random, name),
+        response: getText("weedSuccess", random, name) + getSpecial(User, user),
       });
     } else {
       const sec = Math.round((user[timeKey] + timeNeeded - Date.now()) / 1000);

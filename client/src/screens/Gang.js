@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
-import MarkdownView from "react-native-markdown-renderer";
+import MarkdownView from "react-native-markdown-display";
 import Button from "../components/Button";
 import T from "../components/T";
 import User from "../components/User";

@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/static/js/app.8346ab89.chunk.js",
-    "app.js.map": "/static/js/app.8346ab89.chunk.js.map",
+    "app.js": "/static/js/app.dcd17d41.chunk.js",
+    "app.js.map": "/static/js/app.dcd17d41.chunk.js.map",
     "runtime~app.js": "/static/js/runtime~app.2e9f1821.js",
     "runtime~app.js.map": "/static/js/runtime~app.2e9f1821.js.map",
-    "static/js/2.ff3664e7.chunk.js": "/static/js/2.ff3664e7.chunk.js",
-    "static/js/2.ff3664e7.chunk.js.map": "/static/js/2.ff3664e7.chunk.js.map",
+    "static/js/2.3752aa4e.chunk.js": "/static/js/2.3752aa4e.chunk.js",
+    "static/js/2.3752aa4e.chunk.js.map": "/static/js/2.3752aa4e.chunk.js.map",
     "fonts/AntDesign.ttf": "/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/./fonts/Feather.ttf",
@@ -26,8 +26,10 @@
     "index.html": "/index.html",
     "manifest.json": "/manifest.json",
     "serve.json": "/serve.json",
-    "static/js/2.ff3664e7.chunk.js.LICENSE.txt": "/static/js/2.ff3664e7.chunk.js.LICENSE.txt",
+    "static/js/2.3752aa4e.chunk.js.LICENSE.txt": "/static/js/2.3752aa4e.chunk.js.LICENSE.txt",
+    "static/media/banker.jpg": "/static/media/banker.1d9edc53.jpg",
     "static/media/bombarderen.jpg": "/static/media/bombarderen.3d0c7534.jpg",
+    "static/media/carthief.jpg": "/static/media/carthief.b6f3fdd6.jpg",
     "static/media/city.jpeg": "/static/media/city.3a38ffc1.jpeg",
     "static/media/dood.jpg": "/static/media/dood.d44e4074.jpg",
     "static/media/forest.jpeg": "/static/media/forest.56ce5166.jpeg",
@@ -47,16 +49,21 @@
     "static/media/item7.jpg": "/static/media/item7.bf00b038.jpg",
     "static/media/item8.jpg": "/static/media/item8.e50cc6c5.jpg",
     "static/media/item9.jpg": "/static/media/item9.44698ead.jpg",
+    "static/media/jailbreaker.jpg": "/static/media/jailbreaker.a5d507ae.jpg",
+    "static/media/killer.jpg": "/static/media/killer.fef52faa.jpg",
     "static/media/logo5.jpg": "/static/media/logo5.8e72dd72.jpg",
+    "static/media/pimp.jpg": "/static/media/pimp.f2697d22.jpg",
     "static/media/politie.jpeg": "/static/media/politie.211bf938.jpeg",
     "static/media/spotify.png": "/static/media/spotify.d7c133b0.png",
+    "static/media/thief.jpg": "/static/media/thief.fa783e06.jpg",
+    "static/media/weedgrower.jpg": "/static/media/weedgrower.0b8f1c24.jpg",
     "static/media/whatsapp.png": "/static/media/whatsapp.7c63448f.png",
     "static/media/youtube.png": "/static/media/youtube.ada3efe7.png",
     "vercel.json": "/vercel.json"
   },
   "entrypoints": [
     "static/js/runtime~app.2e9f1821.js",
-    "static/js/2.ff3664e7.chunk.js",
-    "static/js/app.8346ab89.chunk.js"
+    "static/js/2.3752aa4e.chunk.js",
+    "static/js/app.dcd17d41.chunk.js"
   ]
 }

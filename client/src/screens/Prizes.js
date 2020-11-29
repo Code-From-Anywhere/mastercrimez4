@@ -2,7 +2,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
-import MarkdownView from "react-native-markdown-renderer";
+import MarkdownView from "react-native-markdown-display";
 import Content from "../components/Content";
 import Gang from "../components/Gang";
 import T from "../components/T";
@@ -29,11 +29,12 @@ const Prizes = ({
 
   return (
     <ScrollView>
-      <MarkdownView style={{ text: { color: theme.primaryText } }}>
-        {moment().isAfter(InactiveScreens.PRIZES_NORMAL_RELEASE_DATE) &&
-          moment().isBefore(InactiveScreens.PRIZES_RELEASE_DATE) &&
-          getText("prizesText")}
-      </MarkdownView>
+      {moment().isAfter(InactiveScreens.PRIZES_NORMAL_RELEASE_DATE) &&
+        moment().isBefore(InactiveScreens.PRIZES_RELEASE_DATE) && (
+          <MarkdownView style={{ text: { color: theme.primaryText } }}>
+            {getText("prizesText")}
+          </MarkdownView>
+        )}
 
       {me?.level > 1 ||
       moment().isAfter(InactiveScreens.PRIZES_RELEASE_DATE) ? (
@@ -55,10 +56,10 @@ const Prizes = ({
                 id={`prize${index}`}
                 title={getText(`prize${prize.forWhat}title`) + " " + when}
               >
-                {prize.stats.map((stat) => {
+                {prize.stats.map((stat, i) => {
                   //stat is user
                   return (
-                    <Grid>
+                    <Grid key={`grid${i}x${index}`}>
                       <Col
                         size={2}
                         style={{ justifyContent: "center", paddingTop: 10 }}

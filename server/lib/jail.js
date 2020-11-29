@@ -79,8 +79,9 @@ const breakout = async (
     action: "breakout",
     timestamp: Date.now(),
   });
+  const chanceFail = user.profession === "jailbreaker" ? 25 : 50;
 
-  if (random < 50) {
+  if (random < chanceFail) {
     const seconds = 45;
 
     res.json({
