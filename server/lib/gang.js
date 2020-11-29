@@ -9,12 +9,18 @@ const {
   strengthRanks,
   getStrength,
 } = require("./util");
+const moment = require("moment");
 let getText = getTextFunction();
 
 const GANG_CREATE_COST = 5000000;
 const GANG_LEVEL_UNDERBOSS = 3;
 const GANG_LEVEL_BANK = 2;
 const GANG_LEVEL_BOSS = 4;
+
+const bulletFactoryReleaseDate = moment("15/08/2021", "DD/MM/YYYY").set(
+  "hour",
+  17
+);
 
 const deleteGang = async (
   gang,
@@ -1462,7 +1468,333 @@ const gangAchievements = async (
   });
 };
 
+/*Gang kogelfabriek
+
+Als gang kan je een kogelfabriek opzetten.
+Deze kogelfabriek levert kogels aan de gangbank. 
+Om deze kogelfabriek te laten draaien moet een bepaalde target gehaald worden van arbeid.
+
+Ochtend shift 6:00 tot 12:00
+Middag shift 12:00 tot 18:00
+Avond shift 18:00 tot 0:00
+Nacht shift 0:00 tot 6:00
+
+Er zijn n leden.
+Elke speler kan 2 shifts doen per dag. Elke shift moet door n*1.8 leden gedaan worden. 
+Oftewel, er moet goed gecoordineerd worden.
+
+Normale kf brengt rond de 2miljoen kogels per dag in het spel bij 30 actieve leden.
+De gangs moeten moet 1.5 miljoen kogels in het spel brengen, per dag, iets minder dus.
+Een gang van 10 actieve, geverifieerde, leden krijgt dus 500k kogels per dag.
+Als het lukt, krijgt de gang dus 50k kogels per speler per dag bij een grote kf.
+
+Als alle shifts succesvol verlopen, komen er om 6:00 kogels op de gangbank erbij. 
+
+Naast al dit werk, kost het bouwen van een kogelfabriek opstartkosten + een x kosten per dag.
+De opstartkosten zijn 10 miljoen voor een kleine kf, 100 miljoen voor een middelmatige KF, en 1000 miljoen voor een grote KF, en 10miljard voor een mega kf. 
+De runkosten zijn 1 miljoen voor een kleine kf, 10 miljoen voor een middelmatige kf, en 100 miljoen voor een grote kf, en 1 miljard voor een mega kf. 
+Als de runkosten niet betaald kunnen worden door de gangbank, word de KF gesloopt. 
+
+Hoe toon je die shifts mooi? Spelers per shift, niet shift per speler.
+
+Dus qua code:
+*/
+
+const bulletFactories = [
+  {
+    type: "small",
+    generates: 10000,
+    initialCost: 10000000,
+    dailyCost: 1000000,
+  },
+  {
+    type: "medium",
+    generates: 20000,
+    initialCost: 100000000,
+    dailyCost: 10000000,
+  },
+  {
+    type: "big",
+    generates: 40000,
+    initialCost: 1000000000,
+    dailyCost: 100000000,
+  },
+  {
+    type: "mega",
+    generates: 60000,
+    initialCost: 10000000000,
+    dailyCost: 1000000000,
+  },
+];
+
+const getShifts = async (gang, User, Gang) => {
+  const morning = await User.findAll({
+    attributes: publicUserFields,
+    where: { gangId: gang.id, morningShiftDone: true },
+  });
+  const day = await User.findAll({
+    attributes: publicUserFields,
+    where: { gangId: gang.id, dayShiftDone: true },
+  });
+  const evening = await User.findAll({
+    attributes: publicUserFields,
+    where: { gangId: gang.id, eveningShiftDone: true },
+  });
+  const night = await User.findAll({
+    attributes: publicUserFields,
+    where: { gangId: gang.id, nightShiftDone: true },
+  });
+  const underachievers = await User.findAll({
+    attributes: publicUserFields,
+    where: { gangId: gang.id, totalShiftsDone: { [Op.lt]: 2 } },
+  });
+
+  return { morning, day, evening, night, underachievers };
+};
+
+const shifts = async (req, res, { User, Gang }) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.json({ response: getText("noToken") });
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user || !user.gangId) {
+    return res.json({ response: getText("invalidUser") });
+  }
+
+  const gang = await Gang.findOne({
+    where: { id: user.gangId },
+  });
+
+  if (!gang) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  const shifts = await getShifts(gang, User, Gang);
+  res.json(shifts);
+};
+
+/*cron: 6AM every morning
+for every gang that has a bulletfactory:
+- pay running cost, remove bulletfactory if there isn't enough money
+- produce bullets if enough work is done
+- send rapport to gang about who did the shifts, if production was succesful, how many bullets were produced, and if the bulletfactory was removed.
+*/
+const SHIFT_FACTOR = 0.45;
+
+const gangBulletFactoryCron = async ({ Gang, User }) => {
+  const bulletFactoryGangs = await Gang.findAll({
+    where: { bulletFactory: { [Op.ne]: "none" } },
+  });
+  bulletFactoryGangs.map(async (gang) => {
+    const bulletFactory = bulletFactories.find(
+      (x) => x.type === gang.bulletFactory
+    );
+    const cost = bulletFactory.dailyCost;
+    const [paymentSuccesful] = await Gang.update(
+      { bank: Sequelize.literal(`bank-${cost}`) },
+      { where: { id: gang.id, bank: { [Op.gte]: cost } } }
+    );
+    if (paymentSuccesful) {
+      const shifts = await getShifts(gang, User, Gang);
+
+      if (
+        shifts.morning.length > gang.members * SHIFT_FACTOR &&
+        shifts.day.length > gang.members * SHIFT_FACTOR &&
+        shifts.evening.length > gang.members * SHIFT_FACTOR &&
+        shifts.night.length > gang.members * SHIFT_FACTOR
+      ) {
+        //enough
+        Gang.update(
+          {
+            bullets: Sequelize.literal(`bullets + ${bulletFactory.generates}`),
+          },
+          { where: { id: gang.id } }
+        );
+      }
+    } else {
+      Gang.update({ bullfetFactory: "none" }, { where: { id: gang.id } });
+    }
+
+    User.update(
+      {
+        morningShiftDone: false,
+        dayShiftDone: false,
+        eveningShiftDone: false,
+        nightShiftDone: false,
+        totalShiftsDone: 0,
+      },
+      { where: { gangId: gang.id } }
+    );
+  });
+};
+
+/**
+ * accountant and boss can do this
+ */
+const gangBuyBulletFactory = async (
+  req,
+  res,
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
+) => {
+  const { token, type } = req.body;
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  if (!gang.isPolice && moment().isBefore(bulletFactoryReleaseDate)) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  if (
+    user.gangLevel !== GANG_LEVEL_BOSS &&
+    user.gangLevel !== GANG_LEVEL_BANK
+  ) {
+    return res.json({ response: getText("noAccess") });
+  }
+  const bulletFactory = bulletFactories.find((x) => x.type === type);
+
+  if (!bulletFactory) {
+    return res.json({ response: getText("invalidValues") });
+  }
+
+  if (gang.bank < bulletFactory.initialCost) {
+    return res.json({ response: getText("notEnoughMoney") });
+  }
+
+  const [updated] = await Gang.update(
+    {
+      bank: Sequelize.literal(`bank-${bulletFactory.initialCost}`),
+      bulletFactory: bulletFactory.type,
+    },
+    {
+      where: {
+        id: gang.id,
+        bank: { [Op.gte]: bulletFactory.initialCost },
+      },
+    }
+  );
+
+  if (updated !== 1) {
+    return res.json({ response: getText("notEnoughMoney") });
+  }
+
+  Action.create({
+    userId: user.id,
+    action: "buyBulletFactory",
+    timestamp: Date.now(),
+  });
+
+  res.json({
+    response: getText("gangBuyBulletFactorySuccess"),
+  });
+};
+
+const userDoShift = async (
+  req,
+  res,
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage }
+) => {
+  const { token } = req.body;
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  if (gang.bulletFactory === "none") {
+    return res.json({ response: getText("shiftNoBulletFactory") });
+  }
+
+  //user must be verified
+  const isNotVerified = await User.findOne({
+    where: { loginToken: token, phoneVerified: false },
+  });
+
+  if (isNotVerified) {
+    return res.json({ response: getText("accountNotVerified") });
+  }
+
+  const whichShift =
+    moment().hour() >= 0 && moment().hour() < 6
+      ? "night"
+      : moment().hour() >= 6 && moment().hour() < 12
+      ? "morning"
+      : moment().hour() >= 12 && moment().hour() < 18
+      ? "day"
+      : "evening";
+
+  if (user[`${whichShift}ShiftDone`]) {
+    return res.json({ response: getText("shiftAlreadyDone") });
+  }
+
+  if (user.totalShiftsDone >= 2) {
+    return res.json({ response: getText("tooManyShifts") });
+  }
+
+  User.update(
+    {
+      [`${whichShift}ShiftDone`]: true,
+      totalShiftsDone: Sequelize.literal("totalShiftsDone+1"),
+    },
+    { where: { id: user.id } }
+  );
+
+  Action.create({
+    userId: user.id,
+    action: "doShift",
+    timestamp: Date.now(),
+  });
+
+  res.json({
+    response: getText("doShiftSuccess"),
+  });
+};
+
 module.exports = {
+  gangBulletFactoryCron,
+  //bulletfactory
+  //post
+  userDoShift,
+  gangBuyBulletFactory,
+  //get
+  shifts,
+
   //post
   gangCreate,
   gangAnswerInvite, //gangs

@@ -22,12 +22,17 @@ export const InactiveScreens = {
   ACTIONS_BEFORE_STREETRACE: 80,
   ACTIONS_AMOUNT_NEW: 10,
   ACTIONS_BEFORE_ROB: 20,
+  ACTIONS_BEFORE_ROB_KILL_MENU: 20,
   ACTIONS_BEFORE_KILL: 30,
   ACTIONS_BEFORE_BULLETFACTORY: 40,
   ACTIONS_BEFORE_MARKET: 50,
   ACTIONS_BEFORE_AIRPORT: 30,
   DAYS_NEW: 14,
   ACTIONS_BEFORE_POLICE: 100,
+  GANG_BULLET_FACTORY_RELEASE_DATE: moment("15/08/2021", "DD/MM/YYYY").set(
+    "hours",
+    17
+  ),
   PRIZES_NORMAL_RELEASE_DATE: moment("01/12/2020", "DD/MM/YYYY").set(
     "hours",
     17
@@ -72,26 +77,6 @@ export const leftMenu = (me, theme) => {
 
       content: [
         {
-          iconType: "FontAwesome",
-          icon: "car",
-          text: getText("menuStealCar"),
-          to: "StealCar",
-          component:
-            stealcarSeconds > 0 ? (
-              <CountDown
-                style={{ marginLeft: 10 }}
-                until={stealcarSeconds}
-                digitStyle={{ backgroundColor: theme.secondary }}
-                digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
-                size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
-              />
-            ) : null,
-        },
-
-        {
           iconType: "Ionicons",
           icon: "md-cash",
           text: getText("menuCrimes"),
@@ -101,54 +86,6 @@ export const leftMenu = (me, theme) => {
               <CountDown
                 style={{ marginLeft: 10 }}
                 until={crimeSeconds}
-                digitStyle={{ backgroundColor: theme.secondary }}
-                digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
-                size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
-              />
-            ) : null,
-        },
-        {
-          inactive: !me || me?.numActions < InactiveScreens.ACTIONS_BEFORE_KILL,
-          isNew:
-            me?.numActions <
-            InactiveScreens.ACTIONS_BEFORE_KILL +
-              InactiveScreens.ACTIONS_AMOUNT_NEW,
-          iconType: "MaterialCommunityIcons",
-          icon: "pistol",
-          text: getText("menuKill"),
-          to: "Kill",
-          component:
-            attackSeconds > 0 ? (
-              <CountDown
-                style={{ marginLeft: 10 }}
-                until={attackSeconds}
-                digitStyle={{ backgroundColor: theme.secondary }}
-                digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
-                size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
-              />
-            ) : null,
-        },
-        {
-          inactive: !me || me?.numActions < InactiveScreens.ACTIONS_BEFORE_ROB,
-          isNew:
-            me?.numActions <
-            InactiveScreens.ACTIONS_BEFORE_ROB +
-              InactiveScreens.ACTIONS_AMOUNT_NEW,
-          iconType: "MaterialCommunityIcons",
-          icon: "pistol",
-          text: getText("menuRob"),
-          to: "Rob",
-          component:
-            robSeconds > 0 ? (
-              <CountDown
-                style={{ marginLeft: 10 }}
-                until={robSeconds}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
                 onFinish={() => {}}
@@ -263,55 +200,78 @@ export const leftMenu = (me, theme) => {
         },
 
         {
-          inactive:
-            me?.level < 2 &&
-            !(
-              moment().year() > 2020 &&
-              ((moment().month() === 10 && moment().date() > 15) ||
-                (moment().month() === 11 && moment().date() < 6))
-            ),
-          isNew: true,
-          iconType: "AntDesign",
-          icon: "star",
-          text: getText("menuSint"),
-          to: "Sint",
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_BOMB,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_BOMB +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
+          iconType: "FontAwesome",
+          icon: "bomb",
+          text: getText("menuBomb"),
+          to: "Bomb",
         },
       ].filter((x) => !!x && !x.inactive),
     },
 
-    {
+    !(
+      !me?.id || me?.numActions < InactiveScreens.ACTIONS_BEFORE_ROB_KILL_MENU
+    ) && {
       header: {
         isHeader: true,
-        text: getText("headerSpend"),
+        text: getText("headerRobMurder"),
       },
 
       content: [
         {
-          iconType: "FontAwesome",
-          icon: "bank",
-          text: getText("menuBank"),
-          to: "AllBanks",
+          inactive:
+            !me?.id || me?.numActions < InactiveScreens.ACTIONS_BEFORE_KILL,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_KILL +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+          iconType: "MaterialCommunityIcons",
+          icon: "pistol",
+          text: getText("menuKill"),
+          to: "Kill",
+          component:
+            attackSeconds > 0 ? (
+              <CountDown
+                style={{ marginLeft: 10 }}
+                until={attackSeconds}
+                digitStyle={{ backgroundColor: theme.secondary }}
+                digitTxtStyle={{ color: theme.secondaryText }}
+                onFinish={() => {}}
+                size={8}
+                timeToShow={["M", "S"]}
+                timeLabels={{ m: null, s: null }}
+              />
+            ) : null,
         },
-
         {
           inactive:
-            ((!me || me.level < 1) &&
-              moment().isBefore(InactiveScreens.MARKET_RELEASE_DATE)) ||
-            me?.numActions < InactiveScreens.ACTIONS_BEFORE_MARKET,
+            !me?.id || me?.numActions < InactiveScreens.ACTIONS_BEFORE_ROB,
           isNew:
-            moment().isBefore(
-              InactiveScreens.MARKET_RELEASE_DATE.add(
-                InactiveScreens.DAYS_NEW,
-                "days"
-              )
-            ) ||
             me?.numActions <
-              InactiveScreens.ACTIONS_BEFORE_MARKET +
-                InactiveScreens.ACTIONS_AMOUNT_NEW,
-          iconType: "FontAwesome",
-          icon: "bank",
-          text: getText("menuMarket"),
-          to: "Market",
+            InactiveScreens.ACTIONS_BEFORE_ROB +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+          iconType: "MaterialCommunityIcons",
+          icon: "pistol",
+          text: getText("menuRob"),
+          to: "Rob",
+          component:
+            robSeconds > 0 ? (
+              <CountDown
+                style={{ marginLeft: 10 }}
+                until={robSeconds}
+                digitStyle={{ backgroundColor: theme.secondary }}
+                digitTxtStyle={{ color: theme.secondaryText }}
+                onFinish={() => {}}
+                size={8}
+                timeToShow={["M", "S"]}
+                timeLabels={{ m: null, s: null }}
+              />
+            ) : null,
         },
 
         {
@@ -327,32 +287,6 @@ export const leftMenu = (me, theme) => {
           text: getText("menuBulletfactory"),
           to: "Bulletfactory",
         },
-
-        {
-          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_BOMB,
-          isNew:
-            me?.numActions <
-            InactiveScreens.ACTIONS_BEFORE_BOMB +
-              InactiveScreens.ACTIONS_AMOUNT_NEW,
-
-          iconType: "FontAwesome",
-          icon: "bomb",
-          text: getText("menuBomb"),
-          to: "Bomb",
-        },
-
-        {
-          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_CASINO,
-          isNew:
-            me?.numActions <
-            InactiveScreens.ACTIONS_BEFORE_CASINO +
-              InactiveScreens.ACTIONS_AMOUNT_NEW,
-          iconType: "FontAwesome5",
-          icon: "dice",
-          text: getText("menuCasino"),
-          to: "Casino",
-        },
-
         {
           inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_BUNKER,
           isNew:
@@ -391,12 +325,33 @@ export const leftMenu = (me, theme) => {
           text: getText("menuHospital"),
           to: "Hospital",
         },
+      ].filter((x) => !!x && !x.inactive),
+    },
+    {
+      header: {
+        isHeader: true,
+        text: getText("headerCars"),
+      },
 
+      content: [
         {
-          iconType: "Entypo",
-          icon: "shop",
-          text: getText("menuShop"),
-          to: "Shop",
+          iconType: "FontAwesome",
+          icon: "car",
+          text: getText("menuStealCar"),
+          to: "StealCar",
+          component:
+            stealcarSeconds > 0 ? (
+              <CountDown
+                style={{ marginLeft: 10 }}
+                until={stealcarSeconds}
+                digitStyle={{ backgroundColor: theme.secondary }}
+                digitTxtStyle={{ color: theme.secondaryText }}
+                onFinish={() => {}}
+                size={8}
+                timeToShow={["M", "S"]}
+                timeLabels={{ m: null, s: null }}
+              />
+            ) : null,
         },
 
         {
@@ -429,6 +384,62 @@ export const leftMenu = (me, theme) => {
           text: getText("menuStreetrace"),
           to: "Streetrace",
         },
+      ].filter((x) => !!x && !x.inactive),
+    },
+
+    {
+      header: {
+        isHeader: true,
+        text: getText("headerSpend"),
+      },
+
+      content: [
+        {
+          iconType: "FontAwesome",
+          icon: "bank",
+          text: getText("menuBank"),
+          to: "AllBanks",
+        },
+
+        {
+          inactive:
+            ((!me?.id || me.level < 1) &&
+              moment().isBefore(InactiveScreens.MARKET_RELEASE_DATE)) ||
+            me?.numActions < InactiveScreens.ACTIONS_BEFORE_MARKET,
+          isNew:
+            moment().isBefore(
+              InactiveScreens.MARKET_RELEASE_DATE.add(
+                InactiveScreens.DAYS_NEW,
+                "days"
+              )
+            ) ||
+            me?.numActions <
+              InactiveScreens.ACTIONS_BEFORE_MARKET +
+                InactiveScreens.ACTIONS_AMOUNT_NEW,
+          iconType: "FontAwesome",
+          icon: "bank",
+          text: getText("menuMarket"),
+          to: "Market",
+        },
+
+        {
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_CASINO,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_CASINO +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+          iconType: "FontAwesome5",
+          icon: "dice",
+          text: getText("menuCasino"),
+          to: "Casino",
+        },
+
+        {
+          iconType: "Entypo",
+          icon: "shop",
+          text: getText("menuShop"),
+          to: "Shop",
+        },
 
         {
           inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_AIRPORT,
@@ -444,7 +455,7 @@ export const leftMenu = (me, theme) => {
         },
       ].filter((x) => !!x && !x.inactive),
     },
-  ];
+  ].filter((x) => !!x);
 };
 
 const adminMenu = (me) => {
@@ -531,6 +542,24 @@ export const rightMenu = (me, theme) => {
             },
 
             me?.gangId && {
+              inactive:
+                me?.level < 2 &&
+                moment().isBefore(
+                  InactiveScreens.GANG_BULLET_FACTORY_RELEASE_DATE
+                ),
+              isNew: moment().isBefore(
+                InactiveScreens.GANG_BULLET_FACTORY_RELEASE_DATE.add(
+                  InactiveScreens.DAYS_NEW,
+                  "days"
+                )
+              ),
+              iconType: "MaterialCommunityIcons",
+              icon: "pistol",
+              text: getText("menuBulletfactory"),
+              to: "GangBulletFactory",
+            },
+
+            me?.gangId && {
               iconType: "Ionicons",
               icon: "md-cash",
               text: getText("menuOC"),
@@ -549,12 +578,6 @@ export const rightMenu = (me, theme) => {
                   />
                 ) : null,
             },
-            // me?.gangId && {
-            //   iconType: "Ionicons",
-            //   icon: "ios-people",
-            //   text: getText("menuGangOc"),
-            //   to: "GangOc",
-            // },
           ].filter((x) => !!x),
         }
       : null;
@@ -691,6 +714,21 @@ export const rightMenu = (me, theme) => {
         },
 
         {
+          inactive:
+            me?.level < 2 &&
+            !(
+              moment().year() > 2020 &&
+              ((moment().month() === 10 && moment().date() > 15) ||
+                (moment().month() === 11 && moment().date() < 6))
+            ),
+          isNew: true,
+          iconType: "AntDesign",
+          icon: "star",
+          text: getText("menuSint"),
+          to: "Sint",
+        },
+
+        {
           iconType: "SimpleLineIcons",
           icon: "settings",
 
@@ -708,7 +746,7 @@ export const rightMenu = (me, theme) => {
 
         {
           inactive:
-            ((!me || me?.level < 1) &&
+            ((!me?.id || me?.level < 1) &&
               moment().isBefore(InactiveScreens.POLICE_RELEASE_DATE)) ||
             me?.numActions < InactiveScreens.ACTIONS_BEFORE_POLICE,
           isNew:
@@ -730,7 +768,7 @@ export const rightMenu = (me, theme) => {
 
         {
           inactive:
-            ((!me || me?.level < 1) &&
+            ((!me?.id || me?.level < 1) &&
               moment().isBefore(InactiveScreens.POLICE_RELEASE_DATE)) ||
             me?.numActions < InactiveScreens.ACTIONS_BEFORE_POLICE,
           isNew:

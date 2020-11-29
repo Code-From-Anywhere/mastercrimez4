@@ -362,5 +362,11 @@
   "sinted": "Je hebt je schoentje gezet. Sint heeft er €$1,- in gestopt",
 
   "workSuccess": "Je bent nu aan het werk. Kom terug als je klaar bent.",
-  "sintSuccess": "Je hebt je schoentje gezet. Het duurt 24 uur tot sint er iets in stopt"
+  "sintSuccess": "Je hebt je schoentje gezet. Het duurt 24 uur tot sint er iets in stopt",
+
+  "gangBuyBulletFactorySuccess": "Je hebt succesvol een kogelfabriek gebouwd!",
+  "shiftAlreadyDone": "Je hebt deze shift al gedaan",
+  "tooManyShifts": "Je hebt al 2 shifts gedaan vandaag!",
+  "doShiftSuccess": "Je hebt gewerkt in de kogelfabriek",
+  "shiftNoBulletFactory": "Er is geen kogelfabriek om in te werken!"
 }

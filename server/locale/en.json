@@ -368,5 +368,12 @@
   "sinted": "You have put your shoe under the fireplace. Sint dropped €$1,- in it",
 
   "workSuccess": "You're now working. Come back when you're finished.",
-  "sintSuccess": "You've put your shoe under the fireplace. It takes 24 hours for sint to respond."
+  "sintSuccess": "You've put your shoe under the fireplace. It takes 24 hours for sint to respond.",
+
+  "gangBuyBulletFactorySuccess": "You have succesfully built a bulletfactory!",
+  "shiftAlreadyDone": "You've already done this shift",
+  "tooManyShifts": "You've already done two shifts today!",
+
+  "doShiftSuccess": "Je hebt gewerkt in de kogelfabriek",
+  "shiftNoBulletFactory": "There is no bulletfactory to work in!"
 }

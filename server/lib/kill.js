@@ -255,7 +255,7 @@ const kill = async (
       });
   } else {
     responseBackfire = getText(
-      "responseBackfire2",
+      "killResponseBackfire2",
       user2.name,
       bulletsBackfire,
       damageBackfire
@@ -508,7 +508,7 @@ const kill = async (
         ChannelSub,
         User,
         isSystem: true,
-        message: getText(
+        message: getAccompliceText(
           "killFailAccompliceMessage",
           user.name,
           user2.name,

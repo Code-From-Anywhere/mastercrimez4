@@ -53,9 +53,16 @@ const income = async (req, res, sequelize, User, City, Action) => {
     (user.junkies + user.hoeren + user.wiet) * 50 * Math.sqrt(uren2)
   );
 
+  const rldMultiplier = user.profession === "pimp" ? 1.2 : 1;
+  const landlordMultiplier = user.profession === "weedgrower" ? 1.2 : 1;
+
   const junkiesProfit = Math.round(user.junkies * 10 * Math.sqrt(uren2));
-  const rldProfit = Math.round(user.hoeren * 10 * Math.sqrt(uren2));
-  const landlordProfit = Math.round(user.wiet * 10 * Math.sqrt(uren2));
+  const rldProfit = Math.round(
+    user.hoeren * 10 * Math.sqrt(uren2) * rldMultiplier
+  );
+  const landlordProfit = Math.round(
+    user.wiet * 10 * Math.sqrt(uren2) * landlordMultiplier
+  );
 
   const [updated] = await User.update(
     {

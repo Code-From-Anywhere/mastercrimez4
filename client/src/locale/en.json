@@ -4,6 +4,8 @@
   "metaOgDescription": "Will you become the best gangster?",
 
   "headerGang": "Gangs",
+  "headerCars": "Cars",
+  "headerRobMurder": "Rob & Murder",
   "menuGangCreate": "Create gang",
   "menuGangs": "All Gangs",
   "menuGangShop": "Gang Shop",
@@ -505,8 +507,8 @@
   "carthiefAdvantage": "You steal cars a third faster and your car rank increases faster",
   "bankerAdvantage": "You get 7% rent",
   "thiefAdvantage": "You got more chance on crimes.",
-  "pimpAdvantage": "You pimp 30% more prostitutes",
-  "weedgrowerAdvantage": "You grow 30% more weed",
+  "pimpAdvantage": "You pimp 30% more prostitutes and you get 20% more income from them.",
+  "weedgrowerAdvantage": "You grow 30% more weed and you get 20% more income from them.",
   "killer": "Murderer",
   "jailbreaker": "Jailbreaker",
   "carthief": "Carthief",
@@ -521,5 +523,30 @@
   "workWait": "You have to wait $1 minutes",
   "menuSint": "Put your shoe",
   "sintCTA": "Put your shoe under the fireplace",
-  "sintWait": "You have to wait $1 minutes."
+  "sintWait": "You have to wait $1 minutes.",
+
+  "bfsmall": "Small bulletfactory",
+  "bfmedium": "Medium bulletfactory",
+  "bfbig": "Big bulletfactory",
+  "bfmega": "Mega bulletfactory",
+  "generatesBullets": "Generates $1 bullets per day per gangmember",
+  "initialCost": "Initial costs",
+  "dailyCost": "Daily costs",
+  "buyBulletFactory": "Build a bulletfactory",
+  "currentBulletFactory": "This is the current bulletfactory in use",
+
+  "morningShift": "Morning shift",
+  "dayShift": "Day shift",
+  "eveningShift": "Evening shift",
+  "nightShift": "Night shift",
+  "underachievers": "Under achievers",
+  "shiftsDone": "shifts done",
+  "shiftSchedule": "Shifts today",
+
+  "workForBulletFactoryTitle": "Work for the bulletfactory",
+  "workForBulletFactory": "Work for the bulletfactory",
+
+  "info": "Info",
+  "gangBulletFactoryInfo": "A gang can start a bulletfactory. This bulletfactory delivers bullets to the gang bullet bank. To run this bulletfactory, the gang members have to work in shifts. \n\n The morning shift: 6:00-12:00\nThe day shift: 12:00-18:00\nEvening shift: 18:00-0:00\n Night shift: 0:00-6:00\n\nEvery player can do just two shifts per day, and you have to do enough work. The boss has to coordinate this work well, so that all shifts get covered!",
+  "shiftToDo": "Because your gang has $1 members, every shift has to be done by $2 members."
 }

@@ -4,6 +4,9 @@
   "metaOgDescription": "Word jij de beste gangster?",
 
   "headerGang": "Gangs",
+  "headerCars": "Auto's",
+  "headerRobMurder": "Beroven & Vermoorden",
+
   "menuGangCreate": "Gang aanmaken",
   "menuGangs": "Alle gangs",
   "menuGangShop": "Gang Winkel",
@@ -502,8 +505,8 @@
   "carthiefAdvantage": "Je steelt een derde sneller auto's, en je autorang stijgt sneller",
   "bankerAdvantage": "Je krijgt 7% rente",
   "thiefAdvantage": "Je hebt meer kans op misdaden.",
-  "pimpAdvantage": "Je pimpt 30% meer hoeren",
-  "weedgrowerAdvantage": "Je teelt 30% meer wietplanten",
+  "pimpAdvantage": "Je pimpt 30% meer hoeren en je krijgt 20% meer inkomen van ze.",
+  "weedgrowerAdvantage": "Je teelt 30% meer wietplanten en je krijgt 20% meer inkomen van ze.",
   "killer": "Moordenaar",
   "jailbreaker": "Uitbreker",
   "carthief": "Autodief",
@@ -517,5 +520,29 @@
   "statusCanChooseProfessionButton": "Kies beroep",
   "workWait": "Je moet nog $1 minuten wachten",
   "menuSint": "Schoentje zetten",
-  "sintWait": "Je moet nog $1 minuten wachten."
+  "sintWait": "Je moet nog $1 minuten wachten.",
+
+  "bfsmall": "Kleine kogelfabriek",
+  "bfmedium": "Medium kogelfabriek",
+  "bfbig": "Grote kogelfabriek",
+  "bfmega": "Mega kogelfabriek",
+  "generatesBullets": "Genereert $1 kogels per dag per ganglid",
+  "initialCost": "Initiële kosten",
+  "dailyCost": "Dagelijkse kosten",
+  "buyBulletFactory": "Bouw een kogelfabriek",
+  "currentBulletFactory": "Dit is de huidige kogelfabriek in gebruik",
+
+  "morningShift": "'s Morgens gewerkt",
+  "dayShift": "Overdags gewerkt",
+  "eveningShift": "'s Avonds gewerkt",
+  "nightShift": "'s Nachts gewerkt",
+  "underachievers": "Ondergepresteerd",
+  "shiftsDone": "keer gewerkt",
+  "shiftSchedule": "Werktijden vandaag",
+
+  "workForBulletFactoryTitle": "Werk voor de kogelfabriek",
+  "workForBulletFactory": "Werk voor de kogelfabriek",
+  "info": "Info",
+  "gangBulletFactoryInfo": "Als gang kan je een kogelfabriek opzetten. Deze kogelfabriek levert kogels aan de gangbank.  Om deze kogelfabriek te laten draaien moet een bepaalde target gehaald worden van arbeid.\n\nOchtend shift 6:00 tot 12:00\nMiddag shift 12:00 tot 18:00\nAvond shift 18:00 tot 0:00\nNacht shift 0:00 tot 6:00\n\nElke speler kan 2 shifts doen per dag.\n\nOftewel, er moet goed gecoordineerd worden.",
+  "shiftToDo": "Omdat je gang $1 leden heeft, moet elke shift door $2 leden gedaan worden"
 }

@@ -67,6 +67,7 @@ import ForgotPassword from "./screens/ForgotPassword";
 import Forum from "./screens/Forum";
 import Gang from "./screens/Gang";
 import GangAchievements from "./screens/GangAchievements";
+import GangBulletFactory from "./screens/GangBulletFactory";
 import GangCreate from "./screens/GangCreate";
 import GangOc from "./screens/GangOc";
 import Gangs from "./screens/Gangs";
@@ -595,6 +596,7 @@ const Container = rightContainer(
       GangSettings: withLayout(GangSettings),
       GangAchievements: withLayout(GangAchievements),
       GangOc: withLayout(GangOc),
+      GangBulletFactory: withLayout(GangBulletFactory),
 
       Status: withLayout(Status),
       Hackers: withLayout(Hackers),

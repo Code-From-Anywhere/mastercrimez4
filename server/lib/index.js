@@ -9,7 +9,7 @@ const { Sequelize, Model, DataTypes, Op } = require("sequelize");
 const cron = require("node-cron");
 const moment = require("moment");
 const { getPrize } = require("./prizes");
-
+const { gangBulletFactoryCron } = require("./gang");
 const cities = require("../assets/airport.json");
 require("dotenv").config();
 const rateLimit = require("express-rate-limit");
@@ -389,6 +389,16 @@ User.init(
     },
 
     password: DataTypes.STRING,
+
+    //gang bullet factory
+    morningShiftDone: DataTypes.BOOLEAN,
+    dayShiftDone: DataTypes.BOOLEAN,
+    eveningShiftDone: DataTypes.BOOLEAN,
+    nightShiftDone: DataTypes.BOOLEAN,
+    totalShiftsDone: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
   },
   {
     sequelize,
@@ -764,6 +774,11 @@ Gang.init(
     isPolice: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+
+    bulletFactory: {
+      type: DataTypes.ENUM("none", "small", "medium", "big", "mega"),
+      defaultValue: "none",
     },
   },
   {
@@ -1364,6 +1379,42 @@ server.post("/gangLeave", (req, res) =>
 
 server.post("/gangRemove", (req, res) =>
   require("./gang").gangRemove(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.post("/userDoShift", (req, res) =>
+  require("./gang").userDoShift(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.post("/gangBuyBulletFactory", (req, res) =>
+  require("./gang").gangBuyBulletFactory(req, res, {
+    User,
+    Gang,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangRequest,
+  })
+);
+
+server.get("/shifts", (req, res) =>
+  require("./gang").shifts(req, res, {
     User,
     Gang,
     Action,
@@ -2910,6 +2961,15 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     "0 19 * * *",
     function () {
       //send push notification that happy hour is started
+    },
+    { timezone: "Europe/Amsterdam" }
+  );
+
+  //elke dag 6:00 AM
+  cron.schedule(
+    "0 6 * * *",
+    function () {
+      gangBulletFactoryCron({ Gang, User });
     },
     { timezone: "Europe/Amsterdam" }
   );

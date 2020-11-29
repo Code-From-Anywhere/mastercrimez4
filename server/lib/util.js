@@ -68,6 +68,7 @@ const publicUserFields = [
   "prizesCarsStolen",
   "prizesCrimes",
   "profession",
+  "totalShiftsDone",
 ];
 
 const sendChatPushMail = async ({
