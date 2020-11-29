@@ -368,5 +368,8 @@
   "shiftAlreadyDone": "Je hebt deze shift al gedaan",
   "tooManyShifts": "Je hebt al 2 shifts gedaan vandaag!",
   "doShiftSuccess": "Je hebt gewerkt in de kogelfabriek",
-  "shiftNoBulletFactory": "Er is geen kogelfabriek om in te werken!"
+  "shiftNoBulletFactory": "Er is geen kogelfabriek om in te werken!",
+  "gangBulletFactoryCronPaymentFailed": "De gang had niet genoeg geld op de gangbank voor de dagelijkse kosten van de kogelfabriek. De kogelfabriek is vernietigd!",
+  "gangBulletFactoryCronFailed": "het is niet gelukt om genoeg te werken voor de kogelfabriek.",
+  "gangBulletFactoryCronSuccess": "Het is gelukt om genoeg te werken, de gang-kogelfabriek heeft $1 kogels gegenereerd!"
 }

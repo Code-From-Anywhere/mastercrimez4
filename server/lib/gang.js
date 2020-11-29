@@ -1585,7 +1585,7 @@ for every gang that has a bulletfactory:
 */
 const SHIFT_FACTOR = 0.45;
 
-const gangBulletFactoryCron = async ({ Gang, User }) => {
+const gangBulletFactoryCron = async ({ Gang, User, Channel }) => {
   const bulletFactoryGangs = await Gang.findAll({
     where: { bulletFactory: { [Op.ne]: "none" } },
   });
@@ -1608,14 +1608,44 @@ const gangBulletFactoryCron = async ({ Gang, User }) => {
         shifts.night.length > gang.members * SHIFT_FACTOR
       ) {
         //enough
+        const generated = bulletFactory.generates * gang.members;
         Gang.update(
           {
-            bullets: Sequelize.literal(`bullets + ${bulletFactory.generates}`),
+            bullets: Sequelize.literal(`bullets + ${generated}`),
           },
           { where: { id: gang.id } }
         );
+
+        sendChatPushMail({
+          Channel,
+          ChannelMessage,
+          ChannelSub,
+          User,
+          gang,
+          isShareable: true,
+          message: getText("gangBulletFactoryCronSuccess", generated),
+        });
+      } else {
+        sendChatPushMail({
+          Channel,
+          ChannelMessage,
+          ChannelSub,
+          User,
+          gang,
+          isShareable: true,
+          message: getText("gangBulletFactoryCronFailed"),
+        });
       }
     } else {
+      sendChatPushMail({
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+        User,
+        gang,
+        isShareable: true,
+        message: getText("gangBulletFactoryCronPaymentFailed"),
+      });
       Gang.update({ bullfetFactory: "none" }, { where: { id: gang.id } });
     }
 
@@ -1750,6 +1780,7 @@ const userDoShift = async (
     return res.json({ response: getText("accountNotVerified") });
   }
 
+  console.log(moment().hour());
   const whichShift =
     moment().hour() >= 0 && moment().hour() < 6
       ? "night"

@@ -375,5 +375,8 @@
   "tooManyShifts": "You've already done two shifts today!",
 
   "doShiftSuccess": "Je hebt gewerkt in de kogelfabriek",
-  "shiftNoBulletFactory": "There is no bulletfactory to work in!"
+  "shiftNoBulletFactory": "There is no bulletfactory to work in!",
+  "gangBulletFactoryCronPaymentFailed": "The gang had not enough money on the gangbank to pay for the daily costs of the bullet factory. The bullet factory was destroyed!",
+  "gangBulletFactoryCronFailed": "You didn't succeed to work enough shifts.",
+  "gangBulletFactoryCronSuccess": "You succeeded and generated $1 bullets from the bullet factory"
 }
