@@ -265,9 +265,11 @@ export const leftMenu = (me, theme) => {
         {
           inactive:
             me?.level < 2 &&
-            moment().year() > 2020 &&
-            ((moment().month() === 10 && moment().date() > 15) ||
-              (moment().month() === 11 && moment().date() < 6)),
+            !(
+              moment().year() > 2020 &&
+              ((moment().month() === 10 && moment().date() > 15) ||
+                (moment().month() === 11 && moment().date() < 6))
+            ),
           isNew: true,
           iconType: "AntDesign",
           icon: "star",

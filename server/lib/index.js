@@ -2817,7 +2817,7 @@ const awardForSint = async () => {
     //gemiddeld 300k per uur
 
     User.update(
-      { cash: Sequelize.literal(`cash+${earned}`), isSint: 0 },
+      { cash: Sequelize.literal(`cash+${earned}`), isSint: false },
       { where: { id: user.id } }
     );
     sendChatPushMail({
