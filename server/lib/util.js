@@ -147,7 +147,12 @@ const sendChatPushMail = async ({
 
   ChannelSub.update(
     { unread: Sequelize.literal(`unread+1`) },
-    { where: { channelId: channel.id, userId: { [Op.ne]: user1 && user1.id } } }
+    {
+      where: {
+        channelId: channel.id,
+        userId: { [Op.ne]: user1 ? user1.id : null },
+      },
+    }
   );
 
   ChannelSub.update(
@@ -161,7 +166,10 @@ const sendChatPushMail = async ({
   );
 
   const channelSubs = await ChannelSub.findAll({
-    where: { channelId: channel.id, userId: { [Op.ne]: user1 && user1.id } },
+    where: {
+      channelId: channel.id,
+      userId: { [Op.ne]: user1 ? user1.id : null },
+    },
     include: { model: User },
   });
 
