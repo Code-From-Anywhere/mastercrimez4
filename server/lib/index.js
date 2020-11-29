@@ -2833,7 +2833,7 @@ const awardForSint = async () => {
   });
 };
 
-if (true || process.env.NODE_APP_INSTANCE == 0) {
+if (process.env.NODE_APP_INSTANCE == 0) {
   console.log("Scheduling CRONS....");
 
   /*
