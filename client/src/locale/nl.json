@@ -198,7 +198,12 @@
   "chooseYourCar": "Kies je auto",
   "chooseACar": "Kies een auto",
   "createStreetraceOption": "$1 met $2.000 power",
+  "createOcOption": "$1 met $2.000 power",
   "create": "Maak aan",
+
+  "ocBank": "Beroof ee bank",
+  "ocCars": "Wagenpark overval",
+  "ocShootout": "Shootout met andere gang",
 
   "youStillHaveCredits": "Je hebt nog $1 credits",
 

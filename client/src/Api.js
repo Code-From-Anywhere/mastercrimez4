@@ -5,6 +5,10 @@ const fetchStreetraces = (payload) => {
   return get("streetraces");
 };
 
+const fetchOcs = (payload) => {
+  return get(`ocs?token=${payload.token}`);
+};
+
 const fetchCities = (payload) => {
   return get("cities");
 };
@@ -28,5 +32,5 @@ const fetchMe = (payload) => {
     });
 };
 
-const Api = { fetchMe, fetchCities, fetchStreetraces };
+const Api = { fetchMe, fetchCities, fetchStreetraces, fetchOcs };
 export default Api;

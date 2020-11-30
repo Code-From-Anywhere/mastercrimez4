@@ -78,6 +78,8 @@ const Gangs = ({
         : "gangLevelMember"
     );
 
+  const totalHealth = item.users?.reduce((prev, user) => prev + user.health, 0);
+
   return (
     <View style={{ flex: 1, padding: 15 }}>
       <FlatList
@@ -106,6 +108,13 @@ const Gangs = ({
                     style={{ width: SIZE, height: SIZE }}
                   />
                 )}
+
+                {totalHealth === 0 ? (
+                  <Image
+                    source={require("../../assets/uitgemoord.jpg")}
+                    style={{ width: SIZE, height: SIZE }}
+                  />
+                ) : null}
               </View>
               <View style={{ margin: MARGIN }}>
                 {loading ? <ActivityIndicator /> : null}

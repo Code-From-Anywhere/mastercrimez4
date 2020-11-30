@@ -447,6 +447,32 @@ StreetraceParticipant.init(
   { sequelize, modelName: "streetraceParticipant" }
 );
 
+class Oc extends Model {}
+
+Oc.init(
+  {
+    city: DataTypes.STRING,
+    numParticipants: DataTypes.INTEGER,
+    type: DataTypes.STRING,
+    gangId: DataTypes.INTEGER,
+    creator: DataTypes.STRING,
+  },
+  { sequelize, modelName: "oc" }
+);
+
+class OcParticipant extends Model {}
+
+OcParticipant.init(
+  {
+    ocId: DataTypes.INTEGER,
+    name: DataTypes.STRING,
+    car: DataTypes.STRING,
+    image: DataTypes.STRING,
+    power: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "ocParticipant" }
+);
+
 class City extends Model {}
 
 City.init(
@@ -779,6 +805,11 @@ Gang.init(
     bulletFactory: {
       type: DataTypes.ENUM("none", "small", "medium", "big", "mega"),
       defaultValue: "none",
+    },
+
+    ocAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
     },
   },
   {
@@ -1578,6 +1609,62 @@ server.post("/startStreetrace", (req, res) =>
   })
 );
 
+server.post("/createOc", (req, res) =>
+  require("./gangOc").createOc(
+    req,
+    res,
+    User,
+    Oc,
+    OcParticipant,
+    Garage,
+    Action,
+    Gang
+  )
+);
+
+server.get("/ocs", (req, res) =>
+  require("./gangOc").ocs(req, res, User, Oc, OcParticipant, Garage, Gang)
+);
+
+server.post("/joinOc", (req, res) =>
+  require("./gangOc").joinOc(
+    req,
+    res,
+    User,
+    Oc,
+    OcParticipant,
+    Gang,
+    Garage,
+    Action
+  )
+);
+
+server.post("/leaveOc", (req, res) =>
+  require("./gangOc").leaveOc(
+    req,
+    res,
+    User,
+    Oc,
+    OcParticipant,
+    Garage,
+    Gang,
+    Action
+  )
+);
+
+server.post("/startOc", (req, res) =>
+  require("./gangOc").startOc(req, res, {
+    User,
+    Oc,
+    OcParticipant,
+    Gang,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    Action,
+  })
+);
+
 server.post("/income", (req, res) =>
   require("./income").income(req, res, sequelize, User, City, Action)
 );
@@ -1614,8 +1701,6 @@ server.post("/kill", (req, res) =>
     Offer,
   })
 );
-
-server.post("/oc", (req, res) => require("./oc").oc(req, res, User, Action));
 
 server.post("/getalive", (req, res) =>
   require("./kill").getalive(req, res, User, Garage, Action)
@@ -2969,7 +3054,13 @@ if (process.env.NODE_APP_INSTANCE == 0) {
   cron.schedule(
     "0 6 * * *",
     function () {
-      gangBulletFactoryCron({ Gang, User });
+      gangBulletFactoryCron({
+        Gang,
+        User,
+        Channel,
+        ChannelMessage,
+        ChannelSub,
+      });
     },
     { timezone: "Europe/Amsterdam" }
   );

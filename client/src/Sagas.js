@@ -22,6 +22,16 @@ function* fetchStreetraces(action) {
   }
 }
 
+function* fetchOcs(action) {
+  try {
+    const { ocs } = yield call(Api.fetchOcs, action.payload);
+
+    yield put({ type: "OCS_FETCH_SUCCEEDED", ocs });
+  } catch (e) {
+    yield put({ type: "OCS_FETCH_FAILED", message: e.message });
+  }
+}
+
 function* fetchCities(action) {
   try {
     const { cities } = yield call(Api.fetchCities, action.payload);
@@ -43,6 +53,7 @@ function* mySaga() {
   yield takeLatest("ME_FETCH_REQUESTED", fetchMe);
   yield takeLatest("CITIES_FETCH_REQUESTED", fetchCities);
   yield takeLatest("STREETRACES_FETCH_REQUESTED", fetchStreetraces);
+  yield takeLatest("OCS_FETCH_REQUESTED", fetchOcs);
 }
 
 export default mySaga;

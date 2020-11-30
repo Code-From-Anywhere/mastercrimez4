@@ -29,6 +29,7 @@ export const InactiveScreens = {
   ACTIONS_BEFORE_AIRPORT: 30,
   DAYS_NEW: 14,
   ACTIONS_BEFORE_POLICE: 100,
+  OC_RELEASE_DATE: moment("01/08/2021", "DD/MM/YYYY").set("hours", 17),
   GANG_BULLET_FACTORY_RELEASE_DATE: moment("15/08/2021", "DD/MM/YYYY").set(
     "hours",
     17
@@ -488,7 +489,7 @@ const adminMenu = (me) => {
 
 export const rightMenu = (me, theme) => {
   const getText = getTextFunction(me?.locale);
-  const ocSeconds = Math.ceil((me?.ocAt + 120000 - Date.now()) / 1000);
+  const ocSeconds = Math.ceil((me?.ocAt + 3600000 - Date.now()) / 1000);
 
   const gangMenus =
     me?.level > 1 || moment().isAfter(InactiveScreens.GANG_RELEASE_DATE)
@@ -560,10 +561,19 @@ export const rightMenu = (me, theme) => {
             },
 
             me?.gangId && {
+              incative:
+                me?.level < 2 &&
+                moment().isBefore(InactiveScreens.OC_RELEASE_DATE),
+              isNew: moment().isBefore(
+                InactiveScreens.OC_RELEASE_DATE.add(
+                  InactiveScreens.DAYS_NEW,
+                  "days"
+                )
+              ),
               iconType: "Ionicons",
               icon: "md-cash",
               text: getText("menuOC"),
-              to: "OrganisedCrime",
+              to: "OC",
               component:
                 ocSeconds > 0 ? (
                   <CountDown

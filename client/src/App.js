@@ -59,6 +59,7 @@ import Chat from "./screens/Chat";
 import ChooseProfession from "./screens/ChooseProfession";
 import Code from "./screens/Code";
 import Contribute from "./screens/Contribute";
+import CreateOc from "./screens/CreateOC";
 import CreateStreetrace from "./screens/CreateStreetrace";
 import Crimes from "./screens/Crimes";
 import Donate from "./screens/Donate";
@@ -93,7 +94,7 @@ import Members from "./screens/Members";
 import MollieComplete from "./screens/MollieComplete";
 import MyObjects from "./screens/MyObjects";
 import MyProfile from "./screens/MyProfile";
-import OrganisedCrime from "./screens/OrganisedCrime";
+import OC from "./screens/OC";
 import Poker from "./screens/Poker";
 import Police from "./screens/Police";
 import Privacy from "./screens/Privacy";
@@ -633,7 +634,6 @@ const Container = rightContainer(
       Gym: withLayout(Gym),
       Wiet: withLayout(Wiet),
       MollieComplete: withLayout(MollieComplete),
-      OrganisedCrime: withLayout(OrganisedCrime),
       Junkies: withLayout(Junkies),
       Hoeren: withLayout(Hoeren),
       Bunker: withLayout(Bunker),
@@ -691,6 +691,8 @@ const Container = rightContainer(
       MyProfile: withLayout(MyProfile),
       Login: withLayout(Login),
       Work: withLayout(Work),
+      OC: withLayout(OC),
+      CreateOc: withLayout(CreateOc),
 
       //INFO
       Info: withLayout(Info),
@@ -745,9 +747,9 @@ const _RootContainer = (props) => {
   );
 };
 
-const mapStateToProps = ({ device, me, streetraces, cities }) => {
+const mapStateToProps = ({ device, me, streetraces, ocs, cities }) => {
   //console.log("State gets mapped to props... device only");
-  return { device, me, streetraces, cities };
+  return { device, me, streetraces, ocs, cities };
 }; //
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
@@ -757,6 +759,8 @@ const mapDispatchToProps = (dispatch) => ({
   },
   reloadStreetraces: () =>
     dispatch({ type: "STREETRACES_FETCH_REQUESTED", payload: null }),
+  reloadOcs: (token) =>
+    dispatch({ type: "OCS_FETCH_REQUESTED", payload: { token } }),
   reloadCities: () =>
     dispatch({ type: "CITIES_FETCH_REQUESTED", payload: null }),
 });

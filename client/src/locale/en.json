@@ -194,6 +194,11 @@
   "chooseYourCar": "Choose your car",
   "chooseACar": "Choose a car",
   "createStreetraceOption": "$1 with $2.000 power",
+  "createOcOption": "$1 with $2.000 power",
+
+  "ocBank": "Rob a bank",
+  "ocCars": "Carpark heist",
+  "ocShootout": "Shootout with other gang",
   "create": "Create",
 
   "youStillHaveCredits": "You still have $1 credits",

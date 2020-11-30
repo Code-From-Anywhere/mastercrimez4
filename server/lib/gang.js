@@ -1585,7 +1585,13 @@ for every gang that has a bulletfactory:
 */
 const SHIFT_FACTOR = 0.45;
 
-const gangBulletFactoryCron = async ({ Gang, User, Channel }) => {
+const gangBulletFactoryCron = async ({
+  Gang,
+  User,
+  Channel,
+  ChannelMessage,
+  ChannelSub,
+}) => {
   const bulletFactoryGangs = await Gang.findAll({
     where: { bulletFactory: { [Op.ne]: "none" } },
   });
@@ -1780,13 +1786,13 @@ const userDoShift = async (
     return res.json({ response: getText("accountNotVerified") });
   }
 
-  console.log(moment().hour());
+  const local = moment().local();
   const whichShift =
-    moment().hour() >= 0 && moment().hour() < 6
+    local.hour() >= 0 && local.hour() < 6
       ? "night"
-      : moment().hour() >= 6 && moment().hour() < 12
+      : local.hour() >= 6 && local.hour() < 12
       ? "morning"
-      : moment().hour() >= 12 && moment().hour() < 18
+      : local.hour() >= 12 && local.hour() < 18
       ? "day"
       : "evening";
 
