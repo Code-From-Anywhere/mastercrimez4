@@ -75,6 +75,8 @@ const TYPES = [
 
 let getText = getTextFunction();
 
+const releaseDate = moment("15/06/2021", "DD/MM/YYYY").set("hour", 17);
+
 const createRobbery = async (
   req,
   res,
@@ -96,6 +98,10 @@ const createRobbery = async (
 
   if (!user) {
     return res.json({ response: getText("invalidUser") });
+  }
+
+  if (user.level < 2 && moment().isBefore(releaseDate)) {
+    return res.json({ response: getText("noAccess") });
   }
 
   const alreadyParticipant = await RobberyParticipant.findOne({
