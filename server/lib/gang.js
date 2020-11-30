@@ -710,7 +710,7 @@ const gangUpdate = async (
   res,
   { Gang, User, Action, Channel, ChannelSub, ChannelMessage, GangRequest }
 ) => {
-  const { token, profile, image, name } = req.body;
+  const { token, profile, image, name, message } = req.body;
 
   if (!token) {
     res.json({ response: getText("noToken") });
@@ -775,6 +775,11 @@ const gangUpdate = async (
   if (profile && profile !== gang.profile) {
     //profile change
     update.profile = profile;
+  }
+
+  if (message && message !== gang.message) {
+    //profile change
+    update.message = message;
   }
 
   if (image && image.includes("data:image")) {

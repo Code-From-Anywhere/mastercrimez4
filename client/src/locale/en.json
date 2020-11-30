@@ -582,5 +582,6 @@
   "cardealer": "Car dealer",
   "jewelrystore": "Jewelery store",
 
-  "difficulty": "Difficulty"
+  "difficulty": "Difficulty",
+  "gangMessage": "Members message"
 }

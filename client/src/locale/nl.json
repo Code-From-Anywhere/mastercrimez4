@@ -578,5 +578,6 @@
   "cardealer": "Auto dealer",
   "jewelrystore": "Juwelier",
 
-  "difficulty": "Moeilijkheidsgraad"
+  "difficulty": "Moeilijkheidsgraad",
+  "gangMessage": "Bericht voor de leden"
 }

@@ -445,6 +445,17 @@ User.init(
   }
 );
 
+class Detective extends Model {}
+
+Detective.init(
+  {
+    creatorId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
+    findAfterSeconds: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "detective" }
+);
+
 class Streetrace extends Model {}
 
 Streetrace.init(
@@ -833,6 +844,7 @@ Gang.init(
       defaultValue: 0,
     },
     profile: DataTypes.TEXT,
+    message: DataTypes.TEXT,
     image: DataTypes.STRING,
     thumbnail: DataTypes.STRING,
     item1: {

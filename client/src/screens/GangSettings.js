@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
+import MarkdownView from "react-native-markdown-display";
 import { AlertContext } from "../components/AlertProvider";
 import Button from "../components/Button";
 import Content from "../components/Content";
@@ -42,6 +43,7 @@ const GangSettings = ({
   const [username, setUsername] = useState("");
   const [gangName, setGangName] = useState("");
   const [profile, setProfile] = useState(me?.gang?.profile || "");
+  const [message, setMessage] = useState(me?.gang?.message || "");
   const [name, setName] = useState(me?.gang?.name || "");
   const [image, setImage] = useState(me?.gang?.image || "");
   const [isBullets, setIsBullets] = useState(false);
@@ -83,6 +85,7 @@ const GangSettings = ({
       token: device.loginToken,
       profile,
       image,
+      message,
       name,
     });
     setLoading(false);
@@ -255,6 +258,24 @@ const GangSettings = ({
           <T>{getText("noAccess")}</T>
         ) : (
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            <Content
+              title={getText("gangProfile")}
+              contentWidth={"90%"}
+              id="gangProfile"
+            >
+              <T>
+                {getText("bullets")}: {numberFormat(me?.gang?.bullets)}
+              </T>
+              <T>
+                {getText("bank")}: €{numberFormat(me?.gang?.bank)}
+              </T>
+              {me?.gang?.message && (
+                <MarkdownView style={{ text: { color: theme.primaryText } }}>
+                  {me?.gang?.message}
+                </MarkdownView>
+              )}
+            </Content>
+
             <Content
               title={getText("yourStatus")}
               contentWidth={250}
@@ -448,7 +469,7 @@ const GangSettings = ({
                   onChangeText={setName}
                   placeholder={getText("gangName")}
                 />
-
+                <T bold>{getText("gangProfile")}</T>
                 <TextInput
                   placeholderTextColor={theme.secondaryTextSoft}
                   style={[
@@ -462,6 +483,22 @@ const GangSettings = ({
                   value={profile}
                   onChangeText={setProfile}
                 />
+                <T bold>{getText("gangMessage")}</T>
+
+                <TextInput
+                  placeholderTextColor={theme.secondaryTextSoft}
+                  style={[
+                    styles(theme).textInput,
+                    {
+                      width: "100%",
+                      height: 200,
+                    },
+                  ]}
+                  multiline={true}
+                  value={message}
+                  onChangeText={setMessage}
+                />
+
                 <Button
                   onPress={postGangUpdate}
                   title={getText("save")}
