@@ -190,11 +190,11 @@ const Streetrace = ({
   };
   return (
     <View style={{ flex: 1 }}>
+      {renderHeader()}
       <FlatList
         contentContainerStyle={{
           height: Platform.OS === "web" ? height - 200 : undefined,
         }}
-        ListHeaderComponent={renderHeader}
         ListFooterComponent={() => <Footer screenProps={screenProps} />}
         refreshControl={
           <RefreshControl

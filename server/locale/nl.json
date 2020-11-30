@@ -395,5 +395,17 @@
   "shiftNoBulletFactory": "Er is geen kogelfabriek om in te werken!",
   "gangBulletFactoryCronPaymentFailed": "De gang had niet genoeg geld op de gangbank voor de dagelijkse kosten van de kogelfabriek. De kogelfabriek is vernietigd!",
   "gangBulletFactoryCronFailed": "het is niet gelukt om genoeg te werken voor de kogelfabriek.",
-  "gangBulletFactoryCronSuccess": "Het is gelukt om genoeg te werken, de gang-kogelfabriek heeft $1 kogels gegenereerd!"
+  "gangBulletFactoryCronSuccess": "Het is gelukt om genoeg te werken, de gang-kogelfabriek heeft $1 kogels gegenereerd!",
+
+  "lottoDay": "Dag-lotto",
+  "lottoWeek": "Week-lotto",
+  "lottoMonth": "Maand-lotto",
+  "lottoWinnerMessage": "De $1 heeft een winnaar! De winnaar is $3 en wint €$2,-",
+
+  "gangStartMissionSuccess": "De missie is gestart",
+  "gangMissionAlreadySucceeded": "Deze missie heb je al gehaald",
+  "gangMissionAlreadyInProgress": "Deze missie is al bezig",
+  "gangMissionAlreadyAnother": "Je kan maar 1 missie tegelijk doen",
+  "gangFinishMissionCronFailed": "Jullie hebben de missie niet gehaald!",
+  "gangFinishMissionCronSuccess": "Jullie hebben de missie gehaald! De gang heeft $1 $2 verdiend."
 }

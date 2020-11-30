@@ -73,6 +73,9 @@ const allUserFields = publicUserFields.concat([
   "numActions",
   "locale",
   "canChooseProfession",
+  "lottoDay",
+  "lottoWeek",
+  "lottoMonth",
 ]);
 
 function me(token) {
@@ -117,7 +120,6 @@ const sequelize = new Sequelize({
   //   }
   // },
 });
-
 class User extends Model {}
 
 User.init(
@@ -399,6 +401,20 @@ User.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+
+    //lotto
+    lottoDay: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    lottoWeek: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    lottoMonth: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
   },
   {
     sequelize,
@@ -471,6 +487,25 @@ OcParticipant.init(
     power: DataTypes.INTEGER,
   },
   { sequelize, modelName: "ocParticipant" }
+);
+
+class GangMission extends Model {}
+
+GangMission.init(
+  {
+    gangId: DataTypes.INTEGER,
+    missionIndex: DataTypes.INTEGER,
+    amountDone: DataTypes.INTEGER,
+    isSucceeded: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: null,
+    },
+    isEnded: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+  },
+  { sequelize, modelName: "gangMission" }
 );
 
 class City extends Model {}
@@ -1775,6 +1810,13 @@ server.get("/scheduled", (req, res) =>
   })
 );
 
+server.post("/buyLotto", (req, res) =>
+  require("./lotto").buy(req, res, {
+    User,
+    City,
+  })
+);
+
 server.post("/updateScheduled", (req, res) =>
   require("./superMessage").updateScheduled(req, res, {
     User,
@@ -2944,6 +2986,64 @@ const awardForWork = async () => {
   });
 };
 
+const lotto = async (what) => {
+  const participants = await User.findAll({
+    where: { [what]: { [Op.gt]: 0 } },
+  });
+
+  const participantsWithCum = participants.map((participant, index) => {
+    const beforeParicipants = participants.filter((p, i) => i <= index);
+
+    const returnThing = participant.dataValues;
+    returnThing.cumTickets = beforeParicipants.reduce(
+      (previousValue, currentValue) => previousValue + currentValue[what],
+      0
+    );
+
+    return returnThing;
+  });
+
+  const highestCum = participantsWithCum[participantsWithCum.length - 1][what];
+  const randomNumberBelowHighestCum = Math.random() * highestCum; //[0,highestCum]
+
+  const winner = participantsWithCum.find(
+    (p) => randomNumberBelowHighestCum <= p[what]
+  );
+
+  const totalTickets = participants.reduce(
+    (previous, user) => previous + user[what],
+    0
+  );
+
+  const prize = totalTickets * 80000;
+
+  User.update(
+    { bank: Sequelize.literal(`bank+${prize}`) },
+    { where: { id: winner.id } }
+  );
+
+  User.update({ [what]: 0 });
+
+  participants.forEach((user) => {
+    const getUserText = getTextFunction(user.locale);
+
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      user2: user,
+      isSystem: true,
+      message: getUserText(
+        "lottoWinnerMessage",
+        getText(what),
+        prize,
+        winner.name
+      ),
+    });
+  });
+};
+
 const awardForSint = async () => {
   const sinted = await User.findAll({
     where: {
@@ -3013,6 +3113,7 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     "0 17 * * *",
     function () {
       awardPrizes("day");
+      lotto("lottoDay");
     },
     { timezone: "Europe/Amsterdam" }
   );
@@ -3023,6 +3124,7 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     function () {
       awardPrizes("week");
       createStreetraces("week");
+      lotto("lottoWeek");
     },
     { timezone: "Europe/Amsterdam" }
   );
@@ -3032,6 +3134,7 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     "0 0 1 * *",
     function () {
       awardPrizes("month");
+      lotto("lottoMonth");
     },
     { timezone: "Europe/Amsterdam" }
   );

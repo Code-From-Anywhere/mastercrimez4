@@ -70,7 +70,6 @@ import Gang from "./screens/Gang";
 import GangAchievements from "./screens/GangAchievements";
 import GangBulletFactory from "./screens/GangBulletFactory";
 import GangCreate from "./screens/GangCreate";
-import GangOc from "./screens/GangOc";
 import Gangs from "./screens/Gangs";
 import GangSettings from "./screens/GangSettings";
 import GangShop from "./screens/GangShop";
@@ -88,6 +87,7 @@ import JailScreen from "./screens/Jail";
 import Junkies from "./screens/Junkies";
 import Kill from "./screens/Kill";
 import Login from "./screens/Login";
+import Lotto from "./screens/Lotto";
 import ManageObject from "./screens/ManageObject";
 import Market from "./screens/Market";
 import Members from "./screens/Members";
@@ -596,7 +596,6 @@ const Container = rightContainer(
       GangShop: withLayout(GangShop),
       GangSettings: withLayout(GangSettings),
       GangAchievements: withLayout(GangAchievements),
-      GangOc: withLayout(GangOc),
       GangBulletFactory: withLayout(GangBulletFactory),
 
       Status: withLayout(Status),
@@ -608,6 +607,7 @@ const Container = rightContainer(
       Channel: withLayout(Channel),
       AllBanks: withLayout(AllBanks),
       Poker: withLayout(Poker),
+      Lotto: withLayout(Lotto),
       Bomb: withLayout(Bomb),
       SwissBank: withLayout(SwissBank),
 

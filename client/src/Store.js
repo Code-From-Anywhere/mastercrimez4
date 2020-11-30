@@ -130,11 +130,11 @@ const ocsReducer = (state = initOcs, action) => {
       return initOcs;
     }
 
-    case "STREETRACES_FETCH_SUCCEEDED": {
+    case "OCS_FETCH_SUCCEEDED": {
       return action.ocs;
     }
 
-    case "STREETRACES_FETCH_FAILED": {
+    case "OCS_FETCH_FAILED": {
       return state;
     }
     default:

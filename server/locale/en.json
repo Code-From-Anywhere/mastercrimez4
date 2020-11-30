@@ -402,5 +402,16 @@
   "shiftNoBulletFactory": "There is no bulletfactory to work in!",
   "gangBulletFactoryCronPaymentFailed": "The gang had not enough money on the gangbank to pay for the daily costs of the bullet factory. The bullet factory was destroyed!",
   "gangBulletFactoryCronFailed": "You didn't succeed to work enough shifts.",
-  "gangBulletFactoryCronSuccess": "You succeeded and generated $1 bullets from the bullet factory"
+  "gangBulletFactoryCronSuccess": "You succeeded and generated $1 bullets from the bullet factory",
+  "lottoDay": "Day-lotto",
+  "lottoWeek": "Week-lotto",
+  "lottoMonth": "Month-lotto",
+  "lottoWinnerMessage": "The $1 has found a winner! The winner is $3 and wins €$2,-",
+
+  "gangStartMissionSuccess": "The mission has started",
+  "gangMissionAlreadySucceeded": "This mission has already been passed.",
+  "gangMissionAlreadyInProgress": "This mission is already in progress",
+  "gangMissionAlreadyAnother": "You can just do one mission at a time",
+  "gangFinishMissionCronFailed": "You didn't succeed in the mission!",
+  "gangFinishMissionCronSuccess": "You succeeded doing the mission. Your gang has earned $1 $2."
 }

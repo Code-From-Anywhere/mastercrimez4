@@ -1,9 +1,12 @@
 import { Entypo } from "@expo/vector-icons";
+import moment from "moment";
 import React, { useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import { doOnce, getTextFunction, post } from "../Util";
+const lottoReleaseDate = moment("01/07/2021", "DD/MM/YYYY").set("hour", 17);
+
 const Casino = ({
   navigation,
   screenProps: {
@@ -60,11 +63,20 @@ const Casino = ({
             . {getText("casinoInfo2", city?.casinoProfit)}
           </Text>
 
-          <Button
-            onPress={() => navigation.navigate("Poker")}
-            title={getText("poker")}
-          />
+          <View style={{ flexDirection: "row" }}>
+            <Button
+              onPress={() => navigation.navigate("Poker")}
+              title={getText("poker")}
+            />
 
+            {(moment().isAfter(lottoReleaseDate) || me?.level > 1) && (
+              <Button
+                style={{ marginLeft: 10 }}
+                onPress={() => navigation.navigate("Lotto")}
+                title={getText("lotto")}
+              />
+            )}
+          </View>
           {response && (
             <Text style={{ color: theme.primaryText, marginVertical: 20 }}>
               {response}

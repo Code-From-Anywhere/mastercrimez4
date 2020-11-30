@@ -549,5 +549,13 @@
   "workForBulletFactory": "Werk voor de kogelfabriek",
   "info": "Info",
   "gangBulletFactoryInfo": "Als gang kan je een kogelfabriek opzetten. Deze kogelfabriek levert kogels aan de gangbank.  Om deze kogelfabriek te laten draaien moet een bepaalde target gehaald worden van arbeid.\n\nOchtend shift 6:00 tot 12:00\nMiddag shift 12:00 tot 18:00\nAvond shift 18:00 tot 0:00\nNacht shift 0:00 tot 6:00\n\nElke speler kan 2 shifts doen per dag.\n\nOftewel, er moet goed gecoordineerd worden.",
-  "shiftToDo": "Omdat je gang $1 leden heeft, moet elke shift door $2 leden gedaan worden"
+  "shiftToDo": "Omdat je gang $1 leden heeft, moet elke shift door $2 leden gedaan worden",
+
+  "lotto": "Lotto",
+  "youHaveDayTickets": "Jij hebt $1 loten voor de dagtrekking",
+  "youHaveWeekTickets": "Jij hebt $1 loten voor de weektrekking",
+  "youHaveMonthTickets": "Jij hebt $1 loten voor de maandtrekking",
+  "dayLotto": "Voor de dagtrekking",
+  "weekLotto": "Voor de weektrekking",
+  "monthLotto": "Voor de maandtrekking"
 }

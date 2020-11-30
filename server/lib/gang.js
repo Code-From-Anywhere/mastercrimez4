@@ -1823,9 +1823,262 @@ const userDoShift = async (
   });
 };
 
+//what: crime, stealCar, work, kills, ocs
+const gangMissionsArray = [
+  {
+    what: "stealCar",
+    amountPerMember: 3,
+    seconds: 300,
+    award: 100000,
+    awardWhat: "bank",
+  },
+
+  {
+    what: "crime",
+    amountPerMember: 3,
+    seconds: 300,
+    award: 100000,
+    awardWhat: "bank",
+  },
+
+  {
+    what: "work",
+    amountPerMember: 1,
+    seconds: 300,
+    award: 100000,
+    awardWhat: "bank",
+  },
+
+  {
+    what: "kills",
+    amountPerMember: 1,
+    seconds: 3600,
+    award: 100000,
+    awardWhat: "bullets",
+  },
+
+  {
+    what: "stealLegendaricCars",
+    amountPerMember: 10,
+    seconds: 3600,
+    award: 1000000,
+    awardWhat: "bullets",
+  },
+];
+
+const getGangMissions = async ({ User, Gang, GangMission, gang }) => {
+  const missions = await GangMission.findAll({ where: { gangId: gang.id } });
+
+  return gangMissionsArray.map((missionObject, index) => {
+    const mission = missions.find((x) => x.missionIndex === index);
+
+    missionObject.activeMission = mission;
+    return missionObject;
+  });
+};
+
+const gangMissions = async (req, res, { User, Gang, GangMission }) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.json({ response: getText("noToken") });
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user || !user.gangId) {
+    return res.json({ response: getText("invalidUser") });
+  }
+
+  const gang = await Gang.findOne({
+    where: { id: user.gangId },
+  });
+
+  if (!gang) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  const missions = await getGangMissions({ User, Gang, GangMission, gang });
+
+  return missions;
+};
+
+/**
+ * gangStartMission
+ */
+const gangStartMission = async (
+  req,
+  res,
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage, GangMission }
+) => {
+  const { token, index } = req.body;
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  if (
+    user.gangLevel !== GANG_LEVEL_BOSS &&
+    user.gangLevel !== GANG_LEVEL_UNDERBOSS
+  ) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  const invalidIndex = !gangMissionsArray[Math.round(Number(index))];
+
+  if (invalidIndex) {
+    return res.json({ response: getText("invalidValues") });
+  }
+  const already = await GangMission.findOne({
+    where: { missionIndex: index, gangId: gang.id },
+  });
+
+  const alreadyAnother = await GangMission.findOne({
+    where: { gangId: gang.id, isEnded: null },
+  });
+
+  if (alreadyAnother) {
+    return res.json({ response: getText("gangMissionAlreadyAnother") });
+  }
+  if (already && already.isSucceeded) {
+    return res.json({ response: getText("gangMissionAlreadySucceeded") });
+  }
+  if (already && !already.isEnded) {
+    return res.json({ response: getText("gangMissionAlreadyInProgress") });
+  }
+
+  if (already && already.isEnded && !already.isSucceeded) {
+    //mission has to be deleted, because it didn't succeed
+    GangMission.destroy({
+      where: {
+        missionIndex: index,
+        gangId: gang.id,
+        isSucceeded: false,
+        isEnded: true,
+      },
+    });
+  }
+
+  GangMission.create({ gangId: gang.id, missionIndex: index, amountDone: 0 });
+
+  Action.create({
+    userId: user.id,
+    action: "gangStartMission",
+    timestamp: Date.now(),
+  });
+
+  res.json({
+    response: getText("gangStartMissionSuccess"),
+  });
+};
+
+const gangFinishMissionCron = async ({
+  Gang,
+  User,
+  Channel,
+  ChannelMessage,
+  ChannelSub,
+  GangMission,
+}) => {
+  const allActiveMissions = await GangMission.findAll({
+    where: { isEnded: false },
+  });
+
+  allActiveMissions.forEach(async (mission) => {
+    const missionObject = gangMissionsArray[mission.missionIndex];
+    const gang = await Gang.findOne({ where: { id: mission.gangId } });
+    if (!gang) {
+      GangMission.destroy({ where: { id: mission.id } });
+      return;
+    }
+
+    const user = await User.findOne({ where: { gangId: gang.id } });
+    const getText = getTextFunction(user.locale);
+
+    if (
+      moment(mission.createdAt).isBefore(
+        moment().subtract(missionObject.seconds, "seconds")
+      )
+    ) {
+      //mission has passed
+      if (mission.amountDone > missionObject.amountPerMember * gang.members) {
+        GangMission.update(
+          { isEnded: true, isSucceeded: true },
+          { where: { id: mission.id } }
+        );
+
+        sendChatPushMail({
+          Channel,
+          ChannelMessage,
+          ChannelSub,
+          User,
+          gang,
+          isShareable: true,
+          isSystem: true,
+          message: getText(
+            "gangFinishMissionCronSuccess",
+            missionObject.award,
+            missionObject.awardWhat
+          ),
+        });
+
+        Gang.update(
+          {
+            [missionObject.awardWhat]: Sequelize.literal(
+              `${missionObject.awardWhat}+${missionObject.award}`
+            ),
+          },
+          { where: { id: mission.gangId } }
+        );
+      } else {
+        GangMission.update(
+          { isEnded: true, isSucceeded: false },
+          { where: { id: mission.id } }
+        );
+
+        sendChatPushMail({
+          Channel,
+          ChannelMessage,
+          ChannelSub,
+          User,
+          gang,
+          isShareable: false,
+          isSystem: true,
+          message: getText("gangFinishMissionCronFailed"),
+        });
+      }
+    }
+  });
+};
+
 module.exports = {
-  gangBulletFactoryCron,
+  //missions
+  //get
+  gangMissions,
+  //post
+  gangStartMission,
+  //cron
+  gangFinishMissionCron,
+
   //bulletfactory
+  //cron
+  gangBulletFactoryCron,
   //post
   userDoShift,
   gangBuyBulletFactory,

@@ -553,5 +553,13 @@
 
   "info": "Info",
   "gangBulletFactoryInfo": "A gang can start a bulletfactory. This bulletfactory delivers bullets to the gang bullet bank. To run this bulletfactory, the gang members have to work in shifts. \n\n The morning shift: 6:00-12:00\nThe day shift: 12:00-18:00\nEvening shift: 18:00-0:00\n Night shift: 0:00-6:00\n\nEvery player can do just two shifts per day, and you have to do enough work. The boss has to coordinate this work well, so that all shifts get covered!",
-  "shiftToDo": "Because your gang has $1 members, every shift has to be done by $2 members."
+  "shiftToDo": "Because your gang has $1 members, every shift has to be done by $2 members.",
+
+  "lotto": "Lotto",
+  "youHaveDayTickets": "You have $1 tickets for the day-lotto",
+  "youHaveWeekTickets": "You have $1 tickets for the week-lotto",
+  "youHaveMonthTickets": "You have $1 tickets for the month-lotto",
+  "dayLotto": "For the day-lotto",
+  "weekLotto": "For the week-lotto",
+  "monthLotto": "For the month-lotto"
 }

@@ -456,6 +456,7 @@ const streetraces = async (
   StreetraceParticipant
 ) => {
   const streetraces = await Streetrace.findAll({
+    order: [["id", "DESC"]],
     include: { model: StreetraceParticipant, attributes: ["name"] },
   });
   res.json({ streetraces });
