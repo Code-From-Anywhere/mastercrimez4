@@ -309,7 +309,7 @@ const leaveRobbery = async (
   }
 
   const participant = await RobberyParticipant.findOne({
-    where: { name: user.name, robberyId: robbery.id },
+    where: { userId: user.id, robberyId: robbery.id },
   });
 
   if (!participant) {
@@ -334,6 +334,14 @@ const leaveRobbery = async (
     { where: { id: user.id } }
   );
 
+  const nowParticipants = await RobberyParticipant.findAll({
+    where: { robberyId: robbery.id },
+  });
+
+  if (nowParticipants.length === 0) {
+    //also delete robbery
+    Robbery.destroy({ where: { id: robbery.id } });
+  }
   Action.create({
     userId: user.id,
     action: "leaveRobbery",
@@ -391,7 +399,7 @@ const startRobbery = async (
   }
 
   const participant = await RobberyParticipant.findOne({
-    where: { name: user.name, robberyId: robbery.id },
+    where: { userId: user.id, robberyId: robbery.id },
   });
 
   if (!participant) {
@@ -439,10 +447,11 @@ const startRobbery = async (
   );
 
   let chance = cumStrength / type.difficulty;
-  chance = change > maxChance ? maxChance : chance;
+  chance = chance > maxChance ? maxChance : chance;
 
   const isSuccess = random < chance;
 
+  const profit = type.profit * robbery.numParticipants;
   participants.forEach(async (participant) => {
     const pUser = participant.user;
     if (pUser) {
@@ -454,12 +463,21 @@ const startRobbery = async (
         profit
       );
 
+      User.update(
+        {
+          robberyAt: Date.now(),
+          robberySeconds: type.seconds,
+        },
+        { where: { id: pUser.id } }
+      );
+
       if (isSuccess) {
         const strength = Math.ceil(type.difficulty * 0.1);
         const rank = Math.ceil(type.difficulty * 0.1);
         const gamepoints = Math.ceil(type.difficulty * 0.01);
         User.update(
           {
+            cash: Sequelize.literal(`cash + ${type.profit}`),
             strength: Sequelize.literal(`strength + ${strength}`),
             rank: Sequelize.literal(`rank + ${rank}`),
             gamepoints: Sequelize.literal(`gamepoints + ${gamepoints}`),

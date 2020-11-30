@@ -1876,7 +1876,7 @@ const gangMissionsArray = [
 
   {
     what: "stealCar",
-    amountPerMember: 0.75 * 50,
+    amountPerMember: Math.round(0.75 * 50),
     seconds: 3600,
     award: 100000,
     awardWhat: "bullets",
