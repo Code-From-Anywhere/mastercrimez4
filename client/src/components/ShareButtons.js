@@ -7,7 +7,7 @@ import T from "./T";
 const ShareButtons = ({ me, url, text }) => {
   const getText = getTextFunction(me?.locale);
 
-  const siteUrl = `https://mastercrimez.com/#/${url}`;
+  const siteUrl = `https://mastercrimez.com/%23/${url}`;
   const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${siteUrl}`;
 
   return (
@@ -38,8 +38,8 @@ const ShareButtons = ({ me, url, text }) => {
         onPress={() => {
           Linking.openURL(
             Platform.OS === "web"
-              ? `https://wa.me/?text=${text} ${siteUrl}`
-              : `whatsapp://send?text=${text} ${siteUrl}`
+              ? `https://wa.me/?text=${text}%20${siteUrl}`
+              : `whatsapp://send?text=${text}%20${siteUrl}`
           );
         }}
       >
