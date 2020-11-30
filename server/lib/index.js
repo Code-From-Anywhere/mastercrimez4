@@ -9,7 +9,7 @@ const { Sequelize, Model, DataTypes, Op } = require("sequelize");
 const cron = require("node-cron");
 const moment = require("moment");
 const { getPrize } = require("./prizes");
-const { gangBulletFactoryCron } = require("./gang");
+const { gangBulletFactoryCron, gangFinishMissionCron } = require("./gang");
 const cities = require("../assets/airport.json");
 require("dotenv").config();
 const rateLimit = require("express-rate-limit");
@@ -836,6 +836,10 @@ Gang.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    prestige: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
 
     bulletFactory: {
       type: DataTypes.ENUM("none", "small", "medium", "big", "mega"),
@@ -1176,7 +1180,15 @@ server.post("/bulkaction", (req, res) =>
 );
 
 server.post("/stealcar", (req, res) =>
-  require("./stealcar").stealcar(req, res, User, Garage, Action)
+  require("./stealcar").stealcar(
+    req,
+    res,
+    User,
+    Garage,
+    Action,
+    Gang,
+    GangMission
+  )
 );
 
 server.post("/removeprotection", (req, res) =>
@@ -1184,11 +1196,11 @@ server.post("/removeprotection", (req, res) =>
 );
 
 server.post("/crime", (req, res) =>
-  require("./crime").crime(req, res, User, Action, Code)
+  require("./crime").crime(req, res, User, Action, Code, Gang, GangMission)
 );
 
 server.post("/work", (req, res) =>
-  require("./work").work(req, res, User, Action)
+  require("./work").work(req, res, User, Action, Gang, GangMission)
 );
 
 server.post("/sint", (req, res) =>
@@ -1300,6 +1312,38 @@ server.get("/prizes", (req, res) =>
     User,
     Gang,
     Prize,
+  })
+);
+
+server.get("/gangMissions", (req, res) =>
+  require("./gang").gangMissions(req, res, {
+    User,
+    Gang,
+    GangMission,
+  })
+);
+
+server.post("/gangStartMission", (req, res) =>
+  require("./gang").gangStartMission(req, res, {
+    Gang,
+    User,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangMission,
+  })
+);
+
+server.post("/gangMissionPrestige", (req, res) =>
+  require("./gang").gangMissionPrestige(req, res, {
+    Gang,
+    User,
+    Action,
+    Channel,
+    ChannelSub,
+    ChannelMessage,
+    GangMission,
   })
 );
 
@@ -1741,6 +1785,7 @@ server.post("/kill", (req, res) =>
     Action,
     Gang,
     Offer,
+    GangMission,
   })
 );
 
@@ -3076,7 +3121,7 @@ const awardForSint = async () => {
   });
 };
 
-if (process.env.NODE_APP_INSTANCE == 0) {
+if (true || process.env.NODE_APP_INSTANCE == 0) {
   console.log("Scheduling CRONS....");
 
   /*
@@ -3094,6 +3139,14 @@ if (process.env.NODE_APP_INSTANCE == 0) {
   cron.schedule("* * * * *", async () => {
     awardForWork();
     awardForSint();
+    gangFinishMissionCron({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      Gang,
+      GangMission,
+      User,
+    });
   });
 
   //elk uur

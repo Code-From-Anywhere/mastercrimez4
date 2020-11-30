@@ -13,6 +13,7 @@
   "menuGangSettings": "Hoofdkwartier",
   "menuGangAchievements": "Achievements",
   "menuGangOc": "OC",
+  "menuGangMissions": "Missies",
 
   "headerCrime": "Misdaden",
   "menuStealCar": "Auto Stelen",
@@ -557,5 +558,13 @@
   "youHaveMonthTickets": "Jij hebt $1 loten voor de maandtrekking",
   "dayLotto": "Voor de dagtrekking",
   "weekLotto": "Voor de weektrekking",
-  "monthLotto": "Voor de maandtrekking"
+  "monthLotto": "Voor de maandtrekking",
+  "start": "Starten",
+  "missions": "Missies",
+  "killMission": "$1 moorden plegen",
+  "crimeMission": "$1 misdaden doen",
+  "stealCarMission": "$1 auto's stelen",
+  "workMission": "$1 keer werken",
+  "stealLegendaricCarMission": "steel $1 legendarische auto's",
+  "youArePrestige": "Jullie hebben alle missies gedaan. Je kunt nu prestige krijgen. Klik hier om dat te krijgen."
 }

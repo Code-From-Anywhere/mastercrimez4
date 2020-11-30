@@ -352,7 +352,7 @@ const startOc = async (
       ? Math.round(Math.random() * totalPower * 10)
       : Math.round((Math.random() * totalPower) / participants.length);
   const whatString = getText(what);
-  const typeString = getText(type + "OcType");
+  const typeString = getText(oc.type + "OcType");
   if (what === "rank") {
     participants.forEach((participant) => {
       User.update(

@@ -12,6 +12,7 @@
   "menuGangSettings": "Headquarter",
   "menuGangAchievements": "Achievements",
   "menuGangOc": "OC",
+  "menuGangMissions": "Missions",
 
   "headerCrime": "Crimes",
   "menuStealCar": "Steal Car",
@@ -561,5 +562,14 @@
   "youHaveMonthTickets": "You have $1 tickets for the month-lotto",
   "dayLotto": "For the day-lotto",
   "weekLotto": "For the week-lotto",
-  "monthLotto": "For the month-lotto"
+  "monthLotto": "For the month-lotto",
+  "start": "Start",
+  "missions": "Missions",
+
+  "killMission": "Kill $1 people",
+  "crimeMission": "Do $1 crimes",
+  "stealCarMission": "Steal $1 cars",
+  "workMission": "Work $1 times",
+  "stealLegendaricCarMission": "Steal $1 legendaric cars",
+  "youArePrestige": "You've done all missions. You can prestige now. Click here to do so."
 }

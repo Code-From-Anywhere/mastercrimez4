@@ -413,5 +413,6 @@
   "gangMissionAlreadyInProgress": "This mission is already in progress",
   "gangMissionAlreadyAnother": "You can just do one mission at a time",
   "gangFinishMissionCronFailed": "You didn't succeed in the mission!",
-  "gangFinishMissionCronSuccess": "You succeeded doing the mission. Your gang has earned $1 $2."
+  "gangFinishMissionCronSuccess": "You succeeded doing the mission. Your gang has earned $1 $2.",
+  "gangMissionPrestigeSuccess": "Your gang has managed to do all missions and has been awarded a prestige. All missions have been reset and can be started again."
 }

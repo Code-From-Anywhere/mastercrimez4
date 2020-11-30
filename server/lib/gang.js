@@ -17,6 +17,10 @@ const GANG_LEVEL_UNDERBOSS = 3;
 const GANG_LEVEL_BANK = 2;
 const GANG_LEVEL_BOSS = 4;
 
+const gangMissionsReleaseDate = moment("01/05/2021", "DD/MM/YYYY").set(
+  "hour",
+  17
+);
 const bulletFactoryReleaseDate = moment("15/08/2021", "DD/MM/YYYY").set(
   "hour",
   17
@@ -1850,7 +1854,7 @@ const gangMissionsArray = [
   },
 
   {
-    what: "kills",
+    what: "kill",
     amountPerMember: 1,
     seconds: 3600,
     award: 100000,
@@ -1858,10 +1862,18 @@ const gangMissionsArray = [
   },
 
   {
-    what: "stealLegendaricCars",
+    what: "stealLegendaricCar",
     amountPerMember: 10,
     seconds: 3600,
-    award: 1000000,
+    award: 100000,
+    awardWhat: "bullets",
+  },
+
+  {
+    what: "stealCar",
+    amountPerMember: 0.75 * 50,
+    seconds: 3600,
+    award: 100000,
     awardWhat: "bullets",
   },
 ];
@@ -1872,7 +1884,7 @@ const getGangMissions = async ({ User, Gang, GangMission, gang }) => {
   return gangMissionsArray.map((missionObject, index) => {
     const mission = missions.find((x) => x.missionIndex === index);
 
-    missionObject.activeMission = mission;
+    missionObject.current = mission;
     return missionObject;
   });
 };
@@ -1900,18 +1912,15 @@ const gangMissions = async (req, res, { User, Gang, GangMission }) => {
 
   const missions = await getGangMissions({ User, Gang, GangMission, gang });
 
-  return missions;
+  return res.json(missions);
 };
 
-/**
- * gangStartMission
- */
-const gangStartMission = async (
+const gangMissionPrestige = async (
   req,
   res,
   { Gang, User, Action, Channel, ChannelSub, ChannelMessage, GangMission }
 ) => {
-  const { token, index } = req.body;
+  const { token } = req.body;
 
   if (!token) {
     res.json({ response: getText("noToken") });
@@ -1940,6 +1949,81 @@ const gangStartMission = async (
     return res.json({ response: getText("noAccess") });
   }
 
+  const allSucceededMissions = await GangMission.findAll({
+    where: { isSucceeded: true },
+  });
+  if (allSucceededMissions.length >= gangMissionsArray.length) {
+    //up prestige
+    //remove all completed missions
+    const destroyed = await GangMission.destory({
+      where: { isSucceeded: true },
+    });
+
+    if (destroyed >= gangMissionsArray.length) {
+      Gang.update(
+        { prestige: Sequelize.literal(`prestige+1`) },
+        { where: { id: gang.id } }
+      );
+    }
+
+    sendChatPushMail({
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+      User,
+      gang,
+      isShareable: true,
+      isSystem: true,
+      message: getText("gangMissionPrestigeSuccess"),
+    });
+
+    return res.json({ response: getText("success") });
+  } else {
+    return res.json({ response: getText("fail") });
+  }
+};
+
+/**
+ * gangStartMission
+ */
+const gangStartMission = async (
+  req,
+  res,
+  { Gang, User, Action, Channel, ChannelSub, ChannelMessage, GangMission }
+) => {
+  const { token, index } = req.body;
+
+  if (!token) {
+    res.json({ response: getText("noToken") });
+    return;
+  }
+
+  const user = await User.findOne({ where: { loginToken: token } });
+
+  if (!user) {
+    res.json({ response: getText("invalidUser") });
+    return;
+  }
+
+  getText = getTextFunction(user.locale);
+
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (moment().isBefore(gangMissionsReleaseDate) && user.level < 2) {
+    return res.json({ response: getText("noAccess") });
+  }
+
+  if (!gang || !user.gangId) {
+    return res.json({ response: getText("gangDoesntExist") });
+  }
+
+  if (
+    user.gangLevel !== GANG_LEVEL_BOSS &&
+    user.gangLevel !== GANG_LEVEL_UNDERBOSS
+  ) {
+    return res.json({ response: getText("noAccess") });
+  }
+
   const invalidIndex = !gangMissionsArray[Math.round(Number(index))];
 
   if (invalidIndex) {
@@ -1950,7 +2034,7 @@ const gangStartMission = async (
   });
 
   const alreadyAnother = await GangMission.findOne({
-    where: { gangId: gang.id, isEnded: null },
+    where: { gangId: gang.id, isEnded: false },
   });
 
   if (alreadyAnother) {
@@ -1996,11 +2080,12 @@ const gangFinishMissionCron = async ({
   ChannelSub,
   GangMission,
 }) => {
-  const allActiveMissions = await GangMission.findAll({
+  const allCurrentMissions = await GangMission.findAll({
     where: { isEnded: false },
   });
+  console.log("allCurrentmissions", allCurrentMissions.length);
 
-  allActiveMissions.forEach(async (mission) => {
+  allCurrentMissions.forEach(async (mission) => {
     const missionObject = gangMissionsArray[mission.missionIndex];
     const gang = await Gang.findOne({ where: { id: mission.gangId } });
     if (!gang) {
@@ -2067,12 +2152,50 @@ const gangFinishMissionCron = async ({
   });
 };
 
+const doGangMission = async ({ Gang, GangMission, user, amount, what }) => {
+  if (!user.gangId) {
+    return;
+  }
+  const gang = await Gang.findOne({ where: { id: user.gangId } });
+
+  if (!gang) {
+    return;
+  }
+
+  const currentMission = await GangMission.findOne({
+    where: {
+      gangId: gang.id,
+      isEnded: false,
+    },
+  });
+
+  if (!currentMission) {
+    return;
+  }
+
+  const missionObject = gangMissionsArray[currentMission.missionIndex];
+  if (!missionObject) {
+    return;
+  }
+
+  if (missionObject.what === what) {
+    GangMission.update(
+      { amountDone: Sequelize.literal(`amountDone+${amount}`) },
+      { where: { id: currentMission.id } }
+    );
+  }
+};
+
 module.exports = {
   //missions
+  //functions
+  doGangMission,
   //get
   gangMissions,
   //post
   gangStartMission,
+  gangMissionPrestige,
+
   //cron
   gangFinishMissionCron,
 

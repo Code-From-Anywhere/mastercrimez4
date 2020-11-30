@@ -407,5 +407,6 @@
   "gangMissionAlreadyInProgress": "Deze missie is al bezig",
   "gangMissionAlreadyAnother": "Je kan maar 1 missie tegelijk doen",
   "gangFinishMissionCronFailed": "Jullie hebben de missie niet gehaald!",
-  "gangFinishMissionCronSuccess": "Jullie hebben de missie gehaald! De gang heeft $1 $2 verdiend."
+  "gangFinishMissionCronSuccess": "Jullie hebben de missie gehaald! De gang heeft $1 $2 verdiend.",
+  "gangMissionPrestigeSuccess": "Jullie gang heeft alle missies behaald en heeft een prestige erbij. Alle missies zijn nu gereset en kunnen opnieuw behaald worden."
 }

@@ -10,11 +10,12 @@ const {
 const cars = require("../assets/cars.json");
 let getText = getTextFunction();
 const { isHappyHour } = require("./util");
+const { doGangMission } = require("./gang");
 function randomEntry(array) {
   return array[Math.floor(array.length * Math.random())];
 }
 
-const stealcar = async (req, res, User, Garage, Action) => {
+const stealcar = async (req, res, User, Garage, Action, Gang, GangMission) => {
   const { token, option, captcha } = req.body;
 
   const happyHourFactor = isHappyHour() ? 2 : 1;
@@ -156,6 +157,17 @@ const stealcar = async (req, res, User, Garage, Action) => {
 
           return car;
         });
+
+        doGangMission({ Gang, GangMission, amount: 1, user, what: "stealCar" });
+        if (option === 14) {
+          doGangMission({
+            Gang,
+            GangMission,
+            amount: 1,
+            user,
+            what: "stealLegendaricCar",
+          });
+        }
 
         res.json({
           response: getText("success") + getSpecial(User, user),

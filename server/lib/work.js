@@ -5,11 +5,12 @@ const {
   getTextFunction,
 } = require("./util");
 const moment = require("moment");
+const { doGangMission } = require("./gang");
 let getText = getTextFunction();
 
 const workReleaseDate = moment("15/04/2021", "DD/MM/YYYY").set("hour", 17);
 
-const work = async (req, res, User, Action) => {
+const work = async (req, res, User, Action, Gang, GangMission) => {
   let { token, option, captcha } = req.body;
 
   option = Math.round(option);
@@ -92,6 +93,8 @@ const work = async (req, res, User, Action) => {
   if (!updated) {
     return res.json({ response: getText("couldntUpdateUser") });
   }
+
+  doGangMission({ Gang, GangMission, amount: 1, user, what: "work" });
 
   Action.create({
     userId: user.id,

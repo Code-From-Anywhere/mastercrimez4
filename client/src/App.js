@@ -70,6 +70,7 @@ import Gang from "./screens/Gang";
 import GangAchievements from "./screens/GangAchievements";
 import GangBulletFactory from "./screens/GangBulletFactory";
 import GangCreate from "./screens/GangCreate";
+import GangMissions from "./screens/GangMissions";
 import Gangs from "./screens/Gangs";
 import GangSettings from "./screens/GangSettings";
 import GangShop from "./screens/GangShop";
@@ -596,6 +597,7 @@ const Container = rightContainer(
       GangShop: withLayout(GangShop),
       GangSettings: withLayout(GangSettings),
       GangAchievements: withLayout(GangAchievements),
+      GangMissions: withLayout(GangMissions),
       GangBulletFactory: withLayout(GangBulletFactory),
 
       Status: withLayout(Status),

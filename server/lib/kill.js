@@ -8,6 +8,7 @@ const {
 const { Sequelize, Op } = require("sequelize");
 
 const { removeOffer } = require("./market");
+const { doGangMission } = require("./gang");
 let getText = getTextFunction();
 
 const properties = [
@@ -29,7 +30,17 @@ const SECONDS = 120;
 const kill = async (
   req,
   res,
-  { User, Channel, ChannelMessage, ChannelSub, City, Action, Gang, Offer }
+  {
+    User,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    City,
+    Action,
+    Gang,
+    Offer,
+    GangMission,
+  }
 ) => {
   const { token, name, bullets } = req.body;
 
@@ -288,6 +299,8 @@ const kill = async (
 
   if (damage >= user2.health) {
     //user2 gaat dood
+
+    doGangMission({ Gang, GangMission, amount: 1, user, what: "kill" });
     const offers = await Offer.findAll({ where: { userId: user2.id } });
     await Promise.all(
       offers.map((offer) => removeOffer({ id: offer.id, Offer, User }))

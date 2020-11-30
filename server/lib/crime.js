@@ -8,9 +8,10 @@ const {
 } = require("./util");
 const moment = require("moment");
 const { isHappyHour } = require("./util");
+const { doGangMission } = require("./gang");
 let getText = getTextFunction();
 
-const crime = async (req, res, User, Action, Code) => {
+const crime = async (req, res, User, Action, Code, Gang, GangMission) => {
   const { token, option, captcha } = req.body;
   const happyHourFactor = isHappyHour() ? 2 : 1;
 
@@ -99,6 +100,7 @@ const crime = async (req, res, User, Action, Code) => {
           ),
         });
 
+        doGangMission({ Gang, GangMission, amount: 1, user, what: "crime" });
         const specialText = getSpecial(User, user);
 
         const stolen = Math.ceil(

@@ -30,6 +30,10 @@ export const InactiveScreens = {
   DAYS_NEW: 14,
   ACTIONS_BEFORE_POLICE: 100,
   OC_RELEASE_DATE: moment("01/08/2021", "DD/MM/YYYY").set("hours", 17),
+  GANG_MISSIONS_RELEASE_DATE: moment("01/05/2021", "DD/MM/YYYY").set(
+    "hours",
+    17
+  ),
   GANG_BULLET_FACTORY_RELEASE_DATE: moment("15/08/2021", "DD/MM/YYYY").set(
     "hours",
     17
@@ -587,6 +591,22 @@ export const rightMenu = (me, theme) => {
                     timeLabels={{ m: null, s: null }}
                   />
                 ) : null,
+            },
+
+            me?.gangId && {
+              incative:
+                me?.level < 2 &&
+                moment().isBefore(InactiveScreens.GANG_MISSIONS_RELEASE_DATE),
+              isNew: moment().isBefore(
+                InactiveScreens.GANG_MISSIONS_RELEASE_DATE.add(
+                  InactiveScreens.DAYS_NEW,
+                  "days"
+                )
+              ),
+              iconType: "Ionicons",
+              icon: "md-cash",
+              text: getText("menuGangMissions"),
+              to: "GangMissions",
             },
           ].filter((x) => !!x),
         }
