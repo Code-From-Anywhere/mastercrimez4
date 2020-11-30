@@ -146,6 +146,10 @@ const joinOc = async (req, res, User, Oc, OcParticipant, Garage, Action) => {
 
   getText = getTextFunction(user.locale);
 
+  if (user.level < 2 && moment().isBefore(releaseDate)) {
+    return res.json({ response: getText("noAccess") });
+  }
+
   if (user.ocAt + 3600000 > Date.now()) {
     const seconds = Math.round((user.ocAt + 3600000 - Date.now()) / 1000);
 

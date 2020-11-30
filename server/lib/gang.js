@@ -1612,10 +1612,10 @@ const gangBulletFactoryCron = async ({
       const shifts = await getShifts(gang, User, Gang);
 
       if (
-        shifts.morning.length > gang.members * SHIFT_FACTOR &&
-        shifts.day.length > gang.members * SHIFT_FACTOR &&
-        shifts.evening.length > gang.members * SHIFT_FACTOR &&
-        shifts.night.length > gang.members * SHIFT_FACTOR
+        shifts.morning.length > Math.floor(gang.members * SHIFT_FACTOR) &&
+        shifts.day.length > Math.floor(gang.members * SHIFT_FACTOR) &&
+        shifts.evening.length > Math.floor(gang.members * SHIFT_FACTOR) &&
+        shifts.night.length > Math.floor(gang.members * SHIFT_FACTOR)
       ) {
         //enough
         const generated = bulletFactory.generates * gang.members;

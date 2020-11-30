@@ -192,6 +192,10 @@ const joinRobbery = async (
 
   getText = getTextFunction(user.locale);
 
+  if (user.level < 2 && moment().isBefore(releaseDate)) {
+    return res.json({ response: getText("noAccess") });
+  }
+
   if (user.jailAt > Date.now()) {
     return res.json({ response: getText("youreInJail") });
   }

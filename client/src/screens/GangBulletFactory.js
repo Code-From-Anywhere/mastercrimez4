@@ -181,7 +181,7 @@ const GangBulletFactory = ({
                 {getText(
                   "shiftToDo",
                   me?.gang?.members,
-                  Math.ceil(me?.gang?.members * SHIFT_FACTOR)
+                  Math.floor(me?.gang?.members * SHIFT_FACTOR)
                 )}
               </T>
               <T bold style={{ marginTop: 20 }}>
