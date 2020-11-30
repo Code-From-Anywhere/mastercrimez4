@@ -238,6 +238,23 @@
   "streetraceReportConclusion": "De winnaar is $1. $1 wint €$2,-",
   "streetraceStartSuccess": "Je hebt de streetrace gestart. Ga naar berichten om het resultaat te zien.",
 
+  "robberyNotEnoughPower": "Je auto heeft niet genoeg power",
+  "robberyInvalidParticipants": "Ongeldig aantal deelnemers",
+  "robberyCreateSuccess": "De robbery is aangemaakt",
+  "robberyNoRobberyId": "Geef een robbery op",
+  "robberyNoRobbery": "Kon robbery niet vinden",
+  "robberyAlreadyParticipant": "Je doet al mee aan deze robbery",
+  "robberyNoParticipant": "Je zit niet in deze robbery",
+  "robberyWrongCity": "Je bent niet in de goede stad",
+  "robberyJoinSuccess": "Je hebt deelgenomen",
+  "robberyLeaveSuccess": "Je hebt de robbery verlaten",
+  "robberyNotFull": "Deze robbery zit nog niet vol.",
+  "robberyStartAlready": "Deze robbery is al gereden.",
+  "robberyReportTitle": "De robbery is gereden!",
+  "robberyReportParticipant": "$1 deed mee met een $2",
+  "robberyReportConclusion": "De winnaar is $1. $1 wint €$2,-",
+  "robberyStartSuccess": "Je hebt de robbery gestart. Ga naar berichten om het resultaat te zien.",
+
   "ocNoCarId": "Geef een auto op",
   "ocNoCar": "Kon auto niet vinden",
   "ocNotEnoughPower": "Je auto heeft niet genoeg power",
@@ -408,5 +425,17 @@
   "gangMissionAlreadyAnother": "Je kan maar 1 missie tegelijk doen",
   "gangFinishMissionCronFailed": "Jullie hebben de missie niet gehaald!",
   "gangFinishMissionCronSuccess": "Jullie hebben de missie gehaald! De gang heeft $1 $2 verdiend.",
-  "gangMissionPrestigeSuccess": "Jullie gang heeft alle missies behaald en heeft een prestige erbij. Alle missies zijn nu gereset en kunnen opnieuw behaald worden."
+  "gangMissionPrestigeSuccess": "Jullie gang heeft alle missies behaald en heeft een prestige erbij. Alle missies zijn nu gereset en kunnen opnieuw behaald worden.",
+
+  "robberySuccess": "De winkelroof van de $1 is gelukt. Jullie hebben €$2,- gestolen.",
+  "robberyFail": "De winkelroof van de $1 is mislukt. Jullie zitten nu allemaal in de gevangenis!",
+
+  "snackbar": "Snackbar",
+  "clothesstore": "Kledingwinkel",
+  "supermarket": "Supermarkt",
+  "drugstore": "Drogist",
+  "coffeeshop": "Coffee shop",
+  "cardealer": "Auto dealer",
+  "jewelrystore": "Juwelier",
+  "alreadyParticipantOther": "Je doet al mee aan een winkelroof"
 }

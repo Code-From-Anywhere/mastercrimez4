@@ -239,6 +239,26 @@
   "streetraceReportConclusion": "The winner is $1. $1 wins €$2,-",
   "streetraceStartSuccess": "You've started the streetrace. To to messages to see the result.",
 
+  "robberyNoCarId": "Enter a car",
+  "robberyNoCar": "Couldn't find that car",
+  "robberyNotEnoughPower": "Your car doesn't have enough power",
+  "robberyNoCarAsset": "With this car you can't race anymore",
+  "robberyInvalidParticipants": "Invalid amount of participants",
+  "robberyCreateSuccess": "The robbery has been created successfully",
+  "robberyNoRobberyId": "Enter a robbery",
+  "robberyNoRobbery": "Couldn't find robbery",
+  "robberyAlreadyParticipant": "You're already participant in this robbery",
+  "robberyNoParticipant": "You're no participant of this robbery",
+  "robberyWrongCity": "You're not in the right city",
+  "robberyJoinSuccess": "You've participated",
+  "robberyLeaveSuccess": "You left the robbery",
+  "robberyNotFull": "This robbery is not full yet.",
+  "robberyStartAlready": "This robbery has been driven already.",
+  "robberyReportTitle": "The robbery has been driven!",
+  "robberyReportParticipant": "$1 competed with a $2",
+  "robberyReportConclusion": "The winner is $1. $1 wins €$2,-",
+  "robberyStartSuccess": "You've started the robbery. To to messages to see the result.",
+
   "ocNoCarId": "Enter a car",
   "ocNoCar": "Couldn't find that car",
   "ocNotEnoughPower": "Your car doesn't have enough power",
@@ -414,5 +434,17 @@
   "gangMissionAlreadyAnother": "You can just do one mission at a time",
   "gangFinishMissionCronFailed": "You didn't succeed in the mission!",
   "gangFinishMissionCronSuccess": "You succeeded doing the mission. Your gang has earned $1 $2.",
-  "gangMissionPrestigeSuccess": "Your gang has managed to do all missions and has been awarded a prestige. All missions have been reset and can be started again."
+  "gangMissionPrestigeSuccess": "Your gang has managed to do all missions and has been awarded a prestige. All missions have been reset and can be started again.",
+
+  "robberySuccess": "The robbery of the $1 has succeeded. You have stolen €$2,-.",
+  "robberyFail": "The robbery of the $1 has failed! You're now all in jail.",
+
+  "snackbar": "Snackbar",
+  "clothesstore": "Clothes store",
+  "supermarket": "Supermarket",
+  "drugstore": "Drugstore",
+  "coffeeshop": "Coffee shop",
+  "cardealer": "Car dealer",
+  "jewelrystore": "Jewelry store",
+  "alreadyParticipantOther": "You're already participanting in a robbery"
 }

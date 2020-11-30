@@ -14,6 +14,7 @@ export const isHappyHour = () => {
 };
 
 export const InactiveScreens = {
+  ACTIONS_BEFORE_ROBBERY: 120,
   ACTIONS_BEFORE_BOMB: 60,
   ACTIONS_BEFORE_CASINO: 70,
   ACTIONS_BEFORE_BUNKER: 20,
@@ -46,6 +47,7 @@ export const InactiveScreens = {
   MARKET_RELEASE_DATE: moment("15/12/2020", "DD/MM/YYYY").set("hours", 17),
   PRIZES_RELEASE_DATE: moment("01/01/2021", "DD/MM/YYYY").set("hours", 17),
   POLICE_RELEASE_DATE: moment("15/01/2021", "DD/MM/YYYY").set("hours", 17),
+  ROBBERY_RELEASE_DATE: moment("15/06/2021", "DD/MM/YYYY").set("hours", 17),
   //happy hour 1 feb
 
   WORK_RELEASE_DATE: moment("15/04/2021", "DD/MM/YYYY").set("hours", 17),
@@ -69,6 +71,9 @@ export const leftMenu = (me, theme) => {
     (me?.junkiesAt + 120000 - Date.now()) / 1000
   );
   const hoerenSeconds = Math.ceil((me?.hoerenAt + 120000 - Date.now()) / 1000);
+  const robberySeconds = Math.ceil(
+    (me?.robberyAt + me?.robberySeconds * 1000 - Date.now()) / 1000
+  );
 
   const getText = getTextFunction(me?.locale);
 
@@ -215,6 +220,41 @@ export const leftMenu = (me, theme) => {
           icon: "bomb",
           text: getText("menuBomb"),
           to: "Bomb",
+        },
+
+        {
+          inactive:
+            (moment().isBefore(InactiveScreens.ROBBERY_RELEASE_DATE) &&
+              me?.level < 2) ||
+            me?.numActions < InactiveScreens.ACTIONS_BEFORE_ROBBERY,
+          isNew:
+            moment().isBefore(
+              InactiveScreens.ROBBERY_RELEASE_DATE.add(
+                InactiveScreens.DAYS_NEW,
+                "days"
+              )
+            ) ||
+            me?.numActions <
+              InactiveScreens.ACTIONS_BEFORE_ROBBERY +
+                InactiveScreens.ACTIONS_AMOUNT_NEW,
+
+          iconType: "Ionicons",
+          icon: "md-cash",
+          text: getText("menuRobbery"),
+          to: "Robbery",
+          component:
+            robberySeconds > 0 ? (
+              <CountDown
+                style={{ marginLeft: 10 }}
+                until={robberySeconds}
+                digitStyle={{ backgroundColor: theme.secondary }}
+                digitTxtStyle={{ color: theme.secondaryText }}
+                onFinish={() => {}}
+                size={8}
+                timeToShow={["M", "S"]}
+                timeLabels={{ m: null, s: null }}
+              />
+            ) : null,
         },
       ].filter((x) => !!x && !x.inactive),
     },

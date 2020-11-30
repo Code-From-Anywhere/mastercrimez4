@@ -60,6 +60,7 @@ import ChooseProfession from "./screens/ChooseProfession";
 import Code from "./screens/Code";
 import Contribute from "./screens/Contribute";
 import CreateOc from "./screens/CreateOC";
+import CreateRobbery from "./screens/CreateRobbery";
 import CreateStreetrace from "./screens/CreateStreetrace";
 import Crimes from "./screens/Crimes";
 import Donate from "./screens/Donate";
@@ -104,6 +105,7 @@ import Profile from "./screens/Profile";
 import Racecars from "./screens/Racecars";
 import RecoverPassword from "./screens/RecoverPassword";
 import Rob from "./screens/Rob";
+import Robbery from "./screens/Robbery";
 import Settings from "./screens/Settings";
 import Shop from "./screens/Shop";
 import SignupEmail from "./screens/SignupEmail";
@@ -600,6 +602,9 @@ const Container = rightContainer(
       GangMissions: withLayout(GangMissions),
       GangBulletFactory: withLayout(GangBulletFactory),
 
+      Robbery: withLayout(Robbery),
+      CreateRobbery: withLayout(CreateRobbery),
+
       Status: withLayout(Status),
       Hackers: withLayout(Hackers),
       Police: withLayout(Police),
@@ -749,9 +754,16 @@ const _RootContainer = (props) => {
   );
 };
 
-const mapStateToProps = ({ device, me, streetraces, ocs, cities }) => {
+const mapStateToProps = ({
+  device,
+  me,
+  streetraces,
+  ocs,
+  cities,
+  robberies,
+}) => {
   //console.log("State gets mapped to props... device only");
-  return { device, me, streetraces, ocs, cities };
+  return { device, me, streetraces, ocs, cities, robberies };
 }; //
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
@@ -761,6 +773,8 @@ const mapDispatchToProps = (dispatch) => ({
   },
   reloadStreetraces: () =>
     dispatch({ type: "STREETRACES_FETCH_REQUESTED", payload: null }),
+  reloadRobberies: () =>
+    dispatch({ type: "ROBBERIES_FETCH_REQUESTED", payload: null }),
   reloadOcs: (token) =>
     dispatch({ type: "OCS_FETCH_REQUESTED", payload: { token } }),
   reloadCities: () =>

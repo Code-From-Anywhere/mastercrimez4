@@ -13,6 +13,7 @@
   "menuGangAchievements": "Achievements",
   "menuGangOc": "OC",
   "menuGangMissions": "Missions",
+  "menuRobbery": "Robbery",
 
   "headerCrime": "Crimes",
   "menuStealCar": "Steal Car",
@@ -571,5 +572,15 @@
   "stealCarMission": "Steal $1 cars",
   "workMission": "Work $1 times",
   "stealLegendaricCarMission": "Steal $1 legendaric cars",
-  "youArePrestige": "You've done all missions. You can prestige now. Click here to do so."
+  "youArePrestige": "You've done all missions. You can prestige now. Click here to do so.",
+
+  "snackbar": "Snackbar",
+  "clothesstore": "Clothes store",
+  "supermarket": "Supermarket",
+  "drugstore": "Drugstore",
+  "coffeeshop": "Coffee shop",
+  "cardealer": "Car dealer",
+  "jewelrystore": "Jewelery store",
+
+  "difficulty": "Difficulty"
 }

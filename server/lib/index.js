@@ -76,6 +76,8 @@ const allUserFields = publicUserFields.concat([
   "lottoDay",
   "lottoWeek",
   "lottoMonth",
+  "robberyAt",
+  "robberySeconds",
 ]);
 
 function me(token) {
@@ -297,6 +299,16 @@ User.init(
       defaultValue: 0,
     },
 
+    robberyAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+
+    robberySeconds: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+
     protectionAt: {
       type: DataTypes.BIGINT,
       defaultValue: 0,
@@ -462,6 +474,45 @@ StreetraceParticipant.init(
   },
   { sequelize, modelName: "streetraceParticipant" }
 );
+
+class Robbery extends Model {}
+
+Robbery.init(
+  {
+    city: DataTypes.STRING,
+    numParticipants: DataTypes.INTEGER,
+    type: DataTypes.STRING,
+    price: DataTypes.BIGINT,
+    prize: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    creator: DataTypes.STRING,
+  },
+  { sequelize, modelName: "robbery" }
+);
+
+class RobberyParticipant extends Model {}
+
+RobberyParticipant.init(
+  {
+    robberyId: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "robberyParticipant" }
+);
+
+RobberyParticipant.belongsTo(Robbery, {
+  foreignKey: "robberyId",
+});
+Robbery.hasMany(RobberyParticipant, {
+  foreignKey: "robberyId",
+});
+
+RobberyParticipant.belongsTo(User, {
+  foreignKey: "userId",
+  constraints: false,
+});
+User.hasMany(RobberyParticipant, { foreignKey: "userId", constraints: false });
 
 class Oc extends Model {}
 
@@ -1688,6 +1739,65 @@ server.post("/startStreetrace", (req, res) =>
     User,
     Streetrace,
     StreetraceParticipant,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    Action,
+  })
+);
+
+server.post("/createRobbery", (req, res) =>
+  require("./robbery").createRobbery(
+    req,
+    res,
+    User,
+    Robbery,
+    RobberyParticipant,
+    Garage,
+    Action
+  )
+);
+
+server.get("/robberies", (req, res) =>
+  require("./robbery").robberies(
+    req,
+    res,
+    User,
+    Robbery,
+    RobberyParticipant,
+    Garage
+  )
+);
+
+server.post("/joinRobbery", (req, res) =>
+  require("./robbery").joinRobbery(
+    req,
+    res,
+    User,
+    Robbery,
+    RobberyParticipant,
+    Garage,
+    Action
+  )
+);
+
+server.post("/leaveRobbery", (req, res) =>
+  require("./robbery").leaveRobbery(
+    req,
+    res,
+    User,
+    Robbery,
+    RobberyParticipant,
+    Garage,
+    Action
+  )
+);
+
+server.post("/startRobbery", (req, res) =>
+  require("./robbery").startRobbery(req, res, {
+    User,
+    Robbery,
+    RobberyParticipant,
     Channel,
     ChannelMessage,
     ChannelSub,

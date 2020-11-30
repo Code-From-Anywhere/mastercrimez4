@@ -123,6 +123,25 @@ const streetracesReducer = (state = initStreetraces, action) => {
   }
 };
 
+const initRobberies = null;
+const robberiesReducer = (state = initRobberies, action) => {
+  switch (action.type) {
+    case "PURGE": {
+      return initRobberies;
+    }
+
+    case "ROBBERIES_FETCH_SUCCEEDED": {
+      return action.robberies;
+    }
+
+    case "ROBBERIES_FETCH_FAILED": {
+      return state;
+    }
+    default:
+      return state;
+  }
+};
+
 const initOcs = null;
 const ocsReducer = (state = initOcs, action) => {
   switch (action.type) {
@@ -162,7 +181,7 @@ const citiesReducer = (state = initCities, action) => {
 const config = {
   key: "v1",
   storage: AsyncStorage,
-  whitelist: ["device", "me", "streetraces", "cities", "ocs"],
+  whitelist: ["device", "me", "streetraces", "cities", "ocs", "robberies"],
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -173,6 +192,7 @@ const reducers = {
   cities: citiesReducer,
   streetraces: streetracesReducer,
   ocs: ocsReducer,
+  robberies: robberiesReducer,
 };
 
 const rootReducer = persistCombineReducers(config, reducers);

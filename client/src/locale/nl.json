@@ -15,6 +15,8 @@
   "menuGangOc": "OC",
   "menuGangMissions": "Missies",
 
+  "menuRobbery": "Winkelroof",
+
   "headerCrime": "Misdaden",
   "menuStealCar": "Auto Stelen",
   "menuCrimes": "Misdaden",
@@ -566,5 +568,15 @@
   "stealCarMission": "$1 auto's stelen",
   "workMission": "$1 keer werken",
   "stealLegendaricCarMission": "steel $1 legendarische auto's",
-  "youArePrestige": "Jullie hebben alle missies gedaan. Je kunt nu prestige krijgen. Klik hier om dat te krijgen."
+  "youArePrestige": "Jullie hebben alle missies gedaan. Je kunt nu prestige krijgen. Klik hier om dat te krijgen.",
+
+  "snackbar": "Snackbar",
+  "clothesstore": "Kledingwinkel",
+  "supermarket": "Supermarkt",
+  "drugstore": "Drogist",
+  "coffeeshop": "Coffee shop",
+  "cardealer": "Auto dealer",
+  "jewelrystore": "Juwelier",
+
+  "difficulty": "Moeilijkheidsgraad"
 }
