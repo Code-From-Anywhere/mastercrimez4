@@ -118,6 +118,10 @@ const createRobbery = async (
     return res.json({ response: getText("youreInJail") });
   }
 
+  if (user.robberyAt + user.robberySeconds * 1000 > Date.now()) {
+    return res.json({ response: getText("robberyWait") });
+  }
+
   if (user.health === 0) {
     return res.json({ response: getText("youreDead") });
   }
@@ -194,6 +198,10 @@ const joinRobbery = async (
 
   if (user.level < 2 && moment().isBefore(releaseDate)) {
     return res.json({ response: getText("noAccess") });
+  }
+
+  if (user.robberyAt + user.robberySeconds * 1000 > Date.now()) {
+    return res.json({ response: getText("robberyWait") });
   }
 
   if (user.jailAt > Date.now()) {

@@ -446,5 +446,7 @@
   "coffeeshop": "Coffee shop",
   "cardealer": "Car dealer",
   "jewelrystore": "Jewelry store",
-  "alreadyParticipantOther": "You're already participanting in a robbery"
+  "alreadyParticipantOther": "You're already participanting in a robbery",
+
+  "robberyWait": "You're not ready yet for the next robbery"
 }

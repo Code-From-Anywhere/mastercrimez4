@@ -437,5 +437,6 @@
   "coffeeshop": "Coffee shop",
   "cardealer": "Auto dealer",
   "jewelrystore": "Juwelier",
-  "alreadyParticipantOther": "Je doet al mee aan een winkelroof"
+  "alreadyParticipantOther": "Je doet al mee aan een winkelroof",
+  "robberyWait": "Je bent nog niet klaar voor de volgende winkelroof"
 }
