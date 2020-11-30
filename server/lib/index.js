@@ -965,6 +965,13 @@ Streetrace.hasMany(StreetraceParticipant, {
   foreignKey: "streetraceId",
 });
 
+OcParticipant.belongsTo(Oc, {
+  foreignKey: "ocId",
+});
+Oc.hasMany(OcParticipant, {
+  foreignKey: "ocId",
+});
+
 try {
   sequelize.sync({
     alter: true,
