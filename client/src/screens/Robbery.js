@@ -124,7 +124,7 @@ const Robbery = ({
               <User user={p.user} navigation={navigation} size={40} />
             ))}
 
-          {!!item.robberyParticipants.find((x) => x.name === me?.name) ? (
+          {!!item.robberyParticipants.find((x) => x?.user?.id === me?.id) ? (
             item.robberyParticipants.length === item.numParticipants ? (
               <Button
                 theme={theme}
