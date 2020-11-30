@@ -2688,7 +2688,7 @@ const putBulletsInBulletFactories = async () => {
     },
   });
 
-  const newBullets = online.length * 1000;
+  const newBullets = online.length * 1000 + 5000;
   console.log("online", online.length, " new bullets ", newBullets);
 
   sequelize.query(`UPDATE cities SET bullets=bullets+${newBullets}`);

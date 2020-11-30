@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/static/js/app.e927bf99.chunk.js",
-    "app.js.map": "/static/js/app.e927bf99.chunk.js.map",
+    "app.js": "/static/js/app.bf4e5741.chunk.js",
+    "app.js.map": "/static/js/app.bf4e5741.chunk.js.map",
     "runtime~app.js": "/static/js/runtime~app.2e9f1821.js",
     "runtime~app.js.map": "/static/js/runtime~app.2e9f1821.js.map",
-    "static/js/2.dbedb12c.chunk.js": "/static/js/2.dbedb12c.chunk.js",
-    "static/js/2.dbedb12c.chunk.js.map": "/static/js/2.dbedb12c.chunk.js.map",
+    "static/js/2.bbf110f8.chunk.js": "/static/js/2.bbf110f8.chunk.js",
+    "static/js/2.bbf110f8.chunk.js.map": "/static/js/2.bbf110f8.chunk.js.map",
     "fonts/AntDesign.ttf": "/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/./fonts/Feather.ttf",
@@ -26,9 +26,11 @@
     "index.html": "/index.html",
     "manifest.json": "/manifest.json",
     "serve.json": "/serve.json",
-    "static/js/2.dbedb12c.chunk.js.LICENSE.txt": "/static/js/2.dbedb12c.chunk.js.LICENSE.txt",
+    "static/js/2.bbf110f8.chunk.js.LICENSE.txt": "/static/js/2.bbf110f8.chunk.js.LICENSE.txt",
+    "static/media/bank.jpg": "/static/media/bank.a34b0cd7.jpg",
     "static/media/banker.jpg": "/static/media/banker.1d9edc53.jpg",
     "static/media/bombarderen.jpg": "/static/media/bombarderen.3d0c7534.jpg",
+    "static/media/cars.jpeg": "/static/media/cars.a3f3b108.jpeg",
     "static/media/carthief.jpg": "/static/media/carthief.b6f3fdd6.jpg",
     "static/media/city.jpeg": "/static/media/city.3a38ffc1.jpeg",
     "static/media/dood.jpg": "/static/media/dood.d44e4074.jpg",
@@ -54,6 +56,7 @@
     "static/media/logo5.jpg": "/static/media/logo5.8e72dd72.jpg",
     "static/media/pimp.jpg": "/static/media/pimp.f2697d22.jpg",
     "static/media/politie.jpeg": "/static/media/politie.211bf938.jpeg",
+    "static/media/shootout.jpeg": "/static/media/shootout.f88bc10f.jpeg",
     "static/media/spotify.png": "/static/media/spotify.d7c133b0.png",
     "static/media/thief.jpg": "/static/media/thief.fa783e06.jpg",
     "static/media/uitgemoord.jpg": "/static/media/uitgemoord.89bc3b35.jpg",
@@ -64,7 +67,7 @@
   },
   "entrypoints": [
     "static/js/runtime~app.2e9f1821.js",
-    "static/js/2.dbedb12c.chunk.js",
-    "static/js/app.e927bf99.chunk.js"
+    "static/js/2.bbf110f8.chunk.js",
+    "static/js/app.bf4e5741.chunk.js"
   ]
 }

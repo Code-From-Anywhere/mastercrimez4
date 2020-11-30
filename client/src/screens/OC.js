@@ -87,14 +87,14 @@ const Oc = ({
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Image
           source={
-            item.type === "city"
-              ? require("../../assets/city.jpeg")
-              : item.type === "highway"
-              ? require("../../assets/highway.jpeg")
-              : require("../../assets/forest.jpeg")
+            item.type === "bank"
+              ? require("../../assets/bank.jpg")
+              : item.type === "cars"
+              ? require("../../assets/cars.jpeg")
+              : require("../../assets/shootout.jpeg")
           }
           style={{ width: 170, height: 140 }}
           resizeMode={"contain"}
@@ -111,39 +111,35 @@ const Oc = ({
             {getText("participants")}: {item.ocParticipants.length}/
             {item.numParticipants}
           </T>
-          <T>
-            {getText("costs")}: €{item.price},-
-          </T>
-          <T>
-            {getText("addedPrizeMoney")}: €{item.prize},-
-          </T>
           {item.ocParticipants.length > 0 && (
             <T>{item.ocParticipants.map((x) => x.name).join(", ")}</T>
           )}
 
-          {!!item.ocParticipants.find((x) => x.name === me?.name) ? (
-            item.ocParticipants.length === item.numParticipants ? (
-              <Button
-                theme={theme}
-                title={getText("startCTA")}
-                onPress={() => start(item.id)}
-              />
+          <View style={{ flexDirection: "row" }}>
+            {!!item.ocParticipants.find((x) => x.name === me?.name) ? (
+              item.ocParticipants.length === item.numParticipants ? (
+                <Button
+                  theme={theme}
+                  title={getText("startCTA")}
+                  onPress={() => start(item.id)}
+                />
+              ) : (
+                <Button
+                  theme={theme}
+                  title={getText("leaveCTA")}
+                  onPress={() => leave(item.id)}
+                />
+              )
             ) : (
               <Button
                 theme={theme}
-                title={getText("leaveCTA")}
-                onPress={() => leave(item.id)}
+                title={getText("participate")}
+                onPress={() => {
+                  join(item.id);
+                }}
               />
-            )
-          ) : (
-            <Button
-              theme={theme}
-              title={getText("participate")}
-              onPress={() => {
-                join(item.id);
-              }}
-            />
-          )}
+            )}
+          </View>
         </View>
       </View>
     );
@@ -164,11 +160,11 @@ const Oc = ({
   };
   return (
     <View style={{ flex: 1 }}>
+      {renderHeader()}
       <FlatList
         contentContainerStyle={{
           height: Platform.OS === "web" ? height - 200 : undefined,
         }}
-        ListHeaderComponent={renderHeader}
         ListFooterComponent={() => <Footer screenProps={screenProps} />}
         refreshControl={
           <RefreshControl
