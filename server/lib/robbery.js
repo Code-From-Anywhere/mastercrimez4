@@ -7,6 +7,7 @@ const {
   publicUserFields,
 } = require("./util");
 
+const moment = require("moment");
 const TYPES = [
   {
     type: "snackbar",
