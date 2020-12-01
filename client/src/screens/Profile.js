@@ -1,3 +1,5 @@
+// import color from "markdown-it-color-text";
+import emoji from "markdown-it-emoji";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
@@ -9,7 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Markdown from "react-native-markdown-display";
+import Markdown, { MarkdownIt } from "react-native-markdown-display";
 import { AlertContext } from "../components/AlertProvider";
 import Button from "../components/Button";
 import T from "../components/T";
@@ -24,9 +26,38 @@ import {
   post,
 } from "../Util";
 
+const markdownItInstance = MarkdownIt({ typographer: true })
+  // .use(taskLists)
+  .use(emoji);
+// .use(color);
+
 const Bio = ({ bio, theme }) => {
   return (
-    <Markdown style={{ text: { color: theme.primaryText } }}>{bio}</Markdown>
+    <Markdown
+      debugPrintTree
+      markdownit={markdownItInstance}
+      style={{ body: { color: theme.primaryText } }}
+      rules={{
+        emoji: (node, children, parent, styles) => {
+          // examine the node properties to see what video we need to render
+          console.log(node); // expected output of this is in readme.md below this code snip
+
+          return <Text key={node.key}>{node.content}</Text>;
+        },
+        // color: (node, children, parent, styles) => {
+        //   // examine the node properties to see what video we need to render
+        //   console.log(node); // expected output of this is in readme.md below this code snip
+
+        //   return (
+        //     <Text key={node.key} style={{ color: "yellow" }}>
+        //       {node.content}
+        //     </Text>
+        //   );
+        // },
+      }}
+    >
+      {bio}
+    </Markdown>
   );
 };
 const ProfileScreen = ({

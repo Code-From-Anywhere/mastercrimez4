@@ -45,7 +45,7 @@ export const InactiveScreens = {
     "hours",
     17
   ),
-  GANG_RELEASE_DATE: moment("01/12/2020", "DD/MM/YYYY").set("hours", 17),
+  GANG_RELEASE_DATE: moment("30/11/2020", "DD/MM/YYYY").set("hours", 17),
   MARKET_RELEASE_DATE: moment("15/12/2020", "DD/MM/YYYY").set("hours", 17),
   PRIZES_RELEASE_DATE: moment("01/01/2021", "DD/MM/YYYY").set("hours", 17),
   POLICE_RELEASE_DATE: moment("15/01/2021", "DD/MM/YYYY").set("hours", 17),
@@ -193,7 +193,7 @@ export const leftMenu = (me, theme) => {
             moment().isBefore(InactiveScreens.WORK_RELEASE_DATE) &&
             me?.level < 2,
           isNew: moment().isBefore(
-            InactiveScreens.WORK_RELEASE_DATE.add(
+            moment(InactiveScreens.WORK_RELEASE_DATE).add(
               InactiveScreens.DAYS_NEW,
               "days"
             )
@@ -231,7 +231,7 @@ export const leftMenu = (me, theme) => {
             me?.numActions < InactiveScreens.ACTIONS_BEFORE_ROBBERY,
           isNew:
             moment().isBefore(
-              InactiveScreens.ROBBERY_RELEASE_DATE.add(
+              moment(InactiveScreens.ROBBERY_RELEASE_DATE).add(
                 InactiveScreens.DAYS_NEW,
                 "days"
               )
@@ -380,7 +380,7 @@ export const leftMenu = (me, theme) => {
             me?.numActions < InactiveScreens.ACTIONS_BEFORE_DETECTIVES,
           isNew:
             moment().isBefore(
-              InactiveScreens.DETECTIVES_RELEASE_DATE.add(
+              moment(InactiveScreens.DETECTIVES_RELEASE_DATE).add(
                 InactiveScreens.DAYS_NEW,
                 "days"
               )
@@ -477,7 +477,7 @@ export const leftMenu = (me, theme) => {
             me?.numActions < InactiveScreens.ACTIONS_BEFORE_MARKET,
           isNew:
             moment().isBefore(
-              InactiveScreens.MARKET_RELEASE_DATE.add(
+              moment(InactiveScreens.MARKET_RELEASE_DATE).add(
                 InactiveScreens.DAYS_NEW,
                 "days"
               )
@@ -565,13 +565,16 @@ export const rightMenu = (me, theme) => {
   const getText = getTextFunction(me?.locale);
   const ocSeconds = Math.ceil((me?.ocAt + 3600000 - Date.now()) / 1000);
 
+  const isGangsReleased = new moment().isAfter(
+    InactiveScreens.GANG_RELEASE_DATE
+  );
   const gangMenus =
-    me?.level > 1 || moment().isAfter(InactiveScreens.GANG_RELEASE_DATE)
+    me?.level > 1 || isGangsReleased
       ? {
           header: {
             isHeader: true,
             isNew: moment().isBefore(
-              InactiveScreens.GANG_RELEASE_DATE.add(
+              moment(InactiveScreens.GANG_RELEASE_DATE).add(
                 InactiveScreens.DAYS_NEW,
                 "days"
               )
@@ -623,7 +626,7 @@ export const rightMenu = (me, theme) => {
                   InactiveScreens.GANG_BULLET_FACTORY_RELEASE_DATE
                 ),
               isNew: moment().isBefore(
-                InactiveScreens.GANG_BULLET_FACTORY_RELEASE_DATE.add(
+                moment(InactiveScreens.GANG_BULLET_FACTORY_RELEASE_DATE).add(
                   InactiveScreens.DAYS_NEW,
                   "days"
                 )
@@ -639,7 +642,7 @@ export const rightMenu = (me, theme) => {
                 me?.level < 2 &&
                 moment().isBefore(InactiveScreens.OC_RELEASE_DATE),
               isNew: moment().isBefore(
-                InactiveScreens.OC_RELEASE_DATE.add(
+                moment(InactiveScreens.OC_RELEASE_DATE).add(
                   InactiveScreens.DAYS_NEW,
                   "days"
                 )
@@ -668,7 +671,7 @@ export const rightMenu = (me, theme) => {
                 me?.level < 2 &&
                 moment().isBefore(InactiveScreens.GANG_MISSIONS_RELEASE_DATE),
               isNew: moment().isBefore(
-                InactiveScreens.GANG_MISSIONS_RELEASE_DATE.add(
+                moment(InactiveScreens.GANG_MISSIONS_RELEASE_DATE).add(
                   InactiveScreens.DAYS_NEW,
                   "days"
                 )
@@ -851,7 +854,7 @@ export const rightMenu = (me, theme) => {
             me?.numActions < InactiveScreens.ACTIONS_BEFORE_POLICE,
           isNew:
             moment().isBefore(
-              InactiveScreens.POLICE_RELEASE_DATE.add(
+              moment(InactiveScreens.POLICE_RELEASE_DATE).add(
                 InactiveScreens.DAYS_NEW,
                 "days"
               )
@@ -873,7 +876,7 @@ export const rightMenu = (me, theme) => {
             me?.numActions < InactiveScreens.ACTIONS_BEFORE_POLICE,
           isNew:
             moment().isBefore(
-              InactiveScreens.POLICE_RELEASE_DATE.add(
+              moment(InactiveScreens.POLICE_RELEASE_DATE).add(
                 InactiveScreens.DAYS_NEW,
                 "days"
               )
@@ -900,7 +903,7 @@ export const rightMenu = (me, theme) => {
             me?.level < 2 &&
             moment().isBefore(InactiveScreens.PRIZES_NORMAL_RELEASE_DATE),
           isNew: moment().isBefore(
-            InactiveScreens.PRIZES_RELEASE_DATE.add(
+            moment(InactiveScreens.PRIZES_RELEASE_DATE).add(
               InactiveScreens.DAYS_NEW,
               "days"
             )
