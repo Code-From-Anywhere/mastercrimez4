@@ -1,5 +1,5 @@
 const items = require("../assets/creditshop.json");
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 const { getTextFunction, getLocale } = require("./util");
 
 let getText = getTextFunction();
@@ -32,8 +32,8 @@ const creditshopBuy = async (req, res, User) => {
 
     const [updated] = await User.update(
       {
-        [item.wat]: user[item.wat] + item.hoeveel,
-        credits: user.credits - item.kosten,
+        [item.wat]: Sequelize.literal(`${item.wat}+${item.hoeveel}`),
+        credits: Sequelize.literal(`credits - ${item.kosten}`),
       },
       { where: { id: user.id, credits: { [Op.gte]: item.kosten } } }
     );

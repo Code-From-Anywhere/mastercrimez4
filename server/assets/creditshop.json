@@ -1,14 +1,14 @@
 [
   {
     "id": "1",
-    "kooptext": { "nl": "koop €7,500,000 euro", "en": "buy €7,500,000 euro" },
+    "kooptext": { "nl": "koop €2,500,000 euro", "en": "buy €2,500,000 euro" },
     "gekochttext": {
-      "nl": "Je hebt er nu 7,5 miljoen bij op de bank!",
-      "en": "We've added 7.5 million to your bank"
+      "nl": "Je hebt er nu 2,5 miljoen bij op de bank!",
+      "en": "We've added 2.5 million to your bank"
     },
     "wat": "bank",
-    "hoeveel": 7500000,
-    "kosten": 300
+    "hoeveel": 2500000,
+    "kosten": 100
   },
   {
     "id": "2",
@@ -18,8 +18,8 @@
       "en": "We've increased your strength"
     },
     "wat": "strength",
-    "hoeveel": 4000,
-    "kosten": 300
+    "hoeveel": 400,
+    "kosten": 30
   },
   {
     "id": "3",
@@ -29,8 +29,8 @@
       "en": "We've added 100.000 bullets to your account."
     },
     "wat": "bullets",
-    "hoeveel": 100000,
-    "kosten": 300
+    "hoeveel": 30000,
+    "kosten": 100
   },
 
   {
@@ -41,8 +41,8 @@
       "en": "We've added 3000 gamepoints to your account"
     },
     "wat": "gamepoints",
-    "hoeveel": 3000,
-    "kosten": 1000
+    "hoeveel": 300,
+    "kosten": 100
   },
   {
     "id": "7",
@@ -52,7 +52,7 @@
       "en": "We've increased your rank by a whole lot!"
     },
     "wat": "rank",
-    "hoeveel": 10000,
-    "kosten": 500
+    "hoeveel": 2000,
+    "kosten": 100
   }
 ]
