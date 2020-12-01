@@ -10,7 +10,11 @@ let getText = getTextFunction();
 
 const releaseDate = moment("01/06/2021", "DD/MM/YYYY").set("hours", 17);
 
-const hireDetective = async (req, res, { User, Detective }) => {
+const hireDetective = async (
+  req,
+  res,
+  { User, Detective, Channel, ChannelMessage, ChannelSub }
+) => {
   let { loginToken, name, type } = req.body;
   const types = ["slow", "normal", "fast"];
   type = types.includes(type) ? type : "slow";

@@ -1284,7 +1284,13 @@ server.post("/removeprotection", (req, res) =>
 );
 
 server.post("/hireDetective", (req, res) =>
-  require("./detective").hireDetective(req, res, { User, Detective })
+  require("./detective").hireDetective(req, res, {
+    User,
+    Detective,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+  })
 );
 
 server.get("/detectives", (req, res) =>
