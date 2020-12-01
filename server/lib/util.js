@@ -217,6 +217,7 @@ const sendChatPushMail = async ({
           body: JSON.stringify({
             to: channelSub.user.pushtoken,
             title,
+            sound: "default",
             body: message,
             data: { channel: channel.id },
           }),
