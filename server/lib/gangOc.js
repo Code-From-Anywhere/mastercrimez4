@@ -354,7 +354,7 @@ const startOc = async (
       ? Math.round(Math.random() * totalPower * 1000)
       : oc.type === "cars"
       ? Math.round(Math.random() * totalPower * 10)
-      : Math.round((Math.random() * totalPower * 0.1) / participants.length);
+      : Math.round((Math.random() * totalPower * 0.01) / participants.length);
   const whatString = getText(what);
   const typeString = getText(oc.type + "OcType");
   if (what === "rank") {
@@ -391,6 +391,7 @@ const startOc = async (
     ChannelSub,
     User,
     gang,
+    user1: user,
     isShareable: true,
     isSystem: true,
     message: getText("ocStartSuccess", typeString, amount, whatString),
