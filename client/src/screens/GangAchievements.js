@@ -60,7 +60,7 @@ const GangAchievements = ({
                   >
                     <View
                       style={{
-                        width: 200,
+                        width: 150,
                         backgroundColor: theme.secondary,
                         padding: 20,
                         borderRadius: 10,
@@ -83,7 +83,7 @@ const GangAchievements = ({
 
                     <View
                       style={{
-                        width: 200,
+                        width: 150,
                         backgroundColor: theme.secondary,
                         padding: 20,
                         borderRadius: 10,

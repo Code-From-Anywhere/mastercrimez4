@@ -81,7 +81,7 @@ const Gangs = ({
   const totalHealth = item.users?.reduce((prev, user) => prev + user.health, 0);
 
   return (
-    <View style={{ flex: 1, padding: 15 }}>
+    <View style={{ flex: 1 }}>
       <FlatList
         ListFooterComponent={() => {
           return (
@@ -152,13 +152,8 @@ const Gangs = ({
           const color = getUserColor(item, theme);
 
           return (
-            <Grid
-              key={`item${index}`}
-              style={{
-                paddingHorizontal: 20,
-              }}
-            >
-              <Col style={{ marginVertical: 5 }}>
+            <Grid key={`item${index}`} style={{}}>
+              <Col size={2} style={{ marginVertical: 5 }}>
                 <User navigation={navigation} user={item} />
               </Col>
               <Col style={{ justifyContent: "center" }}>

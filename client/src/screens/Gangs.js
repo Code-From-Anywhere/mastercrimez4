@@ -98,7 +98,10 @@ const Gangs = ({
           const navigate = () =>
             navigation.navigate("Gang", { name: item.name });
           return (
-            <TouchableOpacity onPress={navigate} style={{ margin: MARGIN }}>
+            <TouchableOpacity
+              onPress={navigate}
+              style={{ margin: MARGIN, width: SIZE }}
+            >
               {item.thumbnail ? (
                 <Image
                   source={{ uri: Constants.SERVER_ADDR + item.thumbnail }}

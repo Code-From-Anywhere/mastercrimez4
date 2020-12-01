@@ -14,6 +14,11 @@ import { getTextFunction, numberFormat, post } from "../Util";
 const MARGIN = 20;
 const { width, height } = Dimensions.get("window");
 const SIZE = width < 1000 ? 100 : 200;
+
+const GANG_LEVEL_UNDERBOSS = 3;
+const GANG_LEVEL_BANK = 2;
+const GANG_LEVEL_BOSS = 4;
+
 const GangShop = ({
   navigation,
   screenProps: {
@@ -171,20 +176,25 @@ const GangShop = ({
               <T>
                 {getText("inPossession")}: {item.current}
               </T>
-              <View style={{ flexDirection: "row" }}>
-                <TextInput
-                  placeholderTextColor={theme.secondaryTextSoft}
-                  style={[styles(theme).textInput, { width: 100 }]}
-                  value={amount[index + 1] || ""}
-                  onChangeText={(v) => setAmount({ ...amount, [index + 1]: v })}
-                  placeholder={getText("amount")}
-                />
-                <Button
-                  style={{ marginVertical: 10, marginLeft: 10 }}
-                  title={getText("buy")}
-                  onPress={() => postGangShop(index + 1)}
-                />
-              </View>
+              {(me?.gangLevel === GANG_LEVEL_BOSS ||
+                me?.gangLevel === GANG_LEVEL_BANK) && (
+                <View style={{ flexDirection: "row" }}>
+                  <TextInput
+                    placeholderTextColor={theme.secondaryTextSoft}
+                    style={[styles(theme).textInput, { width: 100 }]}
+                    value={amount[index + 1] || ""}
+                    onChangeText={(v) =>
+                      setAmount({ ...amount, [index + 1]: v })
+                    }
+                    placeholder={getText("amount")}
+                  />
+                  <Button
+                    style={{ marginVertical: 10, marginLeft: 10 }}
+                    title={getText("buy")}
+                    onPress={() => postGangShop(index + 1)}
+                  />
+                </View>
+              )}
             </View>
           );
         }}
