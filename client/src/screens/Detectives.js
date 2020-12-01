@@ -59,6 +59,7 @@ const Detectives = ({
           />
 
           <Button
+            style={{ marginBottom: 10 }}
             title={getText(type + "Detective")}
             onPress={() =>
               setType(
@@ -67,7 +68,17 @@ const Detectives = ({
             }
           />
 
+          <T>
+            {getText(
+              "detectiveCost",
+              type === "slow" ? 100000 : type === "normal" ? 1000000 : 10000000,
+              getText(type + "Detective")
+            )}
+          </T>
+
           <Button title={getText("hire")} onPress={postHireDetective} />
+
+          <View style={{ height: 100 }} />
           {detectives?.map?.((detective) => (
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}

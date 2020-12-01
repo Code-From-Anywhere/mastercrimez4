@@ -597,5 +597,6 @@
   "normalDetective": "Normale detective",
   "fastDetective": "Snelle detective",
   "hire": "Inhuren",
-  "menuDetectives": "Detectives"
+  "menuDetectives": "Detectives",
+  "detectiveCost": "Een $2 kost €$1,- om in te huren."
 }

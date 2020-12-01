@@ -604,5 +604,6 @@
   "fastDetective": "Fast detective",
   "hire": "Hire",
 
-  "menuDetectives": "Detectives"
+  "menuDetectives": "Detectives",
+  "detectiveCost": "A $2 costs €$1,- to hire."
 }

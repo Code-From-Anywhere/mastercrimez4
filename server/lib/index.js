@@ -2832,7 +2832,7 @@ server.post("/login", async (req, res) => {
 });
 
 const zcaptcha = require("./captcha");
-const { finishDetectivesCron } = require("./detective");
+const { finishDetectivesCron, deleteOldDetectives } = require("./detective");
 
 const getCaptcha = async (req, res) => {
   const { loginToken } = req.query;
@@ -3331,6 +3331,7 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     });
     awardForWork();
     awardForSint();
+
     gangFinishMissionCron({
       Channel,
       ChannelMessage,
@@ -3346,7 +3347,7 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     "0 * * * *",
     async () => {
       awardPrizes("hour");
-
+      deleteOldDetectives({ sequelize });
       putBulletsInBulletFactories();
       checkScheduledMessages();
     },

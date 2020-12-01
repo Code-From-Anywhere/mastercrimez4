@@ -117,11 +117,6 @@ const GangSettings = ({
   };
 
   const postGangLeave = async () => {
-    if (gangName !== me?.gang?.name) {
-      alert(getText("pleaseFillInGangName"));
-      return;
-    }
-
     setLoading(true);
     const { response } = await post("gangLeave", {
       token: device.loginToken,
@@ -153,11 +148,6 @@ const GangSettings = ({
     );
 
   const postGangRemove = async () => {
-    if (gangName !== me?.gang?.name) {
-      alert(getText("pleaseFillInGangName"));
-      return;
-    }
-
     setLoading(true);
     const { response } = await post("gangRemove", {
       token: device.loginToken,

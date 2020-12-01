@@ -112,7 +112,7 @@ const gangCreate = async (
     return res.json({ response: getText("nameWrongLength", 3, 24) });
   }
 
-  if (user.gangId) {
+  if (!!user.gangId) {
     return res.json({ response: getText("gangAlready") });
   }
 

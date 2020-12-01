@@ -177,4 +177,15 @@ const detectives = async (req, res, { User, Detective }) => {
   });
 };
 
-module.exports = { hireDetective, detectives, finishDetectivesCron };
+const deleteOldDetectives = ({ sequelize }) => {
+  sequelize.query(
+    `DELETE FROM detectives WHERE UNIX_TIMESTAMP(createdAt) < UNIX_TIMESTAMP(NOW())-86400`
+  );
+};
+
+module.exports = {
+  hireDetective,
+  detectives,
+  finishDetectivesCron,
+  deleteOldDetectives,
+};
