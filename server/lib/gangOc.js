@@ -40,7 +40,7 @@ const createOc = async (
   }
   getText = getTextFunction(user.locale);
 
-  if (user.level < 2 && moment().isBefore(releaseDate)) {
+  if (user.level < 2 && moment().local().isBefore(releaseDate)) {
     return res.json({ response: getText("noAccess") });
   }
 
@@ -146,7 +146,7 @@ const joinOc = async (req, res, User, Oc, OcParticipant, Garage, Action) => {
 
   getText = getTextFunction(user.locale);
 
-  if (user.level < 2 && moment().isBefore(releaseDate)) {
+  if (user.level < 2 && moment().local().isBefore(releaseDate)) {
     return res.json({ response: getText("noAccess") });
   }
 

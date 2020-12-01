@@ -1,8 +1,9 @@
 const { getTextFunction, publicUserFields } = require("./util");
+const { Op } = require("sequelize");
 
 let getText = getTextFunction();
 
-const report = async (req, res, User) => {
+const report = async (req, res, { User }) => {
   let { token, ban, userId, banReason } = req.body;
 
   if (!token) {
@@ -31,14 +32,14 @@ const report = async (req, res, User) => {
   ban = user.level >= 5 ? ban : "reported";
 
   if (user.ban === "none" || user.level >= 5) {
-    User.update({ ban, banReason }, { where: { id: user.id } });
+    User.update({ ban, banReason }, { where: { id: user2.id } });
   }
 
   res.json({ response: getText("success") });
 };
 
-const reports = async (req, res, User) => {
-  let { token } = req.body;
+const reports = async (req, res, { User }) => {
+  let { token } = req.query;
 
   if (!token) {
     res.json({ response: getText("noToken") });

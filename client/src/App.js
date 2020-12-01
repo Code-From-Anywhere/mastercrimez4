@@ -64,6 +64,7 @@ import CreateOc from "./screens/CreateOC";
 import CreateRobbery from "./screens/CreateRobbery";
 import CreateStreetrace from "./screens/CreateStreetrace";
 import Crimes from "./screens/Crimes";
+import Detectives from "./screens/Detectives";
 import Donate from "./screens/Donate";
 import DownloadApp from "./screens/DownloadApp";
 import ForgotPassword from "./screens/ForgotPassword";
@@ -618,6 +619,7 @@ const Container = rightContainer(
       Poker: withLayout(Poker),
       Lotto: withLayout(Lotto),
       Bomb: withLayout(Bomb),
+      Detectives: withLayout(Detectives),
       SwissBank: withLayout(SwissBank),
 
       Crimes: withLayout(Crimes),

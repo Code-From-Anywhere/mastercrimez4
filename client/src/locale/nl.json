@@ -7,6 +7,8 @@
   "headerCars": "Auto's",
   "headerRobMurder": "Beroven & Vermoorden",
 
+  "menuReports": "Rapporteringen",
+
   "menuGangCreate": "Gang aanmaken",
   "menuGangs": "Alle gangs",
   "menuGangShop": "Gang Winkel",
@@ -588,5 +590,12 @@
   "reported": "Gerapporteerd",
   "reason": "Reden",
   "ban": "Verban",
-  "shadowBan": "Geef shaduwban"
+  "shadowBan": "Geef shaduwban",
+  "report": "Rapporteer",
+
+  "slowDetective": "Langazame detective",
+  "normalDetective": "Normale detective",
+  "fastDetective": "Snelle detective",
+  "hire": "Inhuren",
+  "menuDetectives": "Detectives"
 }

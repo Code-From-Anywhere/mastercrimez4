@@ -459,11 +459,22 @@ class Detective extends Model {}
 Detective.init(
   {
     creatorId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
+    // userId: DataTypes.INTEGER,
+    seconds: DataTypes.INTEGER,
     findAfterSeconds: DataTypes.INTEGER,
+    city: DataTypes.STRING,
   },
   { sequelize, modelName: "detective" }
 );
+
+Detective.belongsTo(User, {
+  foreignKey: "userId",
+  constraints: false,
+});
+User.hasMany(Detective, {
+  foreignKey: "userId",
+  constraints: false,
+});
 
 class Streetrace extends Model {}
 
@@ -1270,6 +1281,14 @@ server.post("/stealcar", (req, res) =>
 
 server.post("/removeprotection", (req, res) =>
   require("./removeprotection").removeprotection(req, res, User)
+);
+
+server.post("/hireDetective", (req, res) =>
+  require("./detective").hireDetective(req, res, { User, Detective })
+);
+
+server.get("/detectives", (req, res) =>
+  require("./detective").detectives(req, res, { User, Detective })
 );
 
 server.post("/report", (req, res) =>
@@ -2813,6 +2832,7 @@ server.post("/login", async (req, res) => {
 });
 
 const zcaptcha = require("./captcha");
+const { finishDetectivesCron } = require("./detective");
 
 const getCaptcha = async (req, res) => {
   const { loginToken } = req.query;
@@ -3302,6 +3322,13 @@ if (process.env.NODE_APP_INSTANCE == 0) {
 
   // elke minuut
   cron.schedule("* * * * *", async () => {
+    finishDetectivesCron({
+      User,
+      Detective,
+      Channel,
+      ChannelMessage,
+      ChannelSub,
+    });
     awardForWork();
     awardForSint();
     gangFinishMissionCron({

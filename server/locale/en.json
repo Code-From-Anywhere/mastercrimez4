@@ -453,5 +453,12 @@
   "alreadyBlocked": "This person is already blocked by you",
   "blockSuccess": "Blocked",
   "notBlocked": "This person wasn't blocked by you",
-  "blockRemoveSuccess": "Unblocked"
+  "blockRemoveSuccess": "Unblocked",
+
+  "hireDetectiveSuccess": "Detective hired",
+  "alradyHiredDetective": "You have already hired a detective for this person",
+  "detectiveYouAreFound": "You are seen by a detective!",
+  "detectiveUserFound": "Your detective has found $1. $1 is in $2!",
+
+  "detectiveHiredForYou": "Someone hired a detective against you"
 }

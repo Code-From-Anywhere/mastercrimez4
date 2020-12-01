@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import Markdown from "react-native-markdown-display";
+import { AlertContext } from "../components/AlertProvider";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -20,6 +21,7 @@ import {
   getStrength,
   getTextFunction,
   getUserColor,
+  post,
 } from "../Util";
 
 const Bio = ({ bio, theme }) => {
@@ -43,6 +45,8 @@ const ProfileScreen = ({
   const [profile, setProfile] = useState({});
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState(null);
+
   const name = params?.name;
   const getText = getTextFunction(me?.locale);
 
@@ -58,6 +62,17 @@ const ProfileScreen = ({
   useEffect(() => {
     fetchImages();
   }, [profile?.id]);
+
+  const postReport = async () => {
+    const { response } = await post("report", {
+      token: device.loginToken,
+      userId: profile?.id,
+      ban: "reported",
+      banReason: "profile",
+    });
+
+    setResponse(response);
+  };
 
   const getProfile = (name) => {
     setLoading(true);
@@ -185,6 +200,7 @@ const ProfileScreen = ({
     "hour",
     17
   );
+  const alertAlert = React.useContext(AlertContext);
 
   return (
     <ScrollView>
@@ -199,6 +215,7 @@ const ProfileScreen = ({
         >
           <Text style={{ fontWeight: "bold", color }}>{profile?.name}</Text>
 
+          {response && <T>{response}</T>}
           {hasImage ? (
             <View>
               <Image
@@ -317,11 +334,23 @@ const ProfileScreen = ({
                 })
               }
             />
+
+            <Button
+              title={getText("report")}
+              onPress={() =>
+                alertAlert(getText("areYouSure"), getText("areYouSure"), [
+                  { text: getText("ok"), onPress: () => postReport() },
+                  { text: getText("cancel") },
+                ])
+              }
+            />
           </View>
         </View>
 
         <View style={{ marginVertical: 20 }}>
-          <Bio theme={theme} bio={profile?.bio} />
+          {profile?.ban !== "shadowBanned" && profile?.ban !== "banned" && (
+            <Bio theme={theme} bio={profile?.bio} />
+          )}
         </View>
 
         <View>

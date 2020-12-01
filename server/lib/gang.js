@@ -1233,6 +1233,7 @@ const gangInvites = async (req, res, { User, GangRequest, Gang }) => {
 
 const gangs = async (req, res, { User, Gang }) => {
   const gangs = await Gang.findAll({
+    where: { name: { [Op.ne]: null } },
     attributes: { exclude: ["bullets"] },
     order: [["score", "DESC"]],
   });
@@ -1707,7 +1708,7 @@ const gangBuyBulletFactory = async (
     return res.json({ response: getText("gangDoesntExist") });
   }
 
-  if (!gang.isPolice && moment().isBefore(bulletFactoryReleaseDate)) {
+  if (!gang.isPolice && moment().local().isBefore(bulletFactoryReleaseDate)) {
     return res.json({ response: getText("noAccess") });
   }
 
@@ -1813,12 +1814,13 @@ const userDoShift = async (
     return res.json({ response: getText("tooManyShifts") });
   }
 
+  const which = `${whichShift}ShiftDone`;
   User.update(
     {
-      [`${whichShift}ShiftDone`]: true,
+      [which]: true,
       totalShiftsDone: Sequelize.literal("totalShiftsDone+1"),
     },
-    { where: { id: user.id } }
+    { where: { id: user.id, [which]: { [Op.ne]: true } } }
   );
 
   Action.create({
@@ -2014,7 +2016,7 @@ const gangStartMission = async (
 
   const gang = await Gang.findOne({ where: { id: user.gangId } });
 
-  if (moment().isBefore(gangMissionsReleaseDate) && user.level < 2) {
+  if (moment().local().isBefore(gangMissionsReleaseDate) && user.level < 2) {
     return res.json({ response: getText("noAccess") });
   }
 

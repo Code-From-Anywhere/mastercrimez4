@@ -6,6 +6,9 @@
   "headerGang": "Gangs",
   "headerCars": "Cars",
   "headerRobMurder": "Rob & Murder",
+
+  "menuReports": "Reports",
+
   "menuGangCreate": "Create gang",
   "menuGangs": "All Gangs",
   "menuGangShop": "Gang Shop",
@@ -592,5 +595,14 @@
   "reported": "Reported",
   "reason": "Reason",
   "ban": "Ban",
-  "shadowBan": "Shadowban"
+  "shadowBan": "Shadowban",
+
+  "report": "Report",
+
+  "slowDetective": "Slow detective",
+  "normalDetective": "Normal detective",
+  "fastDetective": "Fast detective",
+  "hire": "Hire",
+
+  "menuDetectives": "Detectives"
 }

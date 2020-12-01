@@ -444,5 +444,10 @@
   "alreadyBlocked": "Dit persoon is al geblokkeerd door jou",
   "blockSuccess": "Geblokkeerd",
   "notBlocked": "Dit persoon was niet geblokkeerd door je",
-  "blockRemoveSuccess": "Blokkade opgeheven"
+  "blockRemoveSuccess": "Blokkade opgeheven",
+  "hireDetectiveSuccess": "Detective ingehuurd",
+  "alradyHiredDetective": "Je hebt al een detective ingehuurd voor deze persoon",
+  "detectiveYouAreFound": "Je bent gezien door een detective!",
+  "detectiveUserFound": "Je detective heeft $1 gevonden. $1 is in $2!",
+  "detectiveHiredForYou": "Iemand heeft een detective voor je ingehuurd"
 }

@@ -1,6 +1,7 @@
 import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
+import Button from "../components/Button";
 import T from "../components/T";
 import User from "../components/User";
 import { doOnce, get, getTextFunction, post } from "../Util";
@@ -33,12 +34,13 @@ const Reports = ({
   };
 
   const getReports = async () => {
-    const { reports } = await get(`reports?loginToken=${device.loginToken}`);
+    const { reports } = await get(`reports?token=${device.loginToken}`);
     setReports(reports);
   };
 
   doOnce(getReports);
 
+  console.log("reports", reports);
   return (
     <ScrollView style={{ flex: 1, padding: 15 }}>
       <View style={{ flex: 1, margin: 20 }}>

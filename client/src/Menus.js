@@ -15,6 +15,7 @@ export const isHappyHour = () => {
 
 export const InactiveScreens = {
   ACTIONS_BEFORE_ROBBERY: 120,
+  ACTIONS_BEFORE_DETECTIVES: 30,
   ACTIONS_BEFORE_BOMB: 60,
   ACTIONS_BEFORE_CASINO: 70,
   ACTIONS_BEFORE_BUNKER: 20,
@@ -31,6 +32,7 @@ export const InactiveScreens = {
   DAYS_NEW: 14,
   ACTIONS_BEFORE_POLICE: 100,
   OC_RELEASE_DATE: moment("01/08/2021", "DD/MM/YYYY").set("hours", 17),
+  DETECTIVES_RELEASE_DATE: moment("01/06/2021", "DD/MM/YYYY").set("hours", 17),
   GANG_MISSIONS_RELEASE_DATE: moment("01/05/2021", "DD/MM/YYYY").set(
     "hours",
     17
@@ -370,6 +372,28 @@ export const leftMenu = (me, theme) => {
           text: getText("menuHospital"),
           to: "Hospital",
         },
+
+        {
+          inactive:
+            (moment().isBefore(InactiveScreens.DETECTIVES_RELEASE_DATE) &&
+              me?.level < 2) ||
+            me?.numActions < InactiveScreens.ACTIONS_BEFORE_DETECTIVES,
+          isNew:
+            moment().isBefore(
+              InactiveScreens.DETECTIVES_RELEASE_DATE.add(
+                InactiveScreens.DAYS_NEW,
+                "days"
+              )
+            ) ||
+            me?.numActions <
+              InactiveScreens.ACtIONS_BEFORE_DETECTIVES +
+                InactiveScreens.ACTIONS_AMOUNT_NEW,
+
+          iconType: "FontAwesome",
+          icon: "search",
+          text: getText("menuDetectives"),
+          to: "Detectives",
+        },
       ].filter((x) => !!x && !x.inactive),
     },
     {
@@ -514,6 +538,12 @@ const adminMenu = (me) => {
             icon: "eye",
             text: getText("menuUserWatch"),
             to: "AdminUserWatch",
+          },
+          {
+            iconType: "Entypo",
+            icon: "eye",
+            text: getText("menuReports"),
+            to: "Reports",
           },
         ]
       : [];
