@@ -253,12 +253,6 @@ const GangSettings = ({
               contentWidth={"90%"}
               id="gangProfile"
             >
-              <T>
-                {getText("bullets")}: {numberFormat(me?.gang?.bullets)}
-              </T>
-              <T>
-                {getText("bank")}: €{numberFormat(me?.gang?.bank)}
-              </T>
               {me?.gang?.message && (
                 <MarkdownView style={{ text: { color: theme.primaryText } }}>
                   {me?.gang?.message}
@@ -337,8 +331,7 @@ const GangSettings = ({
             ) : null}
 
             {/* Transactions */}
-            {me?.gangLevel === GANG_LEVEL_BANK ||
-            me?.gangLevel === GANG_LEVEL_BOSS ? (
+            {
               <Content
                 title={getText("gangBank")}
                 contentWidth={250}
@@ -370,14 +363,17 @@ const GangSettings = ({
                     onPress={() => postGangTransaction(false)}
                     style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
                   />
-                  <Button
-                    title={getText("out")}
-                    onPress={() => postGangTransaction(true)}
-                    style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
-                  />
+                  {me?.gangLevel === GANG_LEVEL_BANK ||
+                  me?.gangLevel === GANG_LEVEL_BOSS ? (
+                    <Button
+                      title={getText("out")}
+                      onPress={() => postGangTransaction(true)}
+                      style={{ flex: 1, marginVertical: 10, marginLeft: 10 }}
+                    />
+                  ) : null}
                 </View>
               </Content>
-            ) : null}
+            }
 
             {/* memberview with kick or change rank, per member */}
             {me?.gangLevel >= GANG_LEVEL_UNDERBOSS && (
