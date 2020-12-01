@@ -638,7 +638,7 @@ export const rightMenu = (me, theme) => {
             },
 
             me?.gangId && {
-              incative:
+              inactive:
                 me?.level < 2 &&
                 moment().isBefore(InactiveScreens.OC_RELEASE_DATE),
               isNew: moment().isBefore(
@@ -667,7 +667,7 @@ export const rightMenu = (me, theme) => {
             },
 
             me?.gangId && {
-              incative:
+              inactive:
                 me?.level < 2 &&
                 moment().isBefore(InactiveScreens.GANG_MISSIONS_RELEASE_DATE),
               isNew: moment().isBefore(
@@ -681,7 +681,7 @@ export const rightMenu = (me, theme) => {
               text: getText("menuGangMissions"),
               to: "GangMissions",
             },
-          ].filter((x) => !!x),
+          ].filter((x) => !!x && !x.inactive),
         }
       : null;
 
