@@ -105,7 +105,13 @@ const hireDetective = async (
   });
 };
 
-const finishDetectivesCron = async ({ User, Detective }) => {
+const finishDetectivesCron = async ({
+  User,
+  Detective,
+  Channel,
+  ChannelMessage,
+  ChannelSub,
+}) => {
   const finished = await Detective.findAll({
     where: {
       city: null,
