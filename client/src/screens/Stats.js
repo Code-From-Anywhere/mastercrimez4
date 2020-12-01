@@ -105,6 +105,7 @@ const Stats = ({ navigation, screenProps: { me } }) => {
       </View>
 
       <H1>Online</H1>
+      <T>Rood is online, groen is online per uur, blauw is online per dag.</T>
       <ScrollView horizontal snapToEnd>
         <LineChart
           fromZero
