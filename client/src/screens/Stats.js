@@ -110,7 +110,9 @@ const Stats = ({ navigation, screenProps: { me } }) => {
           fromZero
           data={{
             labels: [
-              gameStats.map((x) => moment(x.createdAt).format("DD MMM")),
+              gameStats
+                .map((x) => moment(x.createdAt).format("DD MMM HH:00"))
+                .filter((x, index) => index === 0 || index % 6 === 0),
             ],
             datasets: [
               {
