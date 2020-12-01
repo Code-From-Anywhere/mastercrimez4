@@ -2505,7 +2505,7 @@ const getAvailableName = async (locale) => {
     "crazy",
   ];
   const name = randomEntry(names);
-  const number = Math.round(Math.random() * 1000);
+  const number = Math.round(Math.random() * 10000);
 
   const fullname = name + number;
 
