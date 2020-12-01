@@ -34,7 +34,7 @@ const hireDetective = async (req, res, { User, Detective }) => {
 
   getText = getTextFunction(user.locale);
 
-  if (moment().isBefore(releaseDate)) {
+  if (moment().isBefore(releaseDate) && user.level < 2) {
     return res.json({ response: getText("noAccess") });
   }
 
