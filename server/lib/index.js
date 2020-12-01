@@ -558,6 +558,17 @@ Oc.init(
   { sequelize, modelName: "oc" }
 );
 
+class Stat extends Model {}
+
+Stat.init(
+  {
+    online: DataTypes.INTEGER,
+    onlineLastHour: DataTypes.INTEGER,
+    onlineLastDay: DataTypes.INTEGER,
+  },
+  { sequelize, modelName: "stat" }
+);
+
 class OcParticipant extends Model {}
 
 OcParticipant.init(
@@ -1281,6 +1292,10 @@ server.post("/stealcar", (req, res) =>
 
 server.post("/removeprotection", (req, res) =>
   require("./removeprotection").removeprotection(req, res, User)
+);
+
+server.get("/gamestats", (req, res) =>
+  require("./gamestats").gamestats(req, res, Stat)
 );
 
 server.post("/hireDetective", (req, res) =>
@@ -3280,6 +3295,30 @@ const lotto = async (what) => {
   });
 };
 
+const addStats = async () => {
+  const online = await User.findAll({
+    where: { phoneVerified: true, onlineAt: { [Op.gte]: Date.now() - 300000 } },
+  });
+  const onlineLastHour = await User.findAll({
+    where: {
+      phoneVerified: true,
+      onlineAt: { [Op.gte]: Date.now() - 3600000 },
+    },
+  });
+  const onlineLastDay = await User.findAll({
+    where: {
+      phoneVerified: true,
+      onlineAt: { [Op.gte]: Date.now() - 86400000 },
+    },
+  });
+
+  Stat.create({
+    onlineLastHour: onlineLastHour.length,
+    onlineLastDay: onlineLastDay.length,
+    online: online.length,
+  });
+};
+
 const awardForSint = async () => {
   const sinted = await User.findAll({
     where: {
@@ -3353,6 +3392,7 @@ if (process.env.NODE_APP_INSTANCE == 0) {
     "0 * * * *",
     async () => {
       awardPrizes("hour");
+      addStats();
       deleteOldDetectives({ sequelize });
       putBulletsInBulletFactories();
       checkScheduledMessages();
