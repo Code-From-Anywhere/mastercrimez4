@@ -2910,7 +2910,7 @@ const checkScheduledMessages = async () => {
     const to = await User.findAll({ where: { phoneVerified: true } });
 
     if (to) {
-      scheduled.map(async (schedule) => {
+      scheduledInPast.map(async (schedule) => {
         const user = await User.findOne({ where: { id: schedule.userId } });
 
         to.forEach((user2) => {
