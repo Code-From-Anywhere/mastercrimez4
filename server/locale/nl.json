@@ -165,8 +165,8 @@
   "killResponseMessageBackfire2": "Met je backfire heb je $1 $2% schade toegebracht.",
   "youreNotDead": "Je bent niet dood",
   "youreAlive": "Je bent levend",
-  "killSuccess": "Je schoot met $1 kogels op $2. Je hebt $2 vermoord. Je hebt $3,- gestolen en $4 gamepoints. $5",
-  "killMessage": "$1 schoot op jou met $2 kogels. $1 heeft je vermoord! $3",
+  "killSuccess": "Je schoot met $1 kogels op $2. Je hebt $2 vermoord. Je hebt $3,- gestolen en $4 gamepoints. $5 $6",
+  "killMessage": "$1 schoot op jou met $2 kogels. $1 heeft je vermoord! $3 $4",
   "killSuccessAccompliceMessage": "$1 schoot op $2 met $3 kogels. $1 heeft $2 vermoord!",
   "killFailAccompliceMessage": "$1 heeft $2 aangevallen en heeft $3% schade toegebracht en $4,- gejat!",
   "killFailMessage": "$1 heeft je aangevallen en heeft $2% schade toegebracht en $3,- van je gejat! $4",
@@ -438,5 +438,11 @@
   "cardealer": "Auto dealer",
   "jewelrystore": "Juwelier",
   "alreadyParticipantOther": "Je doet al mee aan een winkelroof",
-  "robberyWait": "Je bent nog niet klaar voor de volgende winkelroof"
+  "robberyWait": "Je bent nog niet klaar voor de volgende winkelroof",
+
+  "youAreBlocked": "Je bent geblokkeerd",
+  "alreadyBlocked": "Dit persoon is al geblokkeerd door jou",
+  "blockSuccess": "Geblokkeerd",
+  "notBlocked": "Dit persoon was niet geblokkeerd door je",
+  "blockRemoveSuccess": "Blokkade opgeheven"
 }

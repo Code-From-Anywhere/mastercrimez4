@@ -328,7 +328,7 @@ const kill = async (
       const gangMembers = await User.findAll({
         where: { gangId: user2.gangId },
       });
-      const percentageDead = gangMembersDead / gangMembers.length;
+      const percentageDead = (gangMembersDead + 1) / gangMembers.length;
 
       const percentageOfGangBank =
         percentageDead > PERCENTAGE_GANG_DEAD
@@ -367,7 +367,7 @@ const kill = async (
         ChannelSub,
         User,
         isSystem: true,
-        message: getAccompliceText(
+        message: getUserText(
           "killSuccessAccompliceMessage",
           user.name,
           user2.name,

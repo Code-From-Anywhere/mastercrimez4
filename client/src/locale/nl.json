@@ -579,5 +579,14 @@
   "jewelrystore": "Juwelier",
 
   "difficulty": "Moeilijkheidsgraad",
-  "gangMessage": "Bericht voor de leden"
+  "gangMessage": "Bericht voor de leden",
+  "blocks": "Blokkades",
+  "blockThisUser": "Blokkeer deze speler",
+
+  "banned": "Verbannen",
+  "shadowBanned": "Schaduwban",
+  "reported": "Gerapporteerd",
+  "reason": "Reden",
+  "ban": "Verban",
+  "shadowBan": "Geef shaduwban"
 }

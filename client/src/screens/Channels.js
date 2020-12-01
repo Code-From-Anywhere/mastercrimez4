@@ -17,6 +17,8 @@ import T from "../components/T";
 import Constants from "../Constants";
 import { getTextFunction, post } from "../Util";
 
+const blocksReleaseDate = moment("15/02/2021", "DD/MM/YYYY").set("hour", 17);
+
 class ChatScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -71,12 +73,18 @@ class ChatScreen extends React.Component {
     });
   };
 
-  openMenu = (id) => {
-    const { device } = this.props.screenProps;
+  openMenu = (id, userId) => {
+    const { device, me } = this.props.screenProps;
     const getText = getTextFunction(this.props.screenProps.me?.locale);
 
     // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
     const options = [getText("delete")];
+
+    const isBlockButtonActive =
+      (moment().isAfter(blocksReleaseDate) || me?.level > 1) && userId;
+    if (isBlockButtonActive) {
+      options.push(getText("blockThisUser"));
+    }
 
     options.push(getText("cancel"));
 
@@ -92,18 +100,32 @@ class ChatScreen extends React.Component {
           await post("setDeleted", { loginToken: device.loginToken, id: id });
           this.fetchChannelsubs();
         }
+        if (isBlockButtonActive && buttonIndex === 1) {
+          const { response } = await post("addBlock", {
+            loginToken: device.loginToken,
+            user2id: userId,
+          });
+          alert(response);
+        }
         // Do something here depending on the button index selected
       }
     );
   };
 
   openGeneralMenu = () => {
-    const { device } = this.props.screenProps;
+    const { device, me } = this.props.screenProps;
+    const { navigation } = this.props;
+
     const getText = getTextFunction(this.props.screenProps.me?.locale);
 
     // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
     const options = [getText("deleteAllChats")];
 
+    const isBlocksActive = moment().isAfter(blocksReleaseDate) || me?.level > 1;
+
+    if (isBlocksActive) {
+      options.push(getText("blocks"));
+    }
     options.push(getText("cancel"));
 
     this.props.showActionSheetWithOptions(
@@ -117,6 +139,9 @@ class ChatScreen extends React.Component {
           console.log("deleteAll");
           await post("deleteAll", { loginToken: device.loginToken });
           this.fetchChannelsubs();
+        }
+        if (buttonIndex === 1 && isBlocksActive) {
+          navigation.navigate("Blocks");
         }
         // Do something here depending on the button index selected
       }
@@ -143,6 +168,12 @@ class ChatScreen extends React.Component {
       : item.channel?.channelsubs.length === 2
       ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user
           ?.thumbnail
+      : null;
+
+    const channelOtherUserId = item.channel?.image
+      ? item.channel?.image
+      : item.channel?.channelsubs.length === 2
+      ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user?.id
       : null;
 
     return (
@@ -213,7 +244,7 @@ class ChatScreen extends React.Component {
           <View>
             <TouchableOpacity
               style={{ alignSelf: "flex-end" }}
-              onPress={() => this.openMenu(item.id)}
+              onPress={() => this.openMenu(item.id, channelOtherUserId)}
               hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
             >
               <Entypo

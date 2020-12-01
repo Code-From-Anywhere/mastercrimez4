@@ -583,5 +583,14 @@
   "jewelrystore": "Jewelery store",
 
   "difficulty": "Difficulty",
-  "gangMessage": "Members message"
+  "gangMessage": "Members message",
+  "blocks": "Blocks",
+  "blockThisUser": "Block this player",
+
+  "banned": "Banned",
+  "shadowBanned": "Shaduwban",
+  "reported": "Reported",
+  "reason": "Reason",
+  "ban": "Ban",
+  "shadowBan": "Shadowban"
 }

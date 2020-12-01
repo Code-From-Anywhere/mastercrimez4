@@ -47,6 +47,7 @@ import Airport from "./screens/Airport";
 import AllBanks from "./screens/AllBanks";
 import Backfire from "./screens/Backfire";
 import Bank from "./screens/Bank";
+import Blocks from "./screens/Blocks";
 import Bomb from "./screens/Bomb";
 import Bulletfactory from "./screens/Bulletfactory";
 import Bunker from "./screens/Bunker";
@@ -104,6 +105,7 @@ import Prizes from "./screens/Prizes";
 import Profile from "./screens/Profile";
 import Racecars from "./screens/Racecars";
 import RecoverPassword from "./screens/RecoverPassword";
+import Reports from "./screens/Reports";
 import Rob from "./screens/Rob";
 import Robbery from "./screens/Robbery";
 import Settings from "./screens/Settings";
@@ -673,6 +675,8 @@ const Container = rightContainer(
       ChangeName: withLayout(ChangeName),
       VerifyPhoneCode: withLayout(VerifyPhoneCode),
       ForgotPassword: withLayout(ForgotPassword),
+      Blocks: withLayout(Blocks),
+      Reports: withLayout(Reports),
       RecoverPassword: {
         screen: withLayout(RecoverPassword),
         path: "RecoverPassword/:token",

@@ -166,8 +166,8 @@
   "killResponseMessageBackfire2": "With your backfire you've given $1 $2% damage.",
   "youreNotDead": "You're not dead",
   "youreAlive": "You're alive",
-  "killSuccess": "You shot with $1 bullets on $2. You've killed $2. You've stolen $3,- and $4 gamepoints. $5",
-  "killMessage": "$1 shot at you with $2 bullets. $1 has killed you! $3",
+  "killSuccess": "You shot with $1 bullets on $2. You've killed $2. You've stolen $3,- and $4 gamepoints. $5 $6",
+  "killMessage": "$1 shot at you with $2 bullets. $1 has killed you! $3 $4",
   "killSuccessAccompliceMessage": "$1 shot $2 with $3 bullets. $1 has killed $2!",
   "killFailAccompliceMessage": "$1 attacked $2 and has given $3% damage and stole $4,-!",
   "killFailMessage": "$1 has attacked you and has brought you $2% damage and has stolen $3,- from you! $4",
@@ -418,7 +418,7 @@
   "shiftAlreadyDone": "You've already done this shift",
   "tooManyShifts": "You've already done two shifts today!",
 
-  "doShiftSuccess": "Je hebt gewerkt in de kogelfabriek",
+  "doShiftSuccess": "You have worked in the bulletfactory",
   "shiftNoBulletFactory": "There is no bulletfactory to work in!",
   "gangBulletFactoryCronPaymentFailed": "The gang had not enough money on the gangbank to pay for the daily costs of the bullet factory. The bullet factory was destroyed!",
   "gangBulletFactoryCronFailed": "You didn't succeed to work enough shifts.",
@@ -448,5 +448,10 @@
   "jewelrystore": "Jewelry store",
   "alreadyParticipantOther": "You're already participanting in a robbery",
 
-  "robberyWait": "You're not ready yet for the next robbery"
+  "robberyWait": "You're not ready yet for the next robbery",
+  "youAreBlocked": "You are blocked!",
+  "alreadyBlocked": "This person is already blocked by you",
+  "blockSuccess": "Blocked",
+  "notBlocked": "This person wasn't blocked by you",
+  "blockRemoveSuccess": "Unblocked"
 }

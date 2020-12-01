@@ -47,7 +47,7 @@ const getChat = async (req, res, { User, ChannelSub, ChannelMessage }) => {
 const postChat = async (
   req,
   res,
-  { User, Channel, ChannelSub, ChannelMessage, sequelize }
+  { User, Channel, ChannelSub, ChannelMessage, sequelize, Block }
 ) => {
   const { loginToken, cid, message, image } = req.body;
 
@@ -79,13 +79,32 @@ const postChat = async (
     where: { channelId: cid, userId: user.id },
   });
 
-  if (!sub) {
+  const channel = await Channel.findOne({ where: { id: cid } });
+
+  if (!sub || !channel) {
     res.json({ response: getText("notSubbed") });
     return;
   }
 
   const { pathImage, invalid } = saveImageIfValid(res, image, false);
   if (invalid) return;
+
+  if (channel.pmUsers) {
+    const user2 = await ChannelSub.findOne({
+      where: { channelId: cid, userId: { [Op.ne]: user.id } },
+      include: { model: User },
+    });
+
+    if (user2.user) {
+      const block = await Block.findOne({
+        where: { user1id: user2.user.id, user2id: user.id },
+      });
+
+      if (block) {
+        return res.json({ response: getText("youAreBlocked") });
+      }
+    }
+  }
 
   sendChatPushMail({
     // models
@@ -104,7 +123,6 @@ const postChat = async (
   });
 
   res.json({
-    response: getText("postChatSuccess"),
     success: true,
   });
 };

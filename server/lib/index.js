@@ -78,6 +78,8 @@ const allUserFields = publicUserFields.concat([
   "lottoMonth",
   "robberyAt",
   "robberySeconds",
+  "ban",
+  "banReason",
 ]);
 
 function me(token) {
@@ -170,6 +172,13 @@ User.init(
       type: DataTypes.STRING,
       defaultValue: "en",
     },
+
+    ban: {
+      type: DataTypes.ENUM("none", "reported", "banned", "shadowBanned"),
+      defaultValue: "none",
+    },
+
+    banReason: DataTypes.STRING,
 
     receiveMessagesMail: {
       type: DataTypes.BOOLEAN,
@@ -759,6 +768,11 @@ Offer.init(
 Offer.belongsTo(User, { constraints: false });
 User.hasMany(Offer, { constraints: false });
 
+class Block extends Model {}
+Block.init({ user1id: DataTypes.INTEGER }, { sequelize, modelName: "block" });
+Block.belongsTo(User, { foreignKey: "user2id", constraints: false });
+User.hasMany(Block, { foreignKey: "user2id", constraints: false });
+
 class Channel extends Model {}
 
 Channel.init(
@@ -1258,6 +1272,13 @@ server.post("/removeprotection", (req, res) =>
   require("./removeprotection").removeprotection(req, res, User)
 );
 
+server.post("/report", (req, res) =>
+  require("./report").report(req, res, { User })
+);
+
+server.get("/reports", (req, res) =>
+  require("./report").reports(req, res, { User })
+);
 server.post("/crime", (req, res) =>
   require("./crime").crime(req, res, User, Action, Code, Gang, GangMission)
 );
@@ -2016,6 +2037,27 @@ server.post("/deleteAll", (req, res) =>
   require("./channelsubs").deleteAll(req, res, User, ChannelSub, Channel)
 );
 
+server.post("/addBlock", (req, res) =>
+  require("./block").addBlock(req, res, {
+    User,
+    Block,
+  })
+);
+
+server.get("/blocks", (req, res) =>
+  require("./block").blocks(req, res, {
+    User,
+    Block,
+  })
+);
+
+server.post("/removeBlock", (req, res) =>
+  require("./block").removeBlock(req, res, {
+    User,
+    Block,
+  })
+);
+
 server
   .get("/channelmessage", (req, res) =>
     require("./channelmessage").getChat(req, res, {
@@ -2031,6 +2073,7 @@ server
       ChannelMessage,
       ChannelSub,
       sequelize,
+      Block,
     })
   );
 

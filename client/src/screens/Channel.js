@@ -50,7 +50,10 @@ const Footer = ({ me, device, params, fetchChat }) => {
       }),
     })
       .then((response) => response.json())
-      .then(({ success }) => {
+      .then(({ success, response }) => {
+        if (response) {
+          alert(response);
+        }
         if (success) {
           fetchChat();
         }
