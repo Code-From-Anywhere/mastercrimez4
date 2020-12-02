@@ -103,61 +103,66 @@ const Stats = ({ navigation, screenProps: { me } }) => {
           );
         })}
       </View>
-
-      <H1>Online</H1>
-      <T>Rood is online, groen is online per uur, blauw is online per dag.</T>
-      <ScrollView horizontal snapToEnd>
-        <LineChart
-          fromZero
-          data={{
-            labels: [
-              gameStats
-                .map((x) => moment(x.createdAt).format("DD MMM HH:00"))
-                .filter((x, index) => index === 0 || index % 6 === 0),
-            ],
-            datasets: [
-              {
-                data: gameStats.map((x) => x.online),
-                color: (opacity) => "red",
-              },
-              {
-                data: gameStats.map((x) => x.onlineLastHour),
-                color: (opacity) => "green",
-              },
-              {
-                data: gameStats.map((x) => x.onlineLastDay),
-                color: (opacity) => "blue",
-              },
-            ],
-          }}
-          width={gameStats.length * 20 + 100} // from react-native
-          height={225}
-          yAxisLabel=""
-          yAxisSuffix=""
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
-            decimalPlaces: 0, // optional, defaults to 2dp
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-            propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#ffa726",
-            },
-          }}
-          bezier
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-          }}
-        />
-      </ScrollView>
+      {gameStats.length > 0 && (
+        <View>
+          <H1>Online</H1>
+          <T>
+            Rood is online, groen is online per uur, blauw is online per dag.
+          </T>
+          <ScrollView horizontal snapToEnd>
+            <LineChart
+              fromZero
+              data={{
+                labels: [
+                  gameStats
+                    .map((x) => moment(x.createdAt).format("DD MMM HH:00"))
+                    .filter((x, index) => index === 0 || index % 6 === 0),
+                ],
+                datasets: [
+                  {
+                    data: gameStats.map((x) => x.online),
+                    color: (opacity) => "red",
+                  },
+                  {
+                    data: gameStats.map((x) => x.onlineLastHour),
+                    color: (opacity) => "green",
+                  },
+                  {
+                    data: gameStats.map((x) => x.onlineLastDay),
+                    color: (opacity) => "blue",
+                  },
+                ],
+              }}
+              width={gameStats.length * 20 + 100} // from react-native
+              height={225}
+              yAxisLabel=""
+              yAxisSuffix=""
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: "#e26a00",
+                backgroundGradientFrom: "#fb8c00",
+                backgroundGradientTo: "#ffa726",
+                decimalPlaces: 0, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                propsForDots: {
+                  r: "6",
+                  strokeWidth: "2",
+                  stroke: "#ffa726",
+                },
+              }}
+              bezier
+              style={{
+                marginVertical: 8,
+                borderRadius: 16,
+              }}
+            />
+          </ScrollView>
+        </View>
+      )}
     </ScrollView>
   );
 };
