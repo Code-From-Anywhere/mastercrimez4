@@ -18,15 +18,15 @@
       "en": "We've increased your strength"
     },
     "wat": "strength",
-    "hoeveel": 400,
-    "kosten": 30
+    "hoeveel": 1200,
+    "kosten": 100
   },
   {
     "id": "3",
-    "kooptext": { "nl": "Koop 100.000 kogels", "en": "Buy 100.000 bullets" },
+    "kooptext": { "nl": "Koop 30.000 kogels", "en": "Buy 30.000 bullets" },
     "gekochttext": {
-      "nl": "Je hebt nu 100.000 kogels erbij!",
-      "en": "We've added 100.000 bullets to your account."
+      "nl": "Je hebt nu 30.000 kogels erbij!",
+      "en": "We've added 30.000 bullets to your account."
     },
     "wat": "bullets",
     "hoeveel": 30000,
