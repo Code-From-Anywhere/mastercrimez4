@@ -35,10 +35,10 @@
 
   {
     "id": "6",
-    "kooptext": { "nl": "Krijg 3000 gamepoints", "en": "Get 3000 gamepoints" },
+    "kooptext": { "nl": "Krijg 300 gamepoints", "en": "Get 300 gamepoints" },
     "gekochttext": {
-      "nl": "Je hebt nu 3000 gamepoints erbij!",
-      "en": "We've added 3000 gamepoints to your account"
+      "nl": "Je hebt nu 300 gamepoints erbij!",
+      "en": "We've added 300 gamepoints to your account"
     },
     "wat": "gamepoints",
     "hoeveel": 300,
