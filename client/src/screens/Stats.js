@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+import { AlertContext } from "../components/AlertProvider";
 import Content from "../components/Content";
 import H1 from "../components/H1";
 import T from "../components/T";
@@ -24,6 +25,8 @@ const keyNames = {
 const Stats = ({ navigation, screenProps: { me } }) => {
   const [stats, setStats] = useState([]);
   const [gameStats, setGameStats] = useState([]);
+
+  const alertAlert = React.useContext(AlertContext);
   const fetchStats = () => {
     fetch(`${Constants.SERVER_ADDR}/stats`, {
       method: "GET",
@@ -113,11 +116,11 @@ const Stats = ({ navigation, screenProps: { me } }) => {
             <LineChart
               fromZero
               data={{
-                labels: [
-                  gameStats
-                    .map((x) => moment(x.createdAt).format("DD MMM HH:00"))
-                    .filter((x, index) => index === 0 || index % 6 === 0),
-                ],
+                labels: gameStats.map((x, index) =>
+                  index === 0 || index % 6 === 0
+                    ? moment(x.createdAt).format("D MMM HH:00")
+                    : " "
+                ),
                 datasets: [
                   {
                     data: gameStats.map((x) => x.online),
@@ -133,8 +136,18 @@ const Stats = ({ navigation, screenProps: { me } }) => {
                   },
                 ],
               }}
+              onDataPointClick={(data) => {
+                const item = gameStats[data.index];
+
+                alertAlert(
+                  moment(item.createdAt).format("D MMM HH:00"),
+                  `${item.online} online, ${item.onlineLastHour} online dat uur, ${item.onlineLastDay} online die dag`
+                );
+              }}
               width={gameStats.length * 20 + 100} // from react-native
               height={225}
+              xAxisLabel=""
+              xLabelsOffset={10}
               yAxisLabel=""
               yAxisSuffix=""
               yAxisInterval={1} // optional, defaults to 1
