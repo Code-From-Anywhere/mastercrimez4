@@ -1,10 +1,13 @@
 // import color from "markdown-it-color-text";
+import center from "markdown-it-center-text";
 import emoji from "markdown-it-emoji";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
+  Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -28,38 +31,106 @@ import {
 
 const markdownItInstance = MarkdownIt({ typographer: true })
   // .use(taskLists)
-  .use(emoji);
+  .use(emoji)
+  .use(center);
 // .use(color);
 
-const Bio = ({ bio, theme }) => {
+const Bio = React.memo(({ bio, theme }) => {
   return (
     <Markdown
       debugPrintTree
       markdownit={markdownItInstance}
       style={{ body: { color: theme.primaryText } }}
       rules={{
+        blocklink: (node, children, parent, styles) => {
+          return (
+            <TouchableOpacity
+              key={node.key}
+              onPress={() => {
+                if (Platform.OS == "web") {
+                  window.open(node.attributes.href, "_blank");
+                } else {
+                  Linking.openURL(node.attributes.href); // normal Linking react-native
+                }
+              }}
+            >
+              {children}
+            </TouchableOpacity>
+          );
+        },
+
+        image: (node, children, parent, styles) => {
+          const [width, setWidth] = useState(0);
+          const [height, setHeight] = useState(0);
+          Image.getSize(node.attributes.src, (width, height) => {
+            setWidth(width);
+            setHeight(height);
+          });
+
+          // examine the node properties to see what video we need to render
+          // console.log(node); // expected output of this is in readme.md below this code snip
+
+          return (
+            <Image
+              key={node.key}
+              source={{ uri: node.attributes.src }}
+              style={{ width: width, height: height }}
+              resizeMode="contain"
+            />
+          );
+        },
+
         emoji: (node, children, parent, styles) => {
           // examine the node properties to see what video we need to render
-          console.log(node); // expected output of this is in readme.md below this code snip
+          // console.log(node); // expected output of this is in readme.md below this code snip
 
           return <Text key={node.key}>{node.content}</Text>;
         },
-        // color: (node, children, parent, styles) => {
-        //   // examine the node properties to see what video we need to render
-        //   console.log(node); // expected output of this is in readme.md below this code snip
 
-        //   return (
-        //     <Text key={node.key} style={{ color: "yellow" }}>
-        //       {node.content}
-        //     </Text>
-        //   );
-        // },
+        centertext: (node, children, parent, styles) => {
+          // examine the node properties to see what video we need to render
+          // console.log(node); // expected output of this is in readme.md below this code snip
+
+          return (
+            <View
+              key={node.key}
+              style={{
+                flex: 1,
+                alignItems: "center",
+              }}
+            >
+              {children}
+            </View>
+          );
+        },
+
+        paragraph: (node, children, parent, styles) => {
+          // examine the node properties to see what video we need to render
+          // console.log(node); // expected output of this is in readme.md below this code snip
+
+          return (
+            <View key={node.key} style={{ flex: 1 }}>
+              {children}
+            </View>
+          );
+        },
+
+        textgroup: (node, children, parent, styles) => {
+          // examine the node properties to see what video we need to render
+          // console.log(node); // expected output of this is in readme.md below this code snip
+
+          return (
+            <View key={node.key} style={{ flex: 1 }}>
+              {children}
+            </View>
+          );
+        },
       }}
     >
       {bio}
     </Markdown>
   );
-};
+});
 const ProfileScreen = ({
   navigation,
   navigation: {

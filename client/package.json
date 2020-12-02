@@ -26,6 +26,7 @@
     "expo-store-review": "^2.1.3",
     "expo-updates": "~0.2.8",
     "fbjs": "^3.0.0",
+    "markdown-it-center-text": "^1.0.4",
     "markdown-it-emoji": "^2.0.0",
     "moment": "^2.24.0",
     "react": "16.11.0",
