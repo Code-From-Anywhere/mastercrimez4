@@ -8,7 +8,8 @@
   "headerRobMurder": "Beroven & Vermoorden",
 
   "menuReports": "Rapporteringen",
-
+  "menuMap": "Kaart",
+  "menuMore": "Meer",
   "menuGangCreate": "Gang aanmaken",
   "menuGangs": "Alle gangs",
   "menuGangShop": "Gang Winkel",
@@ -35,6 +36,7 @@
   "menuBank": "Bank",
   "menuMarket": "Markt",
   "menuBulletfactory": "Kogelfabriek",
+  "menuGangBulletfactory": "Gang KF",
   "menuBomb": "Bombarderen",
   "menuCasino": "Casino",
   "menuBunker": "Schuilkelder",
@@ -598,5 +600,7 @@
   "fastDetective": "Snelle detective",
   "hire": "Inhuren",
   "menuDetectives": "Detectives",
-  "detectiveCost": "Een $2 kost €$1,- om in te huren."
+  "detectiveCost": "Een $2 kost €$1,- om in te huren.",
+  "everyone": "Iedereen",
+  "takeOver": "Neem over"
 }

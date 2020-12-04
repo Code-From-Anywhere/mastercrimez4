@@ -14,6 +14,8 @@ const cities = require("../assets/airport.json");
 require("dotenv").config();
 const rateLimit = require("express-rate-limit");
 
+const { importAreas } = require("./importAreas");
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 var cors = require("cors");
@@ -116,6 +118,13 @@ const sequelize = new Sequelize({
     host: process.env.DB_HOST,
     port: "3306",
   },
+  //needed for computive intesnive imports
+  // pool: {
+  //   max: 30,
+  //   min: 0,
+  //   idle: 10000,
+  //   acquire: 300000,
+  // },
   logging: null,
   // benchmark: true,
   // logging: (sql, timing) => {
@@ -606,6 +615,9 @@ class City extends Model {}
 City.init(
   {
     city: DataTypes.STRING,
+    latitude: DataTypes.FLOAT,
+    longitude: DataTypes.FLOAT,
+    delta: { type: DataTypes.FLOAT, defaultValue: 0.05 },
     bullets: DataTypes.INTEGER,
     bulletFactoryOwner: DataTypes.STRING,
     bulletFactoryPrice: {
@@ -620,6 +632,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    bulletFactoryLatitude: DataTypes.FLOAT,
+    bulletFactoryLongitude: DataTypes.FLOAT,
+    bulletFactoryAreaCode: DataTypes.STRING,
 
     casinoOwner: DataTypes.STRING,
     casinoProfit: {
@@ -630,6 +645,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    casinoLatitude: DataTypes.FLOAT,
+    casinoLongitude: DataTypes.FLOAT,
+    casinoAreaCode: DataTypes.STRING,
 
     rldOwner: DataTypes.STRING,
     rldProfit: {
@@ -640,6 +658,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    rldLatitude: DataTypes.FLOAT,
+    rldLongitude: DataTypes.FLOAT,
+    rldAreaCode: DataTypes.STRING,
 
     landlordOwner: DataTypes.STRING,
     landlordProfit: {
@@ -650,6 +671,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    landlordLatitude: DataTypes.FLOAT,
+    landlordLongitude: DataTypes.FLOAT,
+    landlordAreaCode: DataTypes.STRING,
 
     junkiesOwner: DataTypes.STRING,
     junkiesProfit: {
@@ -660,6 +684,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    junkiesLatitude: DataTypes.FLOAT,
+    junkiesLongitude: DataTypes.FLOAT,
+    junkiesAreaCode: DataTypes.STRING,
 
     weaponShopOwner: DataTypes.STRING,
     weaponShopProfit: {
@@ -670,6 +697,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    weaponShopLatitude: DataTypes.FLOAT,
+    weaponShopLongitude: DataTypes.FLOAT,
+    weaponShopAreaCode: DataTypes.STRING,
 
     estateAgentOwner: DataTypes.STRING,
     estateAgentProfit: {
@@ -680,6 +710,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    estateAgentLatitude: DataTypes.FLOAT,
+    estateAgentLongitude: DataTypes.FLOAT,
+    estateAgentAreaCode: DataTypes.STRING,
 
     garageOwner: DataTypes.STRING,
     garageProfit: {
@@ -690,6 +723,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    garageLatitude: DataTypes.FLOAT,
+    garageLongitude: DataTypes.FLOAT,
+    garageAreaCode: DataTypes.STRING,
 
     airportOwner: DataTypes.STRING,
     airportProfit: {
@@ -700,6 +736,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    airportLatitude: DataTypes.FLOAT,
+    airportLongitude: DataTypes.FLOAT,
+    airportAreaCode: DataTypes.STRING,
 
     jailOwner: DataTypes.STRING,
     jailProfit: {
@@ -714,6 +753,9 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    jailLatitude: DataTypes.FLOAT,
+    jailLongitude: DataTypes.FLOAT,
+    jailAreaCode: DataTypes.STRING,
 
     bankOwner: DataTypes.STRING,
     bankProfit: {
@@ -724,6 +766,69 @@ City.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    bankLatitude: DataTypes.FLOAT,
+    bankLongitude: DataTypes.FLOAT,
+    bankAreaCode: DataTypes.STRING,
+
+    gymOwner: DataTypes.STRING,
+    gymProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    gymDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    gymLatitude: DataTypes.FLOAT,
+    gymLongitude: DataTypes.FLOAT,
+    gymAreaCode: DataTypes.STRING,
+
+    hospitalOwner: DataTypes.STRING,
+    hospitalProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    hospitalDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    hospitalLatitude: DataTypes.FLOAT,
+    hospitalLongitude: DataTypes.FLOAT,
+    hospitalAreaCode: DataTypes.STRING,
+
+    houseLatitude: DataTypes.FLOAT,
+    houseLongitude: DataTypes.FLOAT,
+    houseAreaCode: DataTypes.STRING,
+
+    headquarterLatitude: DataTypes.FLOAT,
+    headquarterLongitude: DataTypes.FLOAT,
+    headquarterAreaCode: DataTypes.STRING,
+
+    marketOwner: DataTypes.STRING,
+    marketProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    marketDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    marketLatitude: DataTypes.FLOAT,
+    marketLongitude: DataTypes.FLOAT,
+    marketAreaCode: DataTypes.STRING,
+
+    stockExchangeOwner: DataTypes.STRING,
+    stockExchangeProfit: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    stockExchangeDamage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    stockExchangeLatitude: DataTypes.FLOAT,
+    stockExchangeLongitude: DataTypes.FLOAT,
+    stockExchangeAreaCode: DataTypes.STRING,
   },
   { sequelize, modelName: "city" }
 );
@@ -974,6 +1079,50 @@ GangRequest.init(
 
 GangRequest.belongsTo(User, { constraints: false });
 User.hasMany(GangRequest, { constraints: false });
+
+class MapArea extends Model {}
+
+MapArea.init(
+  {
+    city: DataTypes.STRING,
+    code: DataTypes.STRING,
+    name: DataTypes.STRING,
+    centerLatitude: DataTypes.FLOAT,
+    centerLongitude: DataTypes.FLOAT,
+    latitudeDelta: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.01,
+    },
+    longitudeDelta: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0.01,
+    },
+  },
+  { sequelize, modelName: "mapArea" }
+);
+
+MapArea.belongsTo(User, { constraints: false });
+User.hasMany(MapArea, { constraints: false });
+
+MapArea.belongsTo(Gang, { constraints: false });
+Gang.hasMany(MapArea, { constraints: false });
+
+class MapObject extends Model {}
+
+MapObject.init(
+  {
+    city: DataTypes.STRING,
+    type: DataTypes.STRING,
+    latitude: DataTypes.FLOAT,
+    longitude: DataTypes.FLOAT,
+    icon: DataTypes.STRING,
+    iconName: DataTypes.STRING,
+    iconColor: DataTypes.STRING,
+    emoji: DataTypes.STRING,
+    image: DataTypes.STRING, //url to server asset
+  },
+  { sequelize, modelName: "mapObject" }
+);
 
 class Prize extends Model {}
 
@@ -1265,6 +1414,16 @@ server.post("/bomb", (req, res) =>
 );
 
 server.get("/cities", (req, res) => require("./cities").cities(req, res, City));
+server.get("/areas", (req, res) =>
+  require("./cities").areas(req, res, { City, Gang, User, MapArea })
+);
+server.post("/moveBuilding", (req, res) =>
+  require("./cities").moveBuilding(req, res, User, City)
+);
+
+server.post("/takeEmptyArea", (req, res) =>
+  require("./cities").takeEmptyArea(req, res, { User, City, Gang, MapArea })
+);
 
 server.post("/crushcar", (req, res) =>
   require("./garage").crushcar(req, res, User, Garage, Action)
@@ -2173,6 +2332,8 @@ server.get("/profile", (req, res) => {
   });
 });
 
+// importAreas(Area);
+
 server.get("/members", (req, res) => {
   //return coordinatesets that are located in a square of lat/lng
 
@@ -2734,6 +2895,7 @@ server.post("/verifyPhone", async (req, res) => {
   }
 });
 
+// importAreas(MapArea);
 server.post("/updateName", async (req, res) => {
   const { loginToken, name } = req.body;
 

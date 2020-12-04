@@ -13,9 +13,10 @@ const Tabs = ({ tabs }) => {
         justifyContent: "space-around",
       }}
     >
-      {tabs.map((tab) => {
+      {tabs.map((tab, index) => {
         return (
           <TouchableOpacity
+            key={`tab${index}`}
             style={{
               flex: 1,
               height: 60,

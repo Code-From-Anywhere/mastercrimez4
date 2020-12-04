@@ -272,32 +272,72 @@ class ChatScreen extends React.Component {
       navigation,
       screenProps: {
         device: { theme },
+        me,
       },
     } = this.props;
+
+    const getText = getTextFunction(me?.locale);
     const { channelsubs } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
           ListHeaderComponent={() => {
             return (
-              <View
-                style={{
-                  justifyContent: "flex-end",
-                  marginRight: 20,
-                  marginTop: 20,
-                }}
-              >
-                <TouchableOpacity
-                  style={{ alignSelf: "flex-end" }}
-                  onPress={() => this.openGeneralMenu()}
-                  hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+              <View>
+                <View
+                  style={{
+                    justifyContent: "flex-end",
+                    marginRight: 20,
+                    marginTop: 20,
+                  }}
                 >
-                  <Entypo
-                    style={{ marginLeft: 10 }}
-                    name="dots-three-horizontal"
-                    size={20}
-                    color={theme.primaryText}
-                  />
+                  <TouchableOpacity
+                    style={{ alignSelf: "flex-end" }}
+                    onPress={() => this.openGeneralMenu()}
+                    hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
+                  >
+                    <Entypo
+                      style={{ marginLeft: 10 }}
+                      name="dots-three-horizontal"
+                      size={20}
+                      color={theme.primaryText}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("Chat");
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginVertical: 10,
+                      marginHorizontal: 20,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 30,
+                        backgroundColor: "#CCC",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Ionicons name="ios-people" color="white" size={32} />
+                    </View>
+
+                    <View style={{ marginLeft: 20, flex: 1 }}>
+                      <T bold>
+                        {/* name or other person in chat */}
+                        {getText("everyone")}
+                      </T>
+                    </View>
+                  </View>
                 </TouchableOpacity>
               </View>
             );

@@ -22,6 +22,7 @@ import Accordion from "react-native-collapsible/Accordion";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { createStackNavigator } from "react-navigation-stack";
+import { createBottomTabNavigator } from "react-navigation-tabs";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
 import { AlertProvider } from "./components/AlertProvider";
@@ -44,7 +45,12 @@ import Accomplice from "./screens/Accomplice";
 import AdminEmail from "./screens/AdminEmail";
 import AdminUserWatch from "./screens/AdminUserWatch";
 import Airport from "./screens/Airport";
+import AllAirport from "./screens/AllAirport";
 import AllBanks from "./screens/AllBanks";
+import AllBulletfactory from "./screens/AllBulletfactory";
+import AllGang from "./screens/AllGang";
+import AllGarage from "./screens/AllGarage";
+import AllStats from "./screens/AllStats";
 import Backfire from "./screens/Backfire";
 import Bank from "./screens/Bank";
 import Blocks from "./screens/Blocks";
@@ -83,6 +89,7 @@ import Hackers from "./screens/Hackers";
 import Hoeren from "./screens/Hoeren";
 import Home from "./screens/Home";
 import Hospital from "./screens/Hospital";
+import House from "./screens/House";
 import Income from "./screens/Income";
 import Info from "./screens/Info";
 import InfoGame from "./screens/InfoGame";
@@ -93,9 +100,11 @@ import Kill from "./screens/Kill";
 import Login from "./screens/Login";
 import Lotto from "./screens/Lotto";
 import ManageObject from "./screens/ManageObject";
+import Map from "./screens/Map";
 import Market from "./screens/Market";
 import Members from "./screens/Members";
 import MollieComplete from "./screens/MollieComplete";
+import More from "./screens/More";
 import MyObjects from "./screens/MyObjects";
 import MyProfile from "./screens/MyProfile";
 import OC from "./screens/OC";
@@ -128,9 +137,7 @@ import Work from "./screens/Work";
 import { persistor, store } from "./Store";
 import { darkerHex, doOnce, getTextFunction, lighterHex } from "./Util";
 
-const { width, height } = Dimensions.get("window");
-const isSmallDevice = width < 800;
-
+const useNewContainer = Platform.OS === "ios" && __DEV__;
 export const renderMenu = (
   item,
   index,
@@ -249,6 +256,9 @@ export const renderMenu = (
 
 const Layout = ({ screenProps, navigation, children }) => {
   const { me, device, dispatch, reloadMe } = screenProps;
+
+  const window = Dimensions.get("window");
+  const isSmallDevice = window.width < 800;
 
   const { resetIntervalsForToken } = React.useContext(IntervalContext);
 
@@ -379,7 +389,7 @@ const Layout = ({ screenProps, navigation, children }) => {
         style={{ width: 200 }}
         contentContainerStyle={{
           width: 200,
-          height: Platform.OS === "web" ? height - 250 : undefined,
+          height: Platform.OS === "web" ? window.height - 250 : undefined,
         }}
       >
         <Accordion
@@ -419,7 +429,7 @@ const Layout = ({ screenProps, navigation, children }) => {
         style={{ width: 200 }}
         contentContainerStyle={{
           width: 200,
-          height: Platform.OS === "web" ? height - 250 : undefined,
+          height: Platform.OS === "web" ? window.height - 250 : undefined,
         }}
       >
         <Accordion
@@ -453,9 +463,10 @@ const Layout = ({ screenProps, navigation, children }) => {
     </View>
   );
 
+  const SafeOrView = useNewContainer ? View : SafeAreaView;
   return (
     <View style={{ flex: 1 }}>
-      <SafeAreaView
+      <SafeOrView
         style={{
           flexDirection: "row",
           flex: 1,
@@ -467,11 +478,14 @@ const Layout = ({ screenProps, navigation, children }) => {
 
         <View
           style={{
-            height: Platform.OS === "web" ? height : undefined,
+            height: Platform.OS === "web" ? window.height : undefined,
             flex: 1,
           }}
         >
-          <Header navigation={navigation} device={device} me={me} />
+          {(!useNewContainer ||
+            (useNewContainer && navigation.state.routeName !== "Map")) && (
+            <Header navigation={navigation} device={device} me={me} />
+          )}
 
           {me?.reizenAt > Date.now() && !skip ? (
             <Fly screenProps={screenProps} navigation={navigation} />
@@ -486,7 +500,7 @@ const Layout = ({ screenProps, navigation, children }) => {
         </View>
 
         {isSmallDevice ? null : renderRightMenu()}
-      </SafeAreaView>
+      </SafeOrView>
 
       {!device.logged && (
         <LoginModal navigation={navigation} screenProps={screenProps} />
@@ -576,6 +590,10 @@ const CustomDrawerContentComponent = (props) => {
 
 const rightContainer =
   Platform.OS === "web" ? createBrowserApp : createAppContainer;
+
+const window = Dimensions.get("window");
+const isSmallDevice = window.width < 800;
+
 const rightNavigator =
   Platform.OS === "web"
     ? isSmallDevice
@@ -583,151 +601,241 @@ const rightNavigator =
       : createSwitchNavigator
     : createStackNavigator;
 
-const Container = rightContainer(
-  rightNavigator(
-    {
-      Home: {
-        screen: withLayout(Home),
-        path: "",
-      },
+const routes = {
+  Home: {
+    screen: withLayout(Home),
+    path: "",
+  },
 
-      GangCreate: withLayout(GangCreate),
+  GangCreate: withLayout(GangCreate),
+  AllGang: withLayout(AllGang),
 
-      Gang: {
-        screen: withLayout(Gang),
-        path: "Gang/:name",
-      },
+  Gang: {
+    screen: withLayout(Gang),
+    path: "Gang/:name",
+  },
 
-      Gangs: withLayout(Gangs),
-      GangShop: withLayout(GangShop),
-      GangSettings: withLayout(GangSettings),
-      GangAchievements: withLayout(GangAchievements),
-      GangMissions: withLayout(GangMissions),
-      GangBulletFactory: withLayout(GangBulletFactory),
+  Gangs: withLayout(Gangs),
+  GangShop: withLayout(GangShop),
+  GangSettings: withLayout(GangSettings),
+  GangAchievements: withLayout(GangAchievements),
+  GangMissions: withLayout(GangMissions),
+  GangBulletFactory: withLayout(GangBulletFactory),
+  AllBulletfactory: withLayout(AllBulletfactory),
 
-      Robbery: withLayout(Robbery),
-      CreateRobbery: withLayout(CreateRobbery),
+  Robbery: withLayout(Robbery),
+  CreateRobbery: withLayout(CreateRobbery),
 
-      Status: withLayout(Status),
-      Hackers: withLayout(Hackers),
-      Police: withLayout(Police),
-      StealCar: withLayout(StealCar),
-      CreateStreetrace: withLayout(CreateStreetrace),
-      Channels: withLayout(Channels),
-      Channel: withLayout(Channel),
-      AllBanks: withLayout(AllBanks),
-      Poker: withLayout(Poker),
-      Lotto: withLayout(Lotto),
-      Bomb: withLayout(Bomb),
-      Detectives: withLayout(Detectives),
-      SwissBank: withLayout(SwissBank),
+  Status: withLayout(Status),
+  Hackers: withLayout(Hackers),
+  Police: withLayout(Police),
+  StealCar: withLayout(StealCar),
+  CreateStreetrace: withLayout(CreateStreetrace),
+  Channels: withLayout(Channels),
+  Channel: withLayout(Channel),
+  AllBanks: withLayout(AllBanks),
+  Poker: withLayout(Poker),
+  Lotto: withLayout(Lotto),
+  Bomb: withLayout(Bomb),
+  Detectives: withLayout(Detectives),
+  SwissBank: withLayout(SwissBank),
 
-      Crimes: withLayout(Crimes),
-      Jail: withLayout(JailScreen),
-      Kill: withLayout(Kill),
-      Rob: withLayout(Rob),
-      // Showroom: withLayout(Showroom),
-      Bank: withLayout(Bank),
-      Shop: withLayout(Shop),
-      Garage: withLayout(Garage),
-      ManageObject: withLayout(ManageObject),
-      MyObjects: withLayout(MyObjects),
-      Racecars: withLayout(Racecars),
-      Backfire: withLayout(Backfire),
-      Accomplice: withLayout(Accomplice),
-      Streetrace: withLayout(Streetrace),
-      Bulletfactory: withLayout(Bulletfactory),
-      Casino: withLayout(Casino),
-      Airport: withLayout(Airport),
-      Members: withLayout(Members),
-      Stats: withLayout(Stats),
-      Chat: withLayout(Chat),
-      Gym: withLayout(Gym),
-      Wiet: withLayout(Wiet),
-      MollieComplete: withLayout(MollieComplete),
-      Junkies: withLayout(Junkies),
-      Hoeren: withLayout(Hoeren),
-      Bunker: withLayout(Bunker),
-      Donate: withLayout(Donate),
-      Hospital: withLayout(Hospital),
-      Income: withLayout(Income),
-      AdminEmail: withLayout(AdminEmail),
-      AdminUserWatch: withLayout(AdminUserWatch),
-      Forum: withLayout(Forum),
-      Theme: withLayout(Theme),
-      DownloadApp: DownloadApp,
-      VIP: withLayout(VIP),
-      Market: withLayout(Market),
-      Sint: withLayout(Sint),
-      ChooseProfession: withLayout(ChooseProfession),
-      Profile: {
-        screen: withLayout(Profile),
-        path: "Profile/:name",
-      },
+  Crimes: withLayout(Crimes),
+  Jail: withLayout(JailScreen),
+  Kill: withLayout(Kill),
+  Rob: withLayout(Rob),
+  // Showroom: withLayout(Showroom),
+  Bank: withLayout(Bank),
+  Shop: withLayout(Shop),
+  Garage: withLayout(Garage),
+  AllGarage: withLayout(AllGarage),
+  ManageObject: withLayout(ManageObject),
+  MyObjects: withLayout(MyObjects),
+  Racecars: withLayout(Racecars),
+  Backfire: withLayout(Backfire),
+  Accomplice: withLayout(Accomplice),
+  Streetrace: withLayout(Streetrace),
+  Bulletfactory: withLayout(Bulletfactory),
+  Casino: withLayout(Casino),
+  Airport: withLayout(Airport),
+  AllAirport: withLayout(AllAirport),
+  Members: withLayout(Members),
+  Stats: withLayout(Stats),
+  Chat: withLayout(Chat),
+  Gym: withLayout(Gym),
+  Wiet: withLayout(Wiet),
+  MollieComplete: withLayout(MollieComplete),
+  Junkies: withLayout(Junkies),
+  Hoeren: withLayout(Hoeren),
+  Bunker: withLayout(Bunker),
+  House: withLayout(House),
+  Donate: withLayout(Donate),
+  Hospital: withLayout(Hospital),
+  Income: withLayout(Income),
+  AdminEmail: withLayout(AdminEmail),
+  AdminUserWatch: withLayout(AdminUserWatch),
+  Forum: withLayout(Forum),
+  Theme: withLayout(Theme),
+  DownloadApp: DownloadApp,
+  VIP: withLayout(VIP),
+  Market: withLayout(Market),
+  Sint: withLayout(Sint),
+  ChooseProfession: withLayout(ChooseProfession),
+  Profile: {
+    screen: withLayout(Profile),
+    path: "Profile/:name",
+  },
 
-      //SETTINGS
-      Settings: withLayout(Settings),
-      SignupEmail: withLayout(SignupEmail),
+  //SETTINGS
+  Settings: withLayout(Settings),
+  SignupEmail: withLayout(SignupEmail),
 
-      SignupEmail2: {
-        screen: withLayout(SignupEmail2),
-        path: "SignupEmail2/:token",
-      },
+  SignupEmail2: {
+    screen: withLayout(SignupEmail2),
+    path: "SignupEmail2/:token",
+  },
 
-      ChangeName: withLayout(ChangeName),
-      VerifyPhoneCode: withLayout(VerifyPhoneCode),
-      ForgotPassword: withLayout(ForgotPassword),
-      Blocks: withLayout(Blocks),
-      Reports: withLayout(Reports),
-      RecoverPassword: {
-        screen: withLayout(RecoverPassword),
-        path: "RecoverPassword/:token",
-      },
+  ChangeName: withLayout(ChangeName),
+  VerifyPhoneCode: withLayout(VerifyPhoneCode),
+  ForgotPassword: withLayout(ForgotPassword),
+  Blocks: withLayout(Blocks),
+  Reports: withLayout(Reports),
+  Map: withLayout(Map),
+  RecoverPassword: {
+    screen: withLayout(RecoverPassword),
+    path: "RecoverPassword/:token",
+  },
 
-      Code: {
-        screen: withLayout(Code),
-        path: "Code/:code",
-      },
-      Case: {
-        screen: withLayout(Code),
-        path: "Case/:code",
-      },
-      Car: {
-        screen: withLayout(Code),
-        path: "Car/:code",
-      },
+  Code: {
+    screen: withLayout(Code),
+    path: "Code/:code",
+  },
+  Case: {
+    screen: withLayout(Code),
+    path: "Case/:code",
+  },
+  Car: {
+    screen: withLayout(Code),
+    path: "Car/:code",
+  },
 
-      ChangePassword: {
-        screen: withLayout(ChangePassword),
-      },
-      VerifyPhone: withLayout(VerifyPhone),
-      MyProfile: withLayout(MyProfile),
-      Login: withLayout(Login),
-      Work: withLayout(Work),
-      OC: withLayout(OC),
-      CreateOc: withLayout(CreateOc),
+  ChangePassword: {
+    screen: withLayout(ChangePassword),
+  },
+  VerifyPhone: withLayout(VerifyPhone),
+  MyProfile: withLayout(MyProfile),
+  Login: withLayout(Login),
+  Work: withLayout(Work),
+  OC: withLayout(OC),
+  CreateOc: withLayout(CreateOc),
 
-      //INFO
-      Info: withLayout(Info),
-      InfoGame: withLayout(InfoGame),
-      InfoRules: withLayout(InfoRules),
-      Privacy: withLayout(Privacy),
-      Contribute: withLayout(Contribute),
-      Prizes: withLayout(Prizes),
+  //INFO
+  Info: withLayout(Info),
+  InfoGame: withLayout(InfoGame),
+  InfoRules: withLayout(InfoRules),
+  Privacy: withLayout(Privacy),
+  Contribute: withLayout(Contribute),
+  Prizes: withLayout(Prizes),
+  AllStats: withLayout(AllStats),
+  More: withLayout(More),
+};
+
+const tabRoutes = {
+  Map: createStackNavigator(routes, {
+    initialRouteName: "Map",
+    headerMode: "none",
+  }),
+  Stats: createStackNavigator(routes, { initialRouteName: "AllStats" }),
+  Channels: createStackNavigator(routes, { initialRouteName: "Channels" }),
+  More: createStackNavigator(routes, { initialRouteName: "More" }),
+};
+
+const NewContainer = createAppContainer(
+  createBottomTabNavigator(tabRoutes, {
+    defaultNavigationOptions: ({ navigation, screenProps: { me } }) => {
+      const getText = getTextFunction(me?.locale);
+      const routeName = navigation.state.routeName;
+
+      return {
+        title:
+          routeName === "Map"
+            ? getText("menuMap")
+            : routeName === "More"
+            ? getText("menuMore")
+            : routeName === "Channels"
+            ? getText("menuChat")
+            : getText("menuStats"),
+
+        tabBarIcon: ({ focused, horizontal, tintColor }) => {
+          const { routeName } = navigation.state;
+          let IconComponent = Icon.FontAwesome;
+          let badgeCount = 0;
+          let iconName;
+          if (routeName === "Map") {
+            iconName = focused ? "map" : "map-o";
+          } else if (routeName === "More") {
+            iconName = "dots-three-horizontal";
+            IconComponent = Icon.Entypo;
+          } else if (routeName === "Stats") {
+            iconName = "bar-graph";
+            IconComponent = Icon.Entypo;
+          } else {
+            // hoe krijgen we hier de aantal nieuwe chats?
+            iconName = "ios-chatbubbles";
+            IconComponent = Icon.Ionicons;
+            badgeCount = me?.chats;
+          }
+
+          // You can return any component that you like here!
+          return (
+            <View>
+              <IconComponent name={iconName} size={25} color={tintColor} />
+              {badgeCount > 0 && (
+                <View
+                  style={{
+                    backgroundColor: "red",
+                    borderRadius: 6,
+                    minWidth: 12,
+                    height: 12,
+                    position: "absolute",
+                    right: -6,
+                    top: -3,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingHorizontal: 2,
+                  }}
+                >
+                  <Text
+                    style={{ color: "white", fontSize: 10, fontWeight: "bold" }}
+                  >
+                    {badgeCount}
+                  </Text>
+                </View>
+              )}
+            </View>
+          );
+        },
+      };
     },
-    {
-      drawerPosition: "right",
-      edgeWidth: Platform.OS === "web" && isSmallDevice ? 0 : undefined,
-      contentComponent: CustomDrawerContentComponent,
-      unmountInactiveRoutes: true,
-      navigationOptions: {
-        drawerLockMode: "locked-open",
-      },
-      defaultNavigationOptions: {
-        headerShown: false,
-      },
-    }
-  ),
+    tabBarOptions: {
+      activeTintColor: "tomato",
+      inactiveTintColor: "gray",
+    },
+  })
+);
+const OldContainer = rightContainer(
+  rightNavigator(routes, {
+    drawerPosition: "right",
+    edgeWidth: Platform.OS === "web" && isSmallDevice ? 0 : undefined,
+    contentComponent: CustomDrawerContentComponent,
+    unmountInactiveRoutes: true,
+    navigationOptions: {
+      drawerLockMode: "locked-open",
+    },
+    defaultNavigationOptions: {
+      headerShown: false,
+    },
+  }),
   {
     history: "hash",
   }
@@ -747,6 +855,8 @@ function makeid(length) {
 const _RootContainer = (props) => {
   // NB: we got screenProps here , but not navigation
   // if you also need navigation, use withLayout/Layout
+
+  const Container = useNewContainer ? NewContainer : OldContainer;
   return (
     <AlertProvider>
       <IntervalProvider screenProps={{ ...props }}>

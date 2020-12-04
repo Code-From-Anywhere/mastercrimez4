@@ -52,7 +52,7 @@ class Airport extends Component {
       "London",
       "Amsterdam",
       "Berlin",
-      "Lisbon",
+      "Porto",
       "Rome",
       "Dublin",
       "Madrid",

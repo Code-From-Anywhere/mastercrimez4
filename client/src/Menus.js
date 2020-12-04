@@ -542,6 +542,12 @@ const adminMenu = (me) => {
           {
             iconType: "Entypo",
             icon: "eye",
+            text: getText("menuMap"),
+            to: "Map",
+          },
+          {
+            iconType: "Entypo",
+            icon: "eye",
             text: getText("menuReports"),
             to: "Reports",
           },

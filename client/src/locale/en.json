@@ -8,7 +8,9 @@
   "headerRobMurder": "Rob & Murder",
 
   "menuReports": "Reports",
+  "menuMap": "Map",
 
+  "menuMore": "More",
   "menuGangCreate": "Create gang",
   "menuGangs": "All Gangs",
   "menuGangShop": "Gang Shop",
@@ -34,6 +36,8 @@
   "menuBank": "Bank",
   "menuMarket": "Market",
   "menuBulletfactory": "Bulletfactory",
+
+  "menuGangBulletfactory": "Gang BF",
   "menuBomb": "Bombing",
   "menuCasino": "Casino",
   "menuBunker": "Bunker",
@@ -605,5 +609,8 @@
   "hire": "Hire",
 
   "menuDetectives": "Detectives",
-  "detectiveCost": "A $2 costs €$1,- to hire."
+  "detectiveCost": "A $2 costs €$1,- to hire.",
+  "everyone": "Everyone",
+
+  "takeOver": "Take over"
 }
