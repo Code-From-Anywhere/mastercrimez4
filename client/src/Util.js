@@ -1,9 +1,18 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ExpoConstants from "expo-constants";
 import * as IntentLauncher from "expo-intent-launcher";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
-import { useEffect } from "react";
-import { Alert, Dimensions, Platform, ScaledSize } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Platform,
+  ScaledSize,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Constants from "./Constants";
 
 const replaceAll = (string, search, replacement) =>
@@ -130,6 +139,55 @@ export const apiCall = (endpoint, method, body) => {
     .catch((error) => {
       console.error(error);
     });
+};
+
+const Captcha = ({ loginToken }) => {
+  const [random, setRandom] = useState(Math.random());
+
+  const uri =
+    Constants.SERVER_ADDR +
+    `/captcha.png?random=${random}&loginToken=${loginToken}`;
+
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <Image
+        source={{ uri }}
+        style={{ marginLeft: 20, width: 150, height: 50 }}
+      />
+      <TouchableOpacity onPress={() => setRandom(Math.random())}>
+        <MaterialCommunityIcons name="reload" size={32} color="black" />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export const withCaptcha = (
+  loginToken,
+  needCaptcha,
+  getText,
+  alertAlert,
+  setCode
+) => {
+  if (needCaptcha) {
+    alertAlert(
+      getText("fillInCaptcha"),
+      getText("pleaseFillInCaptcha"),
+      [
+        {
+          text: getText("ok"),
+          onPress: setCode,
+        },
+      ],
+      {
+        key: "captcha",
+        textInput: true,
+        keyboardType: "numeric",
+        component: <Captcha loginToken={loginToken} />,
+      }
+    );
+  } else {
+    setCode(null);
+  }
 };
 
 export const get = (endpoint) => apiCall(endpoint, "GET");

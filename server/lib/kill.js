@@ -40,6 +40,7 @@ const kill = async (
     Gang,
     Offer,
     GangMission,
+    MapArea,
   }
 ) => {
   const { token, name, bullets } = req.body;
@@ -300,6 +301,8 @@ const kill = async (
   if (damage >= user2.health) {
     //user2 gaat dood
 
+    MapArea.update({ userId: null }, { where: { userId: user2.id } });
+
     doGangMission({ Gang, GangMission, amount: 1, user, what: "kill" });
     const offers = await Offer.findAll({ where: { userId: user2.id } });
     await Promise.all(
@@ -333,10 +336,16 @@ const kill = async (
       const percentageOfGangBank =
         percentageDead > PERCENTAGE_GANG_DEAD
           ? MAX_PERCENTAGE_GANGBANK
-          : (percentageDead / PERCENTAGE_GANG_DEAD) * MAX_PERCENTAGE_GANGBANK;
+          : Math.round(
+              (percentageDead / PERCENTAGE_GANG_DEAD) *
+                MAX_PERCENTAGE_GANGBANK *
+                100
+            ) / 100;
 
-      amountCashStolenGangbank = gang.bank * percentageOfGangBank;
-      amountBulletsStolenGangbank = gang.bullets * percentageOfGangBank;
+      amountCashStolenGangbank = Math.round(gang.bank * percentageOfGangBank);
+      amountBulletsStolenGangbank = Math.round(
+        gang.bullets * percentageOfGangBank
+      );
 
       responseMessageGang = getText(
         "killGangMessage",

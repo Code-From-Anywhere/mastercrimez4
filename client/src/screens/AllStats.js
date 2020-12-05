@@ -4,22 +4,22 @@ import Tabs from "../components/Tabs";
 import { getTextFunction } from "../Util";
 import Gangs from "./Gangs";
 import Members from "./Members";
-import MyObjects from "./MyObjects";
 import Prizes from "./Prizes";
+import Properties from "./Properties";
 import Stats from "./Stats";
 const AllStats = (props) => {
   const getText = getTextFunction(props.screenProps.me?.locale);
 
   const tabs = [
     {
-      key: "stats",
-      title: getText("menuStats"),
-      component: Stats,
-    },
-    {
       key: "members",
       title: getText("menuMembers", props.screenProps.me?.online),
       component: Members,
+    },
+    {
+      key: "stats",
+      title: getText("menuStats"),
+      component: Stats,
     },
     {
       key: "gangs",
@@ -33,9 +33,9 @@ const AllStats = (props) => {
     },
 
     {
-      key: "myObjects",
-      title: getText("menuMyObjects"),
-      component: MyObjects,
+      key: "properties",
+      title: getText("menuProperties"),
+      component: Properties,
     },
   ];
 

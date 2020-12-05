@@ -62,80 +62,90 @@ function Header({ navigation, device, me }) {
     </View>
   );
 
-  const statsHeader = (
-    <View>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-        }}
-      >
-        <Text style={textStyle}>
-          😎 {me?.name} {me?.gang?.name}
-        </Text>
-        <Text style={textStyle}>💰 €{numberFormat(me?.cash)},-</Text>
-        <Text style={textStyle}>💵 €{numberFormat(me?.bank)},-</Text>
-        <View style={{ flexDirection: "row" }}>
-          <Icon.MaterialCommunityIcons
-            name="pistol"
-            size={18}
-            color={device.theme.secondaryText}
-            style={{ marginRight: 5 }}
-          />
-          <Text style={textStyle}>{numberFormat(me?.bullets)}</Text>
-        </View>
-        <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
-        <Text style={textStyle}>🌍 {me?.city}</Text>
-        <Text style={textStyle}>❤️ {me?.health}%</Text>
-        <Text style={textStyle}>
-          ⭐️ {getRank(me?.rank, "both")} ({me?.position}e)
-        </Text>
-        <Text style={textStyle}>💪 {getStrength(me?.strength, "both")}</Text>
-        <Text style={textStyle} onPress={() => navigation.navigate("Channels")}>
-          💬 {me?.chats}
-        </Text>
-      </View>
-
-      {!me?.phoneVerified && (
+  const statsHeader =
+    navigation.state.routeName === "Channels" ||
+    navigation.state.routeName === "Channel" ||
+    navigation.state.routeName === "Chat" ||
+    navigation.state.routeName === "More" ? null : (
+      <View>
         <View
           style={{
-            padding: 5,
-            backgroundColor: device.theme.secondary,
-            borderRadius: 5,
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
           }}
         >
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            onPress={() => navigation.navigate("VerifyPhone")}
-          >
-            <AntDesign
-              name="exclamationcircleo"
-              color="red"
-              style={{ marginRight: 10 }}
+          <Text style={textStyle}>
+            😎 {me?.name} {me?.gang?.name}
+          </Text>
+          <Text style={textStyle}>💰 €{numberFormat(me?.cash)},-</Text>
+          <Text style={textStyle}>💵 €{numberFormat(me?.bank)},-</Text>
+          <View style={{ flexDirection: "row" }}>
+            <Icon.MaterialCommunityIcons
+              name="pistol"
+              size={18}
+              color={device.theme.secondaryText}
+              style={{ marginRight: 5 }}
             />
-            <Text
-              style={{ color: device.theme.secondaryText, fontWeight: "bold" }}
-            >
-              {getText("headerVerifyYourAccount")}
-            </Text>
-          </TouchableOpacity>
+            <Text style={textStyle}>{numberFormat(me?.bullets)}</Text>
+          </View>
+          <Text style={textStyle}>🔥 {me?.gamepoints}</Text>
+          <Text style={textStyle}>🌍 {me?.city}</Text>
+          <Text style={textStyle}>❤️ {me?.health}%</Text>
+          <Text style={textStyle}>
+            ⭐️ {getRank(me?.rank, "both")} ({me?.position}e)
+          </Text>
+          <Text style={textStyle}>💪 {getStrength(me?.strength, "both")}</Text>
+          <Text
+            style={textStyle}
+            onPress={() => navigation.navigate("Channels")}
+          >
+            💬 {me?.chats}
+          </Text>
         </View>
-      )}
-    </View>
-  );
+
+        {!me?.phoneVerified && (
+          <View
+            style={{
+              padding: 5,
+              backgroundColor: device.theme.secondary,
+              borderRadius: 5,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              onPress={() => navigation.navigate("VerifyPhone")}
+            >
+              <AntDesign
+                name="exclamationcircleo"
+                color="red"
+                style={{ marginRight: 10 }}
+              />
+              <Text
+                style={{
+                  color: device.theme.secondaryText,
+                  fontWeight: "bold",
+                }}
+              >
+                {getText("headerVerifyYourAccount")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    );
   const updateComponent = updateAvailable && (
     <TouchableOpacity
       onPress={() => Updates.reloadAsync()}
@@ -159,7 +169,10 @@ function Header({ navigation, device, me }) {
         flexDirection: "row",
       }}
     >
-      {navigation.state.routeName !== "Home" ? (
+      {navigation.state.routeName !== "Home" &&
+      navigation.state.routeName !== "AllStats" &&
+      navigation.state.routeName !== "More" &&
+      navigation.state.routeName !== "Channels" ? (
         <TouchableOpacity
           hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
           onPress={() => {

@@ -1,11 +1,12 @@
 import moment from "moment";
 import React, { Component } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Button from "../components/Button";
 import T from "../components/T";
 import Constants from "../Constants";
 import { getRank, getStrength, getTextFunction } from "../Util";
+import MyObjects from "./MyObjects";
 
 const professionReleaseDate = moment("15/03/2021", "DD/MM/YYYY").set(
   "hour",
@@ -29,6 +30,7 @@ class Status extends Component {
 
     const {
       navigation,
+      screenProps,
       screenProps: { me, reloadMe, device },
     } = this.props;
 
@@ -37,7 +39,7 @@ class Status extends Component {
     const uur = Math.round((me?.protectionAt - Date.now()) / 3600000);
 
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         {response ? <T>{response}</T> : null}
 
         {me?.protectionAt > Date.now() ? (
@@ -94,7 +96,9 @@ class Status extends Component {
           {this.keyValue(getText("junkies"), me?.junkies)}
           {this.keyValue(getText("prostitutes"), me?.hoeren)}
         </View>
-      </View>
+
+        <MyObjects navigation={navigation} screenProps={screenProps} />
+      </ScrollView>
     );
   }
 }

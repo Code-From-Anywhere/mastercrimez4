@@ -55,10 +55,10 @@
 
   "bulletFactory": "Bulletfactory",
   "casino": "Casino",
-  "landlord": "Landlord",
+  "landlord": "Coffeeshop",
   "junkies": "Junkies",
   "weaponShop": "Weaponshop",
-  "rld": "Red light district",
+  "rld": "Sex shop",
   "airport": "Airport",
   "estateAgent": "Estate Agent",
   "bank": "Swiss Bank",
@@ -74,7 +74,7 @@
   "bombExtraText": "You've taken over the $1!",
   "bombExtraMessage": "$1 has taken over your $2!",
   "bombMessage": "$1 threw $2 bombs on your $3 in $4. This has given your $3 $5% damage, also, $1 stole €$6,-. $7",
-  "bombSuccess": "`You threw $1 bombs on the $2 of $3 of $4. This has given $5% damage, and you stole €$6,-. $7",
+  "bombSuccess": "You threw $1 bombs on the $2 of $3 of $4. This has given $5% damage, and you stole €$6,-. $7",
   "invalidChoice": "Invalid choice",
   "bunkerSuccess": "You've gotten into the bunker.",
   "bunkerAlready": "You're already in the bunker.",
@@ -134,7 +134,7 @@
   "hospitalStillAlive": "This player is still completely healed",
   "hospitalMessage": "$1 has brought you to the hospital.",
   "hospitalSuccess": "You've brought $1 to the hospital for $2",
-  "incomeSuccess": "You've collected your income: $1",
+  "incomeSuccess": "You've collected your income: €$1,-",
 
   "userNotInJail": "$1 is currently not in jail.",
 
@@ -460,5 +460,11 @@
   "detectiveYouAreFound": "You are seen by a detective!",
   "detectiveUserFound": "Your detective has found $1. $1 is in $2!",
 
-  "detectiveHiredForYou": "Someone hired a detective against you"
+  "detectiveHiredForYou": "Someone hired a detective against you",
+  "tooManyForIncome": "Because you have just $1 territories, you just got money from $2 $3",
+
+  "prostitutes": "Prostitutes",
+  "weedplants": "Weedplants",
+  "area": "Area",
+  "areaNotFound": "Area not found"
 }

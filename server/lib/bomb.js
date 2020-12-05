@@ -6,10 +6,10 @@ let getText = getTextFunction();
 let typeStrings = {
   bulletFactory: "Kogelfabriek",
   casino: "Casino",
-  landlord: "Huisjesmelker",
+  landlord: "Coffeeshop",
   junkies: "Leger des Heils",
   weaponShop: "Wapenwinkel",
-  rld: "Red light district",
+  rld: "Sex shop",
   airport: "Vliegveld",
   estateAgent: "Makelaarskantoor",
   bank: "Zwitserse Bank",

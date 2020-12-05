@@ -50,7 +50,7 @@ const GangSettings = ({
   const [amount, setAmount] = useState("");
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const alertAlert = React.useContext(AlertContext);
+  const { alertAlert } = React.useContext(AlertContext);
 
   const getGang = async () => {
     setLoading(true);
@@ -506,7 +506,8 @@ const GangSettings = ({
                       [
                         { text: getText("ok"), onPress: postGangLeave },
                         { text: getText("cancel") },
-                      ]
+                      ],
+                      { key: "leaveGang" }
                     )
                   }
                 />
@@ -525,7 +526,8 @@ const GangSettings = ({
                       [
                         { text: getText("ok"), onPress: postGangRemove },
                         { text: getText("cancel") },
-                      ]
+                      ],
+                      { key: "removeGang" }
                     )
                   }
                 />

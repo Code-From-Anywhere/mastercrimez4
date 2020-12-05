@@ -62,6 +62,9 @@ const allUserFields = publicUserFields.concat([
   "gymTime",
   "bunkerAt",
   "incomeAt",
+  "junkiesIncomeAt",
+  "landlordIncomeAt",
+  "rldIncomeAt",
   "robAt",
   "ocAt",
   "bombAt",
@@ -288,6 +291,18 @@ User.init(
       defaultValue: 0,
     },
     incomeAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    landlordIncomeAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    rldIncomeAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
+    junkiesIncomeAt: {
       type: DataTypes.BIGINT,
       defaultValue: 0,
     },
@@ -869,6 +884,72 @@ Payment.init(
   { sequelize, modelName: "payment" }
 );
 
+//very conservative averages +6% per day (chance on -80% = 1/60)
+//conservative averages +7% per day (chance on -80% = 1/45)
+//medium averages +8% per day (chance on -80% = 1/30)
+//risk averages +9% per day (chance on -80% = 1/15)
+//highrisk averages +10% per day (chance on -80% = 1/7)
+const strategies = [
+  { type: "veryconservative", crash: 60, low: 0.99, high: 1.22 },
+  { type: "conservative", crash: 45, low: 0.98, high: 1.25 },
+  { type: "medium", crash: 30, low: 0.93, high: 1.4 },
+  { type: "risk", crash: 15, low: 0.8, high: 1.7 },
+  { type: "highrisk", crash: 7, low: 0.7, high: 2.4 },
+];
+
+const stockDay = (stocks, day) => {
+  stocks = stocks.map((value, index) => {
+    const strategy = strategies[index];
+    const random = Math.random();
+    const hasDeterministicCrash = day % strategy.crash === 0;
+    const isDeterministic = false;
+    const hasRandomCrash = random < 1 / strategy.crash;
+    if (isDeterministic ? hasDeterministicCrash : hasRandomCrash) {
+      value = value * 0.2;
+    } else {
+      value =
+        (strategy.low + Math.random() * (strategy.high - strategy.low)) * value;
+      //value = ((strategy.low + strategy.high) / 2) * value;
+    }
+    return value;
+  });
+
+  return stocks;
+};
+
+const stockSimulation = () => {
+  const days = 365;
+  let day = 0;
+  let stocks = [100, 100, 100, 100, 100];
+  while (day++ < days) {
+    stocks = stockDay(stocks, day);
+  }
+
+  console.log(stocks.map((value) => Math.pow(value, 1 / days)));
+};
+
+class Stock extends Model {}
+
+Stock.init(
+  {
+    city: DataTypes.STRING,
+    name: DataTypes.STRING,
+    value: DataTypes.INTEGER,
+    strategy: {
+      type: DataTypes.ENUM(
+        "veryconservative",
+        "conservative",
+        "medium",
+        "risk",
+        "highrisk"
+      ),
+      defaultValue: "medium",
+    },
+    totalValue: DataTypes.BIGINT, // for example 10 billion
+  },
+  { sequelize, modelName: "stock" }
+);
+
 class Image extends Model {}
 
 Image.init(
@@ -1096,6 +1177,10 @@ MapArea.init(
     longitudeDelta: {
       type: DataTypes.FLOAT,
       defaultValue: 0.01,
+    },
+    damage: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
   },
   { sequelize, modelName: "mapArea" }
@@ -1413,6 +1498,18 @@ server.post("/bomb", (req, res) =>
   })
 );
 
+server.post("/bombArea", (req, res) =>
+  require("./bombArea").bombArea(req, res, {
+    User,
+    City,
+    Action,
+    Channel,
+    ChannelMessage,
+    ChannelSub,
+    MapArea,
+  })
+);
+
 server.get("/cities", (req, res) => require("./cities").cities(req, res, City));
 server.get("/areas", (req, res) =>
   require("./cities").areas(req, res, { City, Gang, User, MapArea })
@@ -1423,6 +1520,9 @@ server.post("/moveBuilding", (req, res) =>
 
 server.post("/takeEmptyArea", (req, res) =>
   require("./cities").takeEmptyArea(req, res, { User, City, Gang, MapArea })
+);
+server.post("/repairMyArea", (req, res) =>
+  require("./cities").repairMyArea(req, res, { User, City, Gang, MapArea })
 );
 
 server.post("/crushcar", (req, res) =>
@@ -2094,7 +2194,7 @@ server.post("/startOc", (req, res) =>
 );
 
 server.post("/income", (req, res) =>
-  require("./income").income(req, res, sequelize, User, City, Action)
+  require("./income").income(req, res, sequelize, User, City, Action, MapArea)
 );
 
 server.post("/rob", (req, res) =>
@@ -2128,6 +2228,7 @@ server.post("/kill", (req, res) =>
     Gang,
     Offer,
     GangMission,
+    MapArea,
   })
 );
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import Checkbox from "../components/Checkbox";
@@ -80,7 +80,7 @@ const Work = ({
   const minute = Math.round((me?.workEndsAt - Date.now()) / (60 * 1000));
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       <View style={{ margin: 20 }}>
         {response ? (
           <T>{response}</T>
@@ -125,7 +125,7 @@ const Work = ({
           </View>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

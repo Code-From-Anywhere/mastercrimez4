@@ -133,15 +133,23 @@
 
   "bulletFactory": "Bulletfactory",
   "casino": "Casino",
-  "landlord": "Landlord",
+  "landlord": "Coffeeshop",
   "junkiesObject": "Salvation Army",
   "weaponShop": "Weaponshop",
-  "rld": "Red light district",
+  "rld": "Sex shop",
   "airport": "Airport",
   "estateAgent": "Estate Agent",
   "bankObject": "Swiss Bank",
   "jail": "Jail",
   "garage": "Garage",
+
+  "menuProperties": "Properties",
+  "headquarter": "Headquarter",
+  "house": "Your house",
+  "gym": "Gym",
+  "hospital": "Hospital",
+  "market": "Market",
+  "stockExchange": "Stock Exchange",
 
   "damage": "Damage",
   "profit": "Profit",
@@ -612,5 +620,38 @@
   "detectiveCost": "A $2 costs €$1,- to hire.",
   "everyone": "Everyone",
 
-  "takeOver": "Take over"
+  "takeOver": "Take over",
+
+  "buyBullets": "Buy bullets",
+
+  "bombard": "Bombard",
+  "buyWeapons": "Buy weapons",
+  "buyProtection": "Buy protection",
+
+  "menuEstateAgent": "Estate agent",
+  "menuStockExchange": "Stock exchange",
+  "menuAirplaneShop": "Hangar",
+  "menuCoffeeShop": "Coffee Shop",
+  "menuSalvationArmy": "Salvation Army",
+  "menuHouse": "Your house",
+  "menuHeadquarter": "Gang headquarter",
+  "menuJail2": "Jail",
+  "menuWeaponShop": "Weaponshop",
+  "menuRLD": "Sex Shop",
+
+  "getIncome": "Get income",
+
+  "territories": "Territories",
+  "killSomeone": "Kill someone",
+  "robSomeone": "Rob someone",
+  "organizeOC": "Organize an OC",
+  "organizeStreetrace": "Organize Streetrace",
+  "organizeRobbery": "Organize Robbery",
+  "menuGarageShop": "Upgrade Garage",
+  "area": "Area",
+
+  "fillInCaptcha": "Fill in Captcha",
+  "pleaseFillInCaptcha": "Please fill in the Captcha",
+  "bulletsText": "The price per bullet is €$1,-. There are $2 bullets available.",
+  "fillInBombs": "Fill in the amount of bombs"
 }

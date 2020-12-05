@@ -1,4 +1,5 @@
 const { Sequelize } = require("sequelize");
+
 const {
   needCaptcha,
   NUM_ACTIONS_UNTIL_VERIFY,
@@ -6,8 +7,12 @@ const {
 } = require("./util");
 let getText = getTextFunction();
 
-const income = async (req, res, sequelize, User, City, Action) => {
-  const { token, captcha } = req.body;
+const income = async (req, res, sequelize, User, City, Action, MapArea) => {
+  let { token, captcha, type } = req.body;
+  const types = ["junkies", "rld", "landlord"];
+  if (!types.includes(type)) {
+    type = "junkies";
+  }
 
   if (!token) {
     res.json({ response: getText("noToken") });
@@ -46,34 +51,64 @@ const income = async (req, res, sequelize, User, City, Action) => {
     return res.json({ response: getText("accountNotVerified") });
   }
 
-  const incomeAt = user.incomeAt ? user.incomeAt : 0;
-  const uren = Math.round((Date.now() - incomeAt) / 3600000);
+  const key = `${type}IncomeAt`;
+  const incomeAt = user[key] ? user[key] : 0;
+  const uren = Math.floor((Date.now() - incomeAt) / 3600000);
   const uren2 = uren > 24 ? 24 : uren;
-  const amount = Math.round(
-    (user.junkies + user.hoeren + user.wiet) * 50 * Math.sqrt(uren2)
-  );
+
+  const yourAreas = await MapArea.findAll({ where: { userId: user.id } });
+
+  const maxAmount = 2000 * yourAreas.length;
+
+  const whatString =
+    type === "rld"
+      ? getText("prostitutes")
+      : type === "junkies"
+      ? getText("junkies")
+      : getText("weedplants");
+  let amountOfType =
+    type === "junkies"
+      ? user.junkies
+      : type === "rld"
+      ? user.hoeren
+      : user.wiet;
+
+  const tooManyMessage = "";
+  if (amountOfType > maxAmount) {
+    tooManyMessage = getText(
+      "tooManyForIncome",
+      yourAreas.length,
+      maxAmount,
+      whatString
+    );
+    amountOfType = maxAmount;
+  }
 
   const rldMultiplier = user.profession === "pimp" ? 1.2 : 1;
   const landlordMultiplier = user.profession === "weedgrower" ? 1.2 : 1;
+  const multiplier =
+    type === "junkies"
+      ? 1
+      : type === "rld"
+      ? rldMultiplier
+      : landlordMultiplier;
+
+  const amount = Math.round(amountOfType * 50 * Math.sqrt(uren2) * multiplier);
 
   const junkiesProfit = Math.round(user.junkies * 10 * Math.sqrt(uren2));
-  const rldProfit = Math.round(
-    user.hoeren * 10 * Math.sqrt(uren2) * rldMultiplier
-  );
-  const landlordProfit = Math.round(
-    user.wiet * 10 * Math.sqrt(uren2) * landlordMultiplier
-  );
+  const rldProfit = Math.round(user.hoeren * 10 * Math.sqrt(uren2));
+  const landlordProfit = Math.round(user.wiet * 10 * Math.sqrt(uren2));
 
   const [updated] = await User.update(
     {
       numActions: Sequelize.literal(`numActions+1`),
-      incomeAt: Date.now(),
+      [key]: Date.now(),
       onlineAt: Date.now(),
       cash: user.cash + amount,
       captcha: null,
       needCaptcha: needCaptcha(),
     },
-    { where: { id: user.id, incomeAt: user.incomeAt } }
+    { where: { id: user.id, [key]: user[key] } }
   );
 
   if (!updated) {
@@ -86,16 +121,23 @@ const income = async (req, res, sequelize, User, City, Action) => {
     timestamp: Date.now(),
   });
 
-  City.update(
-    {
-      rldProfit: Sequelize.literal(`rldProfit + ${rldProfit}`),
-      junkiesProfit: Sequelize.literal(`junkiesProfit + ${junkiesProfit}`),
-      landlordProfit: Sequelize.literal(`landlordProfit + ${landlordProfit}`),
-    },
-    { where: { city: user.city } }
-  );
+  const cityUpdate = {};
 
-  res.json({ response: getText("incomeSuccess", amount) });
+  if (type === "junkies") {
+    cityUpdate.junkiesProfit = Sequelize.literal(
+      `junkiesProfit + ${junkiesProfit}`
+    );
+  } else if (type === "landlord") {
+    cityUpdate.landlordProfit = Sequelize.literal(
+      `landlordProfit + ${landlordProfit}`
+    );
+  } else {
+    cityUpdate.rldProfit = Sequelize.literal(`rldProfit + ${rldProfit}`);
+  }
+
+  City.update(cityUpdate, { where: { city: user.city } });
+
+  res.json({ response: getText("incomeSuccess", amount) + tooManyMessage });
 };
 
 module.exports = { income };

@@ -5,15 +5,16 @@ let getText = getTextFunction();
 let typeStrings = {
   bulletFactory: "Kogelfabriek",
   casino: "Casino",
-  landlord: "Huisjesmelker",
+  landlord: "Coffeeshop",
   junkies: "Leger des Heils",
   weaponShop: "Wapenwinkel",
-  rld: "Red light district",
+  rld: "Sex shop",
   airport: "Vliegveld",
   estateAgent: "Makelaarskantoor",
   bank: "Zwitserse Bank",
   jail: "Gevangenis",
   garage: "Garage",
+  gym: "Sportschool",
 };
 
 const properties = [
@@ -52,6 +53,7 @@ const properties = [
   {
     name: "bank",
   },
+  { name: "gym" },
 ];
 
 const becomeOwner = async (req, res, User, City) => {

@@ -53,7 +53,7 @@ const buyBullets = async (req, res, sequelize, User, City, Action) => {
   }
 
   if (amount > city.bullets) {
-    return res.json({ response: getText("notEoughBullets") });
+    return res.json({ response: getText("notEnoughBullets") });
   }
 
   const [cityUpdated] = await City.update(

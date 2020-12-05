@@ -786,13 +786,6 @@ export const rightMenu = (me, theme) => {
         {
           iconType: "AntDesign",
           icon: "star",
-          text: getText("menuMyObjects"),
-          to: "MyObjects",
-        },
-
-        {
-          iconType: "AntDesign",
-          icon: "star",
           text: getText("menuStatus"),
           to: "Status",
         },

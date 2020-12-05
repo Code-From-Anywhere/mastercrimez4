@@ -12,7 +12,7 @@ const Settings = ({
     device: { theme },
   },
 }) => {
-  const alertAlert = React.useContext(AlertContext);
+  const { alertAlert } = React.useContext(AlertContext);
 
   const getText = getTextFunction(me?.locale);
 
@@ -39,15 +39,20 @@ const Settings = ({
           navigation={navigation}
           title={getText("purge")}
           onPress={() =>
-            alertAlert(getText("areYouSure"), getText("areYouSure"), [
-              {
-                text: getText("ok"),
-                onPress: () => dispatch({ type: "PURGE" }),
-              },
-              {
-                text: getText("cancel"),
-              },
-            ])
+            alertAlert(
+              getText("areYouSure"),
+              getText("areYouSure"),
+              [
+                {
+                  text: getText("ok"),
+                  onPress: () => dispatch({ type: "PURGE" }),
+                },
+                {
+                  text: getText("cancel"),
+                },
+              ],
+              { key: "purge" }
+            )
           }
         />
       )}

@@ -88,7 +88,7 @@ export class KeyboardAvoidingSpace extends React.Component<
     }
 
     const toValue =
-      e.endCoordinates.height +
+      e.endCoordinates.height -
       // suggestHeight +
       // notchHeight -
       (this.props.offset || 0) -

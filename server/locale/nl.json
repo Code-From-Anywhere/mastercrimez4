@@ -54,10 +54,10 @@
 
   "bulletFactory": "Kogelfabriek",
   "casino": "Casino",
-  "landlord": "Huisjesmelker",
+  "landlord": "Coffeeshop",
   "junkies": "Junkies",
   "weaponShop": "Wapenwinkel",
-  "rld": "Red light district",
+  "rld": "Sex shop",
   "airport": "Vliegveld",
   "estateAgent": "Makelaarskantoor",
   "bank": "Zwitserse Bank",
@@ -133,7 +133,7 @@
   "hospitalStillAlive": "Deze speler is nog helemaal levend",
   "hospitalMessage": "$1 heeft jou naar het ziekenhuis gebracht.",
   "hospitalSuccess": "Je hebt $1 naar het ziekenhuis gebracht voor $2",
-  "incomeSuccess": "Je hebt inkomen opgehaald: $1",
+  "incomeSuccess": "Je hebt inkomen opgehaald: €$1,-",
 
   "userNotInJail": "$1 zit niet in de gevangenis.",
 
@@ -449,5 +449,10 @@
   "alradyHiredDetective": "Je hebt al een detective ingehuurd voor deze persoon",
   "detectiveYouAreFound": "Je bent gezien door een detective!",
   "detectiveUserFound": "Je detective heeft $1 gevonden. $1 is in $2!",
-  "detectiveHiredForYou": "Iemand heeft een detective voor je ingehuurd"
+  "detectiveHiredForYou": "Iemand heeft een detective voor je ingehuurd",
+  "tooManyForIncome": "Omdat je $1 territoriums bezit, heb je slechts geld gekregen van $2 $3",
+  "prostitutes": "Hoeren",
+  "weedplants": "Wietplanten",
+  "area": "Gebied",
+  "areaNotFound": "Gebied niet gevonden"
 }

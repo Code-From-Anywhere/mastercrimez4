@@ -26,7 +26,7 @@ const Stats = ({ navigation, screenProps: { me } }) => {
   const [stats, setStats] = useState([]);
   const [gameStats, setGameStats] = useState([]);
 
-  const alertAlert = React.useContext(AlertContext);
+  const { alertAlert } = React.useContext(AlertContext);
   const fetchStats = () => {
     fetch(`${Constants.SERVER_ADDR}/stats`, {
       method: "GET",
@@ -141,7 +141,10 @@ const Stats = ({ navigation, screenProps: { me } }) => {
 
                 alertAlert(
                   moment(item.createdAt).format("D MMM HH:00"),
-                  `${item.online} online, ${item.onlineLastHour} online dat uur, ${item.onlineLastDay} online die dag`
+                  `${item.online} online, ${item.onlineLastHour} online dat uur, ${item.onlineLastDay} online die dag`,
+                  null,
+                  null,
+                  { key: "onlineInfo" }
                 );
               }}
               width={gameStats.length * 20 + 100} // from react-native

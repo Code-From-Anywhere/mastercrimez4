@@ -302,7 +302,7 @@ const ProfileScreen = ({
     "hour",
     17
   );
-  const alertAlert = React.useContext(AlertContext);
+  const { alertAlert } = React.useContext(AlertContext);
 
   return (
     <ScrollView>
@@ -440,10 +440,15 @@ const ProfileScreen = ({
             <Button
               title={getText("report")}
               onPress={() =>
-                alertAlert(getText("areYouSure"), getText("areYouSure"), [
-                  { text: getText("ok"), onPress: () => postReport() },
-                  { text: getText("cancel") },
-                ])
+                alertAlert(
+                  getText("areYouSure"),
+                  getText("areYouSure"),
+                  [
+                    { text: getText("ok"), onPress: () => postReport() },
+                    { text: getText("cancel") },
+                  ],
+                  { key: "postReport" }
+                )
               }
             />
           </View>

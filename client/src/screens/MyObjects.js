@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
 import { doOnce, getTextFunction } from "../Util";
@@ -42,10 +42,8 @@ const properties = [
 const MyObjects = ({
   navigation,
   screenProps: {
-    device,
     me,
     reloadCities,
-    reloadMe,
     cities,
     device: { theme },
   },
@@ -81,7 +79,7 @@ const MyObjects = ({
     });
 
   return (
-    <ScrollView style={{ flex: 1, padding: 15 }}>
+    <View style={{ flex: 1, padding: 15 }}>
       <T bold>
         {getText("youHave")} {amount}{" "}
         {amount === 1 ? getText("property") : getText("properties")}!
@@ -123,7 +121,7 @@ const MyObjects = ({
         })}
 
       <View style={{ height: 80 }} />
-    </ScrollView>
+    </View>
   );
 };
 

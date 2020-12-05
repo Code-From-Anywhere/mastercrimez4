@@ -45,8 +45,8 @@ const PrivacyPage = ({ navigation, screenProps: { me } }) => {
         kogels krijgen
       </T>
       <T>
-        - Huisjesmelkers, Leger des Heils en het Red Light District krijgen 20%
-        van iedereens inkomen bij het ophalen van inkomens.
+        - Coffeeshop, Leger des Heils en het Sex shop krijgen 20% van iedereens
+        inkomen bij het ophalen van inkomens.
       </T>
       <T>- Gevangenis krijgt uitkoopgeld</T>
       <T>

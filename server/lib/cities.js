@@ -136,4 +136,43 @@ const takeEmptyArea = async (req, res, { User, City, MapArea, Gang }) => {
   res.json({ success: true, response: getText("success") });
 };
 
-module.exports = { cities, moveBuilding, areas, takeEmptyArea };
+const repairMyArea = async (req, res, { User, City, MapArea, Gang }) => {
+  const { loginToken, id } = req.body;
+
+  if (!loginToken) {
+    return res.json({ response: getText("noToken") });
+  }
+
+  const user = await User.findOne({ where: { loginToken } });
+
+  if (!user) {
+    return res.json({ response: getText("invalidUser") });
+  }
+
+  getText = getTextFunction(user.locale);
+
+  if (user.jailAt > Date.now()) {
+    return res.json({ response: getText("youreInJail") });
+  }
+
+  if (user.health === 0) {
+    return res.json({ response: getText("youreDead") });
+  }
+
+  if (user.reizenAt > Date.now()) {
+    return res.json({ response: getText("youreTraveling") });
+  }
+
+  const [updated] = await MapArea.update(
+    { damage: 0 },
+    { where: { id, userId: user.id, damage: { [Op.gt]: 0 } } }
+  );
+
+  if (!updated) {
+    return res.json({ response: getText("invalidValues") });
+  }
+
+  res.json({ success: true, response: getText("success") });
+};
+
+module.exports = { cities, moveBuilding, areas, takeEmptyArea, repairMyArea };

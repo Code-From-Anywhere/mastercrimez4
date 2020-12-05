@@ -24,10 +24,9 @@ const Bomb = ({
   const getText = getTextFunction(me?.locale);
 
   const [response, setResponse] = useState(null);
-  const [becomeOwnerResponse, setBecomeOwnerResponse] = useState(null);
   const [bombs, setBombs] = useState(null);
   const [captcha, setCaptcha] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState(navigation.state.params?.type || "");
   const [random, setRandom] = useState(Math.random());
 
   doOnce(reloadCities);
@@ -61,17 +60,6 @@ const Bomb = ({
     setCaptcha("");
     setRandom(Math.random());
   };
-
-  const airplanes = [
-    "",
-    "Fokker",
-    "Fleet",
-    "Havilland",
-    "Cessna",
-    "Douglas",
-    "Lear Jet",
-    "Raket",
-  ];
 
   const selectType = () => {
     // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html

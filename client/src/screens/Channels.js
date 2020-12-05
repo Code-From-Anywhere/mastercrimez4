@@ -314,8 +314,10 @@ class ChatScreen extends React.Component {
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                      marginVertical: 10,
-                      marginHorizontal: 20,
+                      paddingVertical: 10,
+                      paddingHorizontal: 20,
+                      borderBottomColor: "black",
+                      borderBottomWidth: 0.5,
                     }}
                   >
                     <View

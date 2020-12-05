@@ -22,7 +22,7 @@ class Shop extends Component {
     type: "weapon",
   };
   componentDidMount() {
-    this.fetchShop("weapon");
+    this.fetchShop(this.props.type || "weapon");
     this.fetchCities();
   }
 
@@ -237,7 +237,7 @@ class Shop extends Component {
 
     return (
       <ScrollView>
-        <View
+        {/* <View
           style={{
             flexDirection: "row",
             justifyContent: "space-around",
@@ -249,7 +249,7 @@ class Shop extends Component {
           {this.renderMenu("airplane", getText("airplane"), 1)}
           {this.renderMenu("home", getText("homeShop"), 1)}
           {this.renderMenu("garage", getText("garage"), 1)}
-        </View>
+        </View> */}
 
         {buy ? (
           <View>
@@ -327,7 +327,7 @@ class Shop extends Component {
                 />
               </View>
             ) : null}
-            {this.renderCities()}
+            {/* {this.renderCities()} */}
           </View>
         ) : (
           <ActivityIndicator />

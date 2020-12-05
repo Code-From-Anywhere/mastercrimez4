@@ -6,7 +6,7 @@ const moment = require("moment");
 const { Sequelize, Op } = require("sequelize");
 const SEND_EMAIL_NOTIFICATIONS_ON = false;
 
-const needCaptcha = () => Math.round(Math.random() * 50) === 1;
+const needCaptcha = () => true; //Math.round(Math.random() * 50) === 1;
 
 const replaceAll = (string, search, replacement) =>
   string.split(search).join(replacement);
