@@ -1273,7 +1273,7 @@ const gang = async (req, res, { User, Gang }) => {
 const gangAchievements = async (
   req,
   res,
-  { Gang, User, City, Action, Channel, ChannelSub, ChannelMessage }
+  { Gang, User, City, Action, Channel, ChannelSub, ChannelMessage, MapArea }
 ) => {
   const { token } = req.query;
 
@@ -1300,7 +1300,6 @@ const gangAchievements = async (
   const members = await User.findAll({ where: { gangId: gang.id } });
 
   if (members.length < 3) {
-    //TODO:set to 3!
     if (gang.power > 0) {
       Gang.update({ power: 0 }, { where: { id: gang.id } });
     }
@@ -1359,7 +1358,21 @@ const gangAchievements = async (
       );
     });
 
+  const territories = await MapArea.findAll({
+    attributes: ["userId"],
+    where: {},
+  });
+  let territoriesAmount = 0;
+  territories.forEach((t) => {
+    if (members.map((m) => m.id).includes(t.userId)) {
+      territoriesAmount++;
+    }
+  });
+
   const averagePropertiesAmount = Math.round(propertiesAmount / members.length);
+  const averageTerritoriesAmount = Math.round(
+    territoriesAmount / members.length
+  );
 
   const averageRankNumber = Math.round(
     members
@@ -1383,7 +1396,8 @@ const gangAchievements = async (
       .reduce((previous, current) => previous + current, 0) / members.length
   );
 
-  const propertiesLevels = [0, 0.1, 0.2, 0.5, 0.75, 1, 2, 3, 4, 5]; //10
+  const territoriesLevels = [0, 0.25, 0.5, 1, 1.5, 2, 3, 4, 5, 6]; //10
+  const propertiesLevels = [0, 0.25, 0.5, 1, 1.5, 2, 3, 4, 5, 6]; //10
   const rankLevels = [1, 3, 5, 7, 9, 11, 13, 14, 15, 16]; //10
   const strengthLevels = [1, 4, 7, 10, 13, 16, 18, 20, 22, 23]; //10
   const gamepointsLevels = [
@@ -1399,6 +1413,36 @@ const gangAchievements = async (
     25000,
   ]; //10
   const membersLevels = [3, 5, 7, 9, 12, 15, 18, 22, 26, 30]; //10
+  const gangBulletsLevels = [
+    50000,
+    100000,
+    200000,
+    300000,
+    500000,
+    750000,
+    1000000,
+    1500000,
+    2500000,
+    4000000,
+  ]; //10
+  const gangBankLevels = [
+    10000000,
+    20000000,
+    50000000,
+    100000000,
+    200000000,
+    400000000,
+    800000000,
+    1600000000,
+    3200000000,
+    6400000000,
+  ]; //10
+
+  const territoriesIndex = territoriesLevels.findIndex(
+    (value) => value > averageTerritoriesAmount
+  );
+  const territoriesLevel =
+    territoriesIndex > 0 ? territoriesIndex : territoriesLevels.length;
 
   const propertiesIndex = propertiesLevels.findIndex(
     (value) => value > averagePropertiesAmount
@@ -1406,21 +1450,42 @@ const gangAchievements = async (
   const propertiesLevel =
     propertiesIndex > 0 ? propertiesIndex : propertiesLevels.length;
 
-  const rankLevel =
-    rankLevels.findIndex((value) => value > averageRankNumber) ||
-    rankLevels.length;
+  const rankLevelIndex = rankLevels.findIndex(
+    (value) => value > averageRankNumber
+  );
+  const rankLevel = rankLevelIndex > 0 ? rankLevelIndex : rankLevels.length;
 
+  const strengthLevelIndex = strengthLevels.findIndex(
+    (value) => value > averageStrengthNumber
+  );
   const strengthLevel =
-    strengthLevels.findIndex((value) => value > averageStrengthNumber) ||
-    strengthLevels.length;
+    strengthLevelIndex > 0 ? strengthLevelIndex : strengthLevels.length;
 
+  const gamepointsLevelIndex = gamepointsLevels.findIndex(
+    (value) => value > averageGamepoints
+  );
   const gamepointsLevel =
-    gamepointsLevels.findIndex((value) => value > averageGamepoints) ||
-    gamepointsLevels.length;
+    gamepointsLevelIndex > 0 ? gamepointsLevelIndex : gamepointsLevels.length;
 
+  const membersLevelIndex = membersLevels.findIndex(
+    (value) => value > members.length
+  );
   const membersLevel =
-    membersLevels.findIndex((value) => value > members.length) ||
-    membersLevels.length;
+    membersLevelIndex > 0 ? membersLevelIndex : membersLevels.length;
+
+  const gangBankLevelIndex = gangBankLevels.findIndex(
+    (value) => value > gang.bank
+  );
+  const gangBankLevel =
+    gangBankLevelIndex > 0 ? gangBankLevelIndex : gangBankLevels.length;
+
+  const gangBulletsLevelIndex = gangBulletsLevels.findIndex(
+    (value) => value > gang.bullets
+  );
+  const gangBulletsLevel =
+    gangBulletsLevelIndex > 0
+      ? gangBulletsLevelIndex
+      : gangBulletsLevels.length;
 
   const nextRank = ranks[rankLevels[rankLevel]];
   const achievements = {
@@ -1429,6 +1494,13 @@ const gangAchievements = async (
       level: propertiesLevel,
       next: propertiesLevels[propertiesLevel],
     },
+
+    territories: {
+      current: averageTerritoriesAmount,
+      level: territoriesLevel,
+      next: territoriesLevels[territoriesLevel],
+    },
+
     rank: {
       current: averageRank,
       level: rankLevel,
@@ -1448,6 +1520,16 @@ const gangAchievements = async (
       current: members.length,
       level: membersLevel,
       next: membersLevels[membersLevel],
+    },
+    gangBank: {
+      current: gang.bank,
+      level: gangBankLevel,
+      next: gangBankLevels[gangBankLevel],
+    },
+    gangBullets: {
+      current: gang.bullets,
+      level: gangBulletsLevel,
+      next: gangBulletsLevels[gangBulletsLevel],
     },
   };
 

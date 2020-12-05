@@ -6,7 +6,7 @@ let getText = getTextFunction();
 const hospital = async (
   req,
   res,
-  { User, Channel, ChannelMessage, ChannelSub, Action }
+  { User, Channel, ChannelMessage, ChannelSub, Action, City }
 ) => {
   const { loginToken, name } = req.body;
   const user = await User.findOne({ where: { loginToken } });
@@ -34,6 +34,11 @@ const hospital = async (
         const [updated] = await User.update(
           { cash: Sequelize.literal(`cash-${cost}`), onlineAt: Date.now() },
           { where: { id: user.id, cash: { [Op.gte]: cost } } }
+        );
+
+        const giveProfit = await City.update(
+          { hospitalProfit: Sequelize.literal(`hospitalProfit+${cost}`) },
+          { where: { city: user.city, hospitalOwner: { [Op.ne]: null } } }
         );
 
         if (!updated) {

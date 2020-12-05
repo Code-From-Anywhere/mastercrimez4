@@ -35,7 +35,7 @@ const removeOffer = async ({ id, Offer, User }) => {
 const marketCreateOffer = async (
   req,
   res,
-  { Offer, User, Action, Channel, ChannelSub, ChannelMessage }
+  { Offer, User, Action, Channel, ChannelSub, ChannelMessage, City }
 ) => {
   const { token, type, amount, price, buy } = req.body;
 
@@ -109,6 +109,12 @@ const marketCreateOffer = async (
       return res.json({ response: getText("couldntUpdateUser") });
     }
   }
+
+  const profitMarket = buy ? Math.round(thePrice * 0.025) : 0;
+  City.update(
+    { marketProfit: Sequelize.literal(`marketProfit+${profitMarket}`) },
+    { where: { city: user.city, marketOwner: { [Op.ne]: null } } }
+  );
 
   Offer.create({
     userId: user.id,

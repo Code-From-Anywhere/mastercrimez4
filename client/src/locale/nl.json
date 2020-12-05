@@ -637,5 +637,6 @@
   "fillInCaptcha": "Captcha invullen",
   "pleaseFillInCaptcha": "Vul a.u.b. de captcha in",
   "bulletsText": "De prijs per kogel is €$1,-. Er zijn $2 kogels beschikbaar.",
-  "fillInBombs": "Vul het aantal bommen in"
+  "fillInBombs": "Vul het aantal bommen in",
+  "gangBullets": "Gang kogels"
 }

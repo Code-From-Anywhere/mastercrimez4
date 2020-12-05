@@ -1659,6 +1659,7 @@ server.post("/marketCreateOffer", (req, res) =>
     Channel,
     ChannelSub,
     ChannelMessage,
+    City,
   })
 );
 
@@ -1843,6 +1844,7 @@ server.get("/gangAchievements", (req, res) =>
     ChannelSub,
     ChannelMessage,
     City,
+    MapArea,
   })
 );
 
@@ -2214,6 +2216,7 @@ server.post("/hospital", (req, res) =>
     ChannelMessage,
     ChannelSub,
     Action,
+    City,
   })
 );
 
@@ -3582,6 +3585,13 @@ const addStats = async () => {
   });
 };
 
+const giveGymProfit = async () => {
+  City.update(
+    { gymProfit: Sequelize.literal(`gymProfit+10000000`) },
+    { where: { gymOwner: { [Op.ne]: null } } }
+  );
+};
+
 const awardForSint = async () => {
   const sinted = await User.findAll({
     where: {
@@ -3698,6 +3708,7 @@ if (process.env.NODE_APP_INSTANCE == 0) {
   cron.schedule(
     "0 20 * * *",
     function () {
+      giveGymProfit();
       giveInterest();
       deadPeopleTax();
       swissBankTax();

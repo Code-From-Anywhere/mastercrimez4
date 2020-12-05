@@ -653,5 +653,6 @@
   "fillInCaptcha": "Fill in Captcha",
   "pleaseFillInCaptcha": "Please fill in the Captcha",
   "bulletsText": "The price per bullet is €$1,-. There are $2 bullets available.",
-  "fillInBombs": "Fill in the amount of bombs"
+  "fillInBombs": "Fill in the amount of bombs",
+  "gangBullets": "Gang bullets"
 }
