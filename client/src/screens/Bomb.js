@@ -31,6 +31,16 @@ const Bomb = ({
 
   doOnce(reloadCities);
 
+  const airplanes = [
+    "",
+    "Fokker",
+    "Fleet",
+    "Havilland",
+    "Cessna",
+    "Douglas",
+    "Lear Jet",
+    "Raket",
+  ];
   const typeStrings = {
     bulletFactory: getText("bulletFactory"),
     casino: getText("casino"),

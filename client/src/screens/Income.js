@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { withAlert } from "../components/AlertProvider";
 import Button from "../components/Button";
-import Captcha from "../components/Captcha";
 import T from "../components/T";
-import Constants from "../Constants";
 import style from "../Style";
-import { getTextFunction } from "../Util";
+import { getTextFunction, post, withCaptcha } from "../Util";
 class Income extends Component {
   state = {
     response: null,
@@ -21,58 +20,48 @@ class Income extends Component {
     );
   }
 
-  renderFooter = () => {
-    const { device, me } = this.props.screenProps;
-    const { to, amount, type } = this.state;
+  renderFooter() {
+    const { alert } = this.props;
+    const { me, device, reloadMe, reloadCities } = this.props.screenProps;
 
-    const getText = getTextFunction(me?.locale);
+    const getText = getTextFunction(this.props.screenProps.me?.locale);
+
+    const postGetIncome = async (type, captcha) => {
+      const { response } = await post("income", {
+        token: device.loginToken,
+        captcha,
+        type,
+      });
+
+      reloadMe(device.loginToken);
+      reloadCities();
+      alert(response, null, null, { key: "incomeResponse" });
+    };
+    const incomeAction = (type) =>
+      withCaptcha(device.loginToken, me?.needCaptcha, getText, alert, (code) =>
+        postGetIncome(type, code)
+      );
 
     return (
-      <View>
-        <Captcha
-          screenProps={this.props.screenProps}
-          captcha={this.state.captcha}
-          onChangeCaptcha={(x) => this.setState({ captcha: x })}
-          random={this.state.random}
-          onChangeRandom={(x) => this.setState({ random: x })}
-        />
-
+      <View style={{ flexDirection: "column" }}>
         <Button
-          theme={this.props.screenProps.device.theme}
-          // disabled={!this.state.captcha}
-          style={{ borderRadius: 10, marginTop: 20 }}
-          title={getText("getCTA")}
-          onPress={() => {
-            fetch(`${Constants.SERVER_ADDR}/income`, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                token: device.loginToken,
-                captcha: this.state.captcha,
-              }),
-            })
-              .then((response) => response.json())
-              .then(async (response) => {
-                this.setState({ response, captcha: "", random: Math.random() });
-                this.props.screenProps.reloadMe(device.loginToken);
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          }}
+          title={"Haal Sex Shop inkomen op"}
+          onPress={() => incomeAction("rld")}
+          style={{ margin: 10 }}
         />
-
-        {/* <ReCaptcha
-          sitekey={Constants.CAPTCHA}
-          action="income"
-          verifyCallback={(token) => this.setState({ captcha: token })}
-        /> */}
+        <Button
+          title={"Verkoop je wiet aan de coffeeshop"}
+          onPress={() => incomeAction("landlord")}
+          style={{ margin: 10 }}
+        />
+        <Button
+          title={"Haal Junkies inkomen op (leger des heils)"}
+          onPress={() => incomeAction("junkies")}
+          style={{ margin: 10 }}
+        />
       </View>
     );
-  };
+  }
 
   renderForm() {
     const {
@@ -82,21 +71,12 @@ class Income extends Component {
 
     const getText = getTextFunction(me?.locale);
 
-    const incomeAt = me.incomeAt ? me.incomeAt : 0;
-    const uren = Math.round((Date.now() - incomeAt) / 3600000);
-    const uren2 = uren > 24 ? 24 : uren;
-    const amount = Math.round(
-      (me.junkies + me.hoeren + me.wiet) * 50 * Math.sqrt(uren2)
-    );
-
     return (
       <View>
         {this.keyValue(getText("weed"), me?.wiet)}
         {this.keyValue(getText("junkies"), me?.junkies)}
         {this.keyValue(getText("prostitutes"), me?.hoeren)}
 
-        {this.keyValue(getText("hours"), getText("xHours", uren2))}
-        {this.keyValue(getText("totalProfit"), `${amount},-`)}
         {this.renderFooter()}
       </View>
     );
@@ -110,7 +90,7 @@ class Income extends Component {
 
     return (
       <View style={style(device.theme).container}>
-        <View style={{ margin: 20, width: 200 }}>
+        <View style={{ margin: 20 }}>
           {response ? (
             <Text style={{ color: device.theme.primaryText }}>
               {response.response}
@@ -132,4 +112,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-export default Income;
+export default withAlert(Income);

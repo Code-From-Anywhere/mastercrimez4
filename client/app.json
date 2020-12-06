@@ -4,8 +4,9 @@
     "slug": "mastercrimez",
     "privacy": "public",
     "platforms": ["ios", "android", "web"],
-    "version": "4.14",
+    "version": "4.15",
     "orientation": "portrait",
+    "scheme": "mastercrimez",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -18,13 +19,19 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "bundleIdentifier": "com.wwoessi.mastercrimez",
-      "buildNumber": "14",
+      "buildNumber": "15",
       "associatedDomains": ["applinks:mastercrimez.com"]
     },
     "android": {
+      "softwareKeyboardLayoutMode": "pan",
       "package": "com.wwoessi.mastercrimez",
       "useNextNotificationsApi": true,
-      "versionCode": 14,
+      "versionCode": 15,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDDkc4wdkjYA754zDPxJqjYpUKkjX50yoM"
+        }
+      },
       "intentFilters": [
         {
           "action": "VIEW",

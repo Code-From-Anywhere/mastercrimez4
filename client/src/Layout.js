@@ -1,8 +1,7 @@
 import * as Icon from "@expo/vector-icons";
 import * as ExpoNotifications from "expo-notifications";
 import * as StoreReview from "expo-store-review";
-import * as React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import {
   AppState,
@@ -28,8 +27,79 @@ import { KeyboardAvoidingSpace } from "./KeyboardAvoidingSpace";
 import { leftMenu, rightMenu } from "./Menus";
 import { darkerHex, doOnce, getTextFunction, lighterHex } from "./Util";
 
-const useNewContainer = Platform.OS === "ios" && __DEV__;
+export const CustomDrawerContentComponent = (props) => {
+  const {
+    navigation,
+    screenProps: { me, device, dispatch },
+  } = props;
 
+  const [leftActive, setLeftActive] = useState(device.menu?.left);
+  const [rightActive, setRightActive] = useState(device.menu?.right);
+
+  return (
+    <ScrollView>
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: device.theme.primary }}
+        forceInset={{ top: "always", horizontal: "never" }}
+      >
+        <Accordion
+          expandMultiple
+          sections={leftMenu(me, device.theme)}
+          activeSections={leftActive}
+          onChange={(active) => {
+            setLeftActive(active);
+            dispatch({
+              type: "MENU_SET_LEFT_ACTIVE_SECTIONS",
+              value: active,
+            });
+          }}
+          renderHeader={(section, index) =>
+            renderMenu(
+              section.header,
+              index,
+              navigation,
+              device.theme,
+              dispatch,
+              me
+            )
+          }
+          renderContent={(section) =>
+            section.content.map((item, index) =>
+              renderMenu(item, index, navigation, device.theme, dispatch, me)
+            )
+          }
+        />
+        <Accordion
+          expandMultiple
+          sections={rightMenu(me, device.theme)}
+          activeSections={rightActive}
+          onChange={(active) => {
+            setRightActive(active);
+            dispatch({
+              type: "MENU_SET_RIGHT_ACTIVE_SECTIONS",
+              value: active,
+            });
+          }}
+          renderHeader={(section, index) =>
+            renderMenu(
+              section.header,
+              index,
+              navigation,
+              device.theme,
+              dispatch,
+              me
+            )
+          }
+          renderContent={(section) =>
+            section.content.map((item, index) =>
+              renderMenu(item, index, navigation, device.theme, dispatch, me)
+            )
+          }
+        />
+      </SafeAreaView>
+    </ScrollView>
+  );
+};
 export const renderMenu = (
   item,
   index,
@@ -159,6 +229,9 @@ function makeid(length) {
 
 const Layout = ({ screenProps, navigation, children }) => {
   const { me, device, dispatch, reloadMe } = screenProps;
+
+  const useNewContainer =
+    Platform.OS !== "web" && me?.level >= 2 && me?.newVersion;
 
   const window = Dimensions.get("window");
   const isSmallDevice = window.width < 800;
@@ -395,7 +468,7 @@ const Layout = ({ screenProps, navigation, children }) => {
           ) : (
             <View style={{ flex: 1 }}>{children}</View>
           )}
-          {Platform.OS === "ios" && navigation.state.routeName !== "Map" && (
+          {navigation.state.routeName !== "Map" && (
             <KeyboardAvoidingSpace offset={useNewContainer ? 65 : 0} />
           )}
         </View>

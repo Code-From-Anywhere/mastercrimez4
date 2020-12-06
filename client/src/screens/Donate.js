@@ -135,7 +135,7 @@ class Donate extends Component {
 
     return (
       <ScrollView style={{ flex: 1 }}>
-        <View style={{ margin: 20, width: 200 }}>
+        <View style={{ margin: 20 }}>
           {response ? (
             <Text style={{ color: device.theme.primaryText }}>
               {response.response}

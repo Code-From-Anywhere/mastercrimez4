@@ -1,17 +1,8 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import * as Icon from "@expo/vector-icons";
 import { createBrowserApp } from "@react-navigation/web";
-import * as React from "react";
-import { useState } from "react";
-import {
-  Dimensions,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
-import Accordion from "react-native-collapsible/Accordion";
+import React from "react";
+import { Dimensions, Platform, Text, View } from "react-native";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { createStackNavigator } from "react-navigation-stack";
@@ -21,8 +12,7 @@ import { PersistGate } from "redux-persist/es/integration/react";
 import { AlertProvider } from "./components/AlertProvider";
 import ConnectionProvider from "./components/ConnectionProvider";
 import { IntervalProvider } from "./components/IntervalProvider";
-import { withLayout } from "./Layout";
-import { leftMenu, rightMenu } from "./Menus";
+import { CustomDrawerContentComponent, withLayout } from "./Layout";
 import Accomplice from "./screens/Accomplice";
 import AdminEmail from "./screens/AdminEmail";
 import AdminUserWatch from "./screens/AdminUserWatch";
@@ -124,81 +114,14 @@ import Work from "./screens/Work";
 import { persistor, store } from "./Store";
 import { getTextFunction } from "./Util";
 
-const useNewContainer = Platform.OS === "ios" && __DEV__;
+//hoi
 
-const CustomDrawerContentComponent = (props) => {
-  const {
-    navigation,
-    screenProps: { me, device, dispatch },
-  } = props;
-
-  const [leftActive, setLeftActive] = useState(device.menu?.left);
-  const [rightActive, setRightActive] = useState(device.menu?.right);
-
-  return (
-    <ScrollView>
-      <SafeAreaView
-        style={{ flex: 1, backgroundColor: device.theme.primary }}
-        forceInset={{ top: "always", horizontal: "never" }}
-      >
-        <Accordion
-          expandMultiple
-          sections={leftMenu(me, device.theme)}
-          activeSections={leftActive}
-          onChange={(active) => {
-            setLeftActive(active);
-            dispatch({
-              type: "MENU_SET_LEFT_ACTIVE_SECTIONS",
-              value: active,
-            });
-          }}
-          renderHeader={(section, index) =>
-            renderMenu(
-              section.header,
-              index,
-              navigation,
-              device.theme,
-              dispatch,
-              me
-            )
-          }
-          renderContent={(section) =>
-            section.content.map((item, index) =>
-              renderMenu(item, index, navigation, device.theme, dispatch, me)
-            )
-          }
-        />
-        <Accordion
-          expandMultiple
-          sections={rightMenu(me, device.theme)}
-          activeSections={rightActive}
-          onChange={(active) => {
-            setRightActive(active);
-            dispatch({
-              type: "MENU_SET_RIGHT_ACTIVE_SECTIONS",
-              value: active,
-            });
-          }}
-          renderHeader={(section, index) =>
-            renderMenu(
-              section.header,
-              index,
-              navigation,
-              device.theme,
-              dispatch,
-              me
-            )
-          }
-          renderContent={(section) =>
-            section.content.map((item, index) =>
-              renderMenu(item, index, navigation, device.theme, dispatch, me)
-            )
-          }
-        />
-      </SafeAreaView>
-    </ScrollView>
-  );
-};
+// if (process.env.NODE_ENV === "development") {
+//   const whyDidYouRender = require("@welldone-software/why-did-you-render");
+//   whyDidYouRender(React, {
+//     trackAllPureComponents: false,
+//   });
+// }
 
 const rightContainer =
   Platform.OS === "web" ? createBrowserApp : createAppContainer;
@@ -473,13 +396,16 @@ const _RootContainer = (props) => {
   // NB: we got screenProps here , but not navigation
   // if you also need navigation, use withLayout/Layout
 
-  const Container = useNewContainer ? NewContainer : OldContainer;
+  const Container =
+    props.me?.level >= 2 && props.me?.newVersion && Platform.OS !== "web"
+      ? NewContainer
+      : OldContainer;
   return (
-    <IntervalProvider screenProps={{ ...props }}>
+    <IntervalProvider screenProps={props}>
       <ActionSheetProvider>
         <ConnectionProvider>
           <AlertProvider>
-            <Container screenProps={{ ...props }} />
+            <Container screenProps={props} />
           </AlertProvider>
         </ConnectionProvider>
       </ActionSheetProvider>
@@ -501,7 +427,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
   reloadMe: (loginToken) => {
-    //console.log("reloadMe with loginToken", loginToken);
+    // console.log("reloadMe with loginToken", loginToken);
     dispatch({ type: "ME_FETCH_REQUESTED", payload: { loginToken } });
   },
   reloadStreetraces: () =>

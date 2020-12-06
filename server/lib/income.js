@@ -6,6 +6,9 @@ const {
   getTextFunction,
 } = require("./util");
 let getText = getTextFunction();
+const moment = require("moment");
+
+const releaseDate = moment("01/01/2021", "DD/MM/YYYY");
 
 const income = async (req, res, sequelize, User, City, Action, MapArea) => {
   let { token, captcha, type } = req.body;
@@ -74,7 +77,7 @@ const income = async (req, res, sequelize, User, City, Action, MapArea) => {
       : user.wiet;
 
   const tooManyMessage = "";
-  if (amountOfType > maxAmount) {
+  if (amountOfType > maxAmount && moment().isAfter(releaseDate)) {
     tooManyMessage = getText(
       "tooManyForIncome",
       yourAreas.length,

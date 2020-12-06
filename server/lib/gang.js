@@ -1538,7 +1538,10 @@ const gangAchievements = async (
     rankLevel +
     strengthLevel +
     gamepointsLevel +
-    membersLevel;
+    membersLevel +
+    gangBulletsLevel +
+    gangBankLevel +
+    territoriesLevel;
 
   if (power !== gang.power) {
     sendChatPushMail({

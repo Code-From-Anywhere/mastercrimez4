@@ -427,20 +427,20 @@ export const leftMenu = (me, theme) => {
           iconType: "Ionicons",
           icon: "ios-car",
           text: getText("menuGarage"),
-          to: "Garage",
+          to: "AllGarage",
         },
-        {
-          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_RACECARS,
-          isNew:
-            me?.numActions <
-            InactiveScreens.ACTIONS_BEFORE_RACECARS +
-              InactiveScreens.ACTIONS_AMOUNT_NEW,
+        // {
+        //   inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_RACECARS,
+        //   isNew:
+        //     me?.numActions <
+        //     InactiveScreens.ACTIONS_BEFORE_RACECARS +
+        //       InactiveScreens.ACTIONS_AMOUNT_NEW,
 
-          iconType: "MaterialIcons",
-          icon: "local-car-wash",
-          text: getText("menuRacecars"),
-          to: "Racecars",
-        },
+        //   iconType: "MaterialIcons",
+        //   icon: "local-car-wash",
+        //   text: getText("menuRacecars"),
+        //   to: "Racecars",
+        // },
         {
           inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_STREETRACE,
           isNew:
@@ -504,10 +504,31 @@ export const leftMenu = (me, theme) => {
         },
 
         {
-          iconType: "Entypo",
-          icon: "shop",
-          text: getText("menuShop"),
-          to: "Shop",
+          iconType: "MaterialCommunityIcons",
+          icon: "pistol",
+          text: getText("menuWeaponShop"),
+          to: "WeaponShop",
+        },
+
+        {
+          iconType: "FontAwesome",
+          icon: "shield",
+          text: getText("menuProtectionShop"),
+          to: "ProtectionShop",
+        },
+
+        {
+          iconType: "Ionicons",
+          icon: "ios-airplane",
+          text: getText("menuAirplaneShop"),
+          to: "AirplaneShop",
+        },
+
+        {
+          iconType: "MaterialCommunityIcons",
+          icon: "garage",
+          text: getText("menuGarageShop"),
+          to: "GarageShop",
         },
 
         {
@@ -539,12 +560,7 @@ const adminMenu = (me) => {
             text: getText("menuUserWatch"),
             to: "AdminUserWatch",
           },
-          {
-            iconType: "Entypo",
-            icon: "eye",
-            text: getText("menuMap"),
-            to: "Map",
-          },
+
           {
             iconType: "Entypo",
             icon: "eye",
@@ -554,6 +570,17 @@ const adminMenu = (me) => {
         ]
       : [];
 
+  const betaTester =
+    me?.level >= 2
+      ? [
+          {
+            iconType: "Entypo",
+            icon: "map",
+            text: getText("menuMap"),
+            to: "Map",
+          },
+        ]
+      : [];
   const admin = me?.level >= 10 ? [] : [];
 
   return (
@@ -562,7 +589,7 @@ const adminMenu = (me) => {
         isHeader: true,
         text: getText("headerAdminPanel"),
       },
-      content: [...gameMod, ...admin],
+      content: [...betaTester, ...gameMod, ...admin],
     }
   );
 };

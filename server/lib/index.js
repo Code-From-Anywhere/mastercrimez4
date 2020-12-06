@@ -38,6 +38,7 @@ let getText = getTextFunction();
 const EMAIL_FROM = "noreply@mastercrimez.com";
 
 const allUserFields = publicUserFields.concat([
+  "newVersion",
   "activated",
   "email",
   "bullets",
@@ -146,6 +147,7 @@ User.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    newVersion: { type: DataTypes.BOOLEAN, defaultValue: false },
     ip: DataTypes.STRING,
     loginToken: {
       type: DataTypes.STRING,
@@ -633,6 +635,7 @@ City.init(
     latitude: DataTypes.FLOAT,
     longitude: DataTypes.FLOAT,
     delta: { type: DataTypes.FLOAT, defaultValue: 0.05 },
+    zoom: { type: DataTypes.FLOAT, defaultValue: 9 },
     bullets: DataTypes.INTEGER,
     bulletFactoryOwner: DataTypes.STRING,
     bulletFactoryPrice: {
@@ -2853,7 +2856,15 @@ server.post("/activate", async (req, res) => {
 });
 
 server.post("/updateProfile", async (req, res) => {
-  const { loginToken, image, backfire, bio, pushtoken, locale } = req.body;
+  const {
+    loginToken,
+    image,
+    backfire,
+    bio,
+    pushtoken,
+    locale,
+    newVersion,
+  } = req.body;
 
   if (!loginToken) {
     res.json({ response: getText("noToken") });
@@ -2888,6 +2899,10 @@ server.post("/updateProfile", async (req, res) => {
     update.bio = bio;
   }
 
+  if (newVersion !== undefined) {
+    update.newVersion = newVersion;
+  }
+
   if (pushtoken !== undefined) {
     update.pushtoken = pushtoken;
   }
@@ -2898,7 +2913,7 @@ server.post("/updateProfile", async (req, res) => {
 
   if (loginToken) {
     const user = await User.update(update, { where: { loginToken } });
-    res.json({ user });
+    res.json({ response: getText("success"), user });
   }
 });
 

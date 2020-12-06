@@ -2,13 +2,15 @@ import React from "react";
 import { ScrollView } from "react-native";
 import { AlertContext } from "../components/AlertProvider";
 import Menu from "../components/Menu";
-import { getTextFunction } from "../Util";
+import { getTextFunction, post } from "../Util";
 
 const Settings = ({
   navigation,
   screenProps: {
     dispatch,
     me,
+    reloadMe,
+    device,
     device: { theme },
   },
 }) => {
@@ -97,6 +99,25 @@ const Settings = ({
         IconFont="Ionicons"
         icon="ios-color-palette"
       />
+
+      {me?.level >= 2 && (
+        <Menu
+          theme={theme}
+          navigation={navigation}
+          title={`Turn ${me?.newVersion ? "off" : "on"} new version`}
+          IconFont="Entypo"
+          icon="new"
+          onPress={async () => {
+            const { response } = await post("updateProfile", {
+              loginToken: device.loginToken,
+              newVersion: !me?.newVersion,
+            });
+            reloadMe(device.loginToken);
+            alert(response);
+          }}
+        />
+      )}
+
       <Menu
         theme={theme}
         navigation={navigation}
@@ -113,6 +134,16 @@ const Settings = ({
         IconFont="AntDesign"
         icon="user"
       />
+
+      <Menu
+        theme={theme}
+        navigation={navigation}
+        title={getText("menuMyProfile")}
+        to="MyProfile"
+        IconFont="AntDesign"
+        icon="user"
+      />
+
       <Menu
         theme={theme}
         navigation={navigation}

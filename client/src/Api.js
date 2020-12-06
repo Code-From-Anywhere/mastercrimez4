@@ -29,6 +29,7 @@ const fetchMe = (payload) => {
   })
     .then((response) => response.json())
     .then(async (me) => {
+      // console.log("got me", me);
       return me;
     })
     .catch((error) => {
