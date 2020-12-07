@@ -17,9 +17,11 @@ import {
 } from "react-native";
 import Accordion from "react-native-collapsible/Accordion";
 import Dead from "./components/Dead";
+import Fly from "./components/Fly";
 import Header from "./components/Header";
 import Hoverable from "./components/Hoverable";
 import { IntervalContext } from "./components/IntervalProvider";
+import Jail from "./components/Jail";
 // import { loadReCaptcha } from "react-recaptcha-v3";
 import LoginModal from "./components/LoginModal";
 import T from "./components/T";
@@ -463,11 +465,16 @@ const Layout = ({ screenProps, navigation, children }) => {
             <Header navigation={navigation} device={device} me={me} />
           )}
 
-          {(me?.health <= 0 || me?.health === null) && !skip ? (
+          {me?.reizenAt > Date.now() && !skip ? (
+            <Fly screenProps={screenProps} navigation={navigation} />
+          ) : (me?.health <= 0 || me?.health === null) && !skip ? (
             <Dead screenProps={screenProps} navigation={navigation} />
+          ) : me?.jailAt > Date.now() && !skip ? (
+            <Jail screenProps={screenProps} navigation={navigation} />
           ) : (
             <View style={{ flex: 1 }}>{children}</View>
           )}
+
           {navigation.state.routeName !== "Map" && (
             <KeyboardAvoidingSpace offset={useNewContainer ? 65 : 0} />
           )}

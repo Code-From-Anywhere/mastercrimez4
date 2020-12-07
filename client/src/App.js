@@ -1,12 +1,10 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import * as Icon from "@expo/vector-icons";
 import { createBrowserApp } from "@react-navigation/web";
-import React from "react";
-import { Dimensions, Platform, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Dimensions, Platform } from "react-native";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import { createStackNavigator } from "react-navigation-stack";
-import { createBottomTabNavigator } from "react-navigation-tabs";
 import { connect, Provider } from "react-redux";
 import { PersistGate } from "redux-persist/es/integration/react";
 import { AlertProvider } from "./components/AlertProvider";
@@ -112,7 +110,6 @@ import WeaponShop from "./screens/WeaponShop";
 import Wiet from "./screens/Wiet";
 import Work from "./screens/Work";
 import { persistor, store } from "./Store";
-import { getTextFunction } from "./Util";
 
 //hoi
 
@@ -239,7 +236,6 @@ const routes = {
   ForgotPassword: withLayout(ForgotPassword),
   Blocks: withLayout(Blocks),
   Reports: withLayout(Reports),
-  Map: withLayout(Map),
   RecoverPassword: {
     screen: withLayout(RecoverPassword),
     path: "RecoverPassword/:token",
@@ -281,99 +277,48 @@ const routes = {
   More: withLayout(More),
 };
 
-const tabRoutes = {
-  Map: createStackNavigator(routes, {
-    initialRouteName: "Map",
-    headerMode: "none",
-  }),
-  Stats: createStackNavigator(routes, {
-    initialRouteName: "AllStats",
-    headerMode: "none",
-  }),
-  Channels: createStackNavigator(routes, {
-    initialRouteName: "Channels",
-    headerMode: "none",
-  }),
-  More: createStackNavigator(routes, {
-    initialRouteName: "More",
-    headerMode: "none",
-  }),
+const NewContainer = ({ screenProps }) => {
+  const initialNavigationState = {
+    params: null,
+    routeName: null,
+    history: [],
+  };
+  const [navigationState, setNavigationState] = useState(
+    initialNavigationState
+  );
+  const navigation = {
+    navigate: (routeName, params) => {
+      const newHistory = navigationState.history.concat([
+        { routeName, params },
+      ]);
+      setNavigationState({ history: newHistory, routeName, params });
+    },
+
+    resetTo: (routeName, params) => {
+      const newHistory = [{ routeName, params }];
+      setNavigationState({ history: newHistory, routeName, params });
+    },
+
+    state: navigationState,
+    popToTop: () => {
+      setNavigationState(initialNavigationState);
+    },
+    goBack: () => {
+      navigationState.history.pop();
+      setNavigationState({
+        history: navigationState.history,
+        ...(navigationState.history.length > 0
+          ? navigationState.history[navigationState.history.length - 1]
+          : {}),
+      });
+    },
+  };
+
+  const MapWithLayout = Map;
+
+  return <MapWithLayout navigation={navigation} screenProps={screenProps} />;
 };
 
-const NewContainer = createAppContainer(
-  createBottomTabNavigator(tabRoutes, {
-    defaultNavigationOptions: ({ navigation, screenProps: { me } }) => {
-      const getText = getTextFunction(me?.locale);
-      const routeName = navigation.state.routeName;
-
-      return {
-        title:
-          routeName === "Map"
-            ? getText("menuMap")
-            : routeName === "More"
-            ? getText("menuMore")
-            : routeName === "Channels"
-            ? getText("menuChat")
-            : getText("menuStats"),
-
-        tabBarIcon: ({ focused, horizontal, tintColor }) => {
-          const { routeName } = navigation.state;
-          let IconComponent = Icon.FontAwesome;
-          let badgeCount = 0;
-          let iconName;
-          if (routeName === "Map") {
-            iconName = focused ? "map" : "map-o";
-          } else if (routeName === "More") {
-            iconName = "dots-three-horizontal";
-            IconComponent = Icon.Entypo;
-          } else if (routeName === "Stats") {
-            iconName = "bar-graph";
-            IconComponent = Icon.Entypo;
-          } else {
-            // hoe krijgen we hier de aantal nieuwe chats?
-            iconName = "ios-chatbubbles";
-            IconComponent = Icon.Ionicons;
-            badgeCount = me?.chats;
-          }
-
-          // You can return any component that you like here!
-          return (
-            <View>
-              <IconComponent name={iconName} size={25} color={tintColor} />
-              {badgeCount > 0 && (
-                <View
-                  style={{
-                    backgroundColor: "red",
-                    borderRadius: 6,
-                    minWidth: 12,
-                    height: 12,
-                    position: "absolute",
-                    right: -6,
-                    top: -3,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    paddingHorizontal: 2,
-                  }}
-                >
-                  <Text
-                    style={{ color: "white", fontSize: 10, fontWeight: "bold" }}
-                  >
-                    {badgeCount}
-                  </Text>
-                </View>
-              )}
-            </View>
-          );
-        },
-      };
-    },
-    tabBarOptions: {
-      keyboardHidesTabBar: false, //on ios keyboard goes over tabbar anyway, and if you hide it, the map moves a bit.
-      activeTintColor: "tomato",
-      inactiveTintColor: "gray",
-    },
-  })
-);
 const OldContainer = rightContainer(
   rightNavigator(routes, {
     drawerPosition: "right",
@@ -397,9 +342,7 @@ const _RootContainer = (props) => {
   // if you also need navigation, use withLayout/Layout
 
   const Container =
-    props.me?.level >= 2 && props.me?.newVersion && Platform.OS !== "web"
-      ? NewContainer
-      : OldContainer;
+    props.me?.level >= 2 && props.me?.newVersion ? NewContainer : OldContainer;
   return (
     <IntervalProvider screenProps={props}>
       <ActionSheetProvider>

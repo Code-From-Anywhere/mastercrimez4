@@ -64,11 +64,8 @@ const orders = [
 
 const Members = ({
   showActionSheetWithOptions,
-  navigation,
-  navigation: {
-    state: { params },
-  },
   screenProps: { me, device },
+  navigation,
 }) => {
   const [members, setMembers] = useState([]);
   const [search, setSearch] = useState("");
@@ -77,13 +74,12 @@ const Members = ({
   const getText = getTextFunction(me?.locale);
 
   doOnce(() => {
-    const order = params?.order;
-    if (order) {
-      setOrderBy(orders[order]);
-      fetchMembers(orders[order].key);
-    } else {
-      fetchMembers(orderBy.key);
-    }
+    //   if (order) {
+    //     setOrderBy(orders[order]);
+    //     fetchMembers(orders[order].key);
+    //   } else {
+    fetchMembers(orderBy.key);
+    //   }
   });
 
   const fetchMembers = (order, filter) => {

@@ -14,7 +14,7 @@ const Settings = ({
     device: { theme },
   },
 }) => {
-  const { alertAlert } = React.useContext(AlertContext);
+  const alertAlert = React.useContext(AlertContext);
 
   const getText = getTextFunction(me?.locale);
 

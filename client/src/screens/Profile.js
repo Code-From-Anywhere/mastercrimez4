@@ -302,7 +302,7 @@ const ProfileScreen = ({
     "hour",
     17
   );
-  const { alertAlert } = React.useContext(AlertContext);
+  const alertAlert = React.useContext(AlertContext);
 
   return (
     <ScrollView>

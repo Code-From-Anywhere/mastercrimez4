@@ -463,6 +463,7 @@ const GameObjects = React.memo(
 
 const Map = ({
   navigation,
+  screenProps,
   screenProps: {
     device,
     cities,
@@ -557,13 +558,6 @@ const Map = ({
     }
   }, [city, map, mapReady]);
 
-  if (!me || !city) {
-    return <T>No city, no me</T>;
-  }
-  //useEffect(() => {
-  //map?.fitToElements(true);
-  //}, [view]);
-
   const territories = React.useMemo(
     () =>
       cityAreas.areas.map((area) => {
@@ -577,6 +571,13 @@ const Map = ({
       }),
     [areas]
   );
+
+  if (!me || !city) {
+    return <T>No city, no me</T>;
+  }
+  //useEffect(() => {
+  //map?.fitToElements(true);
+  //}, [view]);
 
   const NativeMapsComponent = Platform.select({
     native: () => require("react-native-maps").default,
@@ -854,6 +855,7 @@ const Map = ({
 
   const renderOverlay = (
     <Overlay
+      screenProps={screenProps}
       setZoom={setZoom}
       getAreas={getAreas}
       map={map}

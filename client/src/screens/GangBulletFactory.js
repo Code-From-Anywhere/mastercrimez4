@@ -39,7 +39,7 @@ const GangBulletFactory = ({
 
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const { alertAlert } = React.useContext(AlertContext);
+  const alertAlert = React.useContext(AlertContext);
 
   /*
   userDoShift,

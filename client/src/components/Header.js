@@ -63,17 +63,9 @@ function Header({ navigation, device, me }) {
     </View>
   );
 
-  const dontShowStatsHeader =
-    navigation.state.routeName === "Channels" ||
-    navigation.state.routeName === "Channel" ||
-    navigation.state.routeName === "Chat" ||
-    navigation.state.routeName === "More";
+  const dontShowStatsHeader = false;
 
-  const showBackButton =
-    navigation.state.routeName !== "Home" &&
-    navigation.state.routeName !== "AllStats" &&
-    navigation.state.routeName !== "More" &&
-    navigation.state.routeName !== "Channels";
+  const showBackButton = navigation.state.routeName !== "Home";
 
   const statsHeader = dontShowStatsHeader ? null : (
     <View>

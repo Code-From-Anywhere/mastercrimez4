@@ -5,7 +5,7 @@ import { getTextFunction } from "../Util";
 import Info from "./Info";
 import Police from "./Police";
 import Settings from "./Settings";
-const AllStats = (props) => {
+const More = (props) => {
   const getText = getTextFunction(props.screenProps.me?.locale);
 
   const tabs = [
@@ -43,4 +43,4 @@ const AllStats = (props) => {
     </View>
   );
 };
-export default AllStats;
+export default More;

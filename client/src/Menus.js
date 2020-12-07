@@ -504,6 +504,13 @@ export const leftMenu = (me, theme) => {
         },
 
         {
+          iconType: "Entypo",
+          icon: "home",
+          text: getText("homeShop"),
+          to: "EstateAgent",
+        },
+
+        {
           iconType: "MaterialCommunityIcons",
           icon: "pistol",
           text: getText("menuWeaponShop"),
@@ -570,17 +577,7 @@ const adminMenu = (me) => {
         ]
       : [];
 
-  const betaTester =
-    me?.level >= 2
-      ? [
-          {
-            iconType: "Entypo",
-            icon: "map",
-            text: getText("menuMap"),
-            to: "Map",
-          },
-        ]
-      : [];
+  const betaTester = me?.level >= 2 ? [] : [];
   const admin = me?.level >= 10 ? [] : [];
 
   return (

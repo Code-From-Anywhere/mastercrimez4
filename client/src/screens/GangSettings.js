@@ -50,7 +50,7 @@ const GangSettings = ({
   const [amount, setAmount] = useState("");
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const { alertAlert } = React.useContext(AlertContext);
+  const alertAlert = React.useContext(AlertContext);
 
   const getGang = async () => {
     setLoading(true);

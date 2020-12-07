@@ -26,7 +26,7 @@ const Stats = ({ navigation, screenProps: { me } }) => {
   const [stats, setStats] = useState([]);
   const [gameStats, setGameStats] = useState([]);
 
-  const { alertAlert } = React.useContext(AlertContext);
+  const alertAlert = React.useContext(AlertContext);
   const fetchStats = () => {
     fetch(`${Constants.SERVER_ADDR}/stats`, {
       method: "GET",
