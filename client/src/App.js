@@ -363,9 +363,11 @@ const mapStateToProps = ({
   ocs,
   cities,
   robberies,
+  channels,
+  areas,
 }) => {
   //console.log("State gets mapped to props... device only");
-  return { device, me, streetraces, ocs, cities, robberies };
+  return { device, me, streetraces, ocs, cities, robberies, channels, areas };
 }; //
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
@@ -381,6 +383,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch({ type: "OCS_FETCH_REQUESTED", payload: { token } }),
   reloadCities: () =>
     dispatch({ type: "CITIES_FETCH_REQUESTED", payload: null }),
+  reloadChannels: (token) =>
+    dispatch({ type: "CHANNELS_FETCH_REQUESTED", payload: { token } }),
+  reloadAreas: (city) =>
+    dispatch({ type: "AREAS_FETCH_REQUESTED", payload: { city } }),
 });
 
 const RootContainer = connect(

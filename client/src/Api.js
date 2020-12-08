@@ -17,6 +17,14 @@ const fetchCities = (payload) => {
   return get("cities");
 };
 
+const fetchChannels = (payload) => {
+  return get(`channelsubs?loginToken=${payload.token}`);
+};
+
+const fetchAreas = (payload) => {
+  return get(`areas?city=${payload.city}`);
+};
+
 const fetchMe = (payload) => {
   const url = `${Constants.SERVER_ADDR}/me?token=${payload.loginToken}`;
 
@@ -43,5 +51,7 @@ const Api = {
   fetchStreetraces,
   fetchOcs,
   fetchRobberies,
+  fetchAreas,
+  fetchChannels,
 };
 export default Api;

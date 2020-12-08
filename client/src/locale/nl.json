@@ -108,6 +108,7 @@
   "yourAccomplicesHeader": "Jouw handlangers:",
   "accomplicesNone": "Je hebt nog geen handlangers!",
   "accompliceWhoseYouWantToBe": "Wiens handlanger wil jij zijn?",
+  "headerAreas": "Territoriums",
 
   "accomplice": "Handlanger $1",
   "save": "Opslaan",
@@ -360,16 +361,21 @@
   "menuMyProfile": "Mijn profiel aanpassen",
   "menuBackfire": "Backfire",
   "menuAccomplice": "Handlanger",
-
+  "headerStats": "Stats",
   "weapons": "Wapens",
   "protection": "Bescherming",
   "airplane": "Vliegtuig",
+  "menuSexShop": "Sex Shop",
   "homeShop": "Makelaar",
-
+  "headerBuildings": "Gebouwen",
   "none": "Geen",
   "for": "Voor",
   "confirmEmail": "Bevestig email",
   "protectionInfo": "Je staat nog $1 uur onder bescherming. Klik hier om het weg te halen",
+
+  "headerChat": "Chat",
+  "menuHome": "Mijn huis",
+  "headerMore": "Meer",
 
   "carOption1": "Steel een auto bij de supermarkt",
   "carOption2": "Steel een auto bij een disco",

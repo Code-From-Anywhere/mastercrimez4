@@ -6,8 +6,7 @@ import {
   OverlayView,
   Polygon,
 } from "@react-google-maps/api";
-import moment from "moment";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Dimensions,
@@ -20,8 +19,20 @@ import {
   View,
 } from "react-native";
 import T from "../../components/T";
-import { doOnce, get, post } from "../../Util";
-import Overlay, { getZoom } from "./Overlay";
+import { doOnce, post } from "../../Util";
+import {
+  API_KEY,
+  getObjectMeta,
+  getPosition,
+  getZoom,
+  objects,
+  OBJECT_SIZE_FACTOR,
+  rgbs,
+} from "./MapUtil";
+import Overlay from "./Overlay";
+const mapStyle = require("./mapStyle.json");
+const mapStyleNight = require("./mapStyleNight.json");
+
 const citiesAreas = require("../../../assets/map/cities.json");
 
 if (Platform.OS === "android") {
@@ -30,196 +41,12 @@ if (Platform.OS === "android") {
   }
 }
 
-const mapStyle = require("./mapStyle.json");
-const API_KEY = "AIzaSyCOENphOkWqcrvmehHhhgKu7lJpwqfLQzc";
-
-const OBJECT_SIZE_FACTOR = 4;
-const SIZE_FACTOR = 100;
-
-const objects = [
-  {
-    title: "menuBulletfactory",
-    type: "bulletFactory",
-    to: "AllBulletfactory",
-    image: require("../../../assets/map/bulletfactory.png"),
-    size: 10,
-    aspectRatio: 1,
-  },
-  {
-    title: "menuAirport",
-    type: "airport",
-    to: "AllAirport",
-    image: require("../../../assets/map/airport.png"),
-    size: 15,
-    aspectRatio: 1,
-  },
-
-  {
-    title: "menuBank",
-    type: "bank",
-    to: "AllBanks",
-    image: require("../../../assets/map/bank.png"),
-    size: 8,
-    aspectRatio: 200 / 235,
-  },
-
-  {
-    title: "menuCasino",
-    type: "casino",
-    to: "Casino",
-    image: require("../../../assets/map/casino.png"),
-    size: 20,
-    aspectRatio: 400 / 251,
-  },
-
-  {
-    title: "menuCoffeeShop",
-    type: "landlord",
-    to: "Wiet",
-    image: require("../../../assets/map/coffeeshop.png"),
-    size: 10,
-    aspectRatio: 300 / 270,
-  },
-
-  {
-    title: "menuSalvationArmy",
-    type: "junkies",
-    to: "Junkies",
-    image: require("../../../assets/map/junkies.png"),
-    size: 10,
-    aspectRatio: 1,
-  },
-
-  {
-    title: "menuGarage",
-    type: "garage",
-    to: "AllGarage",
-    image: require("../../../assets/map/garage.png"),
-    size: 10,
-    aspectRatio: 400 / 292,
-  },
-
-  {
-    title: "menuGym",
-    type: "gym",
-    to: "Gym",
-    image: require("../../../assets/map/gym.png"),
-    size: 10,
-    aspectRatio: 300 / 231,
-  },
-
-  {
-    title: "menuHospital",
-    type: "hospital",
-    to: "Hospital",
-    image: require("../../../assets/map/hospital.png"),
-    size: 10,
-    aspectRatio: 300 / 270,
-  },
-
-  {
-    title: "menuHouse",
-    type: "house",
-    to: "House",
-    image: require("../../../assets/map/house2.png"),
-    size: 10,
-    aspectRatio: 783 / 500,
-  },
-
-  {
-    title: "menuHeadquarter",
-    type: "headquarter",
-    to: "AllGang",
-    image: require("../../../assets/map/headquarter.png"),
-    size: 10,
-    aspectRatio: 202 / 182,
-  },
-
-  {
-    title: "menuJail2",
-    type: "jail",
-    to: "Jail",
-    image: require("../../../assets/map/jail.png"),
-    size: 10,
-    aspectRatio: 1,
-  },
-
-  {
-    title: "menuMarket",
-    type: "market",
-    to: "Market",
-    image: require("../../../assets/map/market.png"),
-    size: 10,
-    aspectRatio: 1,
-  },
-  {
-    title: "menuWeaponShop",
-    type: "weaponShop",
-    to: "Shop",
-    image: require("../../../assets/map/shop.png"),
-    size: 10,
-    aspectRatio: 300 / 262,
-  },
-
-  {
-    title: "menuEstateAgent",
-    type: "estateAgent",
-    to: "EstateAgent",
-    image: require("../../../assets/map/shop.png"),
-    size: 10,
-    aspectRatio: 300 / 262,
-  },
-
-  {
-    title: "menuRLD",
-    type: "rld",
-    to: "Hoeren",
-    image: require("../../../assets/map/sexshop.png"),
-    size: 10,
-    aspectRatio: 1,
-  },
-
-  {
-    title: "menuStockExchange",
-    type: "stockExchange",
-    to: "StockExchange",
-    image: require("../../../assets/map/market.png"),
-    size: 10,
-    aspectRatio: 1,
-  },
-];
-
-const rgbs = [
-  "0,255,0",
-  "255,0,0",
-  "0,255,255",
-  "0,0,255",
-  "255,0,255",
-  "255,255,0",
-  "0,150,0",
-  "0,0,150",
-];
-
-const decimalHash = (string) => {
-  let sum = 0;
-  for (let i = 0; i < string.length; i++)
-    sum += ((i + 1) * string.codePointAt(i)) / (1 << 8);
-  return sum % 1;
-};
-
-// kies positiegetal deterministisch aan de hand van een string van moment().format("DD-MM-YY HH") en index en type
-const getPosition = (id, type) => {
-  const string = moment().format("DD-MM-YY HH") + id?.toString() + type;
-  return decimalHash(string);
-};
-
 const containerStyle = {
   width: "100%",
   height: "100%",
 };
 
 const ReactMap = React.memo(({ zoom, setMap, children, setMapReady }) => {
-  console.log("zoom...", zoom);
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
@@ -293,40 +120,19 @@ const GameObjects = React.memo(
     propertiesSwiperRefContainer,
   }) => {
     // console.log("RENDER GAME OBJECT", index);
-    let latitude = city?.[`${object.type}Latitude`];
-    let longitude = city?.[`${object.type}Longitude`];
 
-    if (!latitude || !longitude) {
-      const terri = cityAreas.areas[index % (cityAreas.areas.length - 1)];
-      latitude = terri.centerLatitude;
-      longitude = terri.centerLongitude;
-    }
-
-    const deltaLatitude =
-      (city?.delta * object.size) / object.aspectRatio / SIZE_FACTOR; //width
-    const deltaLongitude = (city?.delta * object.size) / SIZE_FACTOR;
-
-    const biggestDeltaLatitude =
-      deltaLatitude > deltaLongitude ? deltaLatitude : deltaLongitude;
-    const topLeftLatitude = latitude - deltaLatitude / 2;
-    const topLeftLongitude = longitude - deltaLongitude / 2;
-    const bottomRightLatitude = latitude + deltaLatitude / 2;
-    const bottomRightLongitude = longitude + deltaLongitude / 2;
-
-    const topRightLatitude = latitude + deltaLatitude / 2;
-    const topRightLongitude = longitude - deltaLongitude / 2;
-    const bottomLeftLatitude = latitude - deltaLatitude / 2;
-    const bottomLeftLongitude = longitude + deltaLongitude / 2;
-
-    const square = [
-      { latitude: topLeftLatitude, longitude: topLeftLongitude },
-      { latitude: topRightLatitude, longitude: topRightLongitude },
-      {
-        latitude: bottomRightLatitude,
-        longitude: bottomRightLongitude,
-      },
-      { latitude: bottomLeftLatitude, longitude: bottomLeftLongitude },
-    ];
+    const {
+      latitude,
+      longitude,
+      deltaLatitude,
+      deltaLongitude,
+      biggestDeltaLatitude,
+      radius,
+      zoom,
+      square,
+      bounds,
+      platformBounds,
+    } = getObjectMeta({ object, index, city, cityAreas });
 
     const draggable = level >= 5;
     const onDragEnd = async ({ nativeEvent: { coordinate } }) => {
@@ -361,39 +167,20 @@ const GameObjects = React.memo(
       propertiesSwiperRefContainer?.current?.goTo(index + 1);
     };
 
-    const bounds = {
-      east: bottomRightLongitude,
-      south: bottomLeftLatitude,
-      north: bottomRightLatitude,
-      west: topRightLongitude,
-    };
-
-    const platformBounds =
-      Platform.OS === "ios"
-        ? [
-            [topLeftLatitude, topLeftLongitude],
-            [bottomRightLatitude, bottomRightLongitude],
-          ]
-        : [
-            [bottomRightLatitude, topLeftLongitude],
-            [topLeftLatitude, bottomRightLongitude],
-          ];
-
-    // console.log("BOUNDS", bounds);
     return Platform.OS === "web" ? (
       <>
         {isSelected ? (
           <Circle
             key={`circle${index}${isSelected}`}
             center={{ lat: latitude, lng: longitude }}
-            radius={biggestDeltaLatitude * 50000}
+            radius={radius}
             options={{ fillColor: "rgba(0,0,0,0.5)" }}
           />
         ) : city?.[`${object.type}Owner`] === myName ? (
           <Circle
             key={`circle${index}${isSelected}`}
             center={{ lat: latitude, lng: longitude }}
-            radius={biggestDeltaLatitude * 50000}
+            radius={radius}
             options={{ fillColor: "rgba(0,255,0,0.5)" }}
           />
         ) : null}
@@ -423,14 +210,14 @@ const GameObjects = React.memo(
           <MapsComponent.Circle
             key={`circle${index}${isSelected}`}
             center={{ latitude, longitude }}
-            radius={biggestDeltaLatitude * 50000}
+            radius={radius}
             fillColor={"rgba(0,0,0,0.5)"}
           />
         ) : city?.[`${object.type}Owner`] === myName ? (
           <MapsComponent.Circle
             key={`circle${index}${isSelected}`}
             center={{ latitude, longitude }}
-            radius={biggestDeltaLatitude * 50000}
+            radius={radius}
             fillColor={"rgba(0,255,0,0.5)"}
           />
         ) : null}
@@ -467,15 +254,17 @@ const Map = ({
   screenProps: {
     device,
     cities,
-    reloadCities,
+    areas,
     me,
     ocs,
     reloadMe,
     streetraces,
     robberies,
+    reloadCities,
     reloadStreetraces,
     reloadOcs,
     reloadRobberies,
+    reloadAreas,
   },
 }) => {
   const [dragAndDropMode, setDragAndDropMode] = useState(false);
@@ -485,7 +274,6 @@ const Map = ({
 
   const [map, setMap] = useState(null);
   const [view, setView] = useState("game");
-  const [areas, setAreas] = useState([]);
   const [region, setRegion] = useState({
     latitude: 52.378, //amsterdam
     longitude: 4.89707,
@@ -507,13 +295,8 @@ const Map = ({
   doOnce(() => reloadOcs(device.loginToken));
   doOnce(reloadStreetraces);
   doOnce(reloadRobberies);
-
-  const getAreas = useCallback(() => {
-    get(`areas?city=${me?.city}`).then(({ areas }) => setAreas(areas));
-  }, []);
   useEffect(() => {
-    console.log("getAreas");
-    getAreas();
+    reloadAreas(me?.city);
   }, [me?.city]);
 
   useEffect(() => {
@@ -813,9 +596,11 @@ const Map = ({
       <>
         {shouldRenderTerritories && renderTerritories}
         {/* NB: areas.length moet geladen zijn voor renderGame, anders rendert hij de teritoriums over de game heen */}
-        {(view === "all" || view === "game") && areas.length > 0 && renderGame}
+        {(view === "stats" || view === "more" || view === "game") &&
+          areas.length > 0 &&
+          renderGame}
 
-        {(view === "all" || view === "crimes") && renderCrimes}
+        {view === "crimes" && renderCrimes}
       </>
     );
   }, [view, renderTerritories, renderGame, renderCrimes, areas.length]);
@@ -823,12 +608,20 @@ const Map = ({
   const renderMapsComponentNative = () => {
     return (
       <NativeMapsComponent
+        pitchEnabled={false}
+        rotateEnabled={false}
         onMapReady={() => {
           console.log("map ready");
           setMapReady(true);
         }}
         // provider={PROVIDER_GOOGLE}
-        customMapStyle={Platform.OS === "android" ? mapStyle : undefined}
+        customMapStyle={
+          Platform.OS === "android"
+            ? moment().hour() > 18 && moment().hour() < 7
+              ? mapStyleNight
+              : mapStyle
+            : undefined
+        }
         ref={(map) => setMap(map)}
         initialRegion={region}
         onRegionChange={(r) => {
@@ -857,7 +650,6 @@ const Map = ({
     <Overlay
       screenProps={screenProps}
       setZoom={setZoom}
-      getAreas={getAreas}
       map={map}
       view={view}
       setView={setView}
@@ -891,7 +683,6 @@ const Map = ({
   ) : (
     <View style={{ flex: 1 }}>
       {renderMapsComponentNative()}
-
       {renderOverlay}
     </View>
   );

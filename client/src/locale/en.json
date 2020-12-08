@@ -281,8 +281,10 @@
   "rules": "Rules",
   "contribute": "Contribute",
 
+  "menuHome": "My house",
   "prizes": "Prizes",
 
+  "menuSexShop": "Sex Shop",
   "breakOut": "Break out",
   "jailEmpty": "There is no-one in jail",
   "junkiesInPossession": "Junkies in possession",
@@ -638,6 +640,7 @@
   "menuJail2": "Jail",
   "menuWeaponShop": "Weaponshop",
   "menuRLD": "Sex Shop",
+  "headerAreas": "Territories",
 
   "getIncome": "Get income",
 
@@ -649,12 +652,16 @@
   "organizeRobbery": "Organize Robbery",
   "menuGarageShop": "Upgrade Garage",
 
+  "headerChat": "Chat",
+  "headerMore": "More",
+
   "menuProtectionShop": "Protection shop",
   "area": "Area",
-
+  "headerStats": "Stats",
   "fillInCaptcha": "Fill in Captcha",
   "pleaseFillInCaptcha": "Please fill in the Captcha",
   "bulletsText": "The price per bullet is €$1,-. There are $2 bullets available.",
   "fillInBombs": "Fill in the amount of bombs",
-  "gangBullets": "Gang bullets"
+  "gangBullets": "Gang bullets",
+  "headerBuildings": "Buildings"
 }

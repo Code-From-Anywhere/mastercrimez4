@@ -16,6 +16,7 @@ type Device = {
   logged: boolean,
   theme: Theme,
   foregrounded: number,
+  menuShown: Boolean,
   movements: Movement[],
 };
 
@@ -24,6 +25,7 @@ const initDevice = {
   logged: false,
   theme: DEFAULT_THEME,
   isConnected: 2,
+  menuShown: false,
   foregrounded: 0,
   movements: [],
   menu: {
@@ -50,6 +52,10 @@ const deviceReducer = (state: Device = initDevice, action) => {
 
     case "SET_IS_CONNECTED": {
       return { ...state, isConnected: action.value };
+    }
+
+    case "SET_MENU_SHOWN": {
+      return { ...state, menuShown: action.value };
     }
 
     case "SET_LOGIN_TOKEN": {
@@ -178,10 +184,53 @@ const citiesReducer = (state = initCities, action) => {
   }
 };
 
+const initAreas = [];
+const areasReducer = (state = initAreas, action) => {
+  switch (action.type) {
+    case "PURGE": {
+      return initAreas;
+    }
+    case "AREAS_FETCH_SUCCEEDED": {
+      return action.areas;
+    }
+    case "AREAS_FETCH_FAILED": {
+      return state;
+    }
+    default:
+      return state;
+  }
+};
+
+const initChannels = [];
+const channelsReducer = (state = initChannels, action) => {
+  switch (action.type) {
+    case "PURGE": {
+      return initChannels;
+    }
+    case "CHANNELS_FETCH_SUCCEEDED": {
+      return action.channels;
+    }
+    case "CHANNELS_FETCH_FAILED": {
+      return state;
+    }
+    default:
+      return state;
+  }
+};
+
 const config = {
   key: "v1",
   storage: AsyncStorage,
-  whitelist: ["device", "me", "streetraces", "cities", "ocs", "robberies"],
+  whitelist: [
+    "device",
+    "me",
+    "streetraces",
+    "cities",
+    "ocs",
+    "robberies",
+    "areas",
+    "channels",
+  ],
 };
 
 const sagaMiddleware = createSagaMiddleware();
@@ -193,6 +242,8 @@ const reducers = {
   streetraces: streetracesReducer,
   ocs: ocsReducer,
   robberies: robberiesReducer,
+  areas: areasReducer,
+  channels: channelsReducer,
 };
 
 const rootReducer = persistCombineReducers(config, reducers);

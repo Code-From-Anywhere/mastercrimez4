@@ -52,6 +52,26 @@ function* fetchCities(action) {
   }
 }
 
+function* fetchChannels(action) {
+  try {
+    const channels = yield call(Api.fetchChannels, action.payload);
+
+    yield put({ type: "CHANNELS_FETCH_SUCCEEDED", channels });
+  } catch (e) {
+    yield put({ type: "CHANNELS_FETCH_FAILED", message: e.message });
+  }
+}
+
+function* fetchAreas(action) {
+  try {
+    const { areas } = yield call(Api.fetchAreas, action.payload);
+
+    yield put({ type: "AREAS_FETCH_SUCCEEDED", areas });
+  } catch (e) {
+    yield put({ type: "AREAS_FETCH_FAILED", message: e.message });
+  }
+}
+
 /*
   Alternatively you may use takeLatest.
 
@@ -62,6 +82,8 @@ function* fetchCities(action) {
 function* mySaga() {
   yield takeLatest("ME_FETCH_REQUESTED", fetchMe);
   yield takeLatest("CITIES_FETCH_REQUESTED", fetchCities);
+  yield takeLatest("CHANNELS_FETCH_REQUESTED", fetchChannels);
+  yield takeLatest("AREAS_FETCH_REQUESTED", fetchAreas);
   yield takeLatest("STREETRACES_FETCH_REQUESTED", fetchStreetraces);
   yield takeLatest("OCS_FETCH_REQUESTED", fetchOcs);
   yield takeLatest("ROBBERIES_FETCH_REQUESTED", fetchRobberies);

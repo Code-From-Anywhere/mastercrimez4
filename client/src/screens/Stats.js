@@ -143,7 +143,6 @@ const Stats = ({ navigation, screenProps: { me } }) => {
                   moment(item.createdAt).format("D MMM HH:00"),
                   `${item.online} online, ${item.onlineLastHour} online dat uur, ${item.onlineLastDay} online die dag`,
                   null,
-                  null,
                   { key: "onlineInfo" }
                 );
               }}

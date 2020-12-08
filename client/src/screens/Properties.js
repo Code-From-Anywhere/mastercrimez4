@@ -73,14 +73,14 @@ const Properties = ({
         </View>
 
         <ScrollView horizontal>
-          <View>
+          <View style={{ width: properties.length * 3 * 150 }}>
             <Grid style={gridStyle}>
-              {properties.map((property) => {
+              {properties.map((property, index) => {
                 return ["owner", "damage", "profit"].map((suffix) => {
                   const field = `${getText(property.name)} ${getText(suffix)}`;
 
                   return (
-                    <Col style={{ width: 150 }}>
+                    <Col size={1} key={`prop${index}${suffix}`}>
                       <T bold numberOfLines={1}>
                         {field}
                       </T>
@@ -113,7 +113,7 @@ const Properties = ({
                         ) : (
                           <T>€{numberFormat(city[field])},-</T>
                         );
-                      return <Col style={{ width: 150 }}>{formattedField}</Col>;
+                      return <Col>{formattedField}</Col>;
                     });
                   })}
                 </Grid>

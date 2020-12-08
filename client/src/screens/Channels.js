@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { RefreshControl } from "react-native-web-refresh-control";
 import Separator from "../components/Separator";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -24,7 +23,6 @@ class ChatScreen extends React.Component {
     super(props);
 
     this.state = {
-      channelsubs: [],
       isFetching: true,
     };
   }
@@ -41,31 +39,38 @@ class ChatScreen extends React.Component {
 
   fetchChannelsubs = () => {
     const {
-      screenProps: { device },
+      screenProps: { device, reloadChannels },
     } = this.props;
-    fetch(
-      `${Constants.SERVER_ADDR}/channelsubs?loginToken=${device.loginToken}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((channelsubs) => {
-        if (channelsubs.response) {
-          this.setState({ response: channelsubs.response });
-        } else {
-          this.setState({ channelsubs });
-        }
-        this.setState({ isFetching: false });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    reloadChannels(device.loginToken);
   };
+
+  // fetchChannelsubs = () => {
+  //   const {
+  //     screenProps: { device },
+  //   } = this.props;
+  //   fetch(
+  //     `${Constants.SERVER_ADDR}/channelsubs?loginToken=${device.loginToken}`,
+  //     {
+  //       method: "GET",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   )
+  //     .then((response) => response.json())
+  //     .then((channelsubs) => {
+  //       if (channelsubs.response) {
+  //         this.setState({ response: channelsubs.response });
+  //       } else {
+  //         this.setState({ channelsubs });
+  //       }
+  //       this.setState({ isFetching: false });
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
 
   onRefresh = () => {
     this.setState({ isFetching: true }, function () {
@@ -277,7 +282,11 @@ class ChatScreen extends React.Component {
     } = this.props;
 
     const getText = getTextFunction(me?.locale);
-    const { channelsubs } = this.state;
+    const {
+      screenProps: { channels },
+    } = this.props;
+
+    console.log("channels", channels);
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
@@ -344,16 +353,10 @@ class ChatScreen extends React.Component {
               </View>
             );
           }}
-          data={channelsubs}
+          data={channels}
           renderItem={this.renderItem}
           ItemSeparatorComponent={() => <Separator />}
           keyExtractor={(item, index) => index.toString()}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isFetching}
-              onRefresh={this.onRefresh}
-            />
-          }
         />
       </SafeAreaView>
     );
