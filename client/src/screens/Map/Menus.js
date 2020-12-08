@@ -14,6 +14,7 @@ import Accordion from "react-native-collapsible/Accordion";
 import CountDown from "react-native-countdown-component";
 import Hoverable from "../../components/Hoverable";
 import T from "../../components/T";
+import Constants from "../../Constants";
 import { getTextFunction, lighterHex } from "../../Util";
 import { getObjectMeta, getZoom, objects } from "./MapUtil";
 
@@ -924,7 +925,7 @@ export const renderMenu = ({
               <View style={{ width: 30, alignItems: "center" }}>
                 {item.image ? (
                   <Image
-                    source={{ uri: item.image }}
+                    source={{ uri: Constants.SERVER_ADDR + item.image }}
                     style={{ width: 40, height: 40, borderRadius: 20 }}
                   />
                 ) : TheIcon ? (
