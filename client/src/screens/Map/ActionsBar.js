@@ -3,7 +3,7 @@ import moment from "moment";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { AlertContext } from "../../components/AlertProvider";
-import { getTextFunction, post, withCaptcha } from "../../Util";
+import { getTextFunction, lighterHex, post, withCaptcha } from "../../Util";
 import { InactiveScreens } from "./Menus";
 
 const ActionsBar = ({
@@ -138,6 +138,7 @@ const ActionsBar = ({
       {
         text: getText("poker"),
         onPress: () => navigation.resetTo("Poker"),
+        isSelected: navigation.state.routeName === "Poker",
         icon: Icon.MaterialCommunityIcons,
         iconName: "poker-chip",
         badgeAmount: 0,
@@ -145,6 +146,7 @@ const ActionsBar = ({
       {
         text: getText("lotto"),
         onPress: () => navigation.resetTo("Lotto"),
+        isSelected: navigation.state.routeName === "Lotto",
         icon: Icon.MaterialCommunityIcons,
         iconName: "cash-100",
         badgeAmount: 0,
@@ -203,6 +205,7 @@ const ActionsBar = ({
         icon: Icon.FontAwesome,
         iconName: "group",
         onPress: () => navigation.resetTo("GangBulletFactory"),
+        isSelected: navigation.state.routeName === "GangBulletFactory",
         badgeAmount: 0,
 
         inactive:
@@ -234,6 +237,7 @@ const ActionsBar = ({
         text: getText("menuAirplaneShop"),
         icon: Icon.Ionicons,
         iconName: "ios-airplane",
+        isSelected: navigation.state.routeName === "AirplaneShop",
         onPress: () => navigation.resetTo("AirplaneShop"),
         badgeAmount: 0,
       },
@@ -247,6 +251,7 @@ const ActionsBar = ({
         text: getText("menuBank"),
         icon: Icon.FontAwesome,
         iconName: "bank",
+        isSelected: navigation.state.routeName === "Bank",
         onPress: () => navigation.resetTo("Bank"),
         badgeAmount: 0,
       },
@@ -255,6 +260,7 @@ const ActionsBar = ({
         icon: Icon.FontAwesome5,
         iconName: "money-bill",
         onPress: () => navigation.resetTo("SwissBank"),
+        isSelected: navigation.state.routeName === "SwissBank",
         badgeAmount: 0,
       },
 
@@ -263,6 +269,7 @@ const ActionsBar = ({
         icon: Icon.FontAwesome5,
         iconName: "donate",
         onPress: () => navigation.resetTo("Donate"),
+        isSelected: navigation.state.routeName === "Donate",
         badgeAmount: 0,
       },
 
@@ -277,6 +284,8 @@ const ActionsBar = ({
         icon: Icon.Entypo,
         iconName: "heart",
         onPress: () => navigation.resetTo("Hospital"),
+        isSelected: navigation.state.routeName === "Hospital",
+
         badgeAmount: 0,
       },
       bombAction("hospital"),
@@ -289,6 +298,7 @@ const ActionsBar = ({
         icon: Icon.Ionicons,
         iconName: "ios-stats",
         onPress: () => navigation.resetTo("Status"),
+        isSelected: navigation.state.routeName === "Status",
         badgeAmount: 0,
       },
       {
@@ -296,6 +306,7 @@ const ActionsBar = ({
         icon: Icon.MaterialCommunityIcons,
         iconName: "castle",
         onPress: () => navigation.resetTo("Bunker"),
+        isSelected: navigation.state.routeName === "Bunker",
         badgeAmount: 0,
       },
 
@@ -304,6 +315,7 @@ const ActionsBar = ({
         icon: Icon.MaterialCommunityIcons,
         iconName: "shoe-formal",
         onPress: () => navigation.resetTo("Sint"),
+        isSelected: navigation.state.routeName === "Sint",
         badgeAmount: 0,
         inactive:
           me?.level < 2 &&
@@ -340,6 +352,8 @@ const ActionsBar = ({
         icon: Icon.Ionicons,
         iconName: "ios-people",
         onPress: () => navigation.resetTo("GangCreate"),
+        isSelected: navigation.state.routeName === "GangCreate",
+
         badgeAmount: 0,
         inactive: !!me?.gangId,
       },
@@ -348,6 +362,8 @@ const ActionsBar = ({
         icon: Icon.Ionicons,
         iconName: "ios-people",
         onPress: () => navigation.resetTo("GangSettings"),
+        isSelected: navigation.state.routeName === "GangSettings",
+
         badgeAmount: 0,
         inactive: !me?.gangId,
       },
@@ -357,6 +373,8 @@ const ActionsBar = ({
         icon: Icon.Ionicons,
         iconName: "ios-people",
         onPress: () => navigation.resetTo("GangShop"),
+        isSelected: navigation.state.routeName === "GangShop",
+
         badgeAmount: 0,
         inactive: !me?.gangId,
       },
@@ -366,6 +384,8 @@ const ActionsBar = ({
         icon: Icon.Ionicons,
         iconName: "ios-people",
         onPress: () => navigation.resetTo("GangAchievements"),
+        isSelected: navigation.state.routeName === "GangAchievements",
+
         badgeAmount: 0,
         inactive: !me?.gangId,
       },
@@ -381,6 +401,8 @@ const ActionsBar = ({
           )
         ),
         text: getText("menuGangMissions"),
+        isSelected: navigation.state.routeName === "GangMissions",
+
         icon: Icon.Ionicons,
         iconName: "ios-people",
         onPress: () => navigation.resetTo("GangMissions"),
@@ -393,6 +415,8 @@ const ActionsBar = ({
         icon: Icon.Ionicons,
         iconName: "md-fitness",
         onPress: () => navigation.resetTo("Gym"),
+        isSelected: navigation.state.routeName === "Gym",
+
         badgeAmount: 0,
       },
       bombAction("gym"),
@@ -405,6 +429,8 @@ const ActionsBar = ({
         icon: Icon.FontAwesome,
         iconName: "car",
         onPress: () => navigation.resetTo("Garage"),
+        isSelected: navigation.state.routeName === "Garage",
+
         badgeAmount: 0,
       },
 
@@ -413,6 +439,8 @@ const ActionsBar = ({
         icon: Icon.FontAwesome5,
         iconName: "car",
         onPress: () => navigation.resetTo("Racecars"),
+        isSelected: navigation.state.routeName === "Racecars",
+
         badgeAmount: 0,
       },
 
@@ -421,6 +449,8 @@ const ActionsBar = ({
         icon: Icon.MaterialCommunityIcons,
         iconName: "garage",
         onPress: () => navigation.resetTo("GarageShop"),
+        isSelected: navigation.state.routeName === "GarageShop",
+
         badgeAmount: 0,
       },
 
@@ -435,7 +465,9 @@ const ActionsBar = ({
         icon: Icon.FontAwesome,
         iconName: "bars",
         onPress: () => navigation.resetTo("Jail"),
-        badgeAmount: 0,
+        isSelected: navigation.state.routeName === "Jail",
+
+        badgeAmount: me?.jail,
       },
       bombAction("jail"),
       takeOverAction("jail"),
@@ -448,6 +480,8 @@ const ActionsBar = ({
         icon: Icon.FontAwesome,
         iconName: "handshake-o",
         onPress: () => navigation.resetTo("Market"),
+        isSelected: navigation.state.routeName === "Market",
+
         badgeAmount: 0,
       },
       bombAction("market"),
@@ -460,6 +494,8 @@ const ActionsBar = ({
         icon: Icon.MaterialCommunityIcons,
         iconName: "pistol",
         onPress: () => navigation.resetTo("WeaponShop"),
+        isSelected: navigation.state.routeName === "WeaponShop",
+
         badgeAmount: 0,
       },
 
@@ -468,6 +504,8 @@ const ActionsBar = ({
         icon: Icon.FontAwesome,
         iconName: "shield",
         onPress: () => navigation.resetTo("ProtectionShop"),
+        isSelected: navigation.state.routeName === "ProtectionShop",
+
         badgeAmount: 0,
       },
       bombAction("weaponShop"),
@@ -481,6 +519,8 @@ const ActionsBar = ({
         icon: Icon.FontAwesome,
         iconName: "home",
         onPress: () => navigation.resetTo("EstateAgent"),
+        isSelected: navigation.state.routeName === "EstateAgent",
+
         badgeAmount: 0,
       },
       bombAction("estateAgent"),
@@ -494,6 +534,8 @@ const ActionsBar = ({
         icon: Icon.Entypo,
         iconName: "area-graph",
         onPress: () => navigation.resetTo("StockExchange"),
+        isSelected: navigation.state.routeName === "StockExchange",
+
         badgeAmount: 0,
       },
       bombAction("stockExchange"),
@@ -615,6 +657,8 @@ const ActionsBar = ({
       icon: Icon.FontAwesome,
       iconName: "group",
       onPress: () => navigation.resetTo("Members"),
+      isSelected: navigation.state.routeName === "Members",
+
       badgeAmount: 0,
     },
 
@@ -623,6 +667,8 @@ const ActionsBar = ({
       icon: Icon.Entypo,
       iconName: "area-graph",
       onPress: () => navigation.resetTo("Stats"),
+      isSelected: navigation.state.routeName === "Stats",
+
       badgeAmount: 0,
     },
 
@@ -631,6 +677,8 @@ const ActionsBar = ({
       icon: Icon.MaterialCommunityIcons,
       iconName: "home-group",
       onPress: () => navigation.resetTo("Gangs"),
+      isSelected: navigation.state.routeName === "Gangs",
+
       badgeAmount: 0,
     },
 
@@ -639,6 +687,8 @@ const ActionsBar = ({
       icon: Icon.FontAwesome5,
       iconName: "award",
       onPress: () => navigation.resetTo("Prizes"),
+      isSelected: navigation.state.routeName === "Prizes",
+
       badgeAmount: 0,
     },
 
@@ -647,6 +697,8 @@ const ActionsBar = ({
       icon: Icon.FontAwesome5,
       iconName: "house-damage",
       onPress: () => navigation.resetTo("Properties"),
+      isSelected: navigation.state.routeName === "Properties",
+
       badgeAmount: 0,
     },
   ];
@@ -657,6 +709,7 @@ const ActionsBar = ({
       icon: Icon.Ionicons,
       iconName: "ios-settings",
       onPress: () => navigation.resetTo("Settings"),
+      isSelected: navigation.state.routeName === "Settings",
     },
 
     {
@@ -664,6 +717,7 @@ const ActionsBar = ({
       icon: Icon.Entypo,
       iconName: "info",
       onPress: () => navigation.resetTo("Info"),
+      isSelected: navigation.state.routeName === "Info",
     },
 
     {
@@ -671,12 +725,14 @@ const ActionsBar = ({
       icon: Icon.Foundation,
       iconName: "sheriff-badge",
       onPress: () => navigation.resetTo("Police"),
+      isSelected: navigation.state.routeName === "Police",
     },
     {
       text: getText("menuVIP"),
       icon: Icon.MaterialIcons,
       iconName: "person-add",
       onPress: () => navigation.resetTo("VIP"),
+      isSelected: navigation.state.routeName === "VIP",
     },
 
     {
@@ -684,6 +740,7 @@ const ActionsBar = ({
       icon: Icon.MaterialIcons,
       iconName: "forum",
       onPress: () => navigation.resetTo("Forum"),
+      isSelected: navigation.state.routeName === "Forum",
     },
   ];
   const actions =
@@ -724,7 +781,9 @@ const ActionsBar = ({
                 marginHorizontal: 10,
                 height: 70,
                 borderRadius: 10,
-                backgroundColor: device.theme.secondary,
+                backgroundColor: action.isSelected
+                  ? lighterHex(device.theme.primary)
+                  : device.theme.secondary,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -759,7 +818,9 @@ const ActionsBar = ({
                   height: 20,
                 }}
               >
-                <Text style={{ color: "white", fontWeight: "bold" }}>
+                <Text
+                  style={{ color: "white", fontWeight: "bold", fontSize: 10 }}
+                >
                   {action.badgeAmount}
                 </Text>
               </View>

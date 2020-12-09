@@ -357,35 +357,35 @@ export const leftMenu = (me, theme) => {
           iconType: "FontAwesome5",
           icon: "home",
           text: getText("menuHome"),
-          goToBuilding: "house",
+          buildingType: "house",
         },
 
         {
           iconType: "MaterialCommunityIcons",
           icon: "home-analytics",
           text: getText("menuHeadquarter"),
-          goToBuilding: "headquarter",
+          buildingType: "headquarter",
         },
 
         {
           iconType: "FontAwesome5",
           icon: "beer",
           text: getText("menuSalvationArmy"),
-          goToBuilding: "junkies",
+          buildingType: "junkies",
         },
 
         {
           iconType: "AntDesign",
           icon: "heart",
           text: getText("menuSexShop"),
-          goToBuilding: "rld",
+          buildingType: "rld",
         },
 
         {
           iconType: "Entypo",
           icon: "shop",
           text: getText("menuCoffeeShop"),
-          goToBuilding: "landlord",
+          buildingType: "landlord",
         },
 
         {
@@ -399,7 +399,7 @@ export const leftMenu = (me, theme) => {
           iconType: "MaterialCommunityIcons",
           icon: "pistol",
           text: getText("menuBulletfactory"),
-          goToBuilding: "bulletFactory",
+          buildingType: "bulletFactory",
         },
 
         {
@@ -413,7 +413,7 @@ export const leftMenu = (me, theme) => {
           iconType: "FontAwesome",
           icon: "plane",
           text: getText("menuAirport"),
-          goToBuilding: "airport",
+          buildingType: "airport",
         },
 
         {
@@ -421,7 +421,7 @@ export const leftMenu = (me, theme) => {
           iconType: "FontAwesome",
           icon: "bank",
           text: getText("menuBank"),
-          goToBuilding: "bank",
+          buildingType: "bank",
           to: "Bank",
         },
 
@@ -435,21 +435,21 @@ export const leftMenu = (me, theme) => {
           iconType: "FontAwesome5",
           icon: "dice",
           text: getText("menuCasino"),
-          goToBuilding: "casino",
+          buildingType: "casino",
         },
 
         {
           iconType: "Ionicons",
           icon: "ios-car",
           text: getText("menuGarage"),
-          goToBuilding: "garage",
+          buildingType: "garage",
         },
 
         {
           iconType: "AntDesign",
           icon: "stepforward",
           text: getText("menuGym"),
-          goToBuilding: "gym",
+          buildingType: "gym",
           component:
             gymSeconds > 0 ? (
               <CountDown
@@ -475,14 +475,15 @@ export const leftMenu = (me, theme) => {
           iconType: "FontAwesome5",
           icon: "hospital",
           text: getText("menuHospital"),
-          goToBuilding: "hospital",
+          buildingType: "hospital",
         },
 
         {
           iconType: "FontAwesome",
           icon: "bars",
-          text: getText("menuJail", me?.jail),
-          goToBuilding: "jail",
+          text: getText("menuJail2"),
+          buildingType: "jail",
+          badgeCount: me?.jail,
         },
 
         {
@@ -504,7 +505,7 @@ export const leftMenu = (me, theme) => {
           iconType: "FontAwesome",
           icon: "bank",
           text: getText("menuMarket"),
-          goToBuilding: "market",
+          buildingType: "market",
         },
 
         {
@@ -512,7 +513,7 @@ export const leftMenu = (me, theme) => {
           iconType: "Entypo",
           icon: "home",
           text: getText("homeShop"),
-          goToBuilding: "estateAgent",
+          buildingType: "estateAgent",
         },
 
         {
@@ -520,7 +521,7 @@ export const leftMenu = (me, theme) => {
           iconType: "MaterialCommunityIcons",
           icon: "pistol",
           text: getText("menuWeaponShop"),
-          goToBuilding: "weaponShop",
+          buildingType: "weaponShop",
         },
 
         {
@@ -528,7 +529,7 @@ export const leftMenu = (me, theme) => {
           iconType: "Entypo",
           icon: "line-graph",
           text: getText("menuStockExchange"),
-          goToBuilding: "stockExchange",
+          buildingType: "stockExchange",
         },
       ].filter((x) => !!x && !x.inactive),
     },
@@ -604,6 +605,7 @@ export const rightMenu = (me, theme, areas, channels) => {
       image: channelThumbnail,
       iconType: "Ionicons",
       icon: "ios-person",
+      badgeCount: item.unread,
       to: "Channel",
       params: { subid: item.id, id: item.channel.id },
     };
@@ -682,9 +684,18 @@ export const rightMenu = (me, theme, areas, channels) => {
           icon: "ios-chatbubbles",
           text: getText("everyone"),
           to: "Chat",
+          view: "chat",
         },
 
         ...last10ChannelsMenus,
+
+        {
+          iconType: "Ionicons",
+          icon: "ios-chatbubbles",
+          text: getText("allChats"),
+          to: "Channels",
+          view: "chat",
+        },
       ].filter((x) => !!x && !x.inactive),
     },
 
@@ -717,29 +728,6 @@ export const rightMenu = (me, theme, areas, channels) => {
           view: "more",
           text: getText("menuInfo"),
           to: "Info",
-        },
-
-        {
-          view: "more",
-          inactive:
-            ((!me?.id || me?.level < 1) &&
-              moment().isBefore(InactiveScreens.POLICE_RELEASE_DATE)) ||
-            me?.numActions < InactiveScreens.ACTIONS_BEFORE_POLICE,
-          isNew:
-            moment().isBefore(
-              moment(InactiveScreens.POLICE_RELEASE_DATE).add(
-                InactiveScreens.DAYS_NEW,
-                "days"
-              )
-            ) ||
-            me?.numActions <
-              InactiveScreens.ACTIONS_BEFORE_POLICE +
-                InactiveScreens.ACTIONS_AMOUNT_NEW,
-
-          iconType: "Entypo",
-          icon: "eye",
-          text: getText("menuHackers"),
-          to: "Hackers",
         },
 
         {
@@ -807,6 +795,49 @@ export const renderMenu = ({
   const isCurrent = navigation.state.routeName === item.to;
   const TouchOrView = item.isHeader ? View : TouchableOpacity;
   const getText = getTextFunction(me?.locale);
+
+  let specialColor = null;
+  const gangMembers = []; //should be an {name,id}[] of users in your gang
+
+  if (item.buildingType !== undefined) {
+    const owner = city[`${item.buildingType}Owner`];
+    const isYours = owner === me?.name;
+    const isGang = gangMembers.map((x) => x.name).includes(owner);
+    const hasDamage = city[`${item.buildingType}Damage`] > 0;
+    const hasProfit = city[`${item.buildingType}Profit`] > 0;
+
+    specialColor =
+      isYours && hasDamage
+        ? "darkred"
+        : isYours && hasProfit
+        ? "yellow"
+        : isYours
+        ? "blue"
+        : hasDamage
+        ? "red"
+        : isGang
+        ? "green"
+        : null;
+  } else if (item.goToArea !== undefined) {
+    const area = cityAreas.areas[item.goToArea];
+    const isYours = area.userId === me?.id;
+    const isGang = area.gangId === me?.gangId;
+    const hasDamage = area.damage > 0;
+    const hasProfit = area.profit > 0;
+
+    specialColor =
+      isYours && hasDamage
+        ? "darkred"
+        : isYours && hasProfit
+        ? "yellow"
+        : isYours
+        ? "blue"
+        : hasDamage
+        ? "red"
+        : isGang
+        ? "green"
+        : null;
+  }
   return (
     <TouchOrView
       key={`item${index}`}
@@ -829,9 +860,9 @@ export const renderMenu = ({
         if (item.view) {
           setView(item.view);
         }
-        if (item.goToBuilding) {
+        if (item.buildingType) {
           const objectIndex = objects.findIndex(
-            (x) => x.type === item.goToBuilding
+            (x) => x.type === item.buildingType
           );
           const object = objects[objectIndex];
           const {
@@ -854,7 +885,7 @@ export const renderMenu = ({
                 lng: longitude,
               });
 
-              setZoom(zoom);
+              setZoom(zoom - 2);
             } else {
               map.animateToRegion({
                 latitude: latitude,
@@ -866,7 +897,7 @@ export const renderMenu = ({
           }
 
           setView("game");
-          setSelected(item.goToBuilding);
+          setSelected(item.buildingType);
         }
 
         if (item.goToArea !== undefined) {
@@ -926,13 +957,19 @@ export const renderMenu = ({
                 {item.image ? (
                   <Image
                     source={{ uri: Constants.SERVER_ADDR + item.image }}
-                    style={{ width: 40, height: 40, borderRadius: 20 }}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 20,
+                      borderWidth: specialColor ? 2 : 0,
+                      borderColor: specialColor ? specialColor : undefined,
+                    }}
                   />
                 ) : TheIcon ? (
                   <TheIcon
                     name={item.icon}
                     size={20}
-                    color={theme.secondaryText}
+                    color={specialColor ? specialColor : theme.secondaryText}
                   />
                 ) : null}
               </View>
@@ -975,6 +1012,26 @@ export const renderMenu = ({
                   <T>{item.label}</T>
                 </View>
               )}
+
+              {item.badgeCount > 0 ? (
+                <View
+                  style={{
+                    marginLeft: 10,
+                    borderRadius: 10,
+                    width: 20,
+                    height: 20,
+                    backgroundColor: "red",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Text
+                    style={{ color: "white", fontSize: 10, fontWeight: "bold" }}
+                  >
+                    {item.badgeCount}
+                  </Text>
+                </View>
+              ) : null}
               {item.component}
             </View>
           </View>

@@ -11,8 +11,7 @@ const Code = ({
 }) => {
   const [response, setResponse] = useState(null);
 
-  const code = params?.code;
-
+  const code = params?.param;
   //  When opening the site on web  on /Case or /Code or /StealCar on an unverified account, open modal
   doOnce(() => {
     if (!me?.phoneVerified) {

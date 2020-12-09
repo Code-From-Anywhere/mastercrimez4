@@ -6,9 +6,13 @@ import {
   OverlayView,
   Polygon,
 } from "@react-google-maps/api";
+import * as ExpoNotifications from "expo-notifications";
+import * as StoreReview from "expo-store-review";
 import React, { useEffect, useRef, useState } from "react";
+import { Helmet } from "react-helmet";
 import {
   Animated,
+  AppState,
   Dimensions,
   LayoutAnimation,
   Platform,
@@ -18,9 +22,13 @@ import {
   UIManager,
   View,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { IntervalContext } from "../../components/IntervalProvider";
+import LoginModal from "../../components/LoginModal";
 import T from "../../components/T";
-import { doOnce, post } from "../../Util";
+import { doOnce, getTextFunction, post } from "../../Util";
 import {
+  animateToCity,
   API_KEY,
   getObjectMeta,
   getPosition,
@@ -30,6 +38,7 @@ import {
   rgbs,
 } from "./MapUtil";
 import Overlay from "./Overlay";
+
 const mapStyle = require("./mapStyle.json");
 const mapStyleNight = require("./mapStyleNight.json");
 
@@ -46,7 +55,101 @@ const containerStyle = {
   height: "100%",
 };
 
-const ReactMap = React.memo(({ zoom, setMap, children, setMapReady }) => {
+const Logic = ({
+  children,
+  screenProps,
+  navigation,
+  screenProps: { device, dispatch, me, reloadMe },
+}) => {
+  const { resetIntervalsForToken } = React.useContext(IntervalContext);
+  const getText = getTextFunction(me?.locale);
+
+  doOnce(() => {
+    let token = device.loginToken;
+
+    if (!token || token.length < 64) {
+      token = makeid(64);
+      dispatch({ type: "SET_LOGIN_TOKEN", value: token });
+
+      resetIntervalsForToken(token);
+      reloadMe(token);
+    } else {
+      reloadMe(token);
+    }
+  });
+
+  useEffect(() => {
+    reloadMe(device.loginToken);
+  }, [device.logged]);
+
+  const _handleNotificationResponse = ({
+    notification: {
+      request: {
+        content: { data },
+      },
+    },
+  }) => {
+    //TODO: Fix dat hij naar chat redirect
+    // navigation.navigate("Channels", { id: data.body.id });
+  };
+
+  const handleChange = (nextAppState) => {
+    if (nextAppState === "active") {
+      // somehow this doesn't work properly
+      // screenProps.reloadMe(screenProps.device.loginToken);
+
+      dispatch({ type: "INCREASE_FOREGROUNDED" });
+
+      if (device.foregrounded > 3) {
+        StoreReview.isAvailableAsync().then((available) => {
+          // console.log("avaiable", available);
+          if (available) {
+            StoreReview.requestReview();
+          }
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    ExpoNotifications.addNotificationResponseReceivedListener(
+      _handleNotificationResponse
+    );
+  }, []);
+
+  useEffect(() => {
+    AppState.addEventListener("change", handleChange);
+
+    return () => {
+      AppState.removeEventListener("change", handleChange);
+    };
+  }, []);
+
+  const renderForWeb = () => (
+    <Helmet>
+      <title>MasterCrimeZ - The Ultimate Game</title>
+      <meta name="description" content={getText("metaDescription")} />
+
+      <meta property="og:url" content="https://mastercrimez.com/" />
+      <meta property="og:type" content="article" />
+      <meta property="og:title" content={getText("metaOgTitle")} />
+      <meta property="og:description" content={getText("metaOgDescription")} />
+      <meta property="og:image" content="" />
+    </Helmet>
+  );
+  return (
+    <View style={{ flex: 1 }}>
+      {Platform.OS === "web" && renderForWeb()}
+      {children}
+
+      {!device.logged && (
+        <LoginModal navigation={navigation} screenProps={screenProps} />
+      )}
+    </View>
+  );
+};
+const ReactMap = ({ zoom, map, setMap, children, setMapReady }) => {
+  const dispatch = useDispatch();
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
     map.fitBounds(bounds);
@@ -57,13 +160,17 @@ const ReactMap = React.memo(({ zoom, setMap, children, setMapReady }) => {
   const onUnmount = React.useCallback(function callback(map) {
     setMap(null);
   }, []);
-
   return (
     <LoadScript googleMapsApiKey={API_KEY}>
       <GoogleMap
+        clickableIcons={false}
         mapContainerStyle={containerStyle}
         zoom={zoom}
-        initialZoom={zoom}
+        onZoomChanged={() => {
+          const zoom = map?.getZoom();
+          // console.log("zoom changed to ", zoom);
+          dispatch({ type: "SET_ZOOM", value: zoom });
+        }}
         //center={{ lat: city?.latitude, lng: city?.longitude }}
         onLoad={onLoad}
         options={{ disableDefaultUI: true }}
@@ -73,7 +180,7 @@ const ReactMap = React.memo(({ zoom, setMap, children, setMapReady }) => {
       </GoogleMap>
     </LoadScript>
   );
-});
+};
 
 const Territories = React.memo(
   ({ territories, MapsComponent, onPress, opacity }) => {
@@ -124,11 +231,7 @@ const GameObjects = React.memo(
     const {
       latitude,
       longitude,
-      deltaLatitude,
-      deltaLongitude,
-      biggestDeltaLatitude,
       radius,
-      zoom,
       square,
       bounds,
       platformBounds,
@@ -161,27 +264,39 @@ const GameObjects = React.memo(
 
     const onPressObject = () => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-
       isSelected ? setSelected(null) : setSelected(object.type);
-
-      propertiesSwiperRefContainer?.current?.goTo(index + 1);
     };
+    const owner = city?.[`${object.type}Owner`];
+    const gangMembers = [];
+
+    const isYours = owner === myName;
+    const isGang = gangMembers.includes(owner);
+    const hasDamage = city?.[`${object.type}Damage`] > 0;
+    const hasProfit = city?.[`${object.type}Profit`] > 0;
+
+    const specialColor = isSelected
+      ? "rgba(0,0,0,0.5)"
+      : isYours && hasDamage
+      ? "rgba(139,0,0,0.5)"
+      : isYours && hasProfit
+      ? "rgba(255,255,0,0.5)"
+      : isYours
+      ? "rgba(0,0,255,0.5)"
+      : hasDamage
+      ? "rgba(255,0,0,0.5)"
+      : isGang
+      ? "rgba(0,255,0,0.5)"
+      : null;
 
     return Platform.OS === "web" ? (
       <>
-        {isSelected ? (
+        {specialColor ? (
           <Circle
             key={`circle${index}${isSelected}`}
             center={{ lat: latitude, lng: longitude }}
             radius={radius}
-            options={{ fillColor: "rgba(0,0,0,0.5)" }}
-          />
-        ) : city?.[`${object.type}Owner`] === myName ? (
-          <Circle
-            key={`circle${index}${isSelected}`}
-            center={{ lat: latitude, lng: longitude }}
-            radius={radius}
-            options={{ fillColor: "rgba(0,255,0,0.5)" }}
+            options={{ fillColor: specialColor, strokeColor: specialColor }}
+            onClick={onPressObject}
           />
         ) : null}
 
@@ -206,19 +321,13 @@ const GameObjects = React.memo(
       </MapsComponent.Marker>
     ) : (
       <>
-        {isSelected ? (
+        {specialColor ? (
           <MapsComponent.Circle
             key={`circle${index}${isSelected}`}
             center={{ latitude, longitude }}
             radius={radius}
-            fillColor={"rgba(0,0,0,0.5)"}
-          />
-        ) : city?.[`${object.type}Owner`] === myName ? (
-          <MapsComponent.Circle
-            key={`circle${index}${isSelected}`}
-            center={{ latitude, longitude }}
-            radius={radius}
-            fillColor={"rgba(0,255,0,0.5)"}
+            fillColor={specialColor}
+            strokeColor={specialColor}
           />
         ) : null}
 
@@ -257,6 +366,7 @@ const Map = ({
     areas,
     me,
     ocs,
+    dispatch,
     reloadMe,
     streetraces,
     robberies,
@@ -267,6 +377,10 @@ const Map = ({
     reloadAreas,
   },
 }) => {
+  doOnce(() => {
+    dispatch({ type: "SET_ZOOM", value: getZoom(city?.delta) });
+  });
+
   const [dragAndDropMode, setDragAndDropMode] = useState(false);
 
   const [selected, setSelected] = useState(null);
@@ -286,7 +400,6 @@ const Map = ({
   ]);
   const [mapReady, setMapReady] = useState(false);
 
-  const [zoom, setZoom] = useState(getZoom(city?.delta));
   const territoriesSwiperRefContainer = useRef(null);
   const propertiesSwiperRefContainer = useRef(null);
 
@@ -298,15 +411,6 @@ const Map = ({
   useEffect(() => {
     reloadAreas(me?.city);
   }, [me?.city]);
-
-  useEffect(() => {
-    if (mapReady && city) {
-      console.log("set zoom", city?.zoom);
-      setTimeout(() => {
-        setZoom(city?.zoom);
-      }, 1000);
-    }
-  }, [city, mapReady]);
 
   const window = Dimensions.get("window");
 
@@ -322,6 +426,15 @@ const Map = ({
   }));
 
   useEffect(() => {
+    if (selected === "area") {
+      territoriesSwiperRefContainer?.current?.goTo(selectedAreaIndex + 1);
+    } else if (selected) {
+      const index = objects.findIndex((o) => o.type === selected);
+      propertiesSwiperRefContainer?.current?.goTo(index + 1);
+    }
+  }, [selected, selectedAreaIndex]);
+
+  useEffect(() => {
     if (map && city && mapReady) {
       const reg = {
         latitude: city?.latitude, //amsterdam
@@ -331,15 +444,10 @@ const Map = ({
       };
       setRegion(reg);
 
-      if (Platform.OS === "web") {
-        console.log("panToCity");
-        map.panTo({ lat: city?.latitude, lng: city?.longitude });
-      } else {
-        map.animateToRegion(reg);
-      }
+      animateToCity({ map, dispatch, city, delayZoom: true });
       //map.fitToElements(true);
     }
-  }, [city, map, mapReady]);
+  }, [me?.city, map, mapReady]);
 
   const territories = React.useMemo(
     () =>
@@ -511,7 +619,6 @@ const Map = ({
         return (
           <GameObjects
             key={`game${object.type}`}
-            propertiesSwiperRefContainer={propertiesSwiperRefContainer}
             MapsComponent={NativeMapsComponent}
             city={city}
             dragAndDropMode={dragAndDropMode}
@@ -548,7 +655,6 @@ const Map = ({
             ? (index) => {
                 setSelected("area");
                 setSelectedAreaIndex(index);
-                territoriesSwiperRefContainer?.current?.goTo(index + 1);
               }
             : () => null
         }
@@ -589,9 +695,7 @@ const Map = ({
 
   const renderAllMapObjects = React.useMemo(() => {
     const shouldRenderTerritories =
-      Platform.OS === "web"
-        ? view === "territories"
-        : view === "territories" || view === "game" || view === "crimes";
+      Platform.OS === "web" ? view === "territories" : true;
     return (
       <>
         {shouldRenderTerritories && renderTerritories}
@@ -646,10 +750,11 @@ const Map = ({
     );
   };
 
+  const setZoom = (zoom) => dispatch({ type: "SET_ZOOM", value: zoom });
+
   const renderOverlay = (
     <Overlay
       screenProps={screenProps}
-      setZoom={setZoom}
       map={map}
       view={view}
       setView={setView}
@@ -670,21 +775,31 @@ const Map = ({
       objects={objects}
       reloadMe={reloadMe}
       reloadCities={reloadCities}
+      setZoom={setZoom}
     />
   );
 
   return Platform.OS === "web" ? (
-    <View style={{ flex: 1 }}>
-      <ReactMap setMap={setMap} zoom={zoom} setMapReady={setMapReady}>
-        {renderAllMapObjects}
-      </ReactMap>
-      {renderOverlay}
-    </View>
+    <Logic screenProps={screenProps} navigation={navigation}>
+      <View style={{ flex: 1 }}>
+        <ReactMap
+          map={map}
+          setMap={setMap}
+          zoom={device.map.zoom}
+          setMapReady={setMapReady}
+        >
+          {renderAllMapObjects}
+        </ReactMap>
+        {renderOverlay}
+      </View>
+    </Logic>
   ) : (
-    <View style={{ flex: 1 }}>
-      {renderMapsComponentNative()}
-      {renderOverlay}
-    </View>
+    <Logic screenProps={screenProps} navigation={navigation}>
+      <View style={{ flex: 1 }}>
+        {renderMapsComponentNative()}
+        {renderOverlay}
+      </View>
+    </Logic>
   );
 };
 

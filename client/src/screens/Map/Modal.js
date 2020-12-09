@@ -1,16 +1,41 @@
 import * as Icon from "@expo/vector-icons";
-import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect } from "react";
+import { Platform, TouchableOpacity, View } from "react-native";
 import { useSelector } from "react-redux";
 
-const Modal = ({ view, navigation, setView, children }) => {
+const Modal = ({ view, navigation, setView, children, headerHeight }) => {
+  const keydown = useCallback((event) => {
+    if (event.keyCode === 27) {
+      //esc
+      //Do whatever when esc is pressed
+      close();
+    }
+  }, []);
+
+  const close = () => {
+    if (view !== "game" && view !== "territories" && view !== "crimes") {
+      setView("game");
+    }
+
+    navigation.popToTop();
+  };
+  useEffect(() => {
+    if (Platform.OS === "web") {
+      document.addEventListener("keydown", keydown, false);
+
+      return () => {
+        document.removeEventListener("keydown", keydown, false);
+      };
+    }
+  }, []);
+
   const theme = useSelector((state) => state.device.theme);
   return (
     <View
       style={{
         position: "absolute",
-        top: view === "territories" ? 180 : view === "game" ? 130 : 110,
-        bottom: view === "chat" ? 70 : 140,
+        top: headerHeight + 20,
+        bottom: view === "chat" || view === "crimes" ? 70 : 140,
         left: 5,
         right: 5,
         backgroundColor: `${theme.primary}CC`,
@@ -42,17 +67,7 @@ const Modal = ({ view, navigation, setView, children }) => {
 
         <TouchableOpacity
           hitSlop={{ top: 10, left: 10, right: 10, bottom: 10 }}
-          onPress={() => {
-            if (
-              view !== "game" &&
-              view !== "territories" &&
-              view !== "crimes"
-            ) {
-              setView("game");
-            }
-
-            navigation.popToTop();
-          }}
+          onPress={close}
         >
           <Icon.AntDesign name="close" size={32} color={theme.secondaryText} />
         </TouchableOpacity>

@@ -109,7 +109,7 @@
   "accomplicesNone": "Je hebt nog geen handlangers!",
   "accompliceWhoseYouWantToBe": "Wiens handlanger wil jij zijn?",
   "headerAreas": "Territoriums",
-
+  "gang": "Gang",
   "accomplice": "Handlanger $1",
   "save": "Opslaan",
   "noAccess": "Geen toegang",
@@ -499,6 +499,7 @@
   "yourStatus": "Jouw status",
   "invitePeople": "Mensen uitnodigen",
   "gangProfile": "Gang profiel",
+  "allChats": "Alle berichten",
   "deleteAllChats": "Verwijder alle berichten",
   "areYouSure": "Weet je het zeker?",
   "removeGangAlertMessage": "Weet je zeker dat je de gang wilt verwijderen?",

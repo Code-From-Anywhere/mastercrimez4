@@ -1,19 +1,28 @@
 import * as Icon from "@expo/vector-icons";
 import React from "react";
 import { View } from "react-native";
+import { useDispatch } from "react-redux";
 import MapIcon from "./MapIcon";
+import { animateToCity } from "./MapUtil";
 const BottomTabs = ({
   view,
   setSelected,
   navigation,
   setView,
-  animateToCity,
   dragAndDropMode,
   setDragAndDropMode,
   level,
+  chatBadgeCount,
+  territoriesBadgeCount,
+  crimesBadgeCount,
+  gameBadgeCount,
+  map,
+  city,
 }) => {
+  const dispatch = useDispatch();
   return (
     <View
+      pointerEvents="box-none"
       style={{
         zIndex: 2,
         position: "absolute",
@@ -34,8 +43,9 @@ const BottomTabs = ({
             setSelected(null);
             navigation.popToTop();
             setView("game");
-            animateToCity();
+            animateToCity({ map, dispatch, city });
           },
+          badgeCount: gameBadgeCount,
         },
         {
           view: "crimes",
@@ -46,8 +56,9 @@ const BottomTabs = ({
             setSelected(null);
             navigation.popToTop();
             setView("crimes");
-            animateToCity();
+            animateToCity({ map, dispatch, city });
           },
+          badgeCount: crimesBadgeCount,
         },
         {
           view: "territories",
@@ -58,8 +69,9 @@ const BottomTabs = ({
             setSelected(null);
             navigation.popToTop();
             setView("territories");
-            animateToCity();
+            animateToCity({ map, dispatch, city });
           },
+          badgeCount: territoriesBadgeCount,
         },
 
         {
@@ -94,6 +106,7 @@ const BottomTabs = ({
               navigation.resetTo("Channels");
             }
           },
+          badgeCount: chatBadgeCount,
         },
 
         {

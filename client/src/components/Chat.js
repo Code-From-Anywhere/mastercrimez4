@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import {
   Platform,
   Text,
@@ -11,7 +11,7 @@ import Ticker from "react-ticker";
 import Constants from "../Constants";
 import { getTextFunction } from "../Util";
 
-class Chat extends Component {
+class Chat extends React.PureComponent {
   state = {
     chat: [],
     input: "",
@@ -58,7 +58,7 @@ class Chat extends Component {
       .map((item) => `${item.name}${item.message}`)
       .join("::::");
     return (
-      <View style={{ height: Platform.select({ web: 50, default: 100 }) }}>
+      <View>
         <View
           style={{
             width: "100%",

@@ -1,6 +1,6 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { createBrowserApp } from "@react-navigation/web";
-import React, { useState } from "react";
+import React from "react";
 import { Dimensions, Platform } from "react-native";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createDrawerNavigator } from "react-navigation-drawer";
@@ -73,7 +73,7 @@ import Kill from "./screens/Kill";
 import Login from "./screens/Login";
 import Lotto from "./screens/Lotto";
 import ManageObject from "./screens/ManageObject";
-import Map from "./screens/Map/Map";
+import NewContainer from "./screens/Map/Container";
 import Market from "./screens/Market";
 import Members from "./screens/Members";
 import MollieComplete from "./screens/MollieComplete";
@@ -275,48 +275,6 @@ const routes = {
   Prizes: withLayout(Prizes),
   AllStats: withLayout(AllStats),
   More: withLayout(More),
-};
-
-const NewContainer = ({ screenProps }) => {
-  const initialNavigationState = {
-    params: null,
-    routeName: null,
-    history: [],
-  };
-  const [navigationState, setNavigationState] = useState(
-    initialNavigationState
-  );
-  const navigation = {
-    navigate: (routeName, params) => {
-      const newHistory = navigationState.history.concat([
-        { routeName, params },
-      ]);
-      setNavigationState({ history: newHistory, routeName, params });
-    },
-
-    resetTo: (routeName, params) => {
-      const newHistory = [{ routeName, params }];
-      setNavigationState({ history: newHistory, routeName, params });
-    },
-
-    state: navigationState,
-    popToTop: () => {
-      setNavigationState(initialNavigationState);
-    },
-    goBack: () => {
-      navigationState.history.pop();
-      setNavigationState({
-        history: navigationState.history,
-        ...(navigationState.history.length > 0
-          ? navigationState.history[navigationState.history.length - 1]
-          : {}),
-      });
-    },
-  };
-
-  const MapWithLayout = Map;
-
-  return <MapWithLayout navigation={navigation} screenProps={screenProps} />;
 };
 
 const OldContainer = rightContainer(

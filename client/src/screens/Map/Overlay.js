@@ -15,12 +15,18 @@ import CountDown from "react-native-countdown-component";
 import { Col, Grid } from "react-native-easy-grid";
 import Swiper from "react-native-web-swiper";
 import { useDispatch } from "react-redux";
+import Chat from "../../components/Chat";
 import User from "../../components/User";
-import { getTextFunction, numberFormat } from "../../Util";
+import {
+  getRank,
+  getStrength,
+  getTextFunction,
+  numberFormat,
+} from "../../Util";
 import ActionsBar from "./ActionsBar";
 import BottomTabs from "./BottomTabs";
 import MapIcon from "./MapIcon";
-import { getZoom } from "./MapUtil";
+import { animateToCity, getZoom } from "./MapUtil";
 import Menus from "./Menus";
 import Modal from "./Modal";
 import Screen from "./Screen";
@@ -58,6 +64,8 @@ const Overlay = React.memo(
     const { showActionSheetWithOptions } = useActionSheet();
     const getText = getTextFunction(me?.locale);
     const [loading, setLoading] = useState(false);
+
+    const [headerHeight, setHeaderHeight] = useState(0);
 
     const selectedArea =
       selectedAreaIndex !== undefined
@@ -108,24 +116,6 @@ const Overlay = React.memo(
       );
     };
 
-    const animateToCity = () => {
-      if (Platform.OS === "web") {
-        map.panTo({
-          lat: city.latitude,
-          lng: city.longitude,
-        });
-        console.log("animateTocity");
-        setZoom(getZoom(city?.delta));
-      } else {
-        map.animateToRegion({
-          latitude: city.latitude,
-          longitude: city.longitude,
-          latitudeDelta: city.delta * 1.2,
-          longitudeDelta: city.delta * 1.2,
-        });
-      }
-    };
-
     const renderTerritoriesSwiper = (
       <View style={{ height: 150 }}>
         <Swiper
@@ -137,7 +127,7 @@ const Overlay = React.memo(
           onIndexChanged={(position) => {
             if (position === 0) {
               //should animate to whole city
-              animateToCity();
+              animateToCity({ map, dispatch, city });
               setSelected(null);
               setSelectedAreaIndex(null);
             } else {
@@ -232,23 +222,10 @@ const Overlay = React.memo(
           onIndexChanged={(position) => {
             if (position === 0) {
               //should animate to whole city
-              animateToCity();
+              animateToCity({ map, dispatch, city });
               setSelected(null);
             } else {
               const object = objects[position - 1];
-              const latitude = city[`${object.type}Latitude`];
-              const longitude = city[`${object.type}Longitude`];
-
-              // const region = cityAreas.areas[position].area[0]; //first point for now, later pick center
-              // if (latitude && longitude) {
-              //   map.animateToRegion({
-              //     latitude,
-              //     longitude,
-              //     latitudeDelta: (city?.delta / 100) * object.size,
-              //     longitudeDelta: (city?.delta / 100) * object.size,
-              //   });
-              // }
-
               setSelected(object.type);
             }
             //improve this once i have centers.
@@ -260,6 +237,77 @@ const Overlay = React.memo(
             </Text>
           </View>
           {objects.map((object, index) => {
+            const keyValue = (key, value) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    paddingHorizontal: 20,
+                  }}
+                >
+                  <Text style={{ color: "white" }}>{key}</Text>
+                  <Text style={{ color: "white" }}>{value}</Text>
+                </View>
+              );
+            };
+            if (object.type === "house") {
+              return (
+                <View
+                  style={{
+                    flexDirection: "row",
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    {keyValue(getText("cash"), `€${numberFormat(me?.cash)}`)}
+                    {keyValue(getText("bank"), `€${numberFormat(me?.bank)}`)}
+                    {keyValue(
+                      getText("gamepoints"),
+                      numberFormat(me?.gamepoints)
+                    )}
+                    {keyValue(getText("rank"), getRank(me?.rank, "both"))}
+                    {keyValue(
+                      getText("strength"),
+                      getStrength(me?.strength, "both")
+                    )}
+                  </View>
+
+                  <View style={{ flex: 1 }}>
+                    {keyValue(getText("health"), `${me?.health}%`)}
+                    {keyValue(getText("bullets"), numberFormat(me?.bullets))}
+                    {keyValue(getText("weed"), numberFormat(me?.wiet))}
+                    {keyValue(getText("junkies"), numberFormat(me?.junkies))}
+                    {keyValue(getText("prostitutes"), numberFormat(me?.hoeren))}
+                  </View>
+                </View>
+              );
+            }
+
+            if (object.type === "headquarter") {
+              return me?.gangId ? (
+                <View
+                  style={{
+                    flexDirection: "row",
+                  }}
+                >
+                  <View style={{ flex: 1 }}>
+                    {keyValue(getText("gang"), `${me?.gang?.name}`)}
+                    {keyValue(
+                      getText("bank"),
+                      `€${numberFormat(me?.gang?.bank)}`
+                    )}
+                    {keyValue(
+                      getText("bullets"),
+                      numberFormat(me?.gang?.bullets)
+                    )}
+                    {keyValue(getText("members"), `${me?.gang?.members}`)}
+                  </View>
+
+                  <View style={{ flex: 1 }}></View>
+                </View>
+              ) : null;
+            }
+
             const owner = city?.[`${object.type}Owner`];
             const damage = city?.[`${object.type}Damage`];
             const profit = city?.[`${object.type}Profit`];
@@ -342,6 +390,13 @@ const Overlay = React.memo(
           right: 0,
           padding: 5,
         }}
+        onLayout={({
+          nativeEvent: {
+            layout: { width, height },
+          },
+        }) => {
+          setHeaderHeight(height);
+        }}
       >
         <SafeAreaView
           style={{
@@ -352,8 +407,11 @@ const Overlay = React.memo(
             renderTerritoriesSwiper
           ) : view === "game" ? (
             renderPropertiesSwiper
-          ) : (
+          ) : view === "crimes" ? (
             <StatsHeader device={device} me={me} />
+          ) : null}
+          {!isSmallDevice && (
+            <Chat me={me} device={device} navigation={navigation} />
           )}
         </SafeAreaView>
       </View>
@@ -405,7 +463,7 @@ const Overlay = React.memo(
             <View
               style={{
                 position: "absolute",
-                top: 110,
+                top: headerHeight + 10,
                 right: 5,
               }}
             >
@@ -507,7 +565,12 @@ const Overlay = React.memo(
           />
 
           {navigation.state.routeName && (
-            <Modal view={view} navigation={navigation} setView={setView}>
+            <Modal
+              headerHeight={headerHeight}
+              view={view}
+              navigation={navigation}
+              setView={setView}
+            >
               <Screen navigation={navigation} screenProps={screenProps} />
             </Modal>
           )}
@@ -517,10 +580,16 @@ const Overlay = React.memo(
             setSelected={setSelected}
             navigation={navigation}
             setView={setView}
-            animateToCity={animateToCity}
+            map={map}
+            setZoom={setZoom}
+            city={city}
             dragAndDropMode={dragAndDropMode}
             setDragAndDropMode={setDragAndDropMode}
             level={me?.level}
+            chatBadgeCount={me?.chats}
+            territoriesBadgeCount={0}
+            crimesBadgeCount={0}
+            gameBadgeCount={0}
           />
 
           {/* 

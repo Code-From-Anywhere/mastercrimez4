@@ -32,6 +32,9 @@ const initDevice = {
     left: [0, 1, 2, 3, 4, 5, 6],
     right: [0, 1, 2, 3, 4, 5, 6],
   },
+  map: {
+    zoom: 12,
+  },
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
@@ -52,6 +55,10 @@ const deviceReducer = (state: Device = initDevice, action) => {
 
     case "SET_IS_CONNECTED": {
       return { ...state, isConnected: action.value };
+    }
+
+    case "SET_ZOOM": {
+      return { ...state, map: { ...state.map, zoom: action.value } };
     }
 
     case "SET_MENU_SHOWN": {

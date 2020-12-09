@@ -18,17 +18,17 @@ class Racecars extends Component {
 
     this.fetchGarage();
 
-    this.focusListener = navigation.addListener("didFocus", () => {
-      // The screen is focused
-      // Call any action
-      console.log("FETCH GARAGE");
-      this.fetchGarage();
-    });
+    // this.focusListener = navigation.addListener("didFocus", () => {
+    //   // The screen is focused
+    //   // Call any action
+    //   console.log("FETCH GARAGE");
+    //   this.fetchGarage();
+    // });
   }
 
   componentWillUnmount() {
     // Remove the event listener
-    this.focusListener.remove();
+    // this.focusListener.remove();
   }
 
   fetchGarage = () => {

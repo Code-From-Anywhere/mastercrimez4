@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 const MapIcon = React.memo(({ view }) => {
   return (
@@ -18,6 +18,25 @@ const MapIcon = React.memo(({ view }) => {
       onPress={view.onPress}
     >
       <view.icon name={view.iconName} color="white" size={30} />
+      {view.badgeCount > 0 && (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            backgroundColor: "red",
+            borderRadius: 10,
+            width: 20,
+            height: 20,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "white", fontWeight: "bold", fontSize: 10 }}>
+            {view.badgeCount}
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 });

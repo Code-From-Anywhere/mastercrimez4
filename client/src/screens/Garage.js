@@ -29,16 +29,16 @@ class Garage extends Component {
 
     this.fetchGroups();
 
-    this.focusListener = navigation.addListener("didFocus", () => {
-      // The screen is focused
-      // Call any action
-      this.fetchGroups();
-    });
+    // this.focusListener = navigation.addListener("didFocus", () => {
+    //   // The screen is focused
+    //   // Call any action
+    //   this.fetchGroups();
+    // });
   }
 
   componentWillUnmount() {
     // Remove the event listener
-    this.focusListener.remove();
+    // this.focusListener.remove();
   }
 
   fetchGroups = () => {

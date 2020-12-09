@@ -183,6 +183,32 @@ export const getPosition = (id, type) => {
 };
 
 export const getZoom = (delta) => Math.ceil(Math.log(360 / delta) / Math.LN2);
+
+export const animateToCity = ({ map, dispatch, city, delayZoom }) => {
+  if (Platform.OS === "web") {
+    const zoom = getZoom(city?.delta);
+    console.log("animateTocity", zoom);
+
+    const doZoom = () => dispatch({ type: "SET_ZOOM", value: zoom });
+
+    if (delayZoom) {
+      setTimeout(() => doZoom(), 2000);
+    } else {
+      doZoom();
+    }
+    map.panTo({
+      lat: city.latitude,
+      lng: city.longitude,
+    });
+  } else {
+    map.animateToRegion({
+      latitude: city.latitude,
+      longitude: city.longitude,
+      latitudeDelta: city.delta * 1.2,
+      longitudeDelta: city.delta * 1.2,
+    });
+  }
+};
 export const getObjectMeta = ({ object, index, city, cityAreas }) => {
   let latitude = city?.[`${object.type}Latitude`];
   let longitude = city?.[`${object.type}Longitude`];
