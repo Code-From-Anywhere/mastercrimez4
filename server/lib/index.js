@@ -2681,7 +2681,7 @@ server.get("/me", (req, res) => {
         userWithMessages.accomplices = accomplices;
         userWithMessages.position = position.amount + 1;
         userWithMessages.chats = chats.unread || 0;
-        user.gangMembers = gangMember;
+        user.gangMembers = gangMembers;
 
         res.json(userWithMessages);
       }
