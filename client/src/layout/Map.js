@@ -4,7 +4,7 @@ import {
   GroundOverlay,
   LoadScript,
   OverlayView,
-  Polygon,
+  Polygon
 } from "@react-google-maps/api";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
@@ -17,7 +17,7 @@ import {
   Text,
   TouchableOpacity,
   UIManager,
-  View,
+  View
 } from "react-native";
 import { useDispatch } from "react-redux";
 import T from "../components/T";
@@ -31,7 +31,7 @@ import {
   getZoom,
   objects,
   OBJECT_SIZE_FACTOR,
-  rgbs,
+  rgbs
 } from "./MapUtil";
 import Overlay from "./Overlay";
 const mapStyle = require("./mapStyle.json");
@@ -372,7 +372,7 @@ const Map = ({
   const territories = React.useMemo(
     () =>
       cityAreas.areas.map((area) => {
-        const connectedArea = areas?.find((x) => x.code === area.code);
+        const connectedArea = areas?.find((x) => x?.code === area?.code);
 
         return {
           ...area,

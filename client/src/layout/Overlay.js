@@ -120,7 +120,7 @@ const Overlay = ({
         </Text>
       </View>,
       ...cityAreas.areas.map((area, index) => {
-        const connectedArea = areas?.find((x) => x.code === area.code);
+        const connectedArea = areas?.find((x) => x?.code === area?.code);
 
         return (
           <View key={`page${index}`} style={{ height: 150, flex: 1 }}>

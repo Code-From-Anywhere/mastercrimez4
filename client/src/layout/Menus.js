@@ -814,7 +814,7 @@ export const renderMenu = ({
         : null;
   } else if (item.goToArea !== undefined) {
     const area = cityAreas.areas[item.goToArea];
-    const connectedArea = areas?.find((x) => x.code === area.code);
+    const connectedArea = areas?.find((x) => x?.code === area?.code);
 
     const isYours = connectedArea?.userId === me?.id;
     const isGang =
