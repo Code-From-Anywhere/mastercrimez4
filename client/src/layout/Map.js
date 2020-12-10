@@ -176,7 +176,7 @@ const GameObjects = React.memo(
     const owner = city?.[`${object.type}Owner`];
 
     const isYours = owner === myName;
-    const isGang = gangMembers.map((x) => x.name).includes(owner);
+    const isGang = gangMembers?.map((x) => x.name).includes(owner);
     const hasDamage = city?.[`${object.type}Damage`] > 0;
     const hasProfit = city?.[`${object.type}Profit`] > 0;
 

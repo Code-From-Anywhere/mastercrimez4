@@ -781,7 +781,7 @@ export const renderMenu = ({
   if (item.buildingType !== undefined) {
     const owner = city[`${item.buildingType}Owner`];
     const isYours = owner === me?.name;
-    const isGang = gangMembers.map((x) => x.name).includes(owner);
+    const isGang = gangMembers?.map((x) => x.name).includes(owner);
     const hasDamage = city[`${item.buildingType}Damage`] > 0;
     const hasProfit = city[`${item.buildingType}Profit`] > 0;
 
