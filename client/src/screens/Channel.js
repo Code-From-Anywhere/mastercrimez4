@@ -117,6 +117,9 @@ const ChatScreen = ({
   const [chat, setChat] = useState([]);
   const [response, setResponse] = useState(null);
 
+  if (!params?.id) {
+    return <T>No id given</T>;
+  }
   useEffect(() => {
     fetchChat();
 
@@ -127,7 +130,7 @@ const ChatScreen = ({
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [params.id]);
 
   const fetchChat = async () => {
     const url = `channelmessage?loginToken=${device.loginToken}&id=${params.id}`;

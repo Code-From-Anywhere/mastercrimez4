@@ -12,10 +12,10 @@ import {
 } from "react-native";
 import Accordion from "react-native-collapsible/Accordion";
 import CountDown from "react-native-countdown-component";
-import Hoverable from "../../components/Hoverable";
-import T from "../../components/T";
-import Constants from "../../Constants";
-import { getTextFunction, lighterHex } from "../../Util";
+import Hoverable from "../components/Hoverable";
+import T from "../components/T";
+import Constants from "../Constants";
+import { getTextFunction, lighterHex, post } from "../Util";
 import { getObjectMeta, getZoom, objects } from "./MapUtil";
 
 export const isHappyHour = () => {
@@ -75,7 +75,6 @@ export const leftMenu = (me, theme) => {
   );
 
   const crimeSeconds = Math.ceil((me?.crimeAt + 60000 - Date.now()) / 1000);
-  const bunkerSeconds = Math.ceil((me?.bunkerAt - Date.now()) / 1000);
 
   const attackSeconds = Math.ceil((me?.attackAt + 120000 - Date.now()) / 1000);
 
@@ -313,6 +312,20 @@ export const leftMenu = (me, theme) => {
                 timeLabels={{ m: null, s: null }}
               />
             ) : null,
+        },
+
+        {
+          view: "crimes",
+          inactive: me?.numActions < InactiveScreens.ACTIONS_BEFORE_STREETRACE,
+          isNew:
+            me?.numActions <
+            InactiveScreens.ACTIONS_BEFORE_STREETRACE +
+              InactiveScreens.ACTIONS_AMOUNT_NEW,
+
+          iconType: "Ionicons",
+          icon: "md-cash",
+          text: getText("menuStreetrace"),
+          to: "Streetrace",
         },
 
         me?.gangId && {
@@ -572,7 +585,7 @@ const adminMenu = (me) => {
   );
 };
 
-export const rightMenu = (me, theme, areas, channels) => {
+export const rightMenu = (me, theme, areas, channels, device) => {
   const getText = getTextFunction(me?.locale);
 
   const allAreasMenus = areas.map((area, index) => {
@@ -604,10 +617,14 @@ export const rightMenu = (me, theme, areas, channels) => {
       text: channelTitle,
       image: channelThumbnail,
       iconType: "Ionicons",
+      view: "chat",
       icon: "ios-person",
       badgeCount: item.unread,
       to: "Channel",
       params: { subid: item.id, id: item.channel.id },
+      onPress: () => {
+        post("setRead", { loginToken: device.loginToken, id: item.id });
+      },
     };
   });
 
@@ -813,6 +830,8 @@ export const renderMenu = ({
         ? "yellow"
         : isYours
         ? "blue"
+        : !owner
+        ? "lightblue"
         : hasDamage
         ? "red"
         : isGang
@@ -820,10 +839,10 @@ export const renderMenu = ({
         : null;
   } else if (item.goToArea !== undefined) {
     const area = cityAreas.areas[item.goToArea];
-    const isYours = area.userId === me?.id;
-    const isGang = area.gangId === me?.gangId;
-    const hasDamage = area.damage > 0;
-    const hasProfit = area.profit > 0;
+    const isYours = area?.userId === me?.id;
+    const isGang = area?.gangId === me?.gangId;
+    const hasDamage = area?.damage > 0;
+    const hasProfit = area?.profit > 0;
 
     specialColor =
       isYours && hasDamage
@@ -832,6 +851,8 @@ export const renderMenu = ({
         ? "yellow"
         : isYours
         ? "blue"
+        : !area?.userId
+        ? "lightblue"
         : hasDamage
         ? "red"
         : isGang
@@ -842,6 +863,9 @@ export const renderMenu = ({
     <TouchOrView
       key={`item${index}`}
       onPress={(e) => {
+        if (item.onPress) {
+          item.onPress();
+        }
         if (item.to) {
           navigation.resetTo(item.to, item.params);
 
@@ -1135,7 +1159,7 @@ const Menus = ({
       >
         <Accordion
           expandMultiple
-          sections={rightMenu(me, device.theme, areas, channels)}
+          sections={rightMenu(me, device.theme, areas, channels, device)}
           activeSections={rightActive}
           onChange={(active) => {
             setRightActive(active);

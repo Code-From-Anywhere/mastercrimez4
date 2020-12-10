@@ -2,8 +2,8 @@ import * as Icon from "@expo/vector-icons";
 import moment from "moment";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-import { AlertContext } from "../../components/AlertProvider";
-import { getTextFunction, lighterHex, post, withCaptcha } from "../../Util";
+import { AlertContext } from "../components/AlertProvider";
+import { getTextFunction, lighterHex, post, withCaptcha } from "../Util";
 import { InactiveScreens } from "./Menus";
 
 const ActionsBar = ({
@@ -348,7 +348,7 @@ const ActionsBar = ({
 
     headquarter: () => [
       {
-        text: getText("menuCreateGang"),
+        text: getText("menuGangCreate"),
         icon: Icon.Ionicons,
         iconName: "ios-people",
         onPress: () => navigation.resetTo("GangCreate"),
@@ -555,12 +555,12 @@ const ActionsBar = ({
             });
 
             setLoading(false);
-
-            reloadAreas(me?.city);
-            reloadMe(device.loginToken);
             alertAlert(response, null, null, {
               key: "takeEmptyAreaResponse",
             });
+
+            reloadAreas(me?.city);
+            reloadMe(device.loginToken);
           },
           icon: Icon.MaterialCommunityIcons,
           iconName: "account-arrow-left",

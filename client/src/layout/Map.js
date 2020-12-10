@@ -6,14 +6,10 @@ import {
   OverlayView,
   Polygon,
 } from "@react-google-maps/api";
-import * as ExpoNotifications from "expo-notifications";
-import * as StoreReview from "expo-store-review";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
-import { Helmet } from "react-helmet";
 import {
   Animated,
-  AppState,
   Dimensions,
   LayoutAnimation,
   Platform,
@@ -24,10 +20,9 @@ import {
   View,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { IntervalContext } from "../../components/IntervalProvider";
-import LoginModal from "../../components/LoginModal";
-import T from "../../components/T";
-import { doOnce, getTextFunction, post } from "../../Util";
+import T from "../components/T";
+import { doOnce, post } from "../Util";
+import Logic from "./Logic";
 import {
   animateToCity,
   API_KEY,
@@ -39,11 +34,10 @@ import {
   rgbs,
 } from "./MapUtil";
 import Overlay from "./Overlay";
-
 const mapStyle = require("./mapStyle.json");
 const mapStyleNight = require("./mapStyleNight.json");
 
-const citiesAreas = require("../../../assets/map/cities.json");
+const citiesAreas = require("../../assets/map/cities.json");
 
 if (Platform.OS === "android") {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -56,99 +50,6 @@ const containerStyle = {
   height: "100%",
 };
 
-const Logic = ({
-  children,
-  screenProps,
-  navigation,
-  screenProps: { device, dispatch, me, reloadMe },
-}) => {
-  const { resetIntervalsForToken } = React.useContext(IntervalContext);
-  const getText = getTextFunction(me?.locale);
-
-  doOnce(() => {
-    let token = device.loginToken;
-
-    if (!token || token.length < 64) {
-      token = makeid(64);
-      dispatch({ type: "SET_LOGIN_TOKEN", value: token });
-
-      resetIntervalsForToken(token);
-      reloadMe(token);
-    } else {
-      reloadMe(token);
-    }
-  });
-
-  useEffect(() => {
-    reloadMe(device.loginToken);
-  }, [device.logged]);
-
-  const _handleNotificationResponse = ({
-    notification: {
-      request: {
-        content: { data },
-      },
-    },
-  }) => {
-    //TODO: Fix dat hij naar chat redirect
-    // navigation.navigate("Channels", { id: data.body.id });
-  };
-
-  const handleChange = (nextAppState) => {
-    if (nextAppState === "active") {
-      // somehow this doesn't work properly
-      // screenProps.reloadMe(screenProps.device.loginToken);
-
-      dispatch({ type: "INCREASE_FOREGROUNDED" });
-
-      if (device.foregrounded > 3) {
-        StoreReview.isAvailableAsync().then((available) => {
-          // console.log("avaiable", available);
-          if (available) {
-            StoreReview.requestReview();
-          }
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    ExpoNotifications.addNotificationResponseReceivedListener(
-      _handleNotificationResponse
-    );
-  }, []);
-
-  useEffect(() => {
-    AppState.addEventListener("change", handleChange);
-
-    return () => {
-      AppState.removeEventListener("change", handleChange);
-    };
-  }, []);
-
-  const renderForWeb = () => (
-    <Helmet>
-      <title>MasterCrimeZ - The Ultimate Game</title>
-      <meta name="description" content={getText("metaDescription")} />
-
-      <meta property="og:url" content="https://mastercrimez.com/" />
-      <meta property="og:type" content="article" />
-      <meta property="og:title" content={getText("metaOgTitle")} />
-      <meta property="og:description" content={getText("metaOgDescription")} />
-      <meta property="og:image" content="" />
-    </Helmet>
-  );
-  return (
-    <View style={{ flex: 1 }}>
-      {Platform.OS === "web" && renderForWeb()}
-      {children}
-
-      {!device.logged && (
-        <LoginModal navigation={navigation} screenProps={screenProps} />
-      )}
-    </View>
-  );
-};
 const ReactMap = ({ zoom, map, setMap, children, setMapReady }) => {
   const dispatch = useDispatch();
   const onLoad = React.useCallback(function callback(map) {
@@ -283,6 +184,8 @@ const GameObjects = React.memo(
       ? "rgba(255,255,0,0.5)"
       : isYours
       ? "rgba(0,0,255,0.5)"
+      : !owner
+      ? "rgba(172,216,230,0.5)"
       : hasDamage
       ? "rgba(255,0,0,0.5)"
       : isGang
@@ -572,7 +475,7 @@ const Map = ({
       area.centerLongitude + area.longitudeDelta / 2
     );
 
-    const onPress = () => navigation.navigate(icon.to);
+    const onPress = () => navigation.resetTo(icon.to);
 
     const theIcon = icon.icon;
 
@@ -701,7 +604,10 @@ const Map = ({
       <>
         {shouldRenderTerritories && renderTerritories}
         {/* NB: areas.length moet geladen zijn voor renderGame, anders rendert hij de teritoriums over de game heen */}
-        {(view === "stats" || view === "more" || view === "game") &&
+        {(view === "stats" ||
+          view === "more" ||
+          view === "game" ||
+          view === "chat") &&
           areas.length > 0 &&
           renderGame}
 

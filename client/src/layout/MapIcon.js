@@ -16,6 +16,7 @@ const MapIcon = React.memo(({ view }) => {
         alignItems: "center",
       }}
       onPress={view.onPress}
+      onLongPress={view.onLongPress}
     >
       <view.icon name={view.iconName} color="white" size={30} />
       {view.badgeCount > 0 && (

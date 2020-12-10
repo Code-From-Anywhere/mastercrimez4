@@ -1,9 +1,10 @@
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as Icon from "@expo/vector-icons";
 import React from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { useDispatch } from "react-redux";
 import MapIcon from "./MapIcon";
-import { animateToCity } from "./MapUtil";
+import { animateToCity, objects } from "./MapUtil";
 const BottomTabs = ({
   view,
   setSelected,
@@ -16,10 +17,43 @@ const BottomTabs = ({
   territoriesBadgeCount,
   crimesBadgeCount,
   gameBadgeCount,
+  getText,
   map,
   city,
 }) => {
+  const { showActionSheetWithOptions } = useActionSheet();
   const dispatch = useDispatch();
+
+  const openGameActionSheet = () => {
+    // Same interface as https://facebook.github.io/react-native/docs/actionsheetios.html
+
+    const options = objects.map((o) => getText(o.type));
+
+    options.push(getText("cancel"));
+    const destructiveButtonIndex = undefined;
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        destructiveButtonIndex,
+      },
+      (buttonIndex) => {
+        if (buttonIndex < options.length - 1) {
+          const type = objects[buttonIndex].type;
+          const to = objects[buttonIndex].to;
+          if (to) {
+            navigation.resetTo(to);
+          }
+          setSelected(type);
+          setView("game");
+        }
+        // Do something here depending on the button index selected
+      }
+    );
+  };
+
   return (
     <View
       pointerEvents="box-none"
@@ -39,6 +73,7 @@ const BottomTabs = ({
           icon: Icon.MaterialCommunityIcons,
           iconName: "factory",
           isActive: view === "game",
+          onLongPress: Platform.OS === "web" ? undefined : openGameActionSheet,
           onPress: () => {
             setSelected(null);
             navigation.popToTop();

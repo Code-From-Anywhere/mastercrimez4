@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Linking, Platform } from "react-native";
-import { doOnce } from "../../Util";
+import { doOnce } from "../Util";
 import Map from "./Map";
 import { screens } from "./Screen";
 

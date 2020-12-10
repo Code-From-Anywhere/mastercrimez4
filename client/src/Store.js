@@ -35,6 +35,7 @@ const initDevice = {
   map: {
     zoom: 12,
   },
+  showNotificatonsHeader: false,
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
@@ -43,6 +44,9 @@ const deviceReducer = (state: Device = initDevice, action) => {
       return initDevice;
     }
 
+    case "SET_SHOW_NOTIFICATIONS_HEADER": {
+      return { ...state, showNotificatonsHeader: action.value };
+    }
     case "MENU_SET_RIGHT_ACTIVE_SECTIONS": {
       return { ...state, menu: { left: state.menu.left, right: action.value } };
     }
