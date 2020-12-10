@@ -86,6 +86,7 @@ import Police from "./screens/Police";
 import Privacy from "./screens/Privacy";
 import Prizes from "./screens/Prizes";
 import Profile from "./screens/Profile";
+import Properties from "./screens/Properties";
 import ProtectionShop from "./screens/ProtectionShop";
 import Racecars from "./screens/Racecars";
 import RecoverPassword from "./screens/RecoverPassword";
@@ -154,6 +155,7 @@ const routes = {
   GangMissions: withLayout(GangMissions),
   GangBulletFactory: withLayout(GangBulletFactory),
   AllBulletfactory: withLayout(AllBulletfactory),
+  Properties: withLayout(Properties),
 
   Robbery: withLayout(Robbery),
   CreateRobbery: withLayout(CreateRobbery),
