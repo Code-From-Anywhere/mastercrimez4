@@ -27,6 +27,16 @@ class ChatScreen extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.fetchChannelsubs();
+
+    this.interval = setInterval(() => this.fetchChannelsubs(), 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
   fetchChannelsubs = () => {
     const {
       screenProps: { device, reloadChannels },
