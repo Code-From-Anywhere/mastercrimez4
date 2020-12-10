@@ -24,7 +24,8 @@ const bomb = async (
     return res.json({ response: getText("noToken") });
   }
 
-  if (properties.map((x) => x.name).includes(type)) {
+  const props = properties.map((x) => x.name);
+  if (!props.includes(type)) {
     return res.json({ response: getText("invalidType") });
   }
 
