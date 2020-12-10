@@ -1,32 +1,20 @@
-const { getRank, getTextFunction, publicUserFields } = require("./util");
-const fetch = require("isomorphic-fetch");
+const {
+  getRank,
+  getTextFunction,
+  publicUserFields,
+  properties,
+} = require("./util");
 const { Sequelize, Op } = require("sequelize");
-
+const moment = require("moment");
 const cities = async (req, res, City) => {
   res.json({ cities: await City.findAll({ order: [["city", "asc"]] }) });
 };
+const releaseDate = moment("01/01/2021", "DD/MM/YYYY");
 
 let getText = getTextFunction();
-const buildings = [
-  "bulletFactory",
-  "casino",
-  "rld",
-  "landlord",
-  "junkies",
-  "weaponShop",
-  "airport",
-  "estateAgent",
-  "garage",
-  "jail",
-  "bank",
-  "gym",
-  "hospital",
-  "house",
-  "headquarter",
-  "market",
-  "stockExchange",
-];
-
+const buildings = properties
+  .map((p) => p.name)
+  .concat(["house", "headquarter"]);
 const areas = async (req, res, { City, MapArea, User, Gang }) => {
   let { city } = req.query;
   const cities = await City.findAll({});
@@ -106,6 +94,28 @@ const takeEmptyArea = async (req, res, { User, City, MapArea, Gang }) => {
 
   if (!user) {
     return res.json({ response: getText("invalidUser") });
+  }
+
+  if (!id) {
+    return res.json({ response: getText("invalidValues") });
+  }
+
+  const area = await MapArea.findOne({ where: { id } });
+  if (!area) {
+    return res.json({ response: getText("invalidValues") });
+  }
+
+  const city = await City.findOne({ where: { city: area.city } });
+  if (!city) {
+    return res.json({ response: getText("invalidValues") });
+  }
+
+  const releaseThisCity = moment(releaseDate).add(city.id, "weeks");
+
+  if (releaseThisCity.isAfter(moment())) {
+    return res.json({
+      response: getText("cityRelease", releaseThisCity.format("DD/MM/YYYY")),
+    });
   }
 
   getText = getTextFunction(user.locale);

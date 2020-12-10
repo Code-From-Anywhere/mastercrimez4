@@ -299,8 +299,7 @@ const _RootContainer = (props) => {
   // NB: we got screenProps here , but not navigation
   // if you also need navigation, use withLayout/Layout
 
-  const Container =
-    props.me?.level >= 2 && props.me?.newVersion ? NewContainer : OldContainer;
+  const Container = props.me?.newVersion ? NewContainer : OldContainer;
   return (
     <IntervalProvider screenProps={props}>
       <ActionSheetProvider>

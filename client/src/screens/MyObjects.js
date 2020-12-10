@@ -2,42 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import Button from "../components/Button";
 import T from "../components/T";
-import { doOnce, getTextFunction } from "../Util";
-const properties = [
-  {
-    name: "bulletFactory",
-  },
-  {
-    name: "casino",
-  },
-  {
-    name: "rld",
-  },
-  {
-    name: "landlord",
-  },
-  {
-    name: "junkies",
-  },
-  {
-    name: "weaponShop",
-  },
-  {
-    name: "airport",
-  },
-  {
-    name: "estateAgent",
-  },
-  {
-    name: "garage",
-  },
-  {
-    name: "jail",
-  },
-  {
-    name: "bank",
-  },
-];
+import { doOnce, getTextFunction, properties } from "../Util";
 
 const MyObjects = ({
   navigation,
@@ -49,20 +14,6 @@ const MyObjects = ({
   },
 }) => {
   const getText = getTextFunction(me?.locale);
-
-  const typeStrings = {
-    bulletFactory: getText("bulletFactory"),
-    casino: getText("casino"),
-    landlord: getText("landlord"),
-    junkies: getText("junkiesObject"),
-    weaponShop: getText("weaponShop"),
-    rld: getText("rld"),
-    airport: getText("airport"),
-    estateAgent: getText("estateAgent"),
-    bank: getText("bankObject"),
-    jail: getText("jail"),
-    garage: getText("garage"),
-  };
 
   doOnce(reloadCities);
 
@@ -90,7 +41,7 @@ const MyObjects = ({
         .map((property) => {
           return cities?.map((city, index) => {
             const ownerKey = `${property}Owner`;
-            const propertyString = typeStrings[property];
+            const propertyString = getText(property);
             if (propertyString === undefined) console.log(property);
             if (city[ownerKey] === me?.name && me?.name) {
               return (

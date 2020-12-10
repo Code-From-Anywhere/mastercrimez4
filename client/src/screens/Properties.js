@@ -2,36 +2,11 @@ import React from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Col, Grid } from "react-native-easy-grid";
 import T from "../components/T";
-import { doOnce, getTextFunction, numberFormat } from "../Util";
-
-const properties = [
-  { name: "bulletFactory" },
-  { name: "casino" },
-  { name: "rld" },
-  { name: "landlord" },
-  { name: "junkies" },
-  { name: "weaponShop" },
-  { name: "airport" },
-  { name: "estateAgent" },
-  { name: "garage" },
-  { name: "jail" },
-  { name: "bank" },
-  { name: "gym" },
-  { name: "hospital" },
-  { name: "market" },
-  { name: "stockExchange" },
-];
+import { doOnce, getTextFunction, numberFormat, properties } from "../Util";
 
 const Properties = ({
   navigation,
-  screenProps: {
-    device,
-    me,
-    cities,
-    reloadCities,
-    reloadMe,
-    device: { theme },
-  },
+  screenProps: { me, cities, reloadCities },
 }) => {
   const getText = getTextFunction(me?.locale);
 
@@ -76,17 +51,27 @@ const Properties = ({
           <View style={{ width: properties.length * 3 * 150 }}>
             <Grid style={gridStyle}>
               {properties.map((property, index) => {
-                return ["owner", "damage", "profit"].map((suffix) => {
-                  const field = `${getText(property.name)} ${getText(suffix)}`;
+                return ["owner", "damage", "profit", "price", "bullets"].map(
+                  (suffix) => {
+                    if (
+                      (suffix === "price" || suffix === "bullets") &&
+                      property.name !== "bulletFactory"
+                    ) {
+                      return;
+                    }
+                    const field = `${getText(property.name)} ${getText(
+                      suffix
+                    )}`;
 
-                  return (
-                    <Col size={1} key={`prop${index}${suffix}`}>
-                      <T bold numberOfLines={1}>
-                        {field}
-                      </T>
-                    </Col>
-                  );
-                });
+                    return (
+                      <Col size={1} key={`prop${index}${suffix}`}>
+                        <T bold numberOfLines={1}>
+                          {field}
+                        </T>
+                      </Col>
+                    );
+                  }
+                );
               })}
             </Grid>
 
@@ -94,8 +79,24 @@ const Properties = ({
               return (
                 <Grid style={gridStyle}>
                   {properties.map((property) => {
-                    return ["Owner", "Damage", "Profit"].map((fieldSuffix) => {
-                      const field = `${property.name}${fieldSuffix}`;
+                    return [
+                      "Owner",
+                      "Damage",
+                      "Profit",
+                      "Price",
+                      "bullets",
+                    ].map((fieldSuffix) => {
+                      if (
+                        (fieldSuffix === "Price" ||
+                          fieldSuffix === "bullets") &&
+                        property.name !== "bulletFactory"
+                      ) {
+                        return;
+                      }
+                      const field =
+                        fieldSuffix === "bullets"
+                          ? fieldSuffix
+                          : `${property.name}${fieldSuffix}`;
 
                       const formattedField =
                         fieldSuffix === "Owner" ? (
@@ -110,8 +111,11 @@ const Properties = ({
                           </TouchableOpacity>
                         ) : fieldSuffix === "Damage" ? (
                           <T>{city[field]}%</T>
-                        ) : (
+                        ) : fieldSuffix === "Profit" ||
+                          fieldSuffix === "Price" ? (
                           <T>€{numberFormat(city[field])},-</T>
+                        ) : (
+                          <T>{numberFormat(city[field])}</T>
                         );
                       return <Col>{formattedField}</Col>;
                     });

@@ -63,7 +63,7 @@
   "bank": "Zwitserse Bank",
   "jail": "Gevangenis",
   "garage": "Garage",
-
+  "noOwner": "Deze bezitting heeft geen eigenaar",
   "invalidNumber": "Dat is geen geldig aantal",
   "invalidType": "Ongeldig type",
   "waitForBomb": "Je moet nog $1 seconden wachten voor je weer kan bombarderen",
@@ -454,5 +454,6 @@
   "prostitutes": "Hoeren",
   "weedplants": "Wietplanten",
   "area": "Gebied",
-  "areaNotFound": "Gebied niet gevonden"
+  "areaNotFound": "Gebied niet gevonden",
+  "cityRelease": "Territoriums in deze stad worden $1 toegankelijk"
 }

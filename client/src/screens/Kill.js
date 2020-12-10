@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
 import Button from "../components/Button";
-import Footer from "../components/Footer";
 import Constants from "../Constants";
 import style from "../Style";
 import { getTextFunction } from "../Util";
@@ -104,8 +103,6 @@ class Kill extends Component {
 
           {this.renderForm()}
         </View>
-
-        <Footer screenProps={this.props.screenProps} />
       </ScrollView>
     );
   }

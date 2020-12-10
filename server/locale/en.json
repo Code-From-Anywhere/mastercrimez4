@@ -65,6 +65,7 @@
   "jail": "Jail",
   "garage": "Garage",
 
+  "noOwner": "This property has no owner",
   "invalidNumber": "That's no valid amount",
   "invalidType": "Invalid type",
   "waitForBomb": "You'll have to wait another $1 seconds before you can bomb again.",
@@ -466,5 +467,6 @@
   "prostitutes": "Prostitutes",
   "weedplants": "Weedplants",
   "area": "Area",
-  "areaNotFound": "Area not found"
+  "areaNotFound": "Area not found",
+  "cityRelease": "Territories in this city are available from $1"
 }

@@ -7,8 +7,14 @@ import Content from "../components/Content";
 import Gang from "../components/Gang";
 import T from "../components/T";
 import User from "../components/User";
-import { InactiveScreens } from "../Menus";
-import { doOnce, get, getRank, getStrength, getTextFunction } from "../Util";
+import {
+  doOnce,
+  get,
+  getRank,
+  getStrength,
+  getTextFunction,
+  InactiveScreens,
+} from "../Util";
 
 /**
  */

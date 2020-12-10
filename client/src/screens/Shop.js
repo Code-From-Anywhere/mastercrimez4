@@ -1,11 +1,9 @@
-import { Entypo } from "@expo/vector-icons";
 import React, { Component } from "react";
 import {
   ActivityIndicator,
   Dimensions,
   Image,
   ScrollView,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -73,126 +71,6 @@ class Shop extends Component {
     reloadMe(device.loginToken);
   };
 
-  renderCities = () => {
-    const {
-      device: { theme },
-      me,
-      cities,
-    } = this.props.screenProps;
-    const { navigation } = this.props;
-
-    const { type } = this.state;
-
-    const getText = getTextFunction(me?.locale);
-
-    const propertyKey =
-      type === "weapon"
-        ? "weaponShop"
-        : type === "protection"
-        ? "weaponShop"
-        : type === "airplane"
-        ? "airport"
-        : type === "home"
-        ? "estateAgent"
-        : "garage";
-
-    const ownerKey = `${propertyKey}Owner`;
-    const profitKey = `${propertyKey}Profit`;
-
-    const propertyString =
-      type === "weapon"
-        ? getText("weaponShop")
-        : type === "protection"
-        ? getText("weaponShop")
-        : type === "airplane"
-        ? getText("airport")
-        : type === "home"
-        ? getText("estateAgent")
-        : getText("garage");
-    return (
-      <View style={{ margin: 15 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 30,
-          }}
-        >
-          <View style={{ flex: 2 }}>
-            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              {getText("city")}
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 3,
-              justifyContent: "space-between",
-              flexDirection: "row",
-            }}
-          >
-            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              {propertyString}
-            </Text>
-            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              {getText("profit")}
-            </Text>
-          </View>
-        </View>
-        {cities?.map((city, index) => {
-          return (
-            <View
-              key={`i${index}`}
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingVertical: 10,
-                borderBottomWidth: 0.5,
-                borderBottomColor: "black",
-              }}
-            >
-              <View style={{ flex: 2 }}>
-                <T>{city.city}</T>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  flex: 3,
-                }}
-              >
-                <View style={{ flexDirection: "row" }}>
-                  {city[ownerKey] ? (
-                    <T>{city[ownerKey]}</T>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => this.becomeOwner(city.city)}
-                    >
-                      <T>{getText("nobody")}</T>
-                    </TouchableOpacity>
-                  )}
-                  {city[ownerKey] === me?.name ? (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("ManageObject", {
-                          type: propertyKey,
-                          city: city.city,
-                        })
-                      }
-                    >
-                      <Entypo name="edit" color={theme.primaryText} size={12} />
-                    </TouchableOpacity>
-                  ) : null}
-                </View>
-                <T>{city[profitKey]}</T>
-              </View>
-            </View>
-          );
-        })}
-      </View>
-    );
-  };
-
   renderMenu = (t, string, flex) => {
     const { response, type, buy } = this.state;
     const {
@@ -235,21 +113,27 @@ class Shop extends Component {
     const getText = getTextFunction(me?.locale);
     const locale = getLocale(me?.locale);
 
-    return (
-      <ScrollView>
-        {/* <View
+    const keyValue = (key, value) => {
+      return (
+        <View
           style={{
             flexDirection: "row",
-            justifyContent: "space-around",
-            height: 60,
+            justifyContent: "space-between",
+            paddingHorizontal: 20,
+            height: 40,
+            alignItems: "center",
           }}
         >
-          {this.renderMenu("weapon", getText("weapons"), 1)}
-          {this.renderMenu("protection", getText("protection"), 2)}
-          {this.renderMenu("airplane", getText("airplane"), 1)}
-          {this.renderMenu("home", getText("homeShop"), 1)}
-          {this.renderMenu("garage", getText("garage"), 1)}
-        </View> */}
+          <T>{key}</T>
+          <T>{value}</T>
+        </View>
+      );
+    };
+    return (
+      <ScrollView>
+        {keyValue(getText("cash"), `€${me?.cash}`)}
+        {keyValue(getText("bank"), `€${me?.bank}`)}
+        {keyValue(getText("swissBank"), `€${me?.swissBank}`)}
 
         {buy ? (
           <View>
@@ -327,7 +211,6 @@ class Shop extends Component {
                 />
               </View>
             ) : null}
-            {/* {this.renderCities()} */}
           </View>
         ) : (
           <ActivityIndicator />

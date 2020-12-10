@@ -4,26 +4,13 @@ const {
   NUM_ACTIONS_UNTIL_VERIFY,
   getTextFunction,
   sendChatPushMail,
+  properties,
 } = require("./util");
 const { Sequelize, Op } = require("sequelize");
 
 const { removeOffer } = require("./market");
 const { doGangMission } = require("./gang");
 let getText = getTextFunction();
-
-const properties = [
-  "bulletFactory",
-  "casino",
-  "rld",
-  "landlord",
-  "junkies",
-  "weaponShop",
-  "airport",
-  "estateAgent",
-  "garage",
-  "jail",
-  "bank",
-];
 
 const SECONDS = 120;
 
@@ -257,6 +244,7 @@ const kill = async (
     );
 
     properties
+      .map((p) => p.name)
       .map((p) => `${p}Owner`)
       .map(async (x) => {
         const [updated] = await City.update(
@@ -449,6 +437,7 @@ const kill = async (
     });
 
     properties
+      .map((p) => p.name)
       .map((p) => `${p}Owner`)
       .map(async (x) => {
         const [updated] = await City.update(

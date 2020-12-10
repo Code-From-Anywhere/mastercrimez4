@@ -1,5 +1,6 @@
 import ExpoConstants from "expo-constants";
 import * as ExpoNotifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
 import * as StoreReview from "expo-store-review";
 import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
@@ -87,7 +88,7 @@ const Logic = ({
 
         return;
       }
-      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      const token = (await ExpoNotifications.getExpoPushTokenAsync()).data;
       if (token !== me?.pushtoken) {
         post("updateProfile", {
           pushtoken: token,

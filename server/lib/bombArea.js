@@ -39,7 +39,7 @@ const bombArea = async (
   }
 
   if (user.bombAt + 60000 > Date.now()) {
-    const seconds = Math.round((user.bombAt + 300000 - Date.now()) / 1000);
+    const seconds = Math.round((user.bombAt + 60000 - Date.now()) / 1000);
     return res.json({
       response: getText("waitForBomb", seconds),
     });

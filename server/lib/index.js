@@ -27,6 +27,7 @@ const {
   getTextFunction,
   sendChatPushMail,
   saveImageIfValid,
+  properties,
 } = require("./util");
 
 var accountSid = process.env.TWILIO_SID; // Your Account SID from www.twilio.com/console
@@ -2572,12 +2573,21 @@ server.get("/me", (req, res) => {
           ),
         });
 
+        let gangMembers = [];
+        if (user.gangId) {
+          gangMembers = await User.findAll({
+            attributes: ["id", "name", "thumbnail"],
+            where: { gangId: user.gangId },
+          });
+        }
+
         const userWithMessages = user.dataValues;
         userWithMessages.accomplices = accomplices;
         userWithMessages.position = position.amount + 1;
         userWithMessages.chats = chats.unread || 0;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
+        userWithMessages.gangMembers = gangMembers;
 
         const rankNow = getRank(user.rank, "number");
         if (rankNow > user.rankKnow) {
@@ -2657,12 +2667,21 @@ server.get("/me", (req, res) => {
           ),
         });
 
+        let gangMembers = [];
+        if (user.gangId) {
+          gangMembers = await User.findAll({
+            attributes: ["id", "name", "thumbnail"],
+            where: { gangId: user.gangId },
+          });
+        }
+
         const userWithMessages = newuser.dataValues;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
         userWithMessages.accomplices = accomplices;
         userWithMessages.position = position.amount + 1;
         userWithMessages.chats = chats.unread || 0;
+        user.gangMembers = gangMember;
 
         res.json(userWithMessages);
       }
@@ -3064,22 +3083,9 @@ server.post("/updateName", async (req, res) => {
       { where: { loginToken } }
     );
 
-    const properties = [
-      "bulletFactory",
-      "casino",
-      "rld",
-      "landlord",
-      "junkies",
-      "weaponShop",
-      "airport",
-      "estateAgent",
-      "garage",
-      "jail",
-      "bank",
-    ];
-
     //properties
     properties
+      .map((p) => p.name)
       .map((p) => `${p}Owner`)
       .map(async (x) => {
         const [updated] = await City.update(

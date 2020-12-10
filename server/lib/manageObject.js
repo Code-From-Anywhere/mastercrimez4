@@ -1,60 +1,7 @@
 const { Op, Sequelize } = require("sequelize");
-const { getTextFunction, sendChatPushMail } = require("./util");
+const { getTextFunction, sendChatPushMail, properties } = require("./util");
 
 let getText = getTextFunction();
-let typeStrings = {
-  bulletFactory: "Kogelfabriek",
-  casino: "Casino",
-  landlord: "Coffeeshop",
-  junkies: "Leger des Heils",
-  weaponShop: "Wapenwinkel",
-  rld: "Sex shop",
-  airport: "Vliegveld",
-  estateAgent: "Makelaarskantoor",
-  bank: "Zwitserse Bank",
-  jail: "Gevangenis",
-  garage: "Garage",
-  gym: "Sportschool",
-};
-
-const properties = [
-  {
-    name: "bulletFactory",
-    changePrice: true,
-    maxPrice: 100,
-  },
-  {
-    name: "casino",
-  },
-  {
-    name: "rld",
-  },
-  {
-    name: "landlord",
-  },
-  {
-    name: "junkies",
-  },
-  {
-    name: "weaponShop",
-  },
-  {
-    name: "airport",
-  },
-  {
-    name: "estateAgent",
-  },
-  {
-    name: "garage",
-  },
-  {
-    name: "jail",
-  },
-  {
-    name: "bank",
-  },
-  { name: "gym" },
-];
 
 const becomeOwner = async (req, res, User, City) => {
   const { city, type, token } = req.body;
@@ -163,21 +110,7 @@ const giveAway = async (
     return res.json({ response: getText("objectCantGiveAway") });
   }
 
-  typeStrings = {
-    bulletFactory: getText("bulletFactory"),
-    casino: getText("casino"),
-    landlord: getText("landlord"),
-    junkies: getText("junkies"),
-    weaponShop: getText("weaponShop"),
-    rld: getText("rld"),
-    airport: getText("airport"),
-    estateAgent: getText("estateAgent"),
-    bank: getText("bank"),
-    jail: getText("jail"),
-    garage: getText("garage"),
-  };
-
-  const typeString = typeStrings[type];
+  const typeString = getText(type);
 
   const getUserText = getTextFunction(user2.locale);
 
@@ -328,20 +261,6 @@ const repairObject = async (req, res, sequelize, User, City, Action) => {
 
   getText = getTextFunction(user.locale);
 
-  typeStrings = {
-    bulletFactory: getText("bulletFactory"),
-    casino: getText("casino"),
-    landlord: getText("landlord"),
-    junkies: getText("junkies"),
-    weaponShop: getText("weaponShop"),
-    rld: getText("rld"),
-    airport: getText("airport"),
-    estateAgent: getText("estateAgent"),
-    bank: getText("bank"),
-    jail: getText("jail"),
-    garage: getText("garage"),
-  };
-
   const key = properties.map((p) => p.name).includes(type)
     ? `${type}Damage`
     : null;
@@ -376,7 +295,7 @@ const repairObject = async (req, res, sequelize, User, City, Action) => {
     timestamp: Date.now(),
   });
 
-  res.json({ response: getText("objectRepairSuccess", typeStrings[type]) });
+  res.json({ response: getText("objectRepairSuccess", getText(type)) });
 };
 
 const putInJail = async (

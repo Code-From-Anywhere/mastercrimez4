@@ -232,8 +232,7 @@ function makeid(length) {
 const Layout = ({ screenProps, navigation, children }) => {
   const { me, device, dispatch, reloadMe } = screenProps;
 
-  const useNewContainer =
-    Platform.OS !== "web" && me?.level >= 2 && me?.newVersion;
+  const useNewContainer = me?.newVersion;
 
   const window = Dimensions.get("window");
   const isSmallDevice = window.width < 800;

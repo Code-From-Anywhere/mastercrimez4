@@ -1,6 +1,5 @@
-import { Entypo } from "@expo/vector-icons";
 import React, { Component } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, View } from "react-native";
 import CountDown from "react-native-countdown-component";
 import Button from "../components/Button";
 import T from "../components/T";
@@ -98,106 +97,6 @@ class Jail extends Component {
     reloadMe(device.loginToken);
   };
 
-  renderCities = () => {
-    const {
-      device: { theme },
-      me,
-      cities,
-    } = this.props.screenProps;
-    const { navigation } = this.props;
-
-    const getText = getTextFunction(me?.locale);
-
-    return (
-      <>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 30,
-            marginHorizontal: 15,
-          }}
-        >
-          <View style={{ flex: 2 }}>
-            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              {getText("city")}
-            </Text>
-          </View>
-          <View
-            style={{
-              flex: 3,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              {getText("jail")}
-            </Text>
-            <Text style={{ fontWeight: "bold", color: theme.primaryText }}>
-              {getText("profit")}
-            </Text>
-          </View>
-        </View>
-        {cities?.map((city, index) => {
-          return (
-            <View
-              key={`i${index}`}
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                borderBottomWidth: 0.5,
-                borderBottomColor: "black",
-              }}
-            >
-              <View style={{ flex: 2 }}>
-                <Text style={{ color: theme.primaryText }}>{city.city}</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  flex: 3,
-                }}
-              >
-                <View style={{ flexDirection: "row" }}>
-                  {city.jailOwner ? (
-                    <Text style={{ color: theme.primaryText }}>
-                      {city.jailOwner}
-                    </Text>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => this.becomeOwner(city.city)}
-                    >
-                      <T>{getText("nobody")}</T>
-                    </TouchableOpacity>
-                  )}
-                  {city.jailOwner === me?.name ? (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("ManageObject", {
-                          type: "jail",
-                          city: city.city,
-                        })
-                      }
-                    >
-                      <Entypo name="edit" color={theme.primaryText} size={12} />
-                    </TouchableOpacity>
-                  ) : null}
-                </View>
-
-                <Text style={{ color: theme.primaryText }}>
-                  {city.jailProfit}
-                </Text>
-              </View>
-            </View>
-          );
-        })}
-      </>
-    );
-  };
   render() {
     const {
       navigation,
@@ -212,7 +111,6 @@ class Jail extends Component {
           data={this.state.jail}
           renderItem={this.renderItem}
           ListHeaderComponent={this.renderHeader}
-          ListFooterComponent={this.renderCities}
           ListEmptyComponent={<T>{getText("jailEmpty")}</T>}
         />
       </View>

@@ -3,8 +3,13 @@ import moment from "moment";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { AlertContext } from "../components/AlertProvider";
-import { getTextFunction, lighterHex, post, withCaptcha } from "../Util";
-import { InactiveScreens } from "./Menus";
+import {
+  getTextFunction,
+  InactiveScreens,
+  lighterHex,
+  post,
+  withCaptcha,
+} from "../Util";
 
 const ActionsBar = ({
   selected,
@@ -144,6 +149,9 @@ const ActionsBar = ({
         badgeAmount: 0,
       },
       {
+        inactive:
+          me?.level < 2 &&
+          InactiveScreens.LOTTO_RELEASE_DATE.isBefore(moment()),
         text: getText("lotto"),
         onPress: () => navigation.resetTo("Lotto"),
         isSelected: navigation.state.routeName === "Lotto",
@@ -481,6 +489,9 @@ const ActionsBar = ({
         iconName: "handshake-o",
         onPress: () => navigation.resetTo("Market"),
         isSelected: navigation.state.routeName === "Market",
+        inactive:
+          me?.level < 2 &&
+          InactiveScreens.MARKET_RELEASE_DATE.isBefore(moment()),
 
         badgeAmount: 0,
       },
@@ -535,6 +546,9 @@ const ActionsBar = ({
         iconName: "area-graph",
         onPress: () => navigation.resetTo("StockExchange"),
         isSelected: navigation.state.routeName === "StockExchange",
+        inactive:
+          me?.level < 2 &&
+          InactiveScreens.STOCK_MARKET_RELEASE_DATE.isBefore(moment()),
 
         badgeAmount: 0,
       },
@@ -605,7 +619,7 @@ const ActionsBar = ({
                         const { response } = await post("bombArea", {
                           loginToken: device.loginToken,
                           bombs,
-                          id: connectedArea?.id,
+                          areaId: selectedArea?.id,
                           captcha,
                         });
                         setLoading(false);
@@ -613,7 +627,7 @@ const ActionsBar = ({
                         alertAlert(response, null, null, {
                           key: "bombAreaResponse",
                         });
-                        reloadCities();
+                        reloadAreas(me?.city);
                       }
                     );
                   },
@@ -636,7 +650,7 @@ const ActionsBar = ({
           onPress: async () => {
             setLoading(true);
             const { response } = await post("repairMyArea", {
-              token: device.loginToken,
+              loginToken: device.loginToken,
               id: selectedArea?.id,
             });
             setLoading(false);

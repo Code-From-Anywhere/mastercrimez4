@@ -11,7 +11,6 @@ import {
   View,
 } from "react-native";
 import Button from "../components/Button";
-import Footer from "../components/Footer";
 import T from "../components/T";
 import { doOnce, get, getTextFunction, post } from "../Util";
 
@@ -165,7 +164,6 @@ const Oc = ({
         contentContainerStyle={{
           height: Platform.OS === "web" ? height - 200 : undefined,
         }}
-        ListFooterComponent={() => <Footer screenProps={screenProps} />}
         refreshControl={
           <RefreshControl
             refreshing={loading}

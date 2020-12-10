@@ -1,7 +1,6 @@
 // import { ReCaptcha } from "react-recaptcha-v3";
-import { Entypo } from "@expo/vector-icons";
 import React, { Component } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
 import T from "../components/T";
@@ -76,8 +75,6 @@ class Junkies extends Component {
           title={getText("trainJunkies")}
           onPress={this.submit}
         />
-
-        {this.renderCities()}
       </View>
     );
   };
@@ -107,96 +104,6 @@ class Junkies extends Component {
     });
     reloadCities();
     reloadMe(device.loginToken);
-  };
-
-  renderCities = () => {
-    const {
-      device: { theme },
-      me,
-      cities,
-    } = this.props.screenProps;
-    const { navigation } = this.props;
-
-    const getText = getTextFunction(me?.locale);
-
-    return (
-      <>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 30,
-          }}
-        >
-          <View style={{ flex: 2 }}>
-            <T bold>{getText("city")}</T>
-          </View>
-          <View
-            style={{
-              flex: 3,
-              justifyContent: "space-between",
-              flexDirection: "row",
-            }}
-          >
-            <T bold>{getText("junkiesObject")}</T>
-            <T bold>{getText("profit")}</T>
-          </View>
-        </View>
-        {cities?.map((city, index) => {
-          return (
-            <View
-              key={`i${index}`}
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                paddingVertical: 10,
-                borderBottomWidth: 0.5,
-                borderBottomColor: "black",
-              }}
-            >
-              <View style={{ flex: 2 }}>
-                <T>{city.city}</T>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  flex: 3,
-                }}
-              >
-                <View style={{ flexDirection: "row" }}>
-                  {city.junkiesOwner ? (
-                    <T>{city.junkiesOwner}</T>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => this.becomeOwner(city.city)}
-                    >
-                      <T>{getText("nobody")}</T>
-                    </TouchableOpacity>
-                  )}
-                  {city.junkiesOwner === me?.name ? (
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("ManageObject", {
-                          type: "junkies",
-                          city: city.city,
-                        })
-                      }
-                    >
-                      <Entypo name="edit" color={theme.primaryText} size={12} />
-                    </TouchableOpacity>
-                  ) : null}
-                </View>
-                <View>
-                  <T>{city.junkiesProfit}</T>
-                </View>
-              </View>
-            </View>
-          );
-        })}
-      </>
-    );
   };
 
   render() {

@@ -85,13 +85,15 @@ const ReactMap = ({ zoom, map, setMap, children, setMapReady }) => {
 };
 
 const Territories = React.memo(
-  ({ territories, MapsComponent, onPress, opacity }) => {
+  ({ territories, MapsComponent, onPress, opacity, selectedAreaIndex }) => {
     return territories.map(({ area, userId, gangId }, index) => {
       const number = gangId ? gangId : userId ? userId : 0;
       const rgb = !number ? "255,255,255" : rgbs[number % (rgbs.length - 1)];
       const key = `polygon${index}`;
       const onClick = () => onPress(index);
-      const fillColor = `rgba(${rgb},${opacity})`;
+      const realOpacity = index === selectedAreaIndex ? 0.4 : opacity;
+
+      const fillColor = `rgba(${rgb},${realOpacity})`;
       return Platform.OS === "web" ? (
         <Polygon
           key={key}
@@ -124,9 +126,12 @@ const GameObjects = React.memo(
     reloadCities,
     cityAreas,
     level,
+    gangMembers,
     myName,
     device,
-    propertiesSwiperRefContainer,
+    junkiesIncomeAt,
+    landlordIncomeAt,
+    rldIncomeAt,
   }) => {
     // console.log("RENDER GAME OBJECT", index);
 
@@ -169,23 +174,34 @@ const GameObjects = React.memo(
       isSelected ? setSelected(null) : setSelected(object.type);
     };
     const owner = city?.[`${object.type}Owner`];
-    const gangMembers = [];
 
     const isYours = owner === myName;
-    const isGang = gangMembers.includes(owner);
+    const isGang = gangMembers.map((x) => x.name).includes(owner);
     const hasDamage = city?.[`${object.type}Damage`] > 0;
     const hasProfit = city?.[`${object.type}Profit`] > 0;
+
+    const incomeJunkies =
+      object.type === "junkies" &&
+      Math.floor((Date.now() - junkiesIncomeAt) / 3600000) > 0;
+    const incomeLandlord =
+      object.type === "landlord" &&
+      Math.floor((Date.now() - landlordIncomeAt) / 3600000) > 0;
+    const incomeRLD =
+      object.type === "rld" &&
+      Math.floor((Date.now() - rldIncomeAt) / 3600000) > 0;
+
+    const incomeToGet = incomeJunkies || incomeRLD || incomeLandlord;
 
     const specialColor = isSelected
       ? "rgba(0,0,0,0.5)"
       : isYours && hasDamage
       ? "rgba(139,0,0,0.5)"
-      : isYours && hasProfit
+      : (isYours && hasProfit) || incomeToGet
       ? "rgba(255,255,0,0.5)"
       : isYours
       ? "rgba(0,0,255,0.5)"
-      : !owner
-      ? "rgba(172,216,230,0.5)"
+      : !owner && object.type !== "house" && object.type !== "headquarter"
+      ? "rgba(172,216,230,0.5)" //lightblue
       : hasDamage
       ? "rgba(255,0,0,0.5)"
       : isGang
@@ -522,6 +538,7 @@ const Map = ({
 
         return (
           <GameObjects
+            gangMembers={me?.gangMembers}
             key={`game${object.type}`}
             MapsComponent={NativeMapsComponent}
             city={city}
@@ -535,6 +552,9 @@ const Map = ({
             level={me?.level}
             device={device}
             myName={me?.name}
+            junkiesIncomeAt={me?.junkiesIncomeAt}
+            landlordIncomeAt={me?.landlordIncomeAt}
+            rldIncomeAt={me?.rldIncomeAt}
           />
         );
       }),
@@ -553,7 +573,7 @@ const Map = ({
   const renderTerritories = React.useMemo(() => {
     return (
       <Territories
-        opacity={view === "territories" ? 0.4 : 0.2}
+        opacity={view === "territories" ? 0.8 : 0.2}
         onPress={
           view === "territories"
             ? (index) => {
@@ -562,11 +582,12 @@ const Map = ({
               }
             : () => null
         }
+        selectedAreaIndex={selectedAreaIndex}
         territories={territories}
         MapsComponent={NativeMapsComponent}
       />
     );
-  }, [view, territories]);
+  }, [view, territories, selectedAreaIndex]);
 
   const renderCrimes = icons
     .map(iconToMapIcon)

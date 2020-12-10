@@ -17,7 +17,6 @@ import {
 import CountDown from "react-native-countdown-component";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
-import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
 import { getTextFunction } from "../Util";
@@ -141,8 +140,6 @@ class StealCar extends Component {
           action="stealcar"
           verifyCallback={(token) => this.setState({ captcha: token })}
         /> */}
-
-        <Footer screenProps={screenProps} />
       </View>
     );
   };

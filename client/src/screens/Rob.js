@@ -8,7 +8,6 @@ import {
 } from "react-native";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
-import Footer from "../components/Footer";
 import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
@@ -124,8 +123,6 @@ class Bank extends Component {
             <T>{getText("searchPeopleWithMuchMoney")}</T>
           </TouchableOpacity>
         </View>
-
-        <Footer screenProps={this.props.screenProps} />
       </ScrollView>
     );
   }

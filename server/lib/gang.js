@@ -8,6 +8,7 @@ const {
   ranks,
   strengthRanks,
   getStrength,
+  properties,
 } = require("./util");
 const moment = require("moment");
 let getText = getTextFunction();
@@ -1306,41 +1307,6 @@ const gangAchievements = async (
     return res.json({ response: getText("notEnoughMembers") });
   }
   const cities = await City.findAll({});
-  const properties = [
-    {
-      name: "bulletFactory",
-    },
-    {
-      name: "casino",
-    },
-    {
-      name: "rld",
-    },
-    {
-      name: "landlord",
-    },
-    {
-      name: "junkies",
-    },
-    {
-      name: "weaponShop",
-    },
-    {
-      name: "airport",
-    },
-    {
-      name: "estateAgent",
-    },
-    {
-      name: "garage",
-    },
-    {
-      name: "jail",
-    },
-    {
-      name: "bank",
-    },
-  ];
 
   let propertiesAmount = 0;
 

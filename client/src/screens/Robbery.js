@@ -11,7 +11,6 @@ import {
   View,
 } from "react-native";
 import Button from "../components/Button";
-import Footer from "../components/Footer";
 import T from "../components/T";
 import User from "../components/User";
 import { doOnce, get, getTextFunction, post } from "../Util";
@@ -174,7 +173,6 @@ const Robbery = ({
         contentContainerStyle={{
           height: Platform.OS === "web" ? height - 200 : undefined,
         }}
-        ListFooterComponent={() => <Footer screenProps={screenProps} />}
         refreshControl={
           <RefreshControl
             refreshing={loading}

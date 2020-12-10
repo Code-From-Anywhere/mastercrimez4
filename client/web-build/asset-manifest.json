@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/static/js/app.10cb9aa9.chunk.js",
-    "app.js.map": "/static/js/app.10cb9aa9.chunk.js.map",
+    "app.js": "/static/js/app.ce75e584.chunk.js",
+    "app.js.map": "/static/js/app.ce75e584.chunk.js.map",
     "runtime~app.js": "/static/js/runtime~app.2e9f1821.js",
     "runtime~app.js.map": "/static/js/runtime~app.2e9f1821.js.map",
-    "static/js/2.f068f91b.chunk.js": "/static/js/2.f068f91b.chunk.js",
-    "static/js/2.f068f91b.chunk.js.map": "/static/js/2.f068f91b.chunk.js.map",
+    "static/js/2.b54dea3a.chunk.js": "/static/js/2.b54dea3a.chunk.js",
+    "static/js/2.b54dea3a.chunk.js.map": "/static/js/2.b54dea3a.chunk.js.map",
     "fonts/AntDesign.ttf": "/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/./fonts/Feather.ttf",
@@ -26,7 +26,7 @@
     "index.html": "/index.html",
     "manifest.json": "/manifest.json",
     "serve.json": "/serve.json",
-    "static/js/2.f068f91b.chunk.js.LICENSE.txt": "/static/js/2.f068f91b.chunk.js.LICENSE.txt",
+    "static/js/2.b54dea3a.chunk.js.LICENSE.txt": "/static/js/2.b54dea3a.chunk.js.LICENSE.txt",
     "static/media/airport.png": "/static/media/airport.72e68404.png",
     "static/media/bank.png": "/static/media/bank.94332498.png",
     "static/media/bank.jpg": "/static/media/bank.a34b0cd7.jpg",
@@ -53,7 +53,6 @@
     "static/media/hospital.png": "/static/media/hospital.77df0a1e.png",
     "static/media/house2.png": "/static/media/house2.a0265669.png",
     "static/media/icon.png": "/static/media/icon.d2180cfa.png",
-    "static/media/instagram.png": "/static/media/instagram.75e0546a.png",
     "static/media/item1.jpg": "/static/media/item1.a5e891d8.jpg",
     "static/media/item10.jpg": "/static/media/item10.2cf60cef.jpg",
     "static/media/item11.jpg": "/static/media/item11.d162fbe5.jpg",
@@ -79,18 +78,16 @@
     "static/media/shootout.jpeg": "/static/media/shootout.f88bc10f.jpeg",
     "static/media/shop.png": "/static/media/shop.a9cce2eb.png",
     "static/media/snackbar.jpg": "/static/media/snackbar.a17d7683.jpg",
-    "static/media/spotify.png": "/static/media/spotify.d7c133b0.png",
     "static/media/supermarket.jpg": "/static/media/supermarket.1313f5be.jpg",
     "static/media/thief.jpg": "/static/media/thief.fa783e06.jpg",
     "static/media/uitgemoord.jpg": "/static/media/uitgemoord.89bc3b35.jpg",
     "static/media/weedgrower.jpg": "/static/media/weedgrower.0b8f1c24.jpg",
     "static/media/whatsapp.png": "/static/media/whatsapp.7c63448f.png",
-    "static/media/youtube.png": "/static/media/youtube.ada3efe7.png",
     "vercel.json": "/vercel.json"
   },
   "entrypoints": [
     "static/js/runtime~app.2e9f1821.js",
-    "static/js/2.f068f91b.chunk.js",
-    "static/js/app.10cb9aa9.chunk.js"
+    "static/js/2.b54dea3a.chunk.js",
+    "static/js/app.ce75e584.chunk.js"
   ]
 }

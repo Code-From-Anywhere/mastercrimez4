@@ -8,6 +8,24 @@ const SEND_EMAIL_NOTIFICATIONS_ON = false;
 
 const needCaptcha = () => Math.round(Math.random() * 50) === 1;
 
+const properties = [
+  { name: "bulletFactory", changePrice: true, maxPrice: 100 },
+  { name: "casino" },
+  { name: "rld" },
+  { name: "landlord" },
+  { name: "junkies" },
+  { name: "weaponShop" },
+  { name: "airport" },
+  { name: "estateAgent" },
+  { name: "garage" },
+  { name: "jail" },
+  { name: "bank" },
+  { name: "gym" },
+  { name: "hospital" },
+  { name: "market" },
+  { name: "stockExchange" },
+];
+
 const replaceAll = (string, search, replacement) =>
   string.split(search).join(replacement);
 
@@ -525,4 +543,5 @@ module.exports = {
   sendChatPushMail,
   publicUserFields,
   NUM_ACTIONS_UNTIL_VERIFY,
+  properties,
 };

@@ -21,20 +21,6 @@ const ManageObject = ({
 }) => {
   const getText = getTextFunction(me?.locale);
 
-  const typeStrings = {
-    bulletFactory: getText("bulletFactory"),
-    casino: getText("casino"),
-    landlord: getText("landlord"),
-    junkies: getText("junkiesObject"),
-    weaponShop: getText("weaponShop"),
-    rld: getText("rld"),
-    airport: getText("airport"),
-    estateAgent: getText("estateAgent"),
-    bank: getText("bankObject"),
-    jail: getText("jail"),
-    garage: getText("garage"),
-  };
-
   const city = params?.city;
   const type = params?.type;
 
@@ -111,7 +97,7 @@ const ManageObject = ({
     paddingVertical: 15,
   };
 
-  const typeString = typeStrings[type];
+  const typeString = getText(type);
 
   if (!typeString) {
     return <T>{getText("invalidType")}</T>;

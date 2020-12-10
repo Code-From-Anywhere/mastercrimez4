@@ -1,21 +1,12 @@
 const { Op, Sequelize } = require("sequelize");
-const { needCaptcha, sendChatPushMail, getTextFunction } = require("./util");
+const {
+  needCaptcha,
+  sendChatPushMail,
+  getTextFunction,
+  properties,
+} = require("./util");
 
 let getText = getTextFunction();
-
-let typeStrings = {
-  bulletFactory: "Kogelfabriek",
-  casino: "Casino",
-  landlord: "Coffeeshop",
-  junkies: "Leger des Heils",
-  weaponShop: "Wapenwinkel",
-  rld: "Sex shop",
-  airport: "Vliegveld",
-  estateAgent: "Makelaarskantoor",
-  bank: "Zwitserse Bank",
-  jail: "Gevangenis",
-  garage: "Garage",
-};
 
 const bomb = async (
   req,
@@ -33,7 +24,7 @@ const bomb = async (
     return res.json({ response: getText("noToken") });
   }
 
-  if (!Object.keys(typeStrings).includes(type)) {
+  if (properties.map((x) => x.name).includes(type)) {
     return res.json({ response: getText("invalidType") });
   }
 
@@ -44,19 +35,6 @@ const bomb = async (
 
   getText = getTextFunction(user.locale);
 
-  typeStrings = {
-    bulletFactory: getText("bulletFactory"),
-    casino: getText("casino"),
-    landlord: getText("landlord"),
-    junkies: getText("junkies"),
-    weaponShop: getText("weaponShop"),
-    rld: getText("rld"),
-    airport: getText("airport"),
-    estateAgent: getText("estateAgent"),
-    bank: getText("bank"),
-    jail: getText("jail"),
-    garage: getText("garage"),
-  };
   if (user.jailAt > Date.now()) {
     return res.json({ response: getText("youreInJail") });
   }
@@ -101,6 +79,12 @@ const bomb = async (
     return;
   }
 
+  if (!city[`${type}Owner`]) {
+    res.json({
+      response: getText("noOwner"),
+    });
+  }
+
   const stolenMoney = Math.round(
     city[`${type}Profit`] * Math.random() * (bombs / 100)
   );
@@ -140,8 +124,8 @@ const bomb = async (
   let extraText = "";
   let extraMessage = "";
   if (city[`${type}Damage`] + damage === 100) {
-    extraText = getText("bombExtraText", typeStrings[type]);
-    extraMessage = getText("bombExtraMessage", user.name, typeStrings[type]);
+    extraText = getText("bombExtraText", getText(type));
+    extraMessage = getText("bombExtraMessage", user.name, getText(type));
     City.update(
       {
         [`${type}Owner`]: user.name,
@@ -168,7 +152,7 @@ const bomb = async (
           "bombMessage",
           user.name,
           bombs,
-          typeStrings[type],
+          getUserText(type),
           city.city,
           damage,
           stolenMoney,
@@ -187,7 +171,7 @@ const bomb = async (
     response: getText(
       "bombSuccess",
       bombs,
-      typeStrings[type],
+      getText(type),
       city.city,
       city[`${type}Owner`],
       damage,

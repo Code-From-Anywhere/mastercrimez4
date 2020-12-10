@@ -15,7 +15,7 @@ import CountDown from "react-native-countdown-component";
 import Hoverable from "../components/Hoverable";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getTextFunction, lighterHex, post } from "../Util";
+import { getTextFunction, InactiveScreens, lighterHex, post } from "../Util";
 import { getObjectMeta, getZoom, objects } from "./MapUtil";
 
 export const isHappyHour = () => {
@@ -25,48 +25,6 @@ export const isHappyHour = () => {
     moment("01/02/2021", "DD/MM/YYYY").set("hour", 17)
   );
   return isHappyHourReleased && (isSunday || is7pm);
-};
-
-export const InactiveScreens = {
-  ACTIONS_BEFORE_ROBBERY: 120,
-  ACTIONS_BEFORE_DETECTIVES: 30,
-  ACTIONS_BEFORE_BOMB: 60,
-  ACTIONS_BEFORE_CASINO: 70,
-  ACTIONS_BEFORE_BUNKER: 20,
-  ACTIONS_BEFORE_HOSPITAL: 30,
-  ACTIONS_BEFORE_RACECARS: 80,
-  ACTIONS_BEFORE_STREETRACE: 80,
-  ACTIONS_AMOUNT_NEW: 10,
-  ACTIONS_BEFORE_ROB: 20,
-  ACTIONS_BEFORE_ROB_KILL_MENU: 20,
-  ACTIONS_BEFORE_KILL: 30,
-  ACTIONS_BEFORE_BULLETFACTORY: 40,
-  ACTIONS_BEFORE_MARKET: 50,
-  ACTIONS_BEFORE_AIRPORT: 30,
-  DAYS_NEW: 14,
-  ACTIONS_BEFORE_POLICE: 100,
-  OC_RELEASE_DATE: moment("01/08/2021", "DD/MM/YYYY").set("hours", 17),
-  DETECTIVES_RELEASE_DATE: moment("01/06/2021", "DD/MM/YYYY").set("hours", 17),
-  GANG_MISSIONS_RELEASE_DATE: moment("01/05/2021", "DD/MM/YYYY").set(
-    "hours",
-    17
-  ),
-  GANG_BULLET_FACTORY_RELEASE_DATE: moment("15/08/2021", "DD/MM/YYYY").set(
-    "hours",
-    17
-  ),
-  PRIZES_NORMAL_RELEASE_DATE: moment("01/12/2020", "DD/MM/YYYY").set(
-    "hours",
-    17
-  ),
-  GANG_RELEASE_DATE: moment("30/11/2020", "DD/MM/YYYY").set("hours", 17),
-  MARKET_RELEASE_DATE: moment("15/12/2020", "DD/MM/YYYY").set("hours", 17),
-  PRIZES_RELEASE_DATE: moment("01/01/2021", "DD/MM/YYYY").set("hours", 17),
-  POLICE_RELEASE_DATE: moment("15/01/2021", "DD/MM/YYYY").set("hours", 17),
-  ROBBERY_RELEASE_DATE: moment("15/06/2021", "DD/MM/YYYY").set("hours", 17),
-  //happy hour 1 feb
-
-  WORK_RELEASE_DATE: moment("15/04/2021", "DD/MM/YYYY").set("hours", 17),
 };
 
 export const leftMenu = (me, theme) => {
@@ -322,8 +280,8 @@ export const leftMenu = (me, theme) => {
             InactiveScreens.ACTIONS_BEFORE_STREETRACE +
               InactiveScreens.ACTIONS_AMOUNT_NEW,
 
-          iconType: "Ionicons",
-          icon: "md-cash",
+          iconType: "FontAwesome5",
+          icon: "car-crash",
           text: getText("menuStreetrace"),
           to: "Streetrace",
         },
@@ -541,6 +499,9 @@ export const leftMenu = (me, theme) => {
           view: "game",
           iconType: "Entypo",
           icon: "line-graph",
+          inactive:
+            me?.level < 2 &&
+            InactiveScreens.STOCK_MARKET_RELEASE_DATE.isBefore(moment()),
           text: getText("menuStockExchange"),
           buildingType: "stockExchange",
         },
@@ -806,6 +767,7 @@ export const renderMenu = ({
   setZoom,
   city,
   setView,
+  areas,
 }) => {
   const TheIcon = Icon[item.iconType];
 
@@ -814,7 +776,7 @@ export const renderMenu = ({
   const getText = getTextFunction(me?.locale);
 
   let specialColor = null;
-  const gangMembers = []; //should be an {name,id}[] of users in your gang
+  const gangMembers = me?.gangMembers; //should be an {name,id}[] of users in your gang
 
   if (item.buildingType !== undefined) {
     const owner = city[`${item.buildingType}Owner`];
@@ -823,14 +785,27 @@ export const renderMenu = ({
     const hasDamage = city[`${item.buildingType}Damage`] > 0;
     const hasProfit = city[`${item.buildingType}Profit`] > 0;
 
+    const incomeJunkies =
+      item.buildingType === "junkies" &&
+      Math.floor((Date.now() - me?.junkiesIncomeAt) / 3600000) > 0;
+    const incomeLandlord =
+      item.buildingType === "landlord" &&
+      Math.floor((Date.now() - me?.landlordIncomeAt) / 3600000) > 0;
+    const incomeRLD =
+      item.buildingType === "rld" &&
+      Math.floor((Date.now() - me?.rldIncomeAt) / 3600000) > 0;
+
+    const incomeToGet = incomeJunkies || incomeRLD || incomeLandlord;
     specialColor =
       isYours && hasDamage
         ? "darkred"
-        : isYours && hasProfit
+        : (isYours && hasProfit) || incomeToGet
         ? "yellow"
         : isYours
         ? "blue"
-        : !owner
+        : !owner &&
+          item.buildingType !== "house" &&
+          item.buildingType !== "headquarter"
         ? "lightblue"
         : hasDamage
         ? "red"
@@ -839,10 +814,14 @@ export const renderMenu = ({
         : null;
   } else if (item.goToArea !== undefined) {
     const area = cityAreas.areas[item.goToArea];
-    const isYours = area?.userId === me?.id;
-    const isGang = area?.gangId === me?.gangId;
-    const hasDamage = area?.damage > 0;
-    const hasProfit = area?.profit > 0;
+    const connectedArea = areas?.find((x) => x.code === area.code);
+
+    const isYours = connectedArea?.userId === me?.id;
+    const isGang =
+      connectedArea?.gangId === me?.gangId ||
+      connectedArea?.user?.gangId === me?.gangId;
+    const hasDamage = connectedArea?.damage > 0;
+    const hasProfit = connectedArea?.profit > 0;
 
     specialColor =
       isYours && hasDamage
@@ -851,7 +830,7 @@ export const renderMenu = ({
         ? "yellow"
         : isYours
         ? "blue"
-        : !area?.userId
+        : !connectedArea?.userId
         ? "lightblue"
         : hasDamage
         ? "red"
@@ -1122,6 +1101,7 @@ const Menus = ({
               setZoom,
               city,
               setView,
+              areas,
             })
           }
           renderContent={(section) =>
@@ -1140,6 +1120,7 @@ const Menus = ({
                 setZoom,
                 city,
                 setView,
+                areas,
               })
             )
           }
@@ -1182,6 +1163,7 @@ const Menus = ({
               setSelected,
               setZoom,
               city,
+              areas,
               setView,
             })
           }
@@ -1201,6 +1183,7 @@ const Menus = ({
                 setZoom,
                 city,
                 setView,
+                areas,
               })
             )
           }

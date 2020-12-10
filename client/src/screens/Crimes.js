@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
-import Footer from "../components/Footer";
 import ShareButtons from "../components/ShareButtons";
 import Constants from "../Constants";
 import { getTextFunction } from "../Util";
@@ -105,8 +104,6 @@ class Crimes extends Component {
           title={getText("steal")}
           onPress={this.submit}
         />
-
-        <Footer screenProps={this.props.screenProps} />
       </View>
     );
   };

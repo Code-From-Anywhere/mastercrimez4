@@ -210,7 +210,7 @@ const Overlay = ({
         key={territoriesSwiperKey}
         ref={territoriesSwiperRefContainer}
         style={{ flex: 1 }}
-        initialPage={selectedAreaIndex + 1}
+        from={selectedAreaIndex + 1}
         onIndexChanged={onTerritoriesIndexChanged}
       >
         {territoriesSwiperChildren}
@@ -356,7 +356,10 @@ const Overlay = ({
   );
   const keyValue = useMemo(() => Math.random().toString(), [swiper1Children]);
 
-  const selectedIndex = objects.findIndex((x) => x.type === selected);
+  const selectedIndex = useMemo(
+    () => objects.findIndex((x) => x.type === selected),
+    [swiper1Children]
+  );
   const renderPropertiesSwiper = (
     <View style={{ height: 100 }}>
       <Swiper
@@ -364,7 +367,7 @@ const Overlay = ({
         key={keyValue}
         ref={propertiesSwiperRefContainer}
         style={{ flex: 1 }}
-        initialPage={selectedIndex !== -1 ? selectedIndex + 1 : 0}
+        from={selectedIndex !== -1 ? selectedIndex + 1 : 0}
         onIndexChanged={(position) => {
           if (position === 0) {
             //should animate to whole city

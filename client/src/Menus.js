@@ -2,7 +2,12 @@ import moment from "moment";
 import React from "react";
 import CountDown from "react-native-countdown-component";
 import Constants from "./Constants";
-import { getRank, getTextFunction, numberFormat } from "./Util";
+import {
+  getRank,
+  getTextFunction,
+  InactiveScreens,
+  numberFormat,
+} from "./Util";
 
 export const isHappyHour = () => {
   const isSunday = moment().day() === 0; //sunday
@@ -11,48 +16,6 @@ export const isHappyHour = () => {
     moment("01/02/2021", "DD/MM/YYYY").set("hour", 17)
   );
   return isHappyHourReleased && (isSunday || is7pm);
-};
-
-export const InactiveScreens = {
-  ACTIONS_BEFORE_ROBBERY: 120,
-  ACTIONS_BEFORE_DETECTIVES: 30,
-  ACTIONS_BEFORE_BOMB: 60,
-  ACTIONS_BEFORE_CASINO: 70,
-  ACTIONS_BEFORE_BUNKER: 20,
-  ACTIONS_BEFORE_HOSPITAL: 30,
-  ACTIONS_BEFORE_RACECARS: 80,
-  ACTIONS_BEFORE_STREETRACE: 80,
-  ACTIONS_AMOUNT_NEW: 10,
-  ACTIONS_BEFORE_ROB: 20,
-  ACTIONS_BEFORE_ROB_KILL_MENU: 20,
-  ACTIONS_BEFORE_KILL: 30,
-  ACTIONS_BEFORE_BULLETFACTORY: 40,
-  ACTIONS_BEFORE_MARKET: 50,
-  ACTIONS_BEFORE_AIRPORT: 30,
-  DAYS_NEW: 14,
-  ACTIONS_BEFORE_POLICE: 100,
-  OC_RELEASE_DATE: moment("01/08/2021", "DD/MM/YYYY").set("hours", 17),
-  DETECTIVES_RELEASE_DATE: moment("01/06/2021", "DD/MM/YYYY").set("hours", 17),
-  GANG_MISSIONS_RELEASE_DATE: moment("01/05/2021", "DD/MM/YYYY").set(
-    "hours",
-    17
-  ),
-  GANG_BULLET_FACTORY_RELEASE_DATE: moment("15/08/2021", "DD/MM/YYYY").set(
-    "hours",
-    17
-  ),
-  PRIZES_NORMAL_RELEASE_DATE: moment("01/12/2020", "DD/MM/YYYY").set(
-    "hours",
-    17
-  ),
-  GANG_RELEASE_DATE: moment("30/11/2020", "DD/MM/YYYY").set("hours", 17),
-  MARKET_RELEASE_DATE: moment("15/12/2020", "DD/MM/YYYY").set("hours", 17),
-  PRIZES_RELEASE_DATE: moment("01/01/2021", "DD/MM/YYYY").set("hours", 17),
-  POLICE_RELEASE_DATE: moment("15/01/2021", "DD/MM/YYYY").set("hours", 17),
-  ROBBERY_RELEASE_DATE: moment("15/06/2021", "DD/MM/YYYY").set("hours", 17),
-  //happy hour 1 feb
-
-  WORK_RELEASE_DATE: moment("15/04/2021", "DD/MM/YYYY").set("hours", 17),
 };
 
 export const leftMenu = (me, theme) => {
@@ -812,6 +775,13 @@ export const rightMenu = (me, theme) => {
           icon: "star",
           text: getText("menuStatus"),
           to: "Status",
+        },
+
+        {
+          iconType: "AntDesign",
+          icon: "star",
+          text: getText("menuProperties"),
+          to: "Properties",
         },
       ],
     },
