@@ -665,5 +665,30 @@
   "bulletsText": "The price per bullet is €$1,-. There are $2 bullets available.",
   "fillInBombs": "Fill in the amount of bombs",
   "gangBullets": "Gang bullets",
-  "headerBuildings": "Buildings"
+  "headerBuildings": "Buildings",
+
+  "houseBuildingInfo": "This is your hosue. Here you can see your status and you can go into your bunker.",
+  "headquarterBuildingInfo": "This is your gang headquarter. Here you can do anything with your gang, if you have one.",
+  "bulletFactoryBuildingInfo": "This is the bulletfactory. Here you can buy bullets.",
+  "airportBuildingInfo": "Welcome to the airport. From here you can fly to other cities.",
+  "bankBuildingInfo": "Welcome to the bank. Here you can desposit money so you don't get robbed.",
+  "casinoBuildingInfo": "Welcome to the casino. Here you can gamble away!",
+  "landlordBuildingInfo": "You've just arrived at the coffeeshop. Here you can sell your weed.",
+  "junkiesBuildingInfo": "This is the salvation army. Here you can ask a bit of cash for your junkies.",
+  "garageBuildingInfo": "This is your garage. Here you can see, sell and upgrade your cars. The bigger your garage, the more cars will fit in there.",
+  "gymBuildingInfo": "This is the gym. Here you can train so you get better in attacking and robbing other players.",
+  "hospitalBuildingInfo": "This is the hospital. Here you can heal yourself and others.",
+  "jailBuildingInfo": "This is the jail. Here you will end up if you fail your crimes. Also go here if you like to bust or buy someone out!",
+  "marketBuildingInfo": "Welcome to the market. Here you can buy/sell things and goods from/to other players.",
+  "weaponShopBuildingInfo": "The weaponshop. Here you can buy weapons and protection, which helps you become a better killer, and get killed less quickly..",
+  "estateAgentBuildingInfo": "The estate agent. Here you can buy a better house. Buying a better house increases your rank!",
+  "rldBuildingInfo": "The Sex Shop. Here your prostitutes can earn some money.",
+  "stockExchangeBuildingInfo": "On the stock exchange you can buy and sell stocks, and get filthy rich!",
+
+  "intro0": "Welcome on MasterCrimeZ, criminal! I will teach you how everything works.",
+  "intro1": "First of all.. What's your name, Mr. Criminal?.",
+  "intro2": "Cool $1. And where do you want to live?",
+  "intro3": "Welcome to $1, $2! Now press something, and I'll tell you what you can do there. (HINT) Start with the small icons.",
+  "intro1button": "Choose name",
+  "intro2button": "Choose city"
 }

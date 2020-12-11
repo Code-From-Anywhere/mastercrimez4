@@ -25,7 +25,7 @@ const airport = async (req, res, User, Action) => {
 
   getText = getTextFunction(user.locale);
 
-  if (user.airplane === 0) {
+  if (user.airplane === 0 && !user.canChooseCity) {
     res.json({ response: getText("noAirplane") });
     return;
   }
@@ -35,22 +35,26 @@ const airport = async (req, res, User, Action) => {
   const costs = [0, 5000, 10000, 15000, 25000, 50000, 100000, 200000];
   const cost = costs[user.airplane];
 
-  if (user.cash < cost) {
+  if (user.cash < cost && !user.canChooseCity) {
     res.json({
       response: getText("notEnoughCash", cost),
     });
     return;
   }
 
-  User.update(
-    {
-      city: to,
-      reizenAt: Date.now() + time * 1000,
-      cash: user.cash - cost,
-      onlineAt: Date.now(),
-    },
-    { where: { id: user.id } }
-  );
+  const update = {
+    city: to,
+    onlineAt: Date.now(),
+  };
+
+  if (!user.canChooseCity) {
+    update.reizenAt = Date.now() + time * 1000;
+    update.cash = user.cash - cost;
+  } else {
+    update.canChooseCity = false;
+  }
+
+  User.update(update, { where: { id: user.id } });
 
   Action.create({
     userId: user.id,

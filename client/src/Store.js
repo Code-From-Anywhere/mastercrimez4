@@ -18,6 +18,15 @@ type Device = {
   foregrounded: number,
   menuShown: Boolean,
   movements: Movement[],
+  menu: { left: number[], right: number[] },
+  map: { zoom: number },
+  showNotificatonsHeader: boolean,
+  guyVisible: boolean,
+  introLevel: number,
+  guyText: string,
+  hasSeenInfo: {
+    [key: string]: boolean,
+  },
 };
 
 const initDevice = {
@@ -25,7 +34,7 @@ const initDevice = {
   logged: false,
   theme: DEFAULT_THEME,
   isConnected: 2,
-  menuShown: false,
+  menuShown: true,
   foregrounded: 0,
   movements: [],
   menu: {
@@ -36,6 +45,10 @@ const initDevice = {
     zoom: 12,
   },
   showNotificatonsHeader: false,
+  guyVisible: false,
+  introLevel: 0,
+  guyText: null,
+  hasSeenInfo: {},
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
@@ -47,6 +60,39 @@ const deviceReducer = (state: Device = initDevice, action) => {
     case "SET_SHOW_NOTIFICATIONS_HEADER": {
       return { ...state, showNotificatonsHeader: action.value };
     }
+
+    case "SET_GUY_VISIBLE": {
+      return {
+        ...state,
+        guyVisible: action.value,
+        guyText: action.value === false ? null : state.guyText,
+      };
+    }
+
+    case "UP_INTRO_LEVEL": {
+      console.log("up intro level");
+      return { ...state, guyVisible: false, introLevel: state.introLevel + 1 };
+    }
+
+    case "RESET_INTRO_LEVEL": {
+      return { ...state, introLevel: 0 };
+    }
+
+    case "SET_GUY_TEXT": {
+      return {
+        ...state,
+        guyText: action.value,
+        guyVisible: true,
+        hasSeenInfo: action.setHasSeenInfo
+          ? { ...state.hasSeenInfo, [action.setHasSeenInfo]: true }
+          : state.hasSeenInfo,
+      };
+    }
+
+    case "RESET_HAS_SEEN_INFO": {
+      return { ...state, hasSeenInfo: {} };
+    }
+
     case "MENU_SET_RIGHT_ACTIVE_SECTIONS": {
       return { ...state, menu: { left: state.menu.left, right: action.value } };
     }

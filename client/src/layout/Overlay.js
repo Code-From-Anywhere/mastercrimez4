@@ -23,8 +23,9 @@ import User from "../components/User";
 import { getRank, getStrength, getTextFunction, numberFormat } from "../Util";
 import ActionsBar from "./ActionsBar";
 import BottomTabs from "./BottomTabs";
+import IntroOrInfo from "./IntroOrInfo";
 import MapIcon from "./MapIcon";
-import { animateToCity, getZoom } from "./MapUtil";
+import { animateToCity, getZoom, shouldRenderCities } from "./MapUtil";
 import Menus from "./Menus";
 import Modal from "./Modal";
 import Screen from "./Screen";
@@ -55,6 +56,7 @@ const Overlay = ({
   city,
   selectedAreaIndex,
   setSelectedAreaIndex,
+  region,
 }) => {
   const dispatch = useDispatch();
   const window = Dimensions.get("window");
@@ -290,7 +292,9 @@ const Overlay = ({
 
               <View style={{ flex: 1 }}></View>
             </View>
-          ) : null;
+          ) : (
+            <View />
+          );
         }
 
         const owner = city?.[`${object.type}Owner`];
@@ -468,6 +472,20 @@ const Overlay = ({
   ];
   const skip = allowedRoutes.includes(navigation.state.routeName);
 
+  const guyVisibleTitleStyle = device.guyVisible
+    ? {
+        color: "white",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+      }
+    : {};
   return (
     <>
       <Menus
@@ -487,9 +505,23 @@ const Overlay = ({
       >
         {renderHeader}
 
-        <View style={{ position: "absolute", left: 10, bottom: 135 }}>
-          <Text style={{ fontSize: 30, fontWeight: "bold" }}>{title}</Text>
-        </View>
+        {!shouldRenderCities(device, region) && (
+          <View
+            style={{ position: "absolute", zIndex: 2, left: 10, bottom: 135 }}
+          >
+            <Text
+              style={[
+                {
+                  fontSize: 30,
+                  fontWeight: "bold",
+                },
+                guyVisibleTitleStyle,
+              ]}
+            >
+              {title}
+            </Text>
+          </View>
+        )}
 
         {view === "crimes" && (
           <View
@@ -608,19 +640,22 @@ const Overlay = ({
           )}
         </View>
 
-        <ActionsBar
-          selected={selected}
-          view={view}
-          city={city}
-          me={me}
-          device={device}
-          navigation={navigation}
-          setLoading={setLoading}
-          reloadMe={reloadMe}
-          reloadCities={reloadCities}
-          reloadAreas={screenProps.reloadAreas}
-          selectedArea={selectedArea}
-        />
+        {!shouldRenderCities(device, region) && (
+          <ActionsBar
+            map={map}
+            selected={selected}
+            view={view}
+            city={city}
+            me={me}
+            device={device}
+            navigation={navigation}
+            setLoading={setLoading}
+            reloadMe={reloadMe}
+            reloadCities={reloadCities}
+            reloadAreas={screenProps.reloadAreas}
+            selectedArea={selectedArea}
+          />
+        )}
 
         {navigation.state.routeName ? (
           <Modal
@@ -657,32 +692,12 @@ const Overlay = ({
           territoriesBadgeCount={0}
           crimesBadgeCount={0}
           gameBadgeCount={0}
+          cityAreas={cityAreas}
+          setZoom={setZoom}
+          device={device}
         />
 
-        {/* 
-        
-        <View
-          style={{
-            position: "absolute",
-            zIndex: 0,
-            bottom: 0,
-            left: 0,
-          }}
-        >
-          <Image
-            source={require("../../../assets/gangster2.png")}
-            style={{ width: 300, height: 250 }}
-            resizeMode="contain"
-          />
-
-          <Text
-            style={{ position: "absolute", top: 40, right: 35, width: 140 }}
-          >
-            He jij daar! Wat ben je aan het doen? Ga eens even snel een misdaad
-            doen! Klik onderin het menu op het tweede icoontje om naar het
-            misdaden overzicht te gaan.
-          </Text>
-        </View> */}
+        <IntroOrInfo screenProps={screenProps} />
       </Menus>
     </>
   );

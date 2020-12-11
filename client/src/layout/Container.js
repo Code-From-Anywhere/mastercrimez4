@@ -18,17 +18,19 @@ const Container = ({ screenProps }) => {
     Linking.getInitialURL().then((url) => openWebUrl(url));
   });
   const openWebUrl = (url) => {
-    const parts = url.split("://")[1].split("/");
-    //parts is now ["masercrimez.com","#","Junkies","param"]
-    const routeName = parts[2];
-    const params = parts[3] ? { param: parts[3] } : undefined;
+    if (Platform.OS === "web") {
+      const parts = url?.split("://")[1].split("/");
+      //parts is now ["masercrimez.com","#","Junkies","param"]
+      const routeName = parts[2];
+      const params = parts[3] ? { param: parts[3] } : undefined;
 
-    if (Object.keys(screens).includes(routeName)) {
-      setNavigationState({
-        history: [{ routeName, params }],
-        routeName,
-        params,
-      });
+      if (Object.keys(screens).includes(routeName)) {
+        setNavigationState({
+          history: [{ routeName, params }],
+          routeName,
+          params,
+        });
+      }
     }
   };
 

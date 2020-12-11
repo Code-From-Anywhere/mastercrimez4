@@ -1,0 +1,5 @@
+export enum GESTURE {
+  UNDETERMINED = 0,
+  CONTENT,
+  HANDLE,
+}

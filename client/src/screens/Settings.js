@@ -33,30 +33,79 @@ const Settings = ({
         )} */}
 
       {__DEV__ && (
-        <Menu
-          theme={theme}
-          theme={theme}
-          IconFont="Ionicons"
-          icon="ios-notifications"
-          navigation={navigation}
-          title={getText("purge")}
-          onPress={() =>
-            alertAlert(
-              getText("areYouSure"),
-              getText("areYouSure"),
-              [
-                {
-                  text: getText("ok"),
-                  onPress: () => dispatch({ type: "PURGE" }),
-                },
-                {
-                  text: getText("cancel"),
-                },
-              ],
-              { key: "purge" }
-            )
-          }
-        />
+        <>
+          <Menu
+            theme={theme}
+            IconFont="Ionicons"
+            icon="ios-notifications"
+            navigation={navigation}
+            title={getText("purge")}
+            onPress={() =>
+              alertAlert(
+                getText("areYouSure"),
+                getText("areYouSure"),
+                [
+                  {
+                    text: getText("ok"),
+                    onPress: () => dispatch({ type: "PURGE" }),
+                  },
+                  {
+                    text: getText("cancel"),
+                  },
+                ],
+                { key: "purge" }
+              )
+            }
+          />
+
+          <Menu
+            theme={theme}
+            IconFont="Ionicons"
+            icon="ios-notifications"
+            navigation={navigation}
+            title={"Reset info"}
+            onPress={() =>
+              alertAlert(
+                getText("areYouSure"),
+                getText("areYouSure"),
+                [
+                  {
+                    text: getText("ok"),
+                    onPress: () => dispatch({ type: "RESET_HAS_SEEN_INFO" }),
+                  },
+                  {
+                    text: getText("cancel"),
+                  },
+                ],
+                { key: "purge" }
+              )
+            }
+          />
+
+          <Menu
+            theme={theme}
+            IconFont="Ionicons"
+            icon="ios-notifications"
+            navigation={navigation}
+            title={"Reset intro"}
+            onPress={() =>
+              alertAlert(
+                getText("areYouSure"),
+                getText("areYouSure"),
+                [
+                  {
+                    text: getText("ok"),
+                    onPress: () => dispatch({ type: "RESET_INTRO_LEVEL" }),
+                  },
+                  {
+                    text: getText("cancel"),
+                  },
+                ],
+                { key: "purge" }
+              )
+            }
+          />
+        </>
       )}
 
       <Menu

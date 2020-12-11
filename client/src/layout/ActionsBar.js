@@ -2,6 +2,7 @@ import * as Icon from "@expo/vector-icons";
 import moment from "moment";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch } from "react-redux";
 import { AlertContext } from "../components/AlertProvider";
 import {
   getTextFunction,
@@ -10,6 +11,7 @@ import {
   post,
   withCaptcha,
 } from "../Util";
+import { animateToWorld } from "./MapUtil";
 
 const ActionsBar = ({
   selected,
@@ -23,10 +25,12 @@ const ActionsBar = ({
   selectedArea,
   reloadAreas,
   view,
+  map,
 }) => {
   const getText = getTextFunction(me?.locale);
   const alertAlert = React.useContext(AlertContext);
 
+  const dispatch = useDispatch();
   const bombAction = (type) => ({
     inactive: !city?.[`${type}Owner`] || city?.[`${type}Owner`] === me?.name,
     text: getText("bombard"),
@@ -238,7 +242,9 @@ const ActionsBar = ({
         text: getText("menuAirport"),
         icon: Icon.Ionicons,
         iconName: "ios-airplane",
-        onPress: () => navigation.resetTo("Airport"),
+        onPress: () => {
+          animateToWorld({ map, dispatch, city });
+        },
         badgeAmount: 0,
       },
       {

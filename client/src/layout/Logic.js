@@ -39,8 +39,14 @@ const Logic = ({
   };
 
   const handleAppStateChange = (nextAppState) => {
+    //giving token udefined will not set an interval on the next token
+    if (nextAppState === "background") {
+      resetIntervalsForToken(undefined);
+    }
+
     if (nextAppState === "active") {
       turnOnNotifications();
+      resetIntervalsForToken(device.loginToken);
       sendLanguage();
     }
   };

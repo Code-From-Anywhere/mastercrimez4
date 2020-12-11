@@ -4,7 +4,7 @@ import React from "react";
 import { Platform, View } from "react-native";
 import { useDispatch } from "react-redux";
 import MapIcon from "./MapIcon";
-import { animateToCity, objects } from "./MapUtil";
+import { animateToCity, objects, selectBuilding } from "./MapUtil";
 const BottomTabs = ({
   view,
   setSelected,
@@ -20,6 +20,9 @@ const BottomTabs = ({
   getText,
   map,
   city,
+  cityAreas,
+  setZoom,
+  device,
 }) => {
   const { showActionSheetWithOptions } = useActionSheet();
   const dispatch = useDispatch();
@@ -46,8 +49,20 @@ const BottomTabs = ({
           if (to) {
             navigation.resetTo(to);
           }
-          setSelected(type);
-          setView("game");
+
+          selectBuilding({
+            type,
+            city,
+            cityAreas,
+            map,
+            setSelected,
+            setView,
+            setZoom,
+            animate: true,
+            device,
+            dispatch,
+            getText,
+          });
         }
         // Do something here depending on the button index selected
       }

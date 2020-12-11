@@ -40,6 +40,7 @@ const EMAIL_FROM = "noreply@mastercrimez.com";
 
 const allUserFields = publicUserFields.concat([
   "newVersion",
+  "canChooseCity",
   "activated",
   "email",
   "bullets",
@@ -163,6 +164,11 @@ User.init(
       defaultValue: "thief",
     },
     canChooseProfession: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+
+    canChooseCity: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },

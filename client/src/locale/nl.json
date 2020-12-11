@@ -646,5 +646,30 @@
   "pleaseFillInCaptcha": "Vul a.u.b. de captcha in",
   "bulletsText": "De prijs per kogel is €$1,-. Er zijn $2 kogels beschikbaar.",
   "fillInBombs": "Vul het aantal bommen in",
-  "gangBullets": "Gang kogels"
+  "gangBullets": "Gang kogels",
+
+  "houseBuildingInfo": "Dit is je huis. Hier kun je je status zien en onderduiken.",
+  "headquarterBuildingInfo": "Dit is je gang hoofdkwartier. Hier kun je alles doen met je gang, als je die hebt!",
+  "bulletFactoryBuildingInfo": "Dit is de kogelfabriek. Hier kun je kogels kopen.",
+  "airportBuildingInfo": "Welkom op het vliegveld. Hier kun je naar andere steden vliegen",
+  "bankBuildingInfo": "Welkom bij de bank. Hier kun je geld op de bank zetten, zodat je niet wordt beroofd.",
+  "casinoBuildingInfo": "Welkom bij het casino. Hier kun je lekker gokken!",
+  "landlordBuildingInfo": "Je bent zojuist bij de coffeeshop beland! Hier kun je je wiet verkopen.",
+  "junkiesBuildingInfo": "Welkom bij het leger des heils. Hier kun je voor je junkies een extra zakcentje vragen.",
+  "garageBuildingInfo": "Dit is de garage. Hier kun je al je auto's zien, verbeteren, en verkopen. Hoe groter je garage, des te meer auto's er in passen",
+  "gymBuildingInfo": "Dit is de sportschool. Hier kun je trainen zodat je beter wordt in beroven en aanvallen van andere spelers.",
+  "hospitalBuildingInfo": "Dit is het ziekenhuis. Hier kun je jezelf en anderen genezen.",
+  "jailBuildingInfo": "Dit is de gevangenis. Hier kom je te zitten als je opgepakt wordt. Ga hier ook heen als je mensen wil uitbreken of uitkopen!",
+  "marketBuildingInfo": "Welkom op de markt! Hier kun je goederen en dingen kopen/verkopen van/aan andere spelers.",
+  "weaponShopBuildingInfo": "De wapenshop! Koop hier betere wapens en bescherming.",
+  "estateAgentBuildingInfo": "De makelaar. Hier kan je huizen kopen. Van betere huizen stijgt je rang!",
+  "rldBuildingInfo": "De Sex Shop. Hier kunnen je prostituees geld verdienen, en kan jij de winst ophalen.",
+  "stockExchangeBuildingInfo": "Op de beurs kun je aandelen kopen en verkopen. Hier kun je heel rijk mee worden.",
+
+  "intro0": "Welkom op MasterCrimeZ, crimineel! Ik ga je leren hoe alles werkt.",
+  "intro1": "Maar eerst... Wat is eigenlijk je naam?",
+  "intro2": "Cool $1 En waar wil je wonen?",
+  "intro3": "Welkom in $1, $2! Klik nu iets aan en ik laat je zien wat je er kan doen. (HINT) Begin met de kleine icoontjes",
+  "intro1button": "Kies naam",
+  "intro2button": "Kies stad"
 }

@@ -16,7 +16,7 @@ import Hoverable from "../components/Hoverable";
 import T from "../components/T";
 import Constants from "../Constants";
 import { getTextFunction, InactiveScreens, lighterHex, post } from "../Util";
-import { getObjectMeta, getZoom, objects } from "./MapUtil";
+import { getZoom, selectBuilding } from "./MapUtil";
 
 export const isHappyHour = () => {
   const isSunday = moment().day() === 0; //sunday
@@ -768,6 +768,7 @@ export const renderMenu = ({
   city,
   setView,
   areas,
+  device,
 }) => {
   const TheIcon = Icon[item.iconType];
 
@@ -864,43 +865,19 @@ export const renderMenu = ({
           setView(item.view);
         }
         if (item.buildingType) {
-          const objectIndex = objects.findIndex(
-            (x) => x.type === item.buildingType
-          );
-          const object = objects[objectIndex];
-          const {
-            latitude,
-            longitude,
-            zoom,
-            deltaLatitude,
-            deltaLongitude,
-          } = getObjectMeta({
+          selectBuilding({
+            type: item.buildingType,
             city,
             cityAreas,
-            index: objectIndex,
-            object,
+            map,
+            setSelected,
+            setView,
+            setZoom,
+            animate: true,
+            device,
+            dispatch,
+            getText,
           });
-
-          if (latitude && longitude) {
-            if (Platform.OS === "web") {
-              map.panTo({
-                lat: latitude,
-                lng: longitude,
-              });
-
-              setZoom(zoom - 2);
-            } else {
-              map.animateToRegion({
-                latitude: latitude,
-                longitude: longitude,
-                latitudeDelta: deltaLatitude,
-                longitudeDelta: deltaLongitude,
-              });
-            }
-          }
-
-          setView("game");
-          setSelected(item.buildingType);
         }
 
         if (item.goToArea !== undefined) {
@@ -1102,6 +1079,7 @@ const Menus = ({
               city,
               setView,
               areas,
+              device,
             })
           }
           renderContent={(section) =>
@@ -1121,6 +1099,7 @@ const Menus = ({
                 city,
                 setView,
                 areas,
+                device,
               })
             )
           }
@@ -1165,6 +1144,7 @@ const Menus = ({
               city,
               areas,
               setView,
+              device,
             })
           }
           renderContent={(section) =>
@@ -1184,6 +1164,7 @@ const Menus = ({
                 city,
                 setView,
                 areas,
+                device,
               })
             )
           }

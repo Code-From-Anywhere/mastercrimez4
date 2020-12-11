@@ -45,7 +45,12 @@ const LoginModal = ({
     return success;
   };
 
-  const login = () => dispatch({ type: "SET_LOGGED", value: true });
+  const login = () => {
+    dispatch({ type: "SET_LOGGED", value: true });
+    if (device.introLevel === 1) {
+      dispatch({ type: "UP_INTRO_LEVEL" });
+    }
+  };
   useEffect(() => {
     setName(me?.name);
   }, [me?.name]);

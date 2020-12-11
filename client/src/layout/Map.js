@@ -4,7 +4,7 @@ import {
   GroundOverlay,
   LoadScript,
   OverlayView,
-  Polygon
+  Polygon,
 } from "@react-google-maps/api";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
@@ -17,11 +17,12 @@ import {
   Text,
   TouchableOpacity,
   UIManager,
-  View
+  View,
 } from "react-native";
 import { useDispatch } from "react-redux";
+import { AlertContext } from "../components/AlertProvider";
 import T from "../components/T";
-import { doOnce, post } from "../Util";
+import { doOnce, getTextFunction, post } from "../Util";
 import Logic from "./Logic";
 import {
   animateToCity,
@@ -31,7 +32,9 @@ import {
   getZoom,
   objects,
   OBJECT_SIZE_FACTOR,
-  rgbs
+  rgbs,
+  selectBuilding,
+  shouldRenderCities,
 } from "./MapUtil";
 import Overlay from "./Overlay";
 const mapStyle = require("./mapStyle.json");
@@ -50,7 +53,7 @@ const containerStyle = {
   height: "100%",
 };
 
-const ReactMap = ({ zoom, map, setMap, children, setMapReady }) => {
+const ReactMap = ({ zoom, map, setMap, children, view, setMapReady }) => {
   const dispatch = useDispatch();
   const onLoad = React.useCallback(function callback(map) {
     const bounds = new window.google.maps.LatLngBounds();
@@ -75,7 +78,26 @@ const ReactMap = ({ zoom, map, setMap, children, setMapReady }) => {
         }}
         //center={{ lat: city?.latitude, lng: city?.longitude }}
         onLoad={onLoad}
-        options={{ disableDefaultUI: true }}
+        options={{
+          disableDefaultUI: true,
+
+          //https://developers.google.com/maps/documentation/javascript/style-reference
+          styles:
+            view === "territories"
+              ? [
+                  {
+                    featureType: "all",
+                    elementType: "labels",
+                    stylers: [{ visibility: "off" }],
+                  },
+                  {
+                    featureType: "road",
+                    elementType: "geometry.fill",
+                    stylers: [{ visibility: "off" }],
+                  },
+                ]
+              : undefined,
+        }}
         onUnmount={onUnmount}
       >
         {children}
@@ -127,13 +149,17 @@ const GameObjects = React.memo(
     cityAreas,
     level,
     gangMembers,
+    setView,
     myName,
     device,
     junkiesIncomeAt,
     landlordIncomeAt,
     rldIncomeAt,
+    getText,
   }) => {
     // console.log("RENDER GAME OBJECT", index);
+    const dispatch = useDispatch();
+    const alertAlert = React.useContext(AlertContext);
 
     const {
       latitude,
@@ -154,7 +180,7 @@ const GameObjects = React.memo(
       });
       reloadCities();
       if (!success) {
-        Alert.alert(response);
+        alertAlert(response, null, null, { key: "moveBuildingResponse" });
       }
     };
 
@@ -171,7 +197,17 @@ const GameObjects = React.memo(
 
     const onPressObject = () => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-      isSelected ? setSelected(null) : setSelected(object.type);
+      isSelected
+        ? setSelected(null)
+        : selectBuilding({
+            type: object.type,
+            animate: false,
+            setSelected,
+            setView,
+            device,
+            dispatch,
+            getText,
+          });
     };
     const owner = city?.[`${object.type}Owner`];
 
@@ -306,13 +342,17 @@ const Map = ({
   const [selected, setSelected] = useState(null);
   const [selectedAreaIndex, setSelectedAreaIndex] = useState(null); //index
 
+  const getText = getTextFunction(me?.locale);
   const [map, setMap] = useState(null);
   const [view, setView] = useState("game");
+
+  const delta = me?.canChooseCity ? 5 : 0.05;
+
   const [region, setRegion] = useState({
     latitude: 52.378, //amsterdam
     longitude: 4.89707,
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05,
+    latitudeDelta: delta,
+    longitudeDelta: delta,
   });
   const city = React.useMemo(() => cities?.find((x) => x.city === me?.city), [
     cities,
@@ -324,6 +364,8 @@ const Map = ({
   const propertiesSwiperRefContainer = useRef(null);
 
   doOnce(reloadCities);
+
+  const alertAlert = React.useContext(AlertContext);
 
   doOnce(() => reloadOcs(device.loginToken));
   doOnce(reloadStreetraces);
@@ -364,7 +406,14 @@ const Map = ({
       };
       setRegion(reg);
 
-      animateToCity({ map, dispatch, city, delayZoom: true });
+      animateToCity({
+        map,
+        dispatch,
+        city,
+        delayZoom: true,
+        zoom: me?.canChooseCity ? 3 : undefined,
+      });
+
       //map.fitToElements(true);
     }
   }, [me?.city, map, mapReady]);
@@ -538,10 +587,12 @@ const Map = ({
 
         return (
           <GameObjects
+            getText={getText}
             gangMembers={me?.gangMembers}
             key={`game${object.type}`}
             MapsComponent={NativeMapsComponent}
             city={city}
+            setView={setView}
             dragAndDropMode={dragAndDropMode}
             object={object}
             index={index}
@@ -589,6 +640,52 @@ const Map = ({
     );
   }, [view, territories, selectedAreaIndex]);
 
+  const renderCities = cities.map((city, index) => {
+    const onPress = async () => {
+      const { response } = await post("airport", {
+        token: device.loginToken,
+        to: city.city,
+      });
+
+      reloadMe(device.loginToken);
+      alertAlert(response, null, null, { key: "airportResponse" });
+      animateToCity({ city, dispatch, map, animationTime: 10000 });
+      if (device.introLevel === 2) {
+        dispatch({ type: "UP_INTRO_LEVEL" });
+      }
+    };
+    //random positions on the first territorium
+    const view = (
+      <TouchableOpacity
+        style={
+          Platform.OS === "web"
+            ? { position: "absolute", top: -10, left: -10 }
+            : undefined
+        }
+        onPress={onPress}
+      >
+        <Text style={{ fontSize: 24 }}>✈️</Text>
+      </TouchableOpacity>
+    );
+    return Platform.OS === "web" ? (
+      <OverlayView
+        mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+        // onClick={onPress}
+        key={`city${index}`}
+        position={{ lat: city.latitude, lng: city.longitude }}
+      >
+        {view}
+      </OverlayView>
+    ) : (
+      <NativeMapsComponent.Marker
+        key={`city${index}`}
+        onPress={onPress}
+        coordinate={{ latitude: city.latitude, longitude: city.longitude }}
+      >
+        {view}
+      </NativeMapsComponent.Marker>
+    );
+  });
   const renderCrimes = icons
     .map(iconToMapIcon)
     .map(({ onPress, icon, latitude, longitude, square }, index) => {
@@ -621,17 +718,17 @@ const Map = ({
   const renderAllMapObjects = React.useMemo(() => {
     const shouldRenderTerritories =
       Platform.OS === "web" ? view === "territories" : true;
-    return (
+
+    const shouldRenderGame =
+      view === "stats" || view === "more" || view === "game" || view === "chat";
+
+    return shouldRenderCities(device, region) ? (
+      renderCities
+    ) : (
       <>
         {shouldRenderTerritories && renderTerritories}
         {/* NB: areas.length moet geladen zijn voor renderGame, anders rendert hij de teritoriums over de game heen */}
-        {(view === "stats" ||
-          view === "more" ||
-          view === "game" ||
-          view === "chat") &&
-          areas.length > 0 &&
-          renderGame}
-
+        {shouldRenderGame && areas.length > 0 && renderGame}
         {view === "crimes" && renderCrimes}
       </>
     );
@@ -682,6 +779,7 @@ const Map = ({
 
   const renderOverlay = (
     <Overlay
+      region={region}
       screenProps={screenProps}
       map={map}
       view={view}
@@ -715,6 +813,7 @@ const Map = ({
           setMap={setMap}
           zoom={device.map.zoom}
           setMapReady={setMapReady}
+          view={view}
         >
           {renderAllMapObjects}
         </ReactMap>

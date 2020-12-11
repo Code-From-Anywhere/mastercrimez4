@@ -147,6 +147,67 @@ export const objects = [
   },
 ];
 
+export const selectBuilding = ({
+  type,
+  city,
+  cityAreas,
+  map,
+  setZoom,
+  setView,
+  setSelected,
+  animate,
+  device,
+  dispatch,
+  getText,
+}) => {
+  const objectIndex = objects.findIndex((x) => x.type === type);
+  const object = objects[objectIndex];
+
+  console.log("hasseeninfo", device.hasSeenInfo);
+  if (!device.hasSeenInfo[`${type}Building`]) {
+    dispatch({
+      type: "SET_GUY_TEXT",
+      setHasSeenInfo: `${type}Building`,
+      value: getText(`${type}BuildingInfo`),
+    });
+  }
+
+  if (animate) {
+    const {
+      latitude,
+      longitude,
+      zoom,
+      deltaLatitude,
+      deltaLongitude,
+    } = getObjectMeta({
+      city,
+      cityAreas,
+      index: objectIndex,
+      object,
+    });
+
+    if (latitude && longitude) {
+      if (Platform.OS === "web") {
+        map.panTo({
+          lat: latitude,
+          lng: longitude,
+        });
+
+        setZoom(zoom - 2);
+      } else {
+        map.animateToRegion({
+          latitude: latitude,
+          longitude: longitude,
+          latitudeDelta: deltaLatitude,
+          longitudeDelta: deltaLongitude,
+        });
+      }
+    }
+  }
+
+  setView("game");
+  setSelected(type);
+};
 export const rgbs = [
   "0,255,0",
   "255,0,0",
@@ -173,12 +234,19 @@ export const getPosition = (id, type) => {
 
 export const getZoom = (delta) => Math.ceil(Math.log(360 / delta) / Math.LN2);
 
-export const animateToCity = ({ map, dispatch, city, delayZoom }) => {
+export const animateToCity = ({
+  map,
+  dispatch,
+  city,
+  delayZoom,
+  zoom,
+  animationTime,
+}) => {
   if (Platform.OS === "web") {
-    const zoom = getZoom(city?.delta);
-    console.log("animateTocity", zoom);
+    const zoom2 = zoom ? zoom : getZoom(city?.delta);
+    console.log("animateTocity", zoom2);
 
-    const doZoom = () => dispatch({ type: "SET_ZOOM", value: zoom });
+    const doZoom = () => dispatch({ type: "SET_ZOOM", value: zoom2 });
 
     if (delayZoom) {
       setTimeout(() => doZoom(), 2000);
@@ -190,14 +258,40 @@ export const animateToCity = ({ map, dispatch, city, delayZoom }) => {
       lng: city.longitude,
     });
   } else {
+    map.animateToRegion(
+      {
+        latitude: city.latitude,
+        longitude: city.longitude,
+        latitudeDelta: city.delta * 1.2,
+        longitudeDelta: city.delta * 1.2,
+      },
+      animationTime
+    );
+  }
+};
+
+export const animateToWorld = ({ map, dispatch, city }) => {
+  if (Platform.OS === "web") {
+    const doZoom = () => dispatch({ type: "SET_ZOOM", value: 3 });
+
+    doZoom();
+
+    map.panTo({
+      lat: city.latitude,
+      lng: city.longitude,
+    });
+  } else {
     map.animateToRegion({
       latitude: city.latitude,
       longitude: city.longitude,
-      latitudeDelta: city.delta * 1.2,
-      longitudeDelta: city.delta * 1.2,
+      latitudeDelta: 100,
+      longitudeDelta: 100,
     });
   }
 };
+
+export const shouldRenderCities = (device, region) =>
+  Platform.OS === "web" ? device.map.zoom < 5 : region.latitudeDelta > 3;
 export const getObjectMeta = ({ object, index, city, cityAreas }) => {
   let latitude = city?.[`${object.type}Latitude`];
   let longitude = city?.[`${object.type}Longitude`];

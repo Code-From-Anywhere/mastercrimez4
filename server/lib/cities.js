@@ -96,6 +96,8 @@ const takeEmptyArea = async (req, res, { User, City, MapArea, Gang }) => {
     return res.json({ response: getText("invalidUser") });
   }
 
+  getText = getTextFunction(user.locale);
+
   if (!id) {
     return res.json({ response: getText("invalidValues") });
   }
@@ -117,8 +119,6 @@ const takeEmptyArea = async (req, res, { User, City, MapArea, Gang }) => {
       response: getText("cityRelease", releaseThisCity.format("DD/MM/YYYY")),
     });
   }
-
-  getText = getTextFunction(user.locale);
 
   if (user.jailAt > Date.now()) {
     return res.json({ response: getText("youreInJail") });
