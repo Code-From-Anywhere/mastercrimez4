@@ -286,7 +286,7 @@ class ChatScreen extends React.Component {
       screenProps: { channels },
     } = this.props;
 
-    console.log("channels", channels);
+    // console.log("channels", channels);
     return (
       <SafeAreaView style={styles.container}>
         <FlatList

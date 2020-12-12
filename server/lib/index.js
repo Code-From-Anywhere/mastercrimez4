@@ -2842,15 +2842,7 @@ server.post("/activate", async (req, res) => {
 });
 
 server.post("/updateProfile", async (req, res) => {
-  const {
-    loginToken,
-    image,
-    backfire,
-    bio,
-    pushtoken,
-    locale,
-    newVersion,
-  } = req.body;
+  const { loginToken, image, backfire, bio, pushtoken, locale } = req.body;
 
   if (!loginToken) {
     res.json({ response: getText("noToken") });
@@ -2883,10 +2875,6 @@ server.post("/updateProfile", async (req, res) => {
 
   if (bio) {
     update.bio = bio;
-  }
-
-  if (newVersion !== undefined) {
-    update.newVersion = newVersion;
   }
 
   if (pushtoken !== undefined) {

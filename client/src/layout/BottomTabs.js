@@ -84,6 +84,20 @@ const BottomTabs = ({
     >
       {[
         {
+          view: "crimes",
+          icon: Icon.MaterialCommunityIcons,
+          iconName: "pistol",
+          isActive: view === "crimes",
+          onPress: () => {
+            setSelected(null);
+            navigation.popToTop();
+            setView("crimes");
+            animateToCity({ map, dispatch, city });
+          },
+          badgeCount: crimesBadgeCount,
+        },
+
+        {
           view: "game",
           icon: Icon.MaterialCommunityIcons,
           iconName: "factory",
@@ -97,19 +111,7 @@ const BottomTabs = ({
           },
           badgeCount: gameBadgeCount,
         },
-        {
-          view: "crimes",
-          icon: Icon.MaterialCommunityIcons,
-          iconName: "pistol",
-          isActive: view === "crimes",
-          onPress: () => {
-            setSelected(null);
-            navigation.popToTop();
-            setView("crimes");
-            animateToCity({ map, dispatch, city });
-          },
-          badgeCount: crimesBadgeCount,
-        },
+
         {
           view: "territories",
           icon: Icon.Ionicons,

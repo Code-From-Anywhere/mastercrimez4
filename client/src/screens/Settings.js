@@ -1,8 +1,8 @@
 import React from "react";
-import { ScrollView } from "react-native";
+import { Platform, ScrollView } from "react-native";
 import { AlertContext } from "../components/AlertProvider";
 import Menu from "../components/Menu";
-import { getTextFunction, post } from "../Util";
+import { getTextFunction } from "../Util";
 
 const Settings = ({
   navigation,
@@ -152,38 +152,24 @@ const Settings = ({
       <Menu
         theme={theme}
         navigation={navigation}
-        title={`Turn ${me?.newVersion ? "off" : "on"} new version`}
-        IconFont="Entypo"
-        icon="new"
-        onPress={async () => {
-          const { response } = await post("updateProfile", {
-            loginToken: device.loginToken,
-            newVersion: !me?.newVersion,
-          });
-          reloadMe(device.loginToken);
-          alert(response);
-        }}
-      />
-
-      <Menu
-        theme={theme}
-        navigation={navigation}
         title={getText("menuLogin")}
         IconFont="Entypo"
         icon="login"
         onPress={() => dispatch({ type: "SET_LOGGED", value: false })}
       />
 
-      <Menu
-        theme={theme}
-        navigation={navigation}
-        title={device.hideMap ? getText("showMap") : getText("hideMap")}
-        IconFont="Entypo"
-        icon="map"
-        onPress={() =>
-          dispatch({ type: "SET_HIDE_MAP", value: !device.hideMap })
-        }
-      />
+      {Platform.OS === "web" && (
+        <Menu
+          theme={theme}
+          navigation={navigation}
+          title={device.hideMap ? getText("showMap") : getText("hideMap")}
+          IconFont="Entypo"
+          icon="map"
+          onPress={() =>
+            dispatch({ type: "SET_HIDE_MAP", value: !device.hideMap })
+          }
+        />
+      )}
 
       <Menu
         theme={theme}

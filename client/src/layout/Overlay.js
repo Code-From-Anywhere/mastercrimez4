@@ -362,7 +362,7 @@ const Overlay = ({
         );
       }),
     ],
-    [me?.city, city]
+    [city, me]
   );
   const keyValue = useMemo(() => Math.random().toString(), [swiper1Children]);
 

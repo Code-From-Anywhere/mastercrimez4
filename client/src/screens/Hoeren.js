@@ -113,20 +113,24 @@ class Hoeren extends Component {
         me,
       },
     } = this.props;
-    const number = Math.ceil(Math.random() * 60);
     const getText = getTextFunction(me?.locale);
     return (
       <ScrollView style={{ flex: 1 }}>
         <View style={{ margin: 20 }}>
           {response ? (
             <View style={{ flex: 1, minHeight: 400 }}>
-              <Image
-                style={{ width: 100, height: 100 }}
-                source={{
-                  uri:
-                    Constants.SERVER_ADDR + "/images/female/" + number + ".gif",
-                }}
-              />
+              {response.success && (
+                <Image
+                  style={{ width: 100, height: 100 }}
+                  source={{
+                    uri:
+                      Constants.SERVER_ADDR +
+                      "/images/female/" +
+                      response.success +
+                      ".gif",
+                  }}
+                />
+              )}
               <Text style={{ color: theme.primaryText }}>
                 {response.response}
               </Text>

@@ -253,12 +253,12 @@ export const animateToCity = ({
     } else {
       doZoom();
     }
-    map.panTo({
+    map?.panTo({
       lat: city.latitude,
       lng: city.longitude,
     });
   } else {
-    map.animateToRegion(
+    map?.animateToRegion(
       {
         latitude: city.latitude,
         longitude: city.longitude,
@@ -276,12 +276,12 @@ export const animateToWorld = ({ map, dispatch, city }) => {
 
     doZoom();
 
-    map.panTo({
+    map?.panTo({
       lat: city.latitude,
       lng: city.longitude,
     });
   } else {
-    map.animateToRegion({
+    map?.animateToRegion({
       latitude: city.latitude,
       longitude: city.longitude,
       latitudeDelta: 100,

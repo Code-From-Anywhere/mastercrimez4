@@ -347,7 +347,7 @@ const Map = React.memo(function MapPure({
 
   const getText = getTextFunction(me?.locale);
   const [map, setMap] = useState(null);
-  const [view, setView] = useState("game");
+  const [view, setView] = useState("crimes");
 
   const delta = me?.canChooseCity ? 5 : 0.05;
 
@@ -449,6 +449,7 @@ const Map = React.memo(function MapPure({
 
   const crimeIcons = [
     {
+      id: 1,
       inactive: me?.autostelenAt + 60000 - Date.now() > 0,
       to: "StealCar",
       icon: "🚘",
@@ -456,6 +457,7 @@ const Map = React.memo(function MapPure({
     },
 
     {
+      id: 2,
       inactive: me?.crimeAt + 60000 - Date.now() > 0,
       to: "Crimes",
       icon: "💰",
@@ -463,6 +465,7 @@ const Map = React.memo(function MapPure({
     },
 
     {
+      id: 3,
       inactive: me?.junkiesAt + 120000 - Date.now() > 0,
       to: "Junkies",
       icon: "🧔",
@@ -470,12 +473,14 @@ const Map = React.memo(function MapPure({
     },
 
     {
+      id: 4,
       inactive: me?.hoerenAt + 120000 - Date.now() > 0,
       to: "Hoeren",
       icon: "💃",
       type: "hoeren",
     },
     {
+      id: 5,
       inactive: me?.workEndsAt - Date.now() > 0,
       to: "Work",
       icon: "🛠",
@@ -483,47 +488,39 @@ const Map = React.memo(function MapPure({
     },
 
     {
+      id: 6,
       inactive: me?.wietAt + 120000 - Date.now() > 0,
       to: "Wiet",
       icon: "🌳",
       type: "wiet",
     },
-  ].filter((x) => !x.inactive);
 
-  const ocIcons = ocs
-    ?.filter((x) => x.city === me?.city)
-    .map((oc) => ({
+    {
+      id: 7,
+      inactive: !me?.gangId || ocs.length === 0,
       icon: "🔥",
       type: "oc",
       to: "OC",
-      id: oc.id,
-      params: { id: oc.id },
-    }));
-  const streetraceIcons = streetraces
-    ?.filter((x) => x.city === me?.city)
-    .map((x) => ({
+    },
+
+    {
+      id: 8,
+      inactive: streetraces.length === 0,
       icon: "🛣",
       type: "streetrace",
-      id: x.id,
       to: "Streetrace",
-      params: { id: x.id },
-    }));
+    },
 
-  const robberyIcons = robberies
-    ?.filter((x) => x.city === me?.city)
-    .map((x) => ({
+    {
+      id: 9,
+      inactive: robberies.length === 0,
       icon: "🚨",
       type: "robbery",
       to: "Robbery",
-      id: x.id,
-      params: { id: x.id },
-    }));
+    },
+  ].filter((x) => !x.inactive);
 
-  const icons = crimeIcons
-    .concat(ocIcons)
-    .concat(streetraceIcons)
-    .concat(robberyIcons)
-    .filter((x) => !!x);
+  const icons = crimeIcons.filter((x) => !!x);
 
   const iconToMapIcon = (icon) => {
     const position = getPosition(icon.id, icon.type); //0-1
@@ -833,6 +830,6 @@ const Map = React.memo(function MapPure({
   );
 });
 
-Map.whyDidYouRender = true; // { logOnDifferentValues: true };
+// Map.whyDidYouRender = { logOnDifferentValues: true };
 
 export default Map;

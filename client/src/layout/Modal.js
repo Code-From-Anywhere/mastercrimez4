@@ -77,7 +77,8 @@ const Modal = ({ view, navigation, setView, children, headerHeight }) => {
 
   const theme = useSelector((state) => state.device.theme);
 
-  const defaultBottom = view === "chat" || view === "crimes" ? 70 : 140;
+  const defaultBottom = view === "chat" || view === "crimes" ? 70 : 170;
+
   return (
     <View
       style={{

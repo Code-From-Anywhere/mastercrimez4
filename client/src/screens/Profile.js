@@ -146,7 +146,6 @@ const ProfileScreen = ({
   },
 }) => {
   const [profile, setProfile] = useState({});
-  const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
 
@@ -202,6 +201,8 @@ const ProfileScreen = ({
     );
   };
 
+  const alertAlert = React.useContext(AlertContext);
+
   if (loading) {
     return <ActivityIndicator />;
   }
@@ -243,7 +244,6 @@ const ProfileScreen = ({
     "hour",
     17
   );
-  const alertAlert = React.useContext(AlertContext);
 
   return (
     <ScrollView>

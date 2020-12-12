@@ -2,20 +2,11 @@ import React from "react";
 import AdminEmail from "../screens/AdminEmail";
 import AdminUserWatch from "../screens/AdminUserWatch";
 import AirplaneShop from "../screens/AirplaneShop";
-import Airport from "../screens/Airport";
-import AllAirport from "../screens/AllAirport";
-import AllBanks from "../screens/AllBanks";
-import AllBulletfactory from "../screens/AllBulletfactory";
-import AllGang from "../screens/AllGang";
-import AllGarage from "../screens/AllGarage";
-import AllStats from "../screens/AllStats";
 import Backfire from "../screens/Backfire";
 import Bank from "../screens/Bank";
 import Blocks from "../screens/Blocks";
-import Bomb from "../screens/Bomb";
 import Bulletfactory from "../screens/Bulletfactory";
 import Bunker from "../screens/Bunker";
-import Casino from "../screens/Casino";
 import ChangeName from "../screens/ChangeName";
 import ChangePassword from "../screens/ChangePassword";
 import Channel from "../screens/Channel";
@@ -30,7 +21,6 @@ import CreateStreetrace from "../screens/CreateStreetrace";
 import Crimes from "../screens/Crimes";
 import Detectives from "../screens/Detectives";
 import Donate from "../screens/Donate";
-import DownloadApp from "../screens/DownloadApp";
 import EstateAgent from "../screens/EstateAgent";
 import ForgotPassword from "../screens/ForgotPassword";
 import Forum from "../screens/Forum";
@@ -45,10 +35,8 @@ import GangShop from "../screens/GangShop";
 import Garage from "../screens/Garage";
 import GarageShop from "../screens/GarageShop";
 import Gym from "../screens/Gym";
-import Hackers from "../screens/Hackers";
 import Hoeren from "../screens/Hoeren";
 import Hospital from "../screens/Hospital";
-import House from "../screens/House";
 import Income from "../screens/Income";
 import Info from "../screens/Info";
 import InfoGame from "../screens/InfoGame";
@@ -62,7 +50,6 @@ import ManageObject from "../screens/ManageObject";
 import Market from "../screens/Market";
 import Members from "../screens/Members";
 import MollieComplete from "../screens/MollieComplete";
-import More from "../screens/More";
 import MyObjects from "../screens/MyObjects";
 import MyProfile from "../screens/MyProfile";
 import OC from "../screens/OC";
@@ -86,6 +73,7 @@ import Sint from "../screens/Sint";
 import Stats from "../screens/Stats";
 import Status from "../screens/Status";
 import StealCar from "../screens/StealCar";
+import StockExchange from "../screens/StockExchange";
 import Streetrace from "../screens/Streetrace";
 import SwissBank from "../screens/SwissBank";
 import Theme from "../screens/Theme";
@@ -99,7 +87,6 @@ import Work from "../screens/Work";
 export const screens = {
   Stats,
   Channels,
-  More,
   Profile,
   Members,
   Gangs,
@@ -112,19 +99,11 @@ export const screens = {
   AdminEmail,
   AdminUserWatch,
   AirplaneShop,
-  Airport,
-  AllAirport,
-  AllBanks,
-  AllBulletfactory,
-  AllGang,
-  AllGarage,
-  AllStats,
   Backfire,
   Bank,
   Blocks,
   Bulletfactory,
   Bunker,
-  Casino,
   ChangeName,
   ChangePassword,
   Channel,
@@ -138,10 +117,8 @@ export const screens = {
   Crimes,
   Detectives,
   Donate,
-  DownloadApp,
   EstateAgent,
   ForgotPassword,
-  Bomb,
   Forum,
   Gang,
   GangAchievements,
@@ -153,10 +130,8 @@ export const screens = {
   Garage,
   GarageShop,
   Gym,
-  Hackers,
   Hoeren,
   Hospital,
-  House,
   Income,
   InfoGame,
   InfoRules,
@@ -193,6 +168,7 @@ export const screens = {
   WeaponShop,
   Wiet,
   Work,
+  StockExchange,
 };
 
 const Screen = ({ navigation, screenProps }) => {

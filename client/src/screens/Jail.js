@@ -4,17 +4,16 @@ import Button from "../components/Button";
 import CountDown from "../components/Countdown";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getTextFunction, post } from "../Util";
+import { getTextFunction } from "../Util";
 class Jail extends Component {
   state = {
     jail: [],
   };
   componentDidMount() {
     this.fetchMembers();
-    this.props.screenProps.reloadCities();
   }
 
-  fetchMembers(order) {
+  fetchMembers() {
     fetch(`${Constants.SERVER_ADDR}/jail`, {
       method: "GET",
       headers: {
@@ -23,7 +22,7 @@ class Jail extends Component {
       },
     })
       .then((response) => response.json())
-      .then(async ({ jail }) => {
+      .then(({ jail }) => {
         this.setState({ jail });
       })
       .catch((error) => {
@@ -39,7 +38,7 @@ class Jail extends Component {
     const getText = getTextFunction(me?.locale);
 
     return (
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         <T>{item.name}</T>
         <CountDown
           style={{ marginLeft: 10 }}
@@ -67,8 +66,11 @@ class Jail extends Component {
               .then((response) => response.json())
               .then(async ({ response }) => {
                 this.setState({ response });
-                this.fetchMembers();
-                reloadMe(device.loginToken);
+
+                setTimeout(() => {
+                  this.fetchMembers();
+                  reloadMe(device.loginToken);
+                }, 200);
               })
               .catch((error) => {
                 console.error(error);
@@ -82,17 +84,6 @@ class Jail extends Component {
     return <T>{this.state.response}</T>;
   };
 
-  becomeOwner = async (city) => {
-    const { reloadMe, reloadCities, device } = this.props.screenProps;
-    const { response } = await post("becomeOwner", {
-      city,
-      type: "jail",
-      token: device.loginToken,
-    });
-    reloadCities();
-    reloadMe(device.loginToken);
-  };
-
   render() {
     const {
       navigation,
@@ -104,6 +95,7 @@ class Jail extends Component {
     return (
       <View style={{ flex: 1 }}>
         <FlatList
+          extraData={this.state.jail.length}
           data={this.state.jail}
           renderItem={this.renderItem}
           ListHeaderComponent={this.renderHeader}

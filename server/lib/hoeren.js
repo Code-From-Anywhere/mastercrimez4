@@ -86,6 +86,7 @@ const hoeren = async (req, res, User, Action) => {
       });
 
       res.json({
+        success: Math.ceil(Math.random() * 60),
         response:
           getText("hoerenSuccess", random, name) + getSpecial(User, user),
       });

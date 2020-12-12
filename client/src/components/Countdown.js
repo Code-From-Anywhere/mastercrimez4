@@ -8,18 +8,27 @@ const Countdown = React.memo(function CountdownPure({
   timeToShow,
   timeLabels,
   size,
+  onFinish,
   digitStyle,
   digitTxtStyle,
   style,
 }) {
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft(until - Date.now());
+      const newTimeLeft = until - Date.now();
+      if (newTimeLeft < 0) {
+        if (!finished) {
+          setFinished(true);
+          onFinish?.();
+        }
+      }
+      setTimeLeft(newTimeLeft);
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
   const [timeLeft, setTimeLeft] = useState(until - Date.now());
+  const [finished, setFinished] = useState(false);
 
   return (
     <View style={[{ flexDirection: "row" }, style]}>
@@ -32,7 +41,7 @@ const Countdown = React.memo(function CountdownPure({
                 digitTxtStyle,
               ]}
             >
-              {moment(timeLeft).format(label)}
+              {timeLeft < 0 ? "00" : moment(timeLeft).format(label)}
             </Text>
             {timeLabels?.[label] && (
               <Text style={[{ color: "white" }, digitTxtStyle]}>

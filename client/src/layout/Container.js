@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import isEqual from "react-fast-compare";
 import { Linking, Platform } from "react-native";
 import { doOnce } from "../Util";
 import Map from "./Map";
 import { screens } from "./Screen";
+
+const initialNavigationState = {
+  params: null,
+  routeName: null,
+  history: [],
+};
 const Container = React.memo(function ContainerPure({ screenProps }) {
-  const initialNavigationState = {
-    params: null,
-    routeName: null,
-    history: [],
-  };
   const [navigationState, setNavigationState] = useState(
     initialNavigationState
   );
@@ -34,42 +35,45 @@ const Container = React.memo(function ContainerPure({ screenProps }) {
     }
   };
 
-  const navigation = {
-    navigate: (routeName, params) => {
-      const newHistory = navigationState.history.concat([
-        { routeName, params },
-      ]);
-      setNavigationState({ history: newHistory, routeName, params });
-      if (Platform.OS === "web") {
-        window.history.pushState(routeName, routeName, `/#/${routeName}`);
-      }
-    },
+  const navigation = useMemo(
+    () => ({
+      navigate: (routeName, params) => {
+        const newHistory = navigationState.history.concat([
+          { routeName, params },
+        ]);
+        setNavigationState({ history: newHistory, routeName, params });
+        if (Platform.OS === "web") {
+          window.history.pushState(routeName, routeName, `/#/${routeName}`);
+        }
+      },
 
-    resetTo: (routeName, params) => {
-      const newHistory = [{ routeName, params }];
-      setNavigationState({ history: newHistory, routeName, params });
-      if (Platform.OS === "web") {
-        window.history.pushState(routeName, routeName, `/#/${routeName}`);
-      }
-    },
+      resetTo: (routeName, params) => {
+        const newHistory = [{ routeName, params }];
+        setNavigationState({ history: newHistory, routeName, params });
+        if (Platform.OS === "web") {
+          window.history.pushState(routeName, routeName, `/#/${routeName}`);
+        }
+      },
 
-    state: navigationState,
-    popToTop: () => {
-      setNavigationState(initialNavigationState);
-      if (Platform.OS === "web") {
-        window.history.pushState("home", "Home", "/#/");
-      }
-    },
-    goBack: () => {
-      navigationState.history.pop();
-      setNavigationState({
-        history: navigationState.history,
-        ...(navigationState.history.length > 0
-          ? navigationState.history[navigationState.history.length - 1]
-          : {}),
-      });
-    },
-  };
+      state: navigationState,
+      popToTop: () => {
+        setNavigationState(initialNavigationState);
+        if (Platform.OS === "web") {
+          window.history.pushState("home", "Home", "/#/");
+        }
+      },
+      goBack: () => {
+        navigationState.history.pop();
+        setNavigationState({
+          history: navigationState.history,
+          ...(navigationState.history.length > 0
+            ? navigationState.history[navigationState.history.length - 1]
+            : {}),
+        });
+      },
+    }),
+    [navigationState, setNavigationState]
+  );
 
   return <Map navigation={navigation} screenProps={screenProps} />;
 }, isEqual);

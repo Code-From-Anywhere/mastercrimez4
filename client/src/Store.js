@@ -1,10 +1,10 @@
+import isEqual from "react-fast-compare";
 import { AsyncStorage } from "react-native";
 import { applyMiddleware, compose, createStore } from "redux";
 import { persistCombineReducers, persistStore } from "redux-persist";
 import createSagaMiddleware from "redux-saga";
 import mySaga from "./Sagas";
 import { DEFAULT_THEME, Theme } from "./screens/Theme";
-
 type Movement = {
   action: string,
   locationX: number,
@@ -165,7 +165,7 @@ const meReducer = (state = initMe, action) => {
     }
 
     case "ME_FETCH_SUCCEEDED": {
-      return action.me;
+      return isEqual(state, action.me) ? state : action.me;
     }
 
     case "ME_FETCH_FAILED": {

@@ -28,8 +28,29 @@ const Poker = ({
     reloadMe(device.loginToken);
   };
 
+  const keyValue = (key, value) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingHorizontal: 20,
+          height: 40,
+          alignItems: "center",
+        }}
+      >
+        <T>{key}</T>
+        <T>{value}</T>
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={{ flex: 1, padding: 15 }}>
+      {keyValue(getText("cash"), `€${me?.cash}`)}
+      {keyValue(getText("bank"), `€${me?.bank}`)}
+      {keyValue(getText("swissBank"), `€${me?.swissBank}`)}
+
       <View style={{ flex: 1, margin: 20 }}>
         <View>
           {response ? <T>{response}</T> : null}
