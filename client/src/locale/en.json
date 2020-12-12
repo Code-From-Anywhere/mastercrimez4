@@ -684,11 +684,18 @@
   "estateAgentBuildingInfo": "The estate agent. Here you can buy a better house. Buying a better house increases your rank!",
   "rldBuildingInfo": "The Sex Shop. Here your prostitutes can earn some money.",
   "stockExchangeBuildingInfo": "On the stock exchange you can buy and sell stocks, and get filthy rich!",
+  "menuChangeProfile": "Change profile",
 
-  "intro0": "Welcome on MasterCrimeZ, criminal! I will teach you how everything works.",
+  "intro0": "Welcome to MasterCrimeZ, criminal! My name is Ernst. I will teach you how everything works.",
   "intro1": "First of all.. What's your name, Mr. Criminal?.",
   "intro2": "Cool $1. And where do you want to live?",
   "intro3": "Welcome to $1, $2! Now press something, and I'll tell you what you can do there. (HINT) Start with the small icons.",
   "intro1button": "Choose name",
-  "intro2button": "Choose city"
+  "intro2button": "Choose city",
+
+  "fillInUrl": "Fill in an Url",
+  "fillInUrlText": "Fill in an URL to make a link",
+  "clickHere": "Click here",
+  "showMap": "Show map",
+  "hideMap": "Hide map"
 }

@@ -27,6 +27,7 @@ type Device = {
   hasSeenInfo: {
     [key: string]: boolean,
   },
+  hideMap: boolean,
 };
 
 const initDevice = {
@@ -49,6 +50,7 @@ const initDevice = {
   introLevel: 0,
   guyText: null,
   hasSeenInfo: {},
+  hideMap: false,
 };
 
 const deviceReducer = (state: Device = initDevice, action) => {
@@ -66,6 +68,13 @@ const deviceReducer = (state: Device = initDevice, action) => {
         ...state,
         guyVisible: action.value,
         guyText: action.value === false ? null : state.guyText,
+      };
+    }
+
+    case "SET_HIDE_MAP": {
+      return {
+        ...state,
+        hideMap: action.value,
       };
     }
 

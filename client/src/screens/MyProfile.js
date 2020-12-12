@@ -1,64 +1,18 @@
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
-import React, { useState } from "react";
-import {
-  Dimensions,
-  Image,
-  Platform,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import React, { useCallback, useState } from "react";
+import { Image, Platform, ScrollView, TouchableOpacity } from "react-native";
 import Button from "../components/Button";
+import MarkdownEditor from "../components/MarkdownEditor";
 import Constants from "../Constants";
-import style from "../Style";
-import { doOnce, getTextFunction } from "../Util";
+import { getTextFunction } from "../Util";
 
-const { width } = Dimensions.get("window");
-const isSmallDevice = width < 800;
-
-const MyProfile = ({
-  screenProps: {
-    me,
-    device,
-    device: { theme },
-    reloadMe,
-  },
-}) => {
+const MyProfile = ({ screenProps: { me, device, reloadMe } }) => {
   const getText = getTextFunction(me?.locale);
 
-  const [photo, setPhoto] = useState(null);
   const [image, setImage] = useState(me?.image);
-
-  const [images, setImages] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
   const [bio, setBio] = useState(me?.bio || "");
-
-  doOnce(() => {
-    getPermissionAsync();
-    fetchImages();
-  });
-
-  const fetchImages = () => {
-    fetch(
-      `${Constants.SERVER_ADDR}/listimages?token=${device.loginToken}&uid=${me.id}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then(({ images }) => {
-        setImages(images);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  const setBioCallback = useCallback((bio) => setBio(bio), [setBio]);
 
   const handleChooseImage = async () => {
     await getPermissionAsync();
@@ -85,30 +39,6 @@ const MyProfile = ({
     }
   };
 
-  const handleUploadPhoto = (pic) => {
-    fetch(`${Constants.SERVER_ADDR}/upload`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        image: pic.uri,
-        token: device.loginToken,
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        fetchImages();
-        alert(getText("success"));
-        setPhoto(null);
-      })
-      .catch((error) => {
-        console.log("upload error", error);
-        alert(getText("somethingWentWrong"));
-      });
-  };
-
   const getPermissionAsync = async () => {
     if (Platform.OS === "ios" || Platform.OS === "android") {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -118,85 +48,11 @@ const MyProfile = ({
     }
   };
 
-  const handleChoosePhoto = async () => {
-    try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        // aspect: [4, 3],
-        base64: true,
-        quality: 1,
-      });
-
-      console.log("result", result);
-
-      if (!result.cancelled) {
-        setPhoto(result);
-        handleUploadPhoto(result);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const renderItem = ({ item, index }) => {
-    const uri = Constants.SERVER_ADDR + "/" + item.image;
-    return (
-      <TouchableOpacity onPress={() => setSelectedImage(item.id)}>
-        <View>
-          <Image
-            source={{ uri }}
-            style={{
-              width: 200,
-              height: 200,
-              ...(selectedImage === item.id
-                ? { borderWidth: 2, borderColor: "black" }
-                : {}),
-            }}
-            resizeMode="contain"
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const renderFooter = () => {
-    return (
-      <Button
-        title={getText("delete")}
-        onPress={() => {
-          if (selectedImage) {
-            fetch(`${Constants.SERVER_ADDR}/deleteimage`, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                token: device.loginToken,
-                id: selectedImage,
-              }),
-            })
-              .then((response) => response.json())
-              .then(({ images }) => {
-                fetchImages();
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          } else {
-            alert(getText("noPictureSelected"));
-          }
-        }}
-      />
-    );
-  };
-
   return (
     <ScrollView
       style={{
         flex: 1,
-        margin: 20,
+        margin: 5,
       }}
     >
       <TouchableOpacity onPress={handleChooseImage}>
@@ -207,29 +63,22 @@ const MyProfile = ({
                 ? image
                 : Constants.SERVER_ADDR + image,
             }}
-            style={{ width: 200, height: 200 }}
+            style={{ width: 40, height: 40 }}
             resizeMode="cover"
           />
         ) : (
           <Image
             source={require("../../assets/icon.png")}
-            style={{ width: 200, height: 200 }}
+            style={{ width: 40, height: 40 }}
             resizeMode="cover"
           />
         )}
       </TouchableOpacity>
 
-      <TextInput
-        placeholderTextColor={theme.secondaryTextSoft}
-        style={[style(theme).textInput, { width: "100%", height: 200 }]}
-        multiline={true}
-        numberOfLines={4}
-        value={bio}
-        onChangeText={(x) => setBio(x)}
-      />
+      <MarkdownEditor value={bio} onChange={setBioCallback} />
       <Button
         title={getText("save")}
-        style={{ marginVertical: 20 }}
+        style={{ marginVertical: 5 }}
         onPress={() => {
           fetch(`${Constants.SERVER_ADDR}/updateProfile`, {
             method: "POST",
@@ -254,16 +103,6 @@ const MyProfile = ({
             });
         }}
       />
-
-      <Button
-        style={{ marginVertical: 20 }}
-        title={getText("choosePicture")}
-        onPress={handleChoosePhoto}
-      />
-
-      {images.map((image, index) => renderItem({ item: image, index }))}
-
-      {renderFooter()}
     </ScrollView>
   );
 };

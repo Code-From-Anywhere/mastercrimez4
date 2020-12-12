@@ -17,6 +17,7 @@ import MarkdownView from "react-native-markdown-display";
 import { AlertContext } from "../components/AlertProvider";
 import Button from "../components/Button";
 import Content from "../components/Content";
+import MarkdownEditor from "../components/MarkdownEditor";
 import T from "../components/T";
 import Constants from "../Constants";
 import styles from "../Style";
@@ -456,34 +457,11 @@ const GangSettings = ({
                   placeholder={getText("gangName")}
                 />
                 <T bold>{getText("gangProfile")}</T>
-                <TextInput
-                  placeholderTextColor={theme.secondaryTextSoft}
-                  style={[
-                    styles(theme).textInput,
-                    {
-                      width: "100%",
-                      height: 200,
-                    },
-                  ]}
-                  multiline={true}
-                  value={profile}
-                  onChangeText={setProfile}
-                />
+
+                <MarkdownEditor value={profile} onChange={setProfile} />
                 <T bold>{getText("gangMessage")}</T>
 
-                <TextInput
-                  placeholderTextColor={theme.secondaryTextSoft}
-                  style={[
-                    styles(theme).textInput,
-                    {
-                      width: "100%",
-                      height: 200,
-                    },
-                  ]}
-                  multiline={true}
-                  value={message}
-                  onChangeText={setMessage}
-                />
+                <MarkdownEditor value={message} onChange={setMessage} />
 
                 <Button
                   onPress={postGangUpdate}

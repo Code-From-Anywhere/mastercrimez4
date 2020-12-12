@@ -1407,22 +1407,30 @@ server.post("/upload", async (req, res, next) => {
     // to convert base64 format into random filename
     const base64Data = image.replace(/^data:([A-Za-z-+/]+);base64,/, "");
 
+    console.log("base64Data", base64Data.substring(0, 100));
+
     fs.writeFileSync(path, base64Data, { encoding: "base64" });
 
     Jimp.read(path, (err, image) => {
-      if (err) throw err;
-      image
-        .scaleToFit(512, 512) // resize
-        .write(path); // save
+      if (err) console.log(err);
+
+      if (image) {
+        image
+          .scaleToFit(512, 512) // resize
+          .write(path); // save
+      }
     });
 
-    Image.create({ image: path, uid: user.id });
-
-    return res.json({ path, response: getText("succeeded") });
+    return res.json({
+      path: path.substring(2, path.length), //remove ./
+      response: getText("succeeded"),
+    });
   } catch (e) {
     next(e);
   }
 });
+
+// KAN WEG
 
 server.get("/listimages", async (req, res) => {
   const { token, uid } = req.query;

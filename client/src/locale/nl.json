@@ -665,11 +665,16 @@
   "estateAgentBuildingInfo": "De makelaar. Hier kan je huizen kopen. Van betere huizen stijgt je rang!",
   "rldBuildingInfo": "De Sex Shop. Hier kunnen je prostituees geld verdienen, en kan jij de winst ophalen.",
   "stockExchangeBuildingInfo": "Op de beurs kun je aandelen kopen en verkopen. Hier kun je heel rijk mee worden.",
-
-  "intro0": "Welkom op MasterCrimeZ, crimineel! Ik ga je leren hoe alles werkt.",
+  "menuChangeProfile": "Verander profiel",
+  "intro0": "Welkom op MasterCrimeZ, crimineel! Ik ben Ernst, ik ga je leren hoe alles werkt.",
   "intro1": "Maar eerst... Wat is eigenlijk je naam?",
   "intro2": "Cool $1 En waar wil je wonen?",
   "intro3": "Welkom in $1, $2! Klik nu iets aan en ik laat je zien wat je er kan doen. (HINT) Begin met de kleine icoontjes",
   "intro1button": "Kies naam",
-  "intro2button": "Kies stad"
+  "intro2button": "Kies stad",
+  "fillInUrl": "Vul een URL in",
+  "fillInUrlText": "Voer hier een URL in om een link te maken",
+  "clickHere": "Klik hier",
+  "showMap": "Toon kaart",
+  "hideMap": "Verberg kaart"
 }

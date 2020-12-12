@@ -1,10 +1,10 @@
 import React, { useState } from "react";
+import isEqual from "react-fast-compare";
 import { Linking, Platform } from "react-native";
 import { doOnce } from "../Util";
 import Map from "./Map";
 import { screens } from "./Screen";
-
-const Container = ({ screenProps }) => {
+const Container = React.memo(function ContainerPure({ screenProps }) {
   const initialNavigationState = {
     params: null,
     routeName: null,
@@ -72,6 +72,7 @@ const Container = ({ screenProps }) => {
   };
 
   return <Map navigation={navigation} screenProps={screenProps} />;
-};
+}, isEqual);
 
+// Container.whyDidYouRender = { logOnDifferentValues: true };
 export default Container;

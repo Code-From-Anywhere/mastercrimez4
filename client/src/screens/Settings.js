@@ -149,23 +149,21 @@ const Settings = ({
         icon="ios-color-palette"
       />
 
-      {me?.level >= 2 && (
-        <Menu
-          theme={theme}
-          navigation={navigation}
-          title={`Turn ${me?.newVersion ? "off" : "on"} new version`}
-          IconFont="Entypo"
-          icon="new"
-          onPress={async () => {
-            const { response } = await post("updateProfile", {
-              loginToken: device.loginToken,
-              newVersion: !me?.newVersion,
-            });
-            reloadMe(device.loginToken);
-            alert(response);
-          }}
-        />
-      )}
+      <Menu
+        theme={theme}
+        navigation={navigation}
+        title={`Turn ${me?.newVersion ? "off" : "on"} new version`}
+        IconFont="Entypo"
+        icon="new"
+        onPress={async () => {
+          const { response } = await post("updateProfile", {
+            loginToken: device.loginToken,
+            newVersion: !me?.newVersion,
+          });
+          reloadMe(device.loginToken);
+          alert(response);
+        }}
+      />
 
       <Menu
         theme={theme}
@@ -175,13 +173,16 @@ const Settings = ({
         icon="login"
         onPress={() => dispatch({ type: "SET_LOGGED", value: false })}
       />
+
       <Menu
         theme={theme}
         navigation={navigation}
-        title={getText("menuMyProfile")}
-        to="MyProfile"
-        IconFont="AntDesign"
-        icon="user"
+        title={device.hideMap ? getText("showMap") : getText("hideMap")}
+        IconFont="Entypo"
+        icon="map"
+        onPress={() =>
+          dispatch({ type: "SET_HIDE_MAP", value: !device.hideMap })
+        }
       />
 
       <Menu

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ScrollView, Switch, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import H1 from "../components/H1";
+import MarkdownEditor from "../components/MarkdownEditor";
 import T from "../components/T";
 import Constants from "../Constants";
 import style from "../Style";
@@ -106,14 +107,7 @@ const SuperMessage = ({ screenProps: { me, device } }) => {
           )}
         </View>
       )}
-      <TextInput
-        style={[style(device.theme).textInput, { height: 200 }]}
-        placeholder={getText("message")}
-        placeholderTextColor={device.theme.secondaryTextSoft}
-        multiline
-        value={message}
-        onChangeText={setMessage}
-      />
+      <MarkdownEditor value={message} onChange={setMessage} />
 
       <Button
         theme={device.theme}

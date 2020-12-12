@@ -329,6 +329,7 @@ export const leftMenu = (me, theme) => {
           icon: "home",
           text: getText("menuHome"),
           buildingType: "house",
+          to: "Status",
         },
 
         {
@@ -336,6 +337,7 @@ export const leftMenu = (me, theme) => {
           icon: "home-analytics",
           text: getText("menuHeadquarter"),
           buildingType: "headquarter",
+          to: "GangSettings",
         },
 
         {
@@ -407,6 +409,7 @@ export const leftMenu = (me, theme) => {
           icon: "dice",
           text: getText("menuCasino"),
           buildingType: "casino",
+          to: "Poker",
         },
 
         {
@@ -414,9 +417,11 @@ export const leftMenu = (me, theme) => {
           icon: "ios-car",
           text: getText("menuGarage"),
           buildingType: "garage",
+          to: "Garage",
         },
 
         {
+          to: "Gym",
           iconType: "AntDesign",
           icon: "stepforward",
           text: getText("menuGym"),
@@ -447,6 +452,7 @@ export const leftMenu = (me, theme) => {
           icon: "hospital",
           text: getText("menuHospital"),
           buildingType: "hospital",
+          to: "Hospital",
         },
 
         {
@@ -455,6 +461,7 @@ export const leftMenu = (me, theme) => {
           text: getText("menuJail2"),
           buildingType: "jail",
           badgeCount: me?.jail,
+          to: "Jail",
         },
 
         {
@@ -477,6 +484,7 @@ export const leftMenu = (me, theme) => {
           icon: "bank",
           text: getText("menuMarket"),
           buildingType: "market",
+          to: "Market",
         },
 
         {
@@ -485,6 +493,7 @@ export const leftMenu = (me, theme) => {
           icon: "home",
           text: getText("homeShop"),
           buildingType: "estateAgent",
+          to: "EstateAgent",
         },
 
         {
@@ -493,6 +502,7 @@ export const leftMenu = (me, theme) => {
           icon: "pistol",
           text: getText("menuWeaponShop"),
           buildingType: "weaponShop",
+          to: "WeaponShop",
         },
 
         {
@@ -504,6 +514,7 @@ export const leftMenu = (me, theme) => {
             InactiveScreens.STOCK_MARKET_RELEASE_DATE.isBefore(moment()),
           text: getText("menuStockExchange"),
           buildingType: "stockExchange",
+          to: "StockExchange",
         },
       ].filter((x) => !!x && !x.inactive),
     },

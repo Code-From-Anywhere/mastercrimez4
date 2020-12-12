@@ -53,58 +53,61 @@ const containerStyle = {
   height: "100%",
 };
 
-const ReactMap = ({ zoom, map, setMap, children, view, setMapReady }) => {
-  const dispatch = useDispatch();
-  const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds();
-    map.fitBounds(bounds);
-    setMap(map);
-    setMapReady(true);
-  }, []);
+const ReactMap = React.memo(
+  ({ zoom, map, setMap, children, view, setMapReady }) => {
+    const dispatch = useDispatch();
+    const onLoad = React.useCallback(function callback(map) {
+      const bounds = new window.google.maps.LatLngBounds();
+      map.fitBounds(bounds);
+      setMap(map);
+      setMapReady(true);
+    }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
-    setMap(null);
-  }, []);
-  return (
-    <LoadScript googleMapsApiKey={API_KEY}>
-      <GoogleMap
-        clickableIcons={false}
-        mapContainerStyle={containerStyle}
-        zoom={zoom}
-        onZoomChanged={() => {
-          const zoom = map?.getZoom();
-          // console.log("zoom changed to ", zoom);
-          dispatch({ type: "SET_ZOOM", value: zoom });
-        }}
-        //center={{ lat: city?.latitude, lng: city?.longitude }}
-        onLoad={onLoad}
-        options={{
-          disableDefaultUI: true,
+    const onUnmount = React.useCallback(function callback(map) {
+      setMap(null);
+    }, []);
 
-          //https://developers.google.com/maps/documentation/javascript/style-reference
-          styles:
-            view === "territories"
-              ? [
-                  {
-                    featureType: "all",
-                    elementType: "labels",
-                    stylers: [{ visibility: "off" }],
-                  },
-                  {
-                    featureType: "road",
-                    elementType: "geometry.fill",
-                    stylers: [{ visibility: "off" }],
-                  },
-                ]
-              : undefined,
-        }}
-        onUnmount={onUnmount}
-      >
-        {children}
-      </GoogleMap>
-    </LoadScript>
-  );
-};
+    return (
+      <LoadScript googleMapsApiKey={API_KEY}>
+        <GoogleMap
+          clickableIcons={false}
+          mapContainerStyle={containerStyle}
+          zoom={zoom}
+          onZoomChanged={() => {
+            const zoom = map?.getZoom();
+            // console.log("zoom changed to ", zoom);
+            dispatch({ type: "SET_ZOOM", value: zoom });
+          }}
+          //center={{ lat: city?.latitude, lng: city?.longitude }}
+          onLoad={onLoad}
+          options={{
+            disableDefaultUI: true,
+
+            //https://developers.google.com/maps/documentation/javascript/style-reference
+            styles:
+              view === "territories"
+                ? [
+                    {
+                      featureType: "all",
+                      elementType: "labels",
+                      stylers: [{ visibility: "off" }],
+                    },
+                    {
+                      featureType: "road",
+                      elementType: "geometry.fill",
+                      stylers: [{ visibility: "off" }],
+                    },
+                  ]
+                : undefined,
+          }}
+          onUnmount={onUnmount}
+        >
+          {children}
+        </GoogleMap>
+      </LoadScript>
+    );
+  }
+);
 
 const Territories = React.memo(
   ({ territories, MapsComponent, onPress, opacity, selectedAreaIndex }) => {
@@ -313,7 +316,7 @@ const GameObjects = React.memo(
 
 // GameObjects.whyDidYouRender = true;
 
-const Map = ({
+const Map = React.memo(function MapPure({
   navigation,
   screenProps,
   screenProps: {
@@ -332,7 +335,7 @@ const Map = ({
     reloadRobberies,
     reloadAreas,
   },
-}) => {
+}) {
   doOnce(() => {
     dispatch({ type: "SET_ZOOM", value: getZoom(city?.delta) });
   });
@@ -828,6 +831,8 @@ const Map = ({
       </View>
     </Logic>
   );
-};
+});
+
+Map.whyDidYouRender = { logOnDifferentValues: true };
 
 export default Map;

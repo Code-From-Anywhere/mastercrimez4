@@ -27,6 +27,7 @@ import {
   getTextFunction,
   getUserColor,
   post,
+  properties,
 } from "../Util";
 
 const markdownItInstance = MarkdownIt({ typographer: true })
@@ -161,10 +162,6 @@ const ProfileScreen = ({
     getProfile(name);
   }, [params?.name]);
 
-  useEffect(() => {
-    fetchImages();
-  }, [profile?.id]);
-
   const postReport = async () => {
     const { response } = await post("report", {
       token: device.loginToken,
@@ -205,26 +202,6 @@ const ProfileScreen = ({
     );
   };
 
-  const fetchImages = () => {
-    fetch(
-      `${Constants.SERVER_ADDR}/listimages?token=${device.loginToken}&uid=${profile?.id}`,
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then(({ images }) => {
-        setImages(images);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
   if (loading) {
     return <ActivityIndicator />;
   }
@@ -239,42 +216,6 @@ const ProfileScreen = ({
 
   const uri = Constants.SERVER_ADDR + profile?.image;
   const hasImage = !!profile?.image;
-
-  const properties = [
-    {
-      name: "bulletFactory",
-    },
-    {
-      name: "casino",
-    },
-    {
-      name: "rld",
-    },
-    {
-      name: "landlord",
-    },
-    {
-      name: "junkies",
-    },
-    {
-      name: "weaponShop",
-    },
-    {
-      name: "airport",
-    },
-    {
-      name: "estateAgent",
-    },
-    {
-      name: "garage",
-    },
-    {
-      name: "jail",
-    },
-    {
-      name: "bank",
-    },
-  ];
 
   const PROFESSIONS = [
     { type: "thief", image: require("../../assets/profession/thief.jpg") },
@@ -458,24 +399,6 @@ const ProfileScreen = ({
           {profile?.ban !== "shadowBanned" && profile?.ban !== "banned" && (
             <Bio theme={theme} bio={profile?.bio} />
           )}
-        </View>
-
-        <View>
-          {images.map((image) => {
-            const uri = Constants.SERVER_ADDR + "/" + image.image;
-            return (
-              <View>
-                <Image
-                  source={{ uri }}
-                  style={{
-                    width: "100%",
-                    height: 400,
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
-            );
-          })}
         </View>
       </View>
     </ScrollView>

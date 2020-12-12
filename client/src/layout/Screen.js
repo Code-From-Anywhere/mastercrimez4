@@ -48,7 +48,6 @@ import GarageShop from "../screens/GarageShop";
 import Gym from "../screens/Gym";
 import Hackers from "../screens/Hackers";
 import Hoeren from "../screens/Hoeren";
-import Home from "../screens/Home";
 import Hospital from "../screens/Hospital";
 import House from "../screens/House";
 import Income from "../screens/Income";
@@ -158,7 +157,6 @@ export const screens = {
   Gym,
   Hackers,
   Hoeren,
-  Home,
   Hospital,
   House,
   Income,

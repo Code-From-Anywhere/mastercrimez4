@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { getTextFunction } from "../Util";
 export const AlertContext = React.createContext({});
@@ -15,22 +15,25 @@ export const AlertProvider = ({ children }) => {
     textInputRef.current?.focus();
   }, [textInputRef, alerts.length]);
 
+  const alert = useCallback(
+    (title, message, buttons, options) => {
+      setValue("");
+
+      console.log("lengte", alerts.length);
+
+      // alerts copy.
+      const newAlerts = [...alerts];
+      if (!alerts.map((x) => x.options.key).includes(options.key)) {
+        newAlerts.push({ title, message, buttons, options });
+      }
+      //NB: copy needed!!!
+      setAlerts([...newAlerts]);
+    },
+    [setValue, alerts, setAlerts]
+  );
+
   return (
-    <AlertContext.Provider
-      value={(title, message, buttons, options) => {
-        setValue("");
-
-        console.log("lengte", alerts.length);
-
-        // alerts copy.
-        const newAlerts = [...alerts];
-        if (!alerts.map((x) => x.options.key).includes(options.key)) {
-          newAlerts.push({ title, message, buttons, options });
-        }
-        //NB: copy needed!!!
-        setAlerts([...newAlerts]);
-      }}
-    >
+    <AlertContext.Provider value={alert}>
       {children}
       {alerts.length > 0 ? (
         <View

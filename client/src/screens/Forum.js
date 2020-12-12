@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import MarkdownView from "react-native-markdown-display";
 import Button from "../components/Button";
+import MarkdownEditor from "../components/MarkdownEditor";
 import T from "../components/T";
 import Tabs from "../components/Tabs";
 import Constants from "../Constants";
@@ -19,6 +20,7 @@ class Messages extends Component {
   state = {
     messages: null,
     newMessage: false,
+    message: "",
   };
 
   componentDidMount() {
@@ -141,15 +143,12 @@ class Messages extends Component {
           value={this.state.title}
           onChangeText={(title) => this.setState({ title })}
         />
-        <TextInput
-          multiline
-          placeholderTextColor={device.theme.secondaryTextSoft}
-          numberOfLines={4}
-          style={{ ...style(device.theme).textInput, height: 150 }}
-          placeholder={getText("message")}
+
+        <MarkdownEditor
           value={this.state.message}
-          onChangeText={(message) => this.setState({ message })}
+          onChange={(message) => this.setState({ message })}
         />
+
         <Button
           theme={this.props.screenProps.device.theme}
           style={{ marginVertical: 10 }}
@@ -281,15 +280,11 @@ class Messages extends Component {
         </View>
 
         <View>
-          <TextInput
-            multiline
-            numberOfLines={4}
-            style={style(device.theme).textInput}
-            placeholderTextColor={device.theme.secondaryTextSoft}
-            placeholder={getText("react")}
+          <MarkdownEditor
             value={this.state.message}
-            onChangeText={(message) => this.setState({ message })}
+            onChange={(message) => this.setState({ message })}
           />
+
           <Button
             theme={this.props.screenProps.device.theme}
             style={{ marginVertical: 10 }}

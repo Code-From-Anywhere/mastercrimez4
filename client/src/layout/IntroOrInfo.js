@@ -48,6 +48,7 @@ const IntroOrInfo = ({ screenProps: { dispatch, device, me } }) => {
       text: getText("intro2", me?.name),
       button: getText("intro2button"),
       onClose: () => {
+        dispatch({ type: "SET_GUY_VISIBLE", value: false });
         // open nothing, just let the user choose a city like traveling.
         // when a city is chosen, animate to that city, up level
       },

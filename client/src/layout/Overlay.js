@@ -11,16 +11,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import CountDown from "react-native-countdown-component";
 import { Col, Grid } from "react-native-easy-grid";
 import Swiper from "react-native-web-swiper";
 import { useDispatch } from "react-redux";
 import Chat from "../components/Chat";
+import Countdown from "../components/Countdown";
 import Dead from "../components/Dead";
 import Fly from "../components/Fly";
 import Jail from "../components/Jail";
 import User from "../components/User";
-import { getRank, getStrength, getTextFunction, numberFormat } from "../Util";
+import {
+  getRank,
+  getStrength,
+  getTextFunction,
+  lighterHex,
+  numberFormat,
+} from "../Util";
 import ActionsBar from "./ActionsBar";
 import BottomTabs from "./BottomTabs";
 import IntroOrInfo from "./IntroOrInfo";
@@ -486,8 +492,25 @@ const Overlay = ({
         elevation: 5,
       }
     : {};
+
   return (
     <>
+      {!device.hideMap ||
+      view === "territories" ||
+      (view === "game" && selected === "airport") ? null : (
+        <View
+          style={{
+            zIndex: 0,
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: lighterHex(lighterHex(device.theme.primary)),
+          }}
+        />
+      )}
+
       <Menus
         areas={screenProps.areas}
         channels={screenProps.channels}
@@ -595,13 +618,10 @@ const Overlay = ({
             <View style={{ flexDirection: "row", padding: 10 }}>
               <Icon.Ionicons name="ios-airplane" color="white" size={24} />
 
-              <CountDown
-                until={Math.round((me?.reizenAt - Date.now()) / 1000)}
-                onFinish={() => {
-                  // reloadMe(device.loginToken);
-                }}
+              <Countdown
+                until={me?.reizenAt}
                 size={10}
-                timeToShow={["M", "S"]}
+                timeToShow={["m", "s"]}
                 timeLabels={{ m: null, s: null }}
               />
             </View>
@@ -611,13 +631,10 @@ const Overlay = ({
             <View style={{ flexDirection: "row", padding: 10 }}>
               <Icon.FontAwesome name="bars" color="white" size={24} />
 
-              <CountDown
-                until={Math.round((me?.jailAt - Date.now()) / 1000)}
-                onFinish={() => {
-                  // reloadMe(device.loginToken);
-                }}
+              <Countdown
+                until={me?.jailAt}
                 size={10}
-                timeToShow={["M", "S"]}
+                timeToShow={["m", "s"]}
                 timeLabels={{ m: null, s: null }}
               />
             </View>
@@ -627,13 +644,10 @@ const Overlay = ({
             <View style={{ flexDirection: "row", padding: 10 }}>
               <Icon.FontAwesome name="shield" color="white" size={24} />
 
-              <CountDown
-                until={Math.round((me?.bunkerAt - Date.now()) / 1000)}
-                onFinish={() => {
-                  // reloadMe(device.loginToken);
-                }}
+              <Countdown
+                until={me?.bunkerAt}
                 size={10}
-                timeToShow={["M", "S"]}
+                timeToShow={["m", "s"]}
                 timeLabels={{ m: null, s: null }}
               />
             </View>
