@@ -61,7 +61,7 @@
     "react-native-web": "~0.11.7",
     "react-native-web-refresh-control": "^1.0.3",
     "react-native-web-swiper": "^2.1.7",
-    "react-native-webview": "9.4.0",
+    "react-native-webview": "11.0.0",
     "react-redux": "^7.2.0",
     "react-ticker": "^1.2.2",
     "redux": "^4.0.5",
