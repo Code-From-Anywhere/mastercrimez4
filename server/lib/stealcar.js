@@ -109,21 +109,8 @@ const stealcar = async (req, res, User, Garage, Action, Gang, GangMission) => {
       });
 
       if (kans2 >= random) {
-        const accomplices = await User.findAll({
-          attributes: ["name"],
-          where: Sequelize.and(
-            { ocAt: { [Op.gt]: Date.now() - 120000 } },
-            Sequelize.or(
-              { accomplice: user.name },
-              { accomplice2: user.name },
-              { accomplice3: user.name },
-              { accomplice4: user.name }
-            )
-          ),
-        });
-
         const carsArray = [];
-        let n = (accomplices.length + 1) * happyHourFactor;
+        let n = happyHourFactor;
         while (n--) carsArray.push({ car: true });
 
         const carthiefAdvantage = user.profession === "carthief" ? 2 : 1;

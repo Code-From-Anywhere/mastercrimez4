@@ -202,14 +202,6 @@ const Settings = ({
         IconFont="MaterialCommunityIcons"
         icon="pistol"
       />
-      <Menu
-        theme={theme}
-        navigation={navigation}
-        title={getText("menuAccomplice")}
-        to="Accomplice"
-        IconFont="FontAwesome"
-        icon="universal-access"
-      />
     </ScrollView>
   );
 };

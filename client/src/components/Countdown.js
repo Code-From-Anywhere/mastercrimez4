@@ -8,6 +8,9 @@ const Countdown = React.memo(function CountdownPure({
   timeToShow,
   timeLabels,
   size,
+  digitStyle,
+  digitTxtStyle,
+  style,
 }) {
   useEffect(() => {
     const interval = setInterval(() => {
@@ -19,11 +22,23 @@ const Countdown = React.memo(function CountdownPure({
   const [timeLeft, setTimeLeft] = useState(until - Date.now());
 
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={[{ flexDirection: "row" }, style]}>
       {timeToShow.map((label) => {
         return (
-          <View key={label}>
-            <Text>{moment(timeLeft).format(label)}</Text>
+          <View key={label} style={[{ paddingHorizontal: 5 }, digitStyle]}>
+            <Text
+              style={[
+                { color: "white", fontWeight: "bold", fontSize: size },
+                digitTxtStyle,
+              ]}
+            >
+              {moment(timeLeft).format(label)}
+            </Text>
+            {timeLabels?.[label] && (
+              <Text style={[{ color: "white" }, digitTxtStyle]}>
+                {timeLabels?.[label]}
+              </Text>
+            )}
           </View>
         );
       })}

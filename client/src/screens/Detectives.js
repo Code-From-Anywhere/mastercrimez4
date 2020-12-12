@@ -1,8 +1,8 @@
 import moment from "moment";
 import React, { useState } from "react";
 import { ScrollView, TextInput, View } from "react-native";
-import CountDown from "react-native-countdown-component";
 import Button from "../components/Button";
+import CountDown from "../components/Countdown";
 import T from "../components/T";
 import User from "../components/User";
 import style from "../Style";
@@ -94,13 +94,11 @@ const Detectives = ({
                   style={{ marginLeft: 10 }}
                   until={moment(detective.createdAt)
                     .add(detective.seconds, "seconds")
-                    .diff(moment(), "seconds")}
+                    .valueOf()}
                   digitStyle={{ backgroundColor: theme.secondary }}
                   digitTxtStyle={{ color: theme.secondaryText }}
-                  onFinish={() => {}}
                   size={8}
-                  timeToShow={["H", "M", "S"]}
-                  timeLabels={{ h: null, m: null, s: null }}
+                  timeToShow={["mm", "ss"]}
                 />
               )}
             </View>

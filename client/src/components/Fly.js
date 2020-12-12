@@ -1,34 +1,29 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Text, View } from "react-native";
-import CountDown from "react-native-countdown-component";
+import CountDown from "../components/Countdown";
 import { getTextFunction } from "../Util";
 
-class Fly extends React.Component {
-  render() {
-    const {
-      screenProps: { me, device, reloadMe },
-      navigation,
-    } = this.props;
-    const sec = Math.round((me.reizenAt - Date.now()) / 1000);
-    const getText = getTextFunction(me?.locale);
+const Fly = ({ screenProps: { me, device, reloadMe } }) => {
+  const getText = getTextFunction(me?.locale);
 
-    return (
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Text style={{ color: device.theme.primaryText }}>
-          {getText("flyYoureTravelingTo", me?.city)}
-        </Text>
-        <CountDown
-          until={sec}
-          onFinish={() => {
-            reloadMe(device.loginToken);
-          }}
-          size={20}
-          timeToShow={["M", "S"]}
-          timeLabels={{ m: getText("minutes"), s: getText("seconds") }}
-        />
-      </View>
-    );
-  }
-}
+  const onFinishCallback = useCallback(() => {
+    reloadMe(device.loginToken);
+  }, [reloadMe, device.loginToken]);
+
+  return (
+    <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <Text style={{ color: device.theme.primaryText }}>
+        {getText("flyYoureTravelingTo", me?.city)}
+      </Text>
+      <CountDown
+        until={me?.reizenAt}
+        onFinish={onFinishCallback}
+        size={20}
+        timeToShow={["mm", "ss"]}
+        timeLabels={{ mm: getText("minutes"), ss: getText("seconds") }}
+      />
+    </View>
+  );
+};
 
 export default Fly;

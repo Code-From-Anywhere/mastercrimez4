@@ -2290,10 +2290,6 @@ server.get("/topic", (req, res) =>
   require("./forum").getTopic(req, res, User, ForumTopic, ForumResponse)
 );
 
-server.post("/setAccomplice", (req, res) =>
-  require("./accomplice").setAccomplice(req, res, User)
-);
-
 server.post("/mollieCreate", (req, res) =>
   require("./mollieCreate").mollieCreate(req, res, User, Payment)
 );
@@ -2424,16 +2420,6 @@ server.get("/profile", (req, res) => {
     },
   }).then(async (user) => {
     if (user) {
-      const accomplices = await User.findAll({
-        attributes: ["name", "rank"],
-        where: Sequelize.or(
-          { accomplice: user.name },
-          { accomplice2: user.name },
-          { accomplice3: user.name },
-          { accomplice4: user.name }
-        ),
-      });
-
       // const othersOnIp = await User.findAll({
       //   where: {
       //     ip: user.ip,
@@ -2444,7 +2430,6 @@ server.get("/profile", (req, res) => {
       // });
 
       let extended = user;
-      extended.dataValues.accomplices = accomplices;
       // extended.dataValues.othersOnIp = othersOnIp;
 
       res.json(extended);
@@ -2577,16 +2562,6 @@ server.get("/me", (req, res) => {
           `SELECT SUM(unread) AS unread FROM channelsubs WHERE userId=${user.id};`
         );
 
-        const accomplices = await User.findAll({
-          attributes: ["name", "rank"],
-          where: Sequelize.or(
-            { accomplice: user.name },
-            { accomplice2: user.name },
-            { accomplice3: user.name },
-            { accomplice4: user.name }
-          ),
-        });
-
         let gangMembers = [];
         if (user.gangId) {
           gangMembers = await User.findAll({
@@ -2596,7 +2571,6 @@ server.get("/me", (req, res) => {
         }
 
         const userWithMessages = user.dataValues;
-        userWithMessages.accomplices = accomplices;
         userWithMessages.position = position.amount + 1;
         userWithMessages.chats = chats.unread || 0;
         userWithMessages.jail = jail.length;
@@ -2643,16 +2617,6 @@ server.get("/me", (req, res) => {
         });
         getText = getTextFunction(newuser.locale);
 
-        sendChatPushMail({
-          Channel,
-          ChannelSub,
-          ChannelMessage,
-          User,
-          isSystem: true,
-          user2: newuser,
-          message: getText("welcomeMessage"),
-        });
-
         const jail = await User.findAll({
           attributes: ["id"],
           where: { jailAt: { [Op.gt]: Date.now() } },
@@ -2671,16 +2635,6 @@ server.get("/me", (req, res) => {
           `SELECT SUM(unread) AS unread FROM channelsubs WHERE userId=${newuser.id};`
         );
 
-        const accomplices = await User.findAll({
-          attributes: ["name", "rank"],
-          where: Sequelize.or(
-            { accomplice: newuser.name },
-            { accomplice2: newuser.name },
-            { accomplice3: newuser.name },
-            { accomplice4: newuser.name }
-          ),
-        });
-
         let gangMembers = [];
         if (user.gangId) {
           gangMembers = await User.findAll({
@@ -2692,7 +2646,6 @@ server.get("/me", (req, res) => {
         const userWithMessages = newuser.dataValues;
         userWithMessages.jail = jail.length;
         userWithMessages.online = online.length;
-        userWithMessages.accomplices = accomplices;
         userWithMessages.position = position.amount + 1;
         userWithMessages.chats = chats.unread || 0;
         user.gangMembers = gangMembers;
@@ -3271,7 +3224,7 @@ const swissBankTax = async () => {
   );
 
   sequelize.query(
-    `UPDATE users SET swissBank=ROUND(swissBank*0.98), swissBullets=ROUND(swissBullets*0.98)`
+    `UPDATE users SET swissBank=ROUND(swissBank*0.98), swissBullets=ROUND(swissBullets*0.99)`
   );
 };
 

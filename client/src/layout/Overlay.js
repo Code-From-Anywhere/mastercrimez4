@@ -469,7 +469,6 @@ const Overlay = ({
     "Login",
     "MyProfile",
     "Backfire",
-    "Accomplice",
     "Gangs",
     "Gang",
     "GangSettings",
@@ -615,40 +614,55 @@ const Overlay = ({
           }}
         >
           {me?.reizenAt > Date.now() && (
-            <View style={{ flexDirection: "row", padding: 10 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                padding: 10,
+                alignItems: "center",
+              }}
+            >
               <Icon.Ionicons name="ios-airplane" color="white" size={24} />
 
               <Countdown
                 until={me?.reizenAt}
                 size={10}
-                timeToShow={["m", "s"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             </View>
           )}
 
           {me?.jailAt > Date.now() && (
-            <View style={{ flexDirection: "row", padding: 10 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                padding: 10,
+                alignItems: "center",
+              }}
+            >
               <Icon.FontAwesome name="bars" color="white" size={24} />
 
               <Countdown
                 until={me?.jailAt}
                 size={10}
-                timeToShow={["m", "s"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             </View>
           )}
 
           {me?.bunkerAt > Date.now() && (
-            <View style={{ flexDirection: "row", padding: 10 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                padding: 10,
+                alignItems: "center",
+              }}
+            >
               <Icon.FontAwesome name="shield" color="white" size={24} />
 
               <Countdown
                 until={me?.bunkerAt}
                 size={10}
-                timeToShow={["m", "s"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             </View>
           )}

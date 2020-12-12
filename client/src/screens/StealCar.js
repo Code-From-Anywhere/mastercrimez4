@@ -14,9 +14,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import CountDown from "react-native-countdown-component";
 import Button from "../components/Button";
 import Captcha from "../components/Captcha";
+import CountDown from "../components/Countdown";
 import T from "../components/T";
 import Constants from "../Constants";
 import { getTextFunction } from "../Util";
@@ -304,11 +304,11 @@ class StealCar extends Component {
           </ScrollView>
         ) : seconds > 0 ? (
           <CountDown
-            until={seconds}
+            until={me.autostelenAt + 60000}
             onFinish={() => this.setState({ finished: true })}
             size={20}
-            timeToShow={["M", "S"]}
-            timeLabels={{ m: getText("minutes"), s: getText("seconds") }}
+            timeToShow={["mm", "ss"]}
+            timeLabels={{ mm: getText("minutes"), ss: getText("seconds") }}
           />
         ) : (
           <FlatList

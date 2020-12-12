@@ -11,7 +11,7 @@ import {
   View,
 } from "react-native";
 import Accordion from "react-native-collapsible/Accordion";
-import CountDown from "react-native-countdown-component";
+import CountDown from "../components/Countdown";
 import Hoverable from "../components/Hoverable";
 import T from "../components/T";
 import Constants from "../Constants";
@@ -71,13 +71,11 @@ export const leftMenu = (me, theme) => {
             stealcarSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={stealcarSeconds}
+                until={me?.autostelenAt + 60000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -92,13 +90,11 @@ export const leftMenu = (me, theme) => {
             crimeSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={crimeSeconds}
+                until={me?.crimeAt + 60000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -113,13 +109,11 @@ export const leftMenu = (me, theme) => {
             wietSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={wietSeconds}
+                until={me?.wietAt + 120000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -134,13 +128,11 @@ export const leftMenu = (me, theme) => {
             junkiesSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={junkiesSeconds}
+                until={me?.junkiesAt + 120000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -155,13 +147,11 @@ export const leftMenu = (me, theme) => {
             hoerenSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={hoerenSeconds}
+                until={me?.hoerenAt + 120000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -199,13 +189,11 @@ export const leftMenu = (me, theme) => {
             attackSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={attackSeconds}
+                until={me?.attackAt + 120000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -225,13 +213,11 @@ export const leftMenu = (me, theme) => {
             robSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={robSeconds}
+                until={me?.robAt + 30000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -261,13 +247,11 @@ export const leftMenu = (me, theme) => {
             robberySeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={robberySeconds}
+                until={me?.robberyAt + me?.robberySeconds * 1000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -304,13 +288,11 @@ export const leftMenu = (me, theme) => {
             ocSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={ocSeconds}
+                until={me?.ocAt + 3600000}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },
@@ -430,13 +412,11 @@ export const leftMenu = (me, theme) => {
             gymSeconds > 0 ? (
               <CountDown
                 style={{ marginLeft: 10 }}
-                until={gymSeconds}
+                until={me?.gymAt + me?.gymTime}
                 digitStyle={{ backgroundColor: theme.secondary }}
                 digitTxtStyle={{ color: theme.secondaryText }}
-                onFinish={() => {}}
                 size={8}
-                timeToShow={["M", "S"]}
-                timeLabels={{ m: null, s: null }}
+                timeToShow={["mm", "ss"]}
               />
             ) : null,
         },

@@ -53,18 +53,20 @@ const MyObjects = ({
                   }}
                 >
                   <T>{`${propertyString} in ${city.city}`}</T>
-                  <Button
-                    key={`index${index}${property}`}
-                    style={{ marginVertical: 15 }}
-                    theme={theme}
-                    title={getText("manage")}
-                    onPress={() =>
-                      navigation.navigate("ManageObject", {
-                        type: property,
-                        city: city.city,
-                      })
-                    }
-                  />
+                  {city.city === me?.city && (
+                    <Button
+                      key={`index${index}${property}`}
+                      style={{ marginVertical: 15 }}
+                      theme={theme}
+                      title={getText("manage")}
+                      onPress={() =>
+                        navigation.navigate("ManageObject", {
+                          type: property,
+                          city: city.city,
+                        })
+                      }
+                    />
+                  )}
                 </View>
               );
             }

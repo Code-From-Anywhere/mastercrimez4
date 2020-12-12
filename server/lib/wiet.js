@@ -57,28 +57,10 @@ const wiet = async (req, res, User, Action) => {
     const rang = getRank(user.rank, "number");
 
     if (user[timeKey] + timeNeeded < Date.now()) {
-      const accomplices = await User.findAll({
-        attributes: ["name"],
-        where: Sequelize.and(
-          { ocAt: { [Op.gt]: Date.now() - 120000 } },
-          Sequelize.or(
-            { accomplice: user.name },
-            { accomplice2: user.name },
-            { accomplice3: user.name },
-            { accomplice4: user.name }
-          )
-        ),
-      });
-
       const professionFactor = user.profession === "weedgrower" ? 1.3 : 1;
 
       const random = Math.ceil(
-        Math.random() *
-          10 *
-          rang *
-          (accomplices.length + 1) *
-          happyHourFactor *
-          professionFactor
+        Math.random() * 10 * rang * happyHourFactor * professionFactor
       );
 
       Action.create({

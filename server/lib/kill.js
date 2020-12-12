@@ -446,36 +446,6 @@ const kill = async (
         );
         return updated;
       });
-
-    const accomplices = await User.findAll({
-      attributes: ["id"],
-      where: Sequelize.or(
-        { accomplice: user2.name },
-        { accomplice2: user2.name },
-        { accomplice3: user2.name },
-        { accomplice4: user2.name }
-      ),
-    });
-
-    accomplices.forEach((accomplice) => {
-      const getAccompliceText = getTextFunction(accomplice.locale);
-
-      sendChatPushMail({
-        Channel,
-        ChannelMessage,
-        ChannelSub,
-        User,
-        isSystem: true,
-        message: getAccompliceText(
-          "killSuccessAccompliceMessage",
-          user.name,
-          user2.name,
-          bullets
-        ),
-        user1: user,
-        user2: accomplice,
-      });
-    });
   } else {
     //user2 gaat niet dood maar krijgt schade
 
@@ -499,37 +469,6 @@ const kill = async (
       },
       { where: { id: user.id } }
     );
-
-    const accomplices = await User.findAll({
-      attributes: ["id"],
-      where: Sequelize.or(
-        { accomplice: user2.name },
-        { accomplice2: user2.name },
-        { accomplice3: user2.name },
-        { accomplice4: user2.name }
-      ),
-    });
-
-    accomplices.forEach((accomplice) => {
-      const getAccompliceText = getTextFunction(accomplice.locale);
-
-      sendChatPushMail({
-        Channel,
-        ChannelMessage,
-        ChannelSub,
-        User,
-        isSystem: true,
-        message: getAccompliceText(
-          "killFailAccompliceMessage",
-          user.name,
-          user2.name,
-          damage,
-          stolenTotal
-        ),
-        user1: user,
-        user2: accomplice,
-      });
-    });
 
     sendChatPushMail({
       Channel,

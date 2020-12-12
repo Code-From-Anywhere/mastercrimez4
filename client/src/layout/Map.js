@@ -833,6 +833,6 @@ const Map = React.memo(function MapPure({
   );
 });
 
-Map.whyDidYouRender = { logOnDifferentValues: true };
+Map.whyDidYouRender = true; // { logOnDifferentValues: true };
 
 export default Map;

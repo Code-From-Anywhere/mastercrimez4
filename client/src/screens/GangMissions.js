@@ -1,9 +1,9 @@
 import moment from "moment";
 import React, { useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
-import CountDown from "react-native-countdown-component";
 import { Col, Grid } from "react-native-easy-grid";
 import Button from "../components/Button";
+import CountDown from "../components/Countdown";
 import H1 from "../components/H1";
 import T from "../components/T";
 import { doOnce, get, getTextFunction, post } from "../Util";
@@ -123,15 +123,13 @@ const GangMissions = ({ navigation, screenProps: { device, me } }) => {
                         style={{ marginLeft: 10 }}
                         until={moment(mission.current.createdAt)
                           .add(mission.seconds, "seconds")
-                          .diff(moment(), "seconds")}
+                          .valueOf()}
                         digitStyle={{
                           backgroundColor: device.theme.secondary,
                         }}
                         digitTxtStyle={{ color: device.theme.secondaryText }}
-                        onFinish={() => {}}
                         size={8}
-                        timeToShow={["H", "M", "S"]}
-                        timeLabels={{ m: null, s: null }}
+                        timeToShow={["H", "mm", "ss"]}
                       />
                     )
                   ) : (

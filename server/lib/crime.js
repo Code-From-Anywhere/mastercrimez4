@@ -87,28 +87,11 @@ const crime = async (req, res, User, Action, Code, Gang, GangMission) => {
       });
 
       if (kans2 >= random) {
-        const accomplices = await User.findAll({
-          attributes: ["name"],
-          where: Sequelize.and(
-            { ocAt: { [Op.gt]: Date.now() - 120000 } },
-            Sequelize.or(
-              { accomplice: user.name },
-              { accomplice2: user.name },
-              { accomplice3: user.name },
-              { accomplice4: user.name }
-            )
-          ),
-        });
-
         doGangMission({ Gang, GangMission, amount: 1, user, what: "crime" });
         const specialText = getSpecial(User, user);
 
         const stolen = Math.ceil(
-          Math.random() *
-            option *
-            10000 *
-            (accomplices.length + 1) *
-            happyHourFactor
+          Math.random() * option * 10000 * happyHourFactor
         );
         User.update(
           {

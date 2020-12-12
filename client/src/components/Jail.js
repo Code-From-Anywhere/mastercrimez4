@@ -1,6 +1,6 @@
 import React from "react";
 import { FlatList, View } from "react-native";
-import CountDown from "react-native-countdown-component";
+import CountDown from "../components/Countdown";
 import Constants from "../Constants";
 import { getTextFunction, post } from "../Util";
 import Button from "./Button";
@@ -46,19 +46,16 @@ class Jail extends React.Component {
       screenProps: { device },
     } = this.props;
 
-    const seconds = Math.floor((item.jailAt - Date.now()) / 1000);
-
     return (
       <View style={{ flexDirection: "row" }}>
         <T>{item.name}</T>
         <CountDown
           style={{ marginLeft: 10 }}
-          until={seconds}
+          until={item.jailAt}
           digitStyle={{ backgroundColor: "#404040" }}
           digitTxtStyle={{ color: "white" }}
-          onFinish={() => {}}
           size={8}
-          timeToShow={["M", "S"]}
+          timeToShow={["mm", "ss"]}
           timeLabels={{ m: null, s: null }}
         />
       </View>
@@ -83,16 +80,15 @@ class Jail extends React.Component {
     const getText = getTextFunction(me?.locale);
 
     const { response } = this.state;
-    const sec = Math.round((me.jailAt - Date.now()) / 1000);
     return (
       <View style={{ flex: 1, alignItems: "center" }}>
         <T>{getText("jailYoureInJail")}</T>
 
         <CountDown
-          until={sec}
+          until={me.jailAt}
           size={20}
-          timeToShow={["M", "S"]}
-          timeLabels={{ m: getText("minutes"), s: getText("seconds") }}
+          timeToShow={["mm", "ss"]}
+          timeLabels={{ mm: getText("minutes"), ss: getText("seconds") }}
         />
 
         <View style={{ height: 15 }} />

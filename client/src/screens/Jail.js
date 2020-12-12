@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FlatList, View } from "react-native";
-import CountDown from "react-native-countdown-component";
 import Button from "../components/Button";
+import CountDown from "../components/Countdown";
 import T from "../components/T";
 import Constants from "../Constants";
 import { getTextFunction, post } from "../Util";
@@ -38,20 +38,16 @@ class Jail extends Component {
 
     const getText = getTextFunction(me?.locale);
 
-    const seconds = Math.floor((item.jailAt - Date.now()) / 1000);
-
     return (
       <View style={{ flexDirection: "row" }}>
         <T>{item.name}</T>
         <CountDown
           style={{ marginLeft: 10 }}
-          until={seconds}
+          until={item.jailAt}
           digitStyle={{ backgroundColor: "#404040" }}
           digitTxtStyle={{ color: "white" }}
-          onFinish={() => {}}
           size={8}
-          timeToShow={["M", "S"]}
-          timeLabels={{ m: null, s: null }}
+          timeToShow={["mm", "ss"]}
         />
         <Button
           theme={this.props.screenProps.device.theme}

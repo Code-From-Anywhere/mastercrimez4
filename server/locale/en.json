@@ -375,8 +375,6 @@
   "enterCodeWhatMessage": "You and $1 opened the case together. It contained: $2 $3. You split the profit.",
   "enterCodeWhatSuccess": "You and $1 opened the case together. It contained: $2 $3. You split the profit.",
 
-  "welcomeMessage": "Welcome to MasterCrimeZ.\n\nIn this game, it's your goal to become the best gangster as soon as possible, without being killed by your enemies. It's smart to build strong alliances with other players and your friends. Go ahead and do some crimes, steal cars, and al the other stuff. The more you play, the more features you will unlock. \n\n Good luck!",
-
   "cantBuyFromYourself": "You can't do transactions with yourself",
   "invalidValues": "Invalid values",
   "killRankDifferenceTooBig": "You can't attack this person, because he/she has a too low or too high rank compared to yours. There cannot be more than 5 ranks difference.",

@@ -1,5 +1,4 @@
 import React from "react";
-import Accomplice from "../screens/Accomplice";
 import AdminEmail from "../screens/AdminEmail";
 import AdminUserWatch from "../screens/AdminUserWatch";
 import AirplaneShop from "../screens/AirplaneShop";
@@ -110,7 +109,6 @@ export const screens = {
   Info,
   Police,
   VIP,
-  Accomplice,
   AdminEmail,
   AdminUserWatch,
   AirplaneShop,
