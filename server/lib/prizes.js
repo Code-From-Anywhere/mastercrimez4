@@ -1,18 +1,3 @@
-const { Op, Sequelize } = require("sequelize");
-const {
-  getTextFunction,
-  sendChatPushMail,
-  publicUserFields,
-  saveImageIfValid,
-  getRank,
-  ranks,
-  strengthRanks,
-  getStrength,
-} = require("./util");
-const moment = require("moment");
-let getText = getTextFunction();
-const releaseDate = moment("15/12/2020", "DD/MM/YYYY").set("hours", 17);
-
 const getPrize = (position, totalPositions, totalAmount) => {
   //1 = 100%
   //2 = 60/40

@@ -165,6 +165,7 @@ const meReducer = (state = initMe, action) => {
     }
 
     case "ME_FETCH_SUCCEEDED": {
+      // NB: I think this would help if sometimes me doesn't change. Keep the same object and prevent rerenders. but unfortunately, me is different every time because of onlineAt/updatedAt. This makes every screen rerender every 5 seconds by default.
       return isEqual(state, action.me) ? state : action.me;
     }
 

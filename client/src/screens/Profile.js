@@ -26,6 +26,7 @@ import {
   getStrength,
   getTextFunction,
   getUserColor,
+  InactiveScreens,
   post,
   properties,
 } from "../Util";
@@ -240,10 +241,7 @@ const ProfileScreen = ({
     ? PROFESSIONS.find((p) => p.type === profile.profession)
     : null;
 
-  const professionReleaseDate = moment("15/03/2021", "DD/MM/YYYY").set(
-    "hour",
-    17
-  );
+  const professionReleaseDate = InactiveScreens.PROFESSIONS_RELEASE_DATE;
 
   return (
     <ScrollView>

@@ -35,6 +35,10 @@ const becomeOwner = async (req, res, User, City) => {
     return res.json({ response: getText("cityNotFound") });
   }
 
+  if (cityObj.city !== user.city) {
+    return res.json({ response: getText("wrongCity") });
+  }
+
   const key = properties.map((p) => p.name).includes(type)
     ? `${type}Owner`
     : null;
@@ -99,6 +103,10 @@ const giveAway = async (
 
   if (!cityObj) {
     return res.json({ response: getText("objectNotFound") });
+  }
+
+  if (cityObj.city !== user.city) {
+    return res.json({ response: getText("wrongCity") });
   }
 
   const [cityUpdated] = await City.update(
@@ -174,6 +182,10 @@ const changePrice = async (req, res, User, City) => {
 
   if (!cityObj) {
     return res.json({ response: getText("objectNotFound") });
+  }
+
+  if (cityObj.city !== user.city) {
+    return res.json({ response: getText("wrongCity") });
   }
 
   if (price > maxPrice) {
@@ -280,6 +292,10 @@ const repairObject = async (req, res, sequelize, User, City, Action) => {
     return res.json({ response: getText("objectNotFound") });
   }
 
+  if (cityObj.city !== user.city) {
+    return res.json({ response: getText("wrongCity") });
+  }
+
   const [cityUpdated] = await City.update(
     { [key]: 0 },
     { where: { city: cityObj.city, [key]: { [Op.gt]: 0 } } }
@@ -345,10 +361,20 @@ const putInJail = async (
     return res.json({ response: getText("objectNotFound") });
   }
 
+  if (cityObj.city !== user.city) {
+    return res.json({ response: getText("wrongCity") });
+  }
+
   if (cityObj.jailPutAt >= Date.now()) {
     const seconds = Math.round((cityObj.jailPutAt - Date.now()) / 1000);
     return res.json({
       response: getText("objectJailWait", seconds),
+    });
+  }
+
+  if (user2.putInJailAt >= Date.now() - 3600000) {
+    return res.json({
+      response: getText("objectJailWaitPlayer"),
     });
   }
 
@@ -363,7 +389,10 @@ const putInJail = async (
     { where: { city: cityObj.city } }
   );
 
-  User.update({ jailAt: Date.now() + 300 * 1000 }, { where: { id: user2.id } });
+  User.update(
+    { jailAt: Date.now() + 300 * 1000, putInJailAt: Date.now() },
+    { where: { id: user2.id } }
+  );
 
   const getUserText = getTextFunction(user2.locale);
 

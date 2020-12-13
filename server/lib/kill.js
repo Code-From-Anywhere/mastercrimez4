@@ -310,69 +310,74 @@ const kill = async (
     let responseMessageGang = "";
 
     if (user2.gangId) {
-      const MAX_PERCENTAGE_GANGBANK = 0.1;
-      const PERCENTAGE_GANG_DEAD = 0.5;
-      const gang = await Gang.findOne({ where: { id: user2.gangId } });
-      const gangMembersDead = (
-        await User.findAll({ where: { health: 0, gangId: user2.gangId } })
-      ).length;
-      const gangMembers = await User.findAll({
-        where: { gangId: user2.gangId },
+      const gang = await Gang.findOne({
+        where: { id: user2.gangId, isPolice: false },
       });
-      const percentageDead = (gangMembersDead + 1) / gangMembers.length;
 
-      const percentageOfGangBank =
-        percentageDead > PERCENTAGE_GANG_DEAD
-          ? MAX_PERCENTAGE_GANGBANK
-          : Math.round(
-              (percentageDead / PERCENTAGE_GANG_DEAD) *
-                MAX_PERCENTAGE_GANGBANK *
-                100
-            ) / 100;
+      if (gang) {
+        const MAX_PERCENTAGE_GANGBANK = 0.1;
+        const PERCENTAGE_GANG_DEAD = 0.5;
+        const gangMembersDead = (
+          await User.findAll({ where: { health: 0, gangId: user2.gangId } })
+        ).length;
+        const gangMembers = await User.findAll({
+          where: { gangId: user2.gangId },
+        });
+        const percentageDead = (gangMembersDead + 1) / gangMembers.length;
 
-      amountCashStolenGangbank = Math.round(gang.bank * percentageOfGangBank);
-      amountBulletsStolenGangbank = Math.round(
-        gang.bullets * percentageOfGangBank
-      );
+        const percentageOfGangBank =
+          percentageDead > PERCENTAGE_GANG_DEAD
+            ? MAX_PERCENTAGE_GANGBANK
+            : Math.round(
+                (percentageDead / PERCENTAGE_GANG_DEAD) *
+                  MAX_PERCENTAGE_GANGBANK *
+                  100
+              ) / 100;
 
-      responseMessageGang = getText(
-        "killGangMessage",
-        percentageOfGangBank * 100,
-        amountCashStolenGangbank,
-        amountBulletsStolenGangbank
-      );
-      responseGang = getText(
-        "killGangSuccess",
-        percentageOfGangBank * 100,
-        amountCashStolenGangbank,
-        amountBulletsStolenGangbank
-      );
+        amountCashStolenGangbank = Math.round(gang.bank * percentageOfGangBank);
+        amountBulletsStolenGangbank = Math.round(
+          gang.bullets * percentageOfGangBank
+        );
 
-      Gang.update(
-        {
-          bank: Sequelize.literal(`bank - ${amountCashStolenGangbank}`),
-          bullets: Sequelize.literal(
-            `bullets - ${amountBulletsStolenGangbank}`
+        responseMessageGang = getText(
+          "killGangMessage",
+          percentageOfGangBank * 100,
+          amountCashStolenGangbank,
+          amountBulletsStolenGangbank
+        );
+        responseGang = getText(
+          "killGangSuccess",
+          percentageOfGangBank * 100,
+          amountCashStolenGangbank,
+          amountBulletsStolenGangbank
+        );
+
+        Gang.update(
+          {
+            bank: Sequelize.literal(`bank - ${amountCashStolenGangbank}`),
+            bullets: Sequelize.literal(
+              `bullets - ${amountBulletsStolenGangbank}`
+            ),
+          },
+          { where: { id: gang.id } }
+        );
+
+        sendChatPushMail({
+          Channel,
+          ChannelMessage,
+          ChannelSub,
+          User,
+          isSystem: true,
+          message: getUserText(
+            "killSuccessAccompliceMessage",
+            user.name,
+            user2.name,
+            bullets
           ),
-        },
-        { where: { id: gang.id } }
-      );
-
-      sendChatPushMail({
-        Channel,
-        ChannelMessage,
-        ChannelSub,
-        User,
-        isSystem: true,
-        message: getUserText(
-          "killSuccessAccompliceMessage",
-          user.name,
-          user2.name,
-          bullets
-        ),
-        user1: user,
-        gang,
-      });
+          user1: user,
+          gang,
+        });
+      }
     }
 
     res.json({

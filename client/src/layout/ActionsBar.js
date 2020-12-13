@@ -1,9 +1,17 @@
 import * as Icon from "@expo/vector-icons";
 import moment from "moment";
 import React from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Linking,
+  Platform,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useDispatch } from "react-redux";
 import { AlertContext } from "../components/AlertProvider";
+import Countdown from "../components/Countdown";
 import {
   getTextFunction,
   InactiveScreens,
@@ -11,7 +19,7 @@ import {
   post,
   withCaptcha,
 } from "../Util";
-import { animateToWorld } from "./MapUtil";
+import { animateToCity, animateToWorld } from "./MapUtil";
 
 const ActionsBar = ({
   selected,
@@ -26,6 +34,7 @@ const ActionsBar = ({
   reloadAreas,
   view,
   map,
+  shouldRenderCities,
 }) => {
   const getText = getTextFunction(me?.locale);
   const alertAlert = React.useContext(AlertContext);
@@ -35,60 +44,95 @@ const ActionsBar = ({
     inactive: !city?.[`${type}Owner`] || city?.[`${type}Owner`] === me?.name,
     text: getText("bombard"),
     onPress: () => {
-      const airplanes = [
-        "",
-        "Fokker",
-        "Fleet",
-        "Havilland",
-        "Cessna",
-        "Douglas",
-        "Lear Jet",
-        "Raket",
-      ];
-
-      alertAlert(
-        getText("fillInBombs"),
-        me?.airplane === 0
-          ? getText("bombNoAirplane")
-          : getText(
-              "bombAirplaneText",
-              airplanes[me?.airplane],
-              me?.airplane * 5
-            ),
-        [
-          {
-            text: getText("ok"),
-            onPress: (bombs) => {
-              withCaptcha(
-                device.loginToken,
-                me?.needCaptcha,
-                getText,
-                alertAlert,
-                async (captcha) => {
-                  setLoading(true);
-                  const { response } = await post("bomb", {
-                    loginToken: device.loginToken,
-                    bombs,
-                    type,
-                    captcha,
-                  });
-                  setLoading(false);
-                  reloadMe(device.loginToken);
-                  alertAlert(response, null, null, { key: "bombResponse" });
-                  reloadCities();
-                }
-              );
+      if (me?.bombAt + 300000 > Date.now()) {
+        alertAlert(
+          getText("bombWait"),
+          getText("bombWaitText"),
+          [
+            {
+              text: getText("ok"),
+              onPress: () => {
+                const text = getText(
+                  "bombAskOnWhatsAppText",
+                  getText(type),
+                  me?.city,
+                  city?.[`${type}Damage`]
+                );
+                const siteUrl = "https://mastercrimez.com";
+                Linking.openURL(
+                  Platform.OS === "web"
+                    ? `https://wa.me/?text=${text} ${siteUrl}`
+                    : `whatsapp://send?text=${text} ${siteUrl}`
+                );
+              },
             },
-          },
-          {
-            text: getText("cancel"),
-          },
-        ],
-        { key: "bomb", textInput: true, keyboardType: "numeric" }
-      );
+            { text: getText("cancel") },
+          ],
+          { key: "bombWait" }
+        );
+      } else {
+        const airplanes = [
+          "",
+          "Fokker",
+          "Fleet",
+          "Havilland",
+          "Cessna",
+          "Douglas",
+          "Lear Jet",
+          "Raket",
+        ];
+
+        alertAlert(
+          getText("fillInBombs"),
+          me?.airplane === 0
+            ? getText("bombNoAirplane")
+            : getText(
+                "bombAirplaneText",
+                airplanes[me?.airplane],
+                me?.airplane * 5
+              ),
+          [
+            {
+              text: getText("ok"),
+              onPress: (bombs) => {
+                withCaptcha(
+                  device.loginToken,
+                  me?.needCaptcha,
+                  getText,
+                  alertAlert,
+                  async (captcha) => {
+                    setLoading(true);
+                    const { response } = await post("bomb", {
+                      loginToken: device.loginToken,
+                      bombs,
+                      type,
+                      captcha,
+                    });
+                    setLoading(false);
+                    reloadMe(device.loginToken);
+                    alertAlert(response, null, null, { key: "bombResponse" });
+                    reloadCities();
+                  }
+                );
+              },
+            },
+            {
+              text: getText("cancel"),
+            },
+          ],
+          { key: "bomb", textInput: true, keyboardType: "numeric" }
+        );
+      }
     },
     icon: Icon.FontAwesome,
     iconName: "bomb",
+    component: me?.bombAt + 300000 > Date.now() && (
+      <Countdown
+        until={me?.bombAt + 300000}
+        timeToShow={["mm", "ss"]}
+        size={10}
+      />
+    ),
   });
   const takeOverAction = (type) => ({
     inactive: !!city?.[`${type}Owner`],
@@ -763,16 +807,28 @@ const ActionsBar = ({
       isSelected: navigation.state.routeName === "Forum",
     },
   ];
-  const actions =
-    view === "territories" || view === "game"
-      ? selected
-        ? allActions[selected]().filter((x) => !x.inactive)
-        : []
-      : view === "stats"
-      ? statsActions
-      : view === "more"
-      ? moreActions
-      : [];
+
+  const citiesActions = [
+    {
+      text: getText("goBack"),
+      icon: Icon.AntDesign,
+      iconName: "back",
+      onPress: () => animateToCity({ city, dispatch, map }),
+      isSelected: false,
+    },
+  ];
+
+  const actions = shouldRenderCities
+    ? citiesActions
+    : view === "territories" || view === "game"
+    ? selected
+      ? allActions[selected]().filter((x) => !x.inactive)
+      : []
+    : view === "stats"
+    ? statsActions
+    : view === "more"
+    ? moreActions
+    : [];
 
   return (
     actions.length > 0 && (
@@ -824,7 +880,22 @@ const ActionsBar = ({
                 {action.text}
               </Text>
             </TouchableOpacity>
-            {action.badgeAmount > 0 ? (
+
+            {action.component ? (
+              <View
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: 0,
+                  backgroundColor: "#404040",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 10,
+                }}
+              >
+                {action.component}
+              </View>
+            ) : action.badgeAmount > 0 ? (
               <View
                 style={{
                   position: "absolute",

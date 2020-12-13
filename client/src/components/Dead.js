@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
 import Constants from "../Constants";
 import { getTextFunction } from "../Util";
 import Button from "./Button";
@@ -11,15 +11,15 @@ class Dead extends React.Component {
   render() {
     const {
       screenProps: { me, device, reloadMe },
-      navigation,
     } = this.props;
 
     const getText = getTextFunction(me?.locale);
 
-    const sec = Math.round((me.reizenAt - Date.now()) / 1000);
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <View>
+      <ScrollView style={{ flex: 1 }}>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
           <Image
             source={require("../../assets/dood.jpg")}
             style={{ width: 402, height: 424 }}
@@ -55,7 +55,7 @@ class Dead extends React.Component {
             }}
           />
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }

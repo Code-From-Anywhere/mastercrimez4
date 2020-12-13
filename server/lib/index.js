@@ -275,6 +275,10 @@ User.init(
       type: DataTypes.BIGINT,
       defaultValue: 0,
     },
+    putInJailAt: {
+      type: DataTypes.BIGINT,
+      defaultValue: 0,
+    },
     bombAt: {
       type: DataTypes.BIGINT,
       defaultValue: 0,
@@ -3217,7 +3221,7 @@ const swissBankTax = async () => {
 };
 
 const awardPrizes = async (every) => {
-  const releaseDatePrizes = moment("01/01/2021", "DD/MM/YYYY").set("hours", 17);
+  const releaseDatePrizes = moment("01/02/2021", "DD/MM/YYYY").set("hours", 17);
   if (moment().isBefore(releaseDatePrizes)) {
     return;
   }

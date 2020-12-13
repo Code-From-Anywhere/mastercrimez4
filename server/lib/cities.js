@@ -9,7 +9,7 @@ const moment = require("moment");
 const cities = async (req, res, City) => {
   res.json({ cities: await City.findAll({ order: [["city", "asc"]] }) });
 };
-const releaseDate = moment("01/01/2021", "DD/MM/YYYY");
+const releaseDate = moment("01/02/2021", "DD/MM/YYYY");
 
 let getText = getTextFunction();
 const buildings = properties

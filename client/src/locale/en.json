@@ -697,5 +697,16 @@
   "fillInUrlText": "Fill in an URL to make a link",
   "clickHere": "Click here",
   "showMap": "Show map",
-  "hideMap": "Hide map"
+  "hideMap": "Hide map",
+
+  "goBack": "Go back",
+
+  "noAirplane": "You don't have an airplane",
+  "travelToCityXYZ": "Do you want to travel with your $1 to $2? It will take $3 seconds and it will cost €$4,-.",
+
+  "removeProtectionText": "Do you want to remove your protection?",
+  "removeProtection": "Remove protection",
+  "bombWait": "Wait",
+  "bombWaitText": "You have to wait a bit before you can do this again. Do you want to ask a friend to help you?",
+  "bombAskOnWhatsAppText": "Hey, the $1 in $2 has $3% damage. Do you want to help me bomb it?"
 }

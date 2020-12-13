@@ -188,6 +188,8 @@
   "objectNoDamage": "You have no damage.",
   "objectRepairSuccess": "You've repared your $1.",
   "objectJailWait": "You'll have to wait $1 seconds before you can put another person in jail.",
+  "objectJailWaitPlayer": "This player has already put in jail this hour",
+
   "objectJailMessage": "$1 has put you in jail for 5 minutes",
   "objectJailSuccess": "You've put $1 in jail for 5 minutes",
 
@@ -466,5 +468,7 @@
   "weedplants": "Weedplants",
   "area": "Area",
   "areaNotFound": "Area not found",
-  "cityRelease": "Territories in this city are available from $1"
+  "cityRelease": "Territories in this city are available from $1",
+  "wrongCity": "Je bent niet in de goede stad",
+  "gym": "Gym"
 }

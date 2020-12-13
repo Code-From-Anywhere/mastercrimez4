@@ -159,6 +159,9 @@ const GameObjects = React.memo(
     landlordIncomeAt,
     rldIncomeAt,
     getText,
+    gymAt,
+    gymTime,
+    peopleInJail,
   }) => {
     // console.log("RENDER GAME OBJECT", index);
     const dispatch = useDispatch();
@@ -230,12 +233,14 @@ const GameObjects = React.memo(
       Math.floor((Date.now() - rldIncomeAt) / 3600000) > 0;
 
     const incomeToGet = incomeJunkies || incomeRLD || incomeLandlord;
-
+    const jailPrisoners = object.type === "jail" && peopleInJail > 0;
+    const gymTrain = object.type === "gym" && gymAt + gymTime - Date.now() < 0;
+    const canDoSomething = jailPrisoners || gymTrain;
     const specialColor = isSelected
       ? "rgba(0,0,0,0.5)"
       : isYours && hasDamage
       ? "rgba(139,0,0,0.5)"
-      : (isYours && hasProfit) || incomeToGet
+      : (isYours && hasProfit) || incomeToGet || canDoSomething
       ? "rgba(255,255,0,0.5)"
       : isYours
       ? "rgba(0,0,255,0.5)"
@@ -351,16 +356,18 @@ const Map = React.memo(function MapPure({
 
   const delta = me?.canChooseCity ? 5 : 0.05;
 
-  const [region, setRegion] = useState({
-    latitude: 52.378, //amsterdam
-    longitude: 4.89707,
-    latitudeDelta: delta,
-    longitudeDelta: delta,
-  });
   const city = React.useMemo(() => cities?.find((x) => x.city === me?.city), [
     cities,
     me?.city,
   ]);
+
+  const [region, setRegion] = useState({
+    latitude: city?.latitude || 52.378, //amsterdam
+    longitude: city?.longitude || 4.89707,
+    latitudeDelta: city?.delta || delta,
+    longitudeDelta: city?.delta || delta,
+  });
+
   const [mapReady, setMapReady] = useState(false);
 
   const territoriesSwiperRefContainer = useRef(null);
@@ -400,7 +407,7 @@ const Map = React.memo(function MapPure({
   }, [selected, selectedAreaIndex]);
 
   useEffect(() => {
-    if (map && city && mapReady) {
+    if (city) {
       const reg = {
         latitude: city?.latitude, //amsterdam
         longitude: city?.longitude,
@@ -408,7 +415,8 @@ const Map = React.memo(function MapPure({
         longitudeDelta: city?.delta,
       };
       setRegion(reg);
-
+    }
+    if (map && city && mapReady) {
       animateToCity({
         map,
         dispatch,
@@ -606,6 +614,9 @@ const Map = React.memo(function MapPure({
             junkiesIncomeAt={me?.junkiesIncomeAt}
             landlordIncomeAt={me?.landlordIncomeAt}
             rldIncomeAt={me?.rldIncomeAt}
+            gymAt={me?.gymAt}
+            gymTime={me?.gymTime}
+            peopleInJail={me?.jail}
           />
         );
       }),
@@ -642,17 +653,50 @@ const Map = React.memo(function MapPure({
 
   const renderCities = cities.map((city, index) => {
     const onPress = async () => {
-      const { response } = await post("airport", {
-        token: device.loginToken,
-        to: city.city,
-      });
+      const airplanes = [
+        "Geen vliegtuig",
+        "Fokker",
+        "Fleet",
+        "Havilland",
+        "Cessna",
+        "Douglas",
+        "Lear Jet",
+        "Raket",
+      ];
+      const airplane = airplanes[me?.airplane];
+      const times = [0, 180, 120, 90, 60, 30, 20, 10];
+      const time = times[me?.airplane];
+      const costs = [0, 5000, 10000, 15000, 25000, 50000, 100000, 200000];
+      const cost = costs[me?.airplane];
 
-      reloadMe(device.loginToken);
-      alertAlert(response, null, null, { key: "airportResponse" });
-      animateToCity({ city, dispatch, map, animationTime: 10000 });
-      if (device.introLevel === 2) {
-        dispatch({ type: "UP_INTRO_LEVEL" });
-      }
+      alertAlert(
+        city.city,
+        me?.airplane === 0
+          ? getText("noAirplane")
+          : getText("travelToCityXYZ", airplane, city.city, time, cost),
+        [
+          me?.airplane > 0 && {
+            text: getText("ok"),
+            onPress: async () => {
+              const { response } = await post("airport", {
+                token: device.loginToken,
+                to: city.city,
+              });
+
+              reloadMe(device.loginToken);
+              alertAlert(response, null, null, { key: "airportResponse" });
+              animateToCity({ city, dispatch, map, animationTime: 10000 });
+              if (device.introLevel === 2) {
+                dispatch({ type: "UP_INTRO_LEVEL" });
+              }
+            },
+          },
+          {
+            text: getText("cancel"),
+          },
+        ].filter((x) => !!x),
+        { key: "airport" }
+      );
     };
     //random positions on the first territorium
     const view = (

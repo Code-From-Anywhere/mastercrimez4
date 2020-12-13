@@ -10,7 +10,7 @@ const TYPES = ["bank", "cars", "shootout"]; //cash, bullets, rank+strength
 const moment = require("moment");
 let getText = getTextFunction();
 
-const releaseDate = moment("01/08/2021", "DD/MM/YYYY").set("hour", 17);
+const releaseDate = moment("15/01/2021", "DD/MM/YYYY").set("hour", 17);
 
 const createOc = async (
   req,

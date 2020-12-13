@@ -164,6 +164,9 @@
   "profit": "winst",
   "cancel": "Annuleren",
 
+  "noAirplane": "Je hebt geen vliegtuig",
+  "travelToCityXYZ": "Wil je reizen met je $1 naar $2? Het duurt $3 seconden en kost €$4,-.",
+
   "bombNoAirplane": "Jij hebt nog geen vliegtuig, dus kan niet bombarderen",
   "bombAirplaneText": "Jij hebt een $1. Hiermee kan je $2 bommen gooien. Één bom kost €50.000,-",
   "bombs": "Bommen",
@@ -676,5 +679,12 @@
   "fillInUrlText": "Voer hier een URL in om een link te maken",
   "clickHere": "Klik hier",
   "showMap": "Toon kaart",
-  "hideMap": "Verberg kaart"
+  "hideMap": "Verberg kaart",
+  "goBack": "Ga terug",
+
+  "removeProtectionText": "Wil je je bescherming weghalen?",
+  "removeProtection": "Bescherming weghalen",
+  "bombWait": "Wachten",
+  "bombWaitText": "Je moet nog even wachten voor je dit weer kan doen. Wil je een vriend vragen om je te helpen?",
+  "bombAskOnWhatsAppText": "Hey, de $1 in $2 heeft $3% schade. Wil je me helpen deze te bombarderen?"
 }

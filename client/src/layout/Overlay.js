@@ -14,12 +14,14 @@ import {
 import { Col, Grid } from "react-native-easy-grid";
 import Swiper from "react-native-web-swiper";
 import { useDispatch } from "react-redux";
+import { AlertContext } from "../components/AlertProvider";
 import Chat from "../components/Chat";
 import Countdown from "../components/Countdown";
 import Dead from "../components/Dead";
 import Fly from "../components/Fly";
 import Jail from "../components/Jail";
 import User from "../components/User";
+import Constants from "../Constants";
 import {
   getRank,
   getStrength,
@@ -67,6 +69,8 @@ const Overlay = ({
   const dispatch = useDispatch();
   const window = Dimensions.get("window");
   const isSmallDevice = window.width < 800;
+  const alertAlert = React.useContext(AlertContext);
+
   const { showActionSheetWithOptions } = useActionSheet();
   const getText = getTextFunction(me?.locale);
   const [loading, setLoading] = useState(false);
@@ -122,7 +126,7 @@ const Overlay = ({
 
   const territoriesSwiperChildren = useMemo(
     () => [
-      <View style={{ flex: 1 }}>
+      <View key={`territoriesHome`} style={{ flex: 1 }}>
         <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
           {me?.city}: {cityAreas.areas.length} {getText("territories")}
         </Text>
@@ -227,7 +231,7 @@ const Overlay = ({
   );
 
   const propertiesSwiperFirstPage = (
-    <View style={{ flex: 1 }}>
+    <View key={`firstPage`} style={{ flex: 1 }}>
       <Text style={{ color: "white", fontSize: 24, fontWeight: "bold" }}>
         {me?.city}
       </Text>
@@ -256,6 +260,7 @@ const Overlay = ({
         if (object.type === "house") {
           return (
             <View
+              key={`house${index}`}
               style={{
                 flexDirection: "row",
               }}
@@ -285,6 +290,7 @@ const Overlay = ({
         if (object.type === "headquarter") {
           return me?.gangId ? (
             <View
+              key={`object${index}`}
               style={{
                 flexDirection: "row",
               }}
@@ -299,7 +305,7 @@ const Overlay = ({
               <View style={{ flex: 1 }}></View>
             </View>
           ) : (
-            <View />
+            <View key={`object${index}`} />
           );
         }
 
@@ -362,7 +368,23 @@ const Overlay = ({
         );
       }),
     ],
-    [city, me]
+    [
+      city,
+      me?.city,
+      me?.gang?.name,
+      me?.gang?.bank,
+      me?.gang?.bullets,
+      me?.gang?.members,
+      me?.cash,
+      me?.bank,
+      me?.health,
+      me?.rank,
+      me?.gamepoints,
+      me?.bullets,
+      me?.wiet,
+      me?.junkies,
+      me?.hoeren,
+    ]
   );
   const keyValue = useMemo(() => Math.random().toString(), [swiper1Children]);
 
@@ -492,6 +514,115 @@ const Overlay = ({
       }
     : {};
 
+  const renderTimers = !navigation.state.routeName && (
+    <View
+      style={{
+        position: "absolute",
+        top: headerHeight + 60,
+
+        right: 5,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        borderRadius: 20,
+      }}
+    >
+      {me?.reizenAt > Date.now() && (
+        <View
+          style={{
+            flexDirection: "row",
+            padding: 10,
+            alignItems: "center",
+          }}
+        >
+          <Icon.Ionicons name="ios-airplane" color="white" size={24} />
+
+          <Countdown until={me?.reizenAt} size={10} timeToShow={["mm", "ss"]} />
+        </View>
+      )}
+
+      {me?.jailAt > Date.now() && (
+        <View
+          style={{
+            flexDirection: "row",
+            padding: 10,
+            alignItems: "center",
+          }}
+        >
+          <Icon.FontAwesome name="bars" color="white" size={24} />
+
+          <Countdown until={me?.jailAt} size={10} timeToShow={["mm", "ss"]} />
+        </View>
+      )}
+
+      {me?.bunkerAt > Date.now() && (
+        <View
+          style={{
+            flexDirection: "row",
+            padding: 10,
+            alignItems: "center",
+          }}
+        >
+          <Icon.FontAwesome name="shield" color="white" size={24} />
+
+          <Countdown until={me?.bunkerAt} size={10} timeToShow={["mm", "ss"]} />
+        </View>
+      )}
+
+      {me?.protectionAt > Date.now() ? (
+        <TouchableOpacity
+          onPress={() => {
+            alertAlert(
+              getText("removeProtection"),
+              getText("removeProtectionText"),
+              [
+                {
+                  text: getText("ok"),
+                  onPress: () => {
+                    fetch(`${Constants.SERVER_ADDR}/removeprotection`, {
+                      method: "POST",
+                      headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({ token: device.loginToken }),
+                    })
+                      .then((response) => response.json())
+                      .then(async ({ response }) => {
+                        alertAlert(response, null, null, {
+                          key: "removeprotectionResponse",
+                        });
+
+                        reloadMe(device.loginToken);
+                      })
+                      .catch((error) => {
+                        console.error(error);
+                      });
+                  },
+                },
+                { text: getText("cancel") },
+              ],
+              { key: "removeprotection" }
+            );
+
+            //haalweg
+          }}
+          style={{
+            flexDirection: "row",
+            padding: 10,
+            alignItems: "center",
+          }}
+        >
+          <Icon.FontAwesome name="shield" color="white" size={24} />
+
+          <Countdown
+            until={me?.protectionAt}
+            size={10}
+            timeToShow={["H", "mm", "ss"]}
+          />
+        </TouchableOpacity>
+      ) : null}
+    </View>
+  );
+
   return (
     <>
       {!device.hideMap ||
@@ -545,7 +676,7 @@ const Overlay = ({
           </View>
         )}
 
-        {view === "crimes" && (
+        {view === "crimes" && !navigation.state.routeName && (
           <View
             style={{
               position: "absolute",
@@ -564,7 +695,7 @@ const Overlay = ({
           </View>
         )}
 
-        {!isSmallDevice && (
+        {!isSmallDevice && !navigation.state.routeName && (
           <View
             style={{
               position: "absolute",
@@ -603,87 +734,23 @@ const Overlay = ({
           </View>
         )}
 
-        <View
-          style={{
-            position: "absolute",
-            top: headerHeight + 60,
+        {renderTimers}
 
-            right: 5,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            borderRadius: 20,
-          }}
-        >
-          {me?.reizenAt > Date.now() && (
-            <View
-              style={{
-                flexDirection: "row",
-                padding: 10,
-                alignItems: "center",
-              }}
-            >
-              <Icon.Ionicons name="ios-airplane" color="white" size={24} />
-
-              <Countdown
-                until={me?.reizenAt}
-                size={10}
-                timeToShow={["mm", "ss"]}
-              />
-            </View>
-          )}
-
-          {me?.jailAt > Date.now() && (
-            <View
-              style={{
-                flexDirection: "row",
-                padding: 10,
-                alignItems: "center",
-              }}
-            >
-              <Icon.FontAwesome name="bars" color="white" size={24} />
-
-              <Countdown
-                until={me?.jailAt}
-                size={10}
-                timeToShow={["mm", "ss"]}
-              />
-            </View>
-          )}
-
-          {me?.bunkerAt > Date.now() && (
-            <View
-              style={{
-                flexDirection: "row",
-                padding: 10,
-                alignItems: "center",
-              }}
-            >
-              <Icon.FontAwesome name="shield" color="white" size={24} />
-
-              <Countdown
-                until={me?.bunkerAt}
-                size={10}
-                timeToShow={["mm", "ss"]}
-              />
-            </View>
-          )}
-        </View>
-
-        {!shouldRenderCities(device, region) && (
-          <ActionsBar
-            map={map}
-            selected={selected}
-            view={view}
-            city={city}
-            me={me}
-            device={device}
-            navigation={navigation}
-            setLoading={setLoading}
-            reloadMe={reloadMe}
-            reloadCities={reloadCities}
-            reloadAreas={screenProps.reloadAreas}
-            selectedArea={selectedArea}
-          />
-        )}
+        <ActionsBar
+          shouldRenderCities={shouldRenderCities(device, region)}
+          map={map}
+          selected={selected}
+          view={view}
+          city={city}
+          me={me}
+          device={device}
+          navigation={navigation}
+          setLoading={setLoading}
+          reloadMe={reloadMe}
+          reloadCities={reloadCities}
+          reloadAreas={screenProps.reloadAreas}
+          selectedArea={selectedArea}
+        />
 
         {navigation.state.routeName ? (
           <Modal

@@ -488,7 +488,7 @@ const isHappyHour = () => {
   const isSunday = moment().day() === 0; //sunday
   const is7pm = moment().hour() === 19; //19pm
   const isHappyHourReleased = moment().isAfter(
-    moment("01/02/2021", "DD/MM/YYYY").set("hour", 17)
+    moment("01/01/2022", "DD/MM/YYYY").set("hour", 17)
   );
   return isHappyHourReleased && (isSunday || is7pm);
 };

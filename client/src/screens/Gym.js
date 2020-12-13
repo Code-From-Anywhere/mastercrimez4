@@ -60,12 +60,12 @@ class Gym extends Component {
       this.state.selected === item.id ? "#2c98f0" : undefined;
     return (
       <TouchableOpacity
+        key={`item${index}`}
         onPress={() => {
           this.setState({ selected: item.id });
         }}
       >
         <View
-          key={`item${index}`}
           style={{
             flexDirection: "row",
             borderRadius: 10,

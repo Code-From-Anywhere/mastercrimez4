@@ -1,17 +1,17 @@
 import moment from "moment";
 import React, { Component } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Button from "../components/Button";
 import T from "../components/T";
-import Constants from "../Constants";
-import { getRank, getStrength, getTextFunction } from "../Util";
+import {
+  getRank,
+  getStrength,
+  getTextFunction,
+  InactiveScreens,
+} from "../Util";
 import MyObjects from "./MyObjects";
 
-const professionReleaseDate = moment("15/03/2021", "DD/MM/YYYY").set(
-  "hour",
-  17
-);
+const professionReleaseDate = InactiveScreens.PROFESSIONS_RELEASE_DATE;
 
 class Status extends Component {
   state = {
@@ -41,34 +41,6 @@ class Status extends Component {
     return (
       <ScrollView style={{ flex: 1 }}>
         {response ? <T>{response}</T> : null}
-
-        {me?.protectionAt > Date.now() ? (
-          <TouchableOpacity
-            onPress={() => {
-              //haalweg
-              fetch(`${Constants.SERVER_ADDR}/removeprotection`, {
-                method: "POST",
-                headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ token: device.loginToken }),
-              })
-                .then((response) => response.json())
-                .then(async ({ response }) => {
-                  this.setState({ response });
-                  reloadMe(device.loginToken);
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
-            }}
-          >
-            <View>
-              <T>{getText("protectionInfo", uur)}</T>
-            </View>
-          </TouchableOpacity>
-        ) : null}
 
         {me?.canChooseProfession &&
           (moment().isAfter(professionReleaseDate) || me?.level > 1) && (

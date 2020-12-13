@@ -186,6 +186,7 @@
   "objectNoDamage": "Je hebt geen schade.",
   "objectRepairSuccess": "Je hebt je $1 gerepareerd.",
   "objectJailWait": "Je moet nog $1 seconden wachten voordat je weer iemand in de gevangenis kan stoppen",
+  "objectJailWaitPlayer": "Deze speler is dit uur al in de gevangenis gezet",
   "objectJailMessage": "$1 heeft jou voor 5 minuten in de gevangenis gestopt",
   "objectJailSuccess": "Je hebt $1 in de gevangenis gestopt voor 5 minuten",
 
@@ -454,5 +455,7 @@
   "weedplants": "Wietplanten",
   "area": "Gebied",
   "areaNotFound": "Gebied niet gevonden",
-  "cityRelease": "Territoriums in deze stad worden $1 toegankelijk"
+  "cityRelease": "Territoriums in deze stad worden $1 toegankelijk",
+  "wrongCity": "Je bent niet in de goede stad",
+  "gym": "Sportschool"
 }

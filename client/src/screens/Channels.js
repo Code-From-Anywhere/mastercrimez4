@@ -14,9 +14,9 @@ import {
 import Separator from "../components/Separator";
 import T from "../components/T";
 import Constants from "../Constants";
-import { getTextFunction, post } from "../Util";
+import { getTextFunction, InactiveScreens, post } from "../Util";
 
-const blocksReleaseDate = moment("15/02/2021", "DD/MM/YYYY").set("hour", 17);
+const blocksReleaseDate = InactiveScreens.BLOCKS_RELEASE_DATE;
 
 class ChatScreen extends React.Component {
   constructor(props) {

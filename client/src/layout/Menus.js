@@ -22,7 +22,7 @@ export const isHappyHour = () => {
   const isSunday = moment().day() === 0; //sunday
   const is7pm = moment().hour() === 19; //19pm
   const isHappyHourReleased = moment().isAfter(
-    moment("01/02/2021", "DD/MM/YYYY").set("hour", 17)
+    InactiveScreens.HAPPY_HOUR_RELEASE_DATE
   );
   return isHappyHourReleased && (isSunday || is7pm);
 };
@@ -788,10 +788,15 @@ export const renderMenu = ({
       Math.floor((Date.now() - me?.rldIncomeAt) / 3600000) > 0;
 
     const incomeToGet = incomeJunkies || incomeRLD || incomeLandlord;
+    const jailPrisoners = item.buildingType === "jail" && me?.jail > 0;
+    const gymTrain =
+      item.buildingType === "gym" && me?.gymAt + me?.gymTime - Date.now() < 0;
+    const canDoSomething = jailPrisoners || gymTrain;
+
     specialColor =
       isYours && hasDamage
         ? "darkred"
-        : (isYours && hasProfit) || incomeToGet
+        : (isYours && hasProfit) || incomeToGet || canDoSomething
         ? "yellow"
         : isYours
         ? "blue"
