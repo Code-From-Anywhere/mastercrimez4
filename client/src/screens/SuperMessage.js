@@ -72,9 +72,10 @@ const SuperMessage = ({ screenProps: { me, device } }) => {
       body: JSON.stringify({
         token: device.loginToken,
         message,
-        date: date
-          ? moment(date, "DD/MM/YYYY").set("hours", 17).valueOf()
-          : undefined,
+        date:
+          schedule && date
+            ? moment(date, "DD/MM/YYYY").set("hours", 17).valueOf()
+            : undefined,
       }),
     })
       .then((response) => response.json())

@@ -114,7 +114,7 @@ const BottomTabs = ({
         },
 
         moment("01/02/2021", "DD/MM/YYYY")
-          .add(city.id, "weeks")
+          .add(city?.id || 1, "weeks")
           .isBefore(moment()) && {
           view: "territories",
           icon: Icon.Ionicons,
