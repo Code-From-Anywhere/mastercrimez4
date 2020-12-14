@@ -537,7 +537,7 @@ const adminMenu = (me) => {
   );
 };
 
-export const rightMenu = (me, theme, areas, channels, device) => {
+export const rightMenu = (me, theme, areas, channels, device, city) => {
   const getText = getTextFunction(me?.locale);
 
   const allAreasMenus = areas.map((area, index) => {
@@ -550,35 +550,38 @@ export const rightMenu = (me, theme, areas, channels, device) => {
     };
   });
 
-  const last10ChannelsMenus = channels.slice(0, 10).map((item) => {
-    const channelTitle = item.channel?.name
-      ? item.channel?.name
-      : item.channel?.channelsubs.length === 2
-      ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user?.name
-      : "(System)";
+  const last10ChannelsMenus = channels?.slice
+    ? channels.slice(0, 10).map((item) => {
+        const channelTitle = item.channel?.name
+          ? item.channel?.name
+          : item.channel?.channelsubs.length === 2
+          ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user
+              ?.name
+          : "(System)";
 
-    const channelThumbnail = item.channel?.image
-      ? item.channel?.image
-      : item.channel?.channelsubs.length === 2
-      ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user
-          ?.thumbnail
-      : null;
+        const channelThumbnail = item.channel?.image
+          ? item.channel?.image
+          : item.channel?.channelsubs.length === 2
+          ? item.channel?.channelsubs.find((x) => x.userId !== me?.id)?.user
+              ?.thumbnail
+          : null;
 
-    return {
-      image: null,
-      text: channelTitle,
-      image: channelThumbnail,
-      iconType: "Ionicons",
-      view: "chat",
-      icon: "ios-person",
-      badgeCount: item.unread,
-      to: "Channel",
-      params: { subid: item.id, id: item.channel.id },
-      onPress: () => {
-        post("setRead", { loginToken: device.loginToken, id: item.id });
-      },
-    };
-  });
+        return {
+          image: null,
+          text: channelTitle,
+          image: channelThumbnail,
+          iconType: "Ionicons",
+          view: "chat",
+          icon: "ios-person",
+          badgeCount: item.unread,
+          to: "Channel",
+          params: { subid: item.id, id: item.channel.id },
+          onPress: () => {
+            post("setRead", { loginToken: device.loginToken, id: item.id });
+          },
+        };
+      })
+    : [];
 
   return [
     {
@@ -668,7 +671,9 @@ export const rightMenu = (me, theme, areas, channels, device) => {
       ].filter((x) => !!x && !x.inactive),
     },
 
-    {
+    moment("01/02/2021", "DD/MM/YYYY")
+      .add(city.id, "weeks")
+      .isBefore(moment()) && {
       header: {
         isHeader: true,
         text: getText("headerAreas"),
@@ -771,11 +776,11 @@ export const renderMenu = ({
   const gangMembers = me?.gangMembers; //should be an {name,id}[] of users in your gang
 
   if (item.buildingType !== undefined) {
-    const owner = city[`${item.buildingType}Owner`];
+    const owner = city?.[`${item.buildingType}Owner`];
     const isYours = owner === me?.name;
     const isGang = gangMembers?.map((x) => x.name).includes(owner);
-    const hasDamage = city[`${item.buildingType}Damage`] > 0;
-    const hasProfit = city[`${item.buildingType}Profit`] > 0;
+    const hasDamage = city?.[`${item.buildingType}Damage`] > 0;
+    const hasProfit = city?.[`${item.buildingType}Profit`] > 0;
 
     const incomeJunkies =
       item.buildingType === "junkies" &&
@@ -1115,7 +1120,7 @@ const Menus = ({
       >
         <Accordion
           expandMultiple
-          sections={rightMenu(me, device.theme, areas, channels, device)}
+          sections={rightMenu(me, device.theme, areas, channels, device, city)}
           activeSections={rightActive}
           onChange={(active) => {
             setRightActive(active);
@@ -1181,11 +1186,19 @@ const Menus = ({
       }}
       pointerEvents="box-none"
     >
-      {device.menuShown && renderLeftMenu()}
+      {me?.id && device.menuShown
+        ? !me?.canChooseCity
+          ? renderLeftMenu()
+          : null
+        : null}
       <View style={{ flex: 1 }} pointerEvents="box-none">
         {children}
       </View>
-      {device.menuShown && renderRightMenu()}
+      {me?.id && device.menuShown
+        ? !me?.canChooseCity
+          ? renderRightMenu()
+          : null
+        : null}
     </View>
   );
 };

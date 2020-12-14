@@ -1,10 +1,11 @@
 import * as Icon from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { useExpoUpdate } from "../updateHook";
-import { getRank, numberFormat } from "../Util";
-
+import { getRank, getTextFunction, numberFormat } from "../Util";
 const StatsHeader = React.memo(({ me, device, navigation }) => {
+  const getText = getTextFunction(me?.locale);
   const textStyle = {
     marginRight: 10,
     marginBottom: 10,

@@ -51,18 +51,26 @@ const mapDispatchToProps = (dispatch) => ({
   dispatch,
   reloadMe: (loginToken) => {
     // console.log("reloadMe with loginToken", loginToken);
-    dispatch({ type: "ME_FETCH_REQUESTED", payload: { loginToken } });
+    if (loginToken) {
+      dispatch({ type: "ME_FETCH_REQUESTED", payload: { loginToken } });
+    }
   },
   reloadStreetraces: () =>
     dispatch({ type: "STREETRACES_FETCH_REQUESTED", payload: null }),
   reloadRobberies: () =>
     dispatch({ type: "ROBBERIES_FETCH_REQUESTED", payload: null }),
-  reloadOcs: (token) =>
-    dispatch({ type: "OCS_FETCH_REQUESTED", payload: { token } }),
+  reloadOcs: (token) => {
+    if (token) {
+      dispatch({ type: "OCS_FETCH_REQUESTED", payload: { token } });
+    }
+  },
   reloadCities: () =>
     dispatch({ type: "CITIES_FETCH_REQUESTED", payload: null }),
-  reloadChannels: (token) =>
-    dispatch({ type: "CHANNELS_FETCH_REQUESTED", payload: { token } }),
+  reloadChannels: (token) => {
+    if (token) {
+      dispatch({ type: "CHANNELS_FETCH_REQUESTED", payload: { token } });
+    }
+  },
   reloadAreas: (city) =>
     dispatch({ type: "AREAS_FETCH_REQUESTED", payload: { city } }),
 });

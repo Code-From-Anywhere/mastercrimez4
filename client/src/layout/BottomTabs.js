@@ -1,5 +1,6 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import * as Icon from "@expo/vector-icons";
+import moment from "moment";
 import React from "react";
 import { Platform, View } from "react-native";
 import { useDispatch } from "react-redux";
@@ -112,7 +113,9 @@ const BottomTabs = ({
           badgeCount: gameBadgeCount,
         },
 
-        {
+        moment("01/02/2021", "DD/MM/YYYY")
+          .add(city.id, "weeks")
+          .isBefore(moment()) && {
           view: "territories",
           icon: Icon.Ionicons,
           iconName: "md-grid",

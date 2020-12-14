@@ -10,7 +10,6 @@ import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  Dimensions,
   LayoutAnimation,
   Platform,
   StyleSheet,
@@ -21,7 +20,6 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { AlertContext } from "../components/AlertProvider";
-import T from "../components/T";
 import { doOnce, getTextFunction, post } from "../Util";
 import Logic from "./Logic";
 import {
@@ -321,6 +319,7 @@ const GameObjects = React.memo(
 
 // GameObjects.whyDidYouRender = true;
 
+const DEFAULT_CITY = "Amsterdam";
 const Map = React.memo(function MapPure({
   navigation,
   screenProps,
@@ -356,10 +355,10 @@ const Map = React.memo(function MapPure({
 
   const delta = me?.canChooseCity ? 5 : 0.05;
 
-  const city = React.useMemo(() => cities?.find((x) => x.city === me?.city), [
-    cities,
-    me?.city,
-  ]);
+  const city = React.useMemo(
+    () => cities?.find((x) => x.city === (me?.city ? me?.city : DEFAULT_CITY)),
+    [cities, me?.city]
+  );
 
   const [region, setRegion] = useState({
     latitude: city?.latitude || 52.378, //amsterdam
@@ -384,9 +383,9 @@ const Map = React.memo(function MapPure({
     reloadAreas(me?.city);
   }, [me?.city]);
 
-  const window = Dimensions.get("window");
-
-  const cityAreas = citiesAreas.find((x) => x.city === me?.city);
+  const cityAreas = citiesAreas.find(
+    (x) => x.city === (me?.city || DEFAULT_CITY)
+  );
 
   const objectsWithAnimated = objects.map((object) => ({
     ...object,
@@ -416,13 +415,13 @@ const Map = React.memo(function MapPure({
       };
       setRegion(reg);
     }
-    if (map && city && mapReady) {
+    if (map && mapReady) {
       animateToCity({
         map,
         dispatch,
         city,
         delayZoom: true,
-        zoom: me?.canChooseCity ? 3 : undefined,
+        zoom: !me || !me?.id || me?.canChooseCity ? 3 : undefined,
       });
 
       //map.fitToElements(true);
@@ -431,7 +430,7 @@ const Map = React.memo(function MapPure({
 
   const territories = React.useMemo(
     () =>
-      cityAreas.areas.map((area) => {
+      cityAreas?.areas.map((area) => {
         const connectedArea = areas?.find((x) => x?.code === area?.code);
 
         return {
@@ -440,12 +439,9 @@ const Map = React.memo(function MapPure({
           gangId: connectedArea?.gangId || connectedArea?.user?.gangId,
         };
       }),
-    [areas]
+    [areas, cityAreas]
   );
 
-  if (!me || !city) {
-    return <T>No city, no me</T>;
-  }
   //useEffect(() => {
   //map?.fitToElements(true);
   //}, [view]);
@@ -505,7 +501,7 @@ const Map = React.memo(function MapPure({
 
     {
       id: 7,
-      inactive: !me?.gangId || ocs.length === 0,
+      inactive: !me?.gangId || ocs?.length === 0,
       icon: "🔥",
       type: "oc",
       to: "OC",
@@ -513,7 +509,7 @@ const Map = React.memo(function MapPure({
 
     {
       id: 8,
-      inactive: streetraces.length === 0,
+      inactive: streetraces?.length === 0,
       icon: "🛣",
       type: "streetrace",
       to: "Streetrace",
@@ -521,7 +517,7 @@ const Map = React.memo(function MapPure({
 
     {
       id: 9,
-      inactive: robberies.length === 0,
+      inactive: robberies?.length === 0,
       icon: "🚨",
       type: "robbery",
       to: "Robbery",
@@ -533,10 +529,11 @@ const Map = React.memo(function MapPure({
   const iconToMapIcon = (icon) => {
     const position = getPosition(icon.id, icon.type); //0-1
 
-    const areaIndex = Math.floor(cityAreas.areas.length * position);
+    const areaIndex = Math.floor(cityAreas?.areas.length * position);
 
-    const area = cityAreas.areas[areaIndex];
+    const area = cityAreas?.areas[areaIndex];
 
+    if (!area) return {};
     const pseudoRandom = (x, y) => x + position * (y - x);
 
     const latitude = pseudoRandom(
@@ -625,7 +622,7 @@ const Map = React.memo(function MapPure({
       selected,
       city,
       dragAndDropMode,
-      cityAreas.city,
+      cityAreas?.city,
       me?.name,
       me?.level,
       device,
@@ -651,7 +648,7 @@ const Map = React.memo(function MapPure({
     );
   }, [view, territories, selectedAreaIndex]);
 
-  const renderCities = cities.map((city, index) => {
+  const renderCities = cities?.map((city, index) => {
     const onPress = async () => {
       const airplanes = [
         "Geen vliegtuig",
@@ -671,11 +668,13 @@ const Map = React.memo(function MapPure({
 
       alertAlert(
         city.city,
-        me?.airplane === 0
+        me?.canChooseCity
+          ? getText("chooseCityText", city.city)
+          : me?.airplane === 0
           ? getText("noAirplane")
           : getText("travelToCityXYZ", airplane, city.city, time, cost),
         [
-          me?.airplane > 0 && {
+          (me?.airplane > 0 || me?.canChooseCity) && {
             text: getText("ok"),
             onPress: async () => {
               const { response } = await post("airport", {

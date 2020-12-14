@@ -32,7 +32,7 @@ type Device = {
 
 const initDevice = {
   loginToken: "",
-  logged: false,
+  logged: true,
   theme: DEFAULT_THEME,
   isConnected: 2,
   menuShown: true,
@@ -43,10 +43,10 @@ const initDevice = {
     right: [0, 1, 2, 3, 4, 5, 6],
   },
   map: {
-    zoom: 12,
+    zoom: 3,
   },
   showNotificatonsHeader: false,
-  guyVisible: false,
+  guyVisible: true,
   introLevel: 0,
   guyText: null,
   hasSeenInfo: {},

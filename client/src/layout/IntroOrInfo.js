@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { getTextFunction } from "../Util";
 import Guy from "./Guy";
+import { animateToWorld } from "./MapUtil";
 
-const IntroOrInfo = ({ screenProps: { dispatch, device, me } }) => {
+const IntroOrInfo = ({ city, map, screenProps: { dispatch, device, me } }) => {
   const getText = getTextFunction(me?.locale);
 
   useEffect(() => {
@@ -49,6 +50,7 @@ const IntroOrInfo = ({ screenProps: { dispatch, device, me } }) => {
       button: getText("intro2button"),
       onClose: () => {
         dispatch({ type: "SET_GUY_VISIBLE", value: false });
+        animateToWorld({ city, dispatch, map });
         // open nothing, just let the user choose a city like traveling.
         // when a city is chosen, animate to that city, up level
       },
@@ -73,7 +75,6 @@ const IntroOrInfo = ({ screenProps: { dispatch, device, me } }) => {
     text = intro?.text;
     button = intro?.button;
   }
-
   return (
     <Guy
       button={button}

@@ -808,15 +808,17 @@ const ActionsBar = ({
     },
   ];
 
-  const citiesActions = [
-    {
-      text: getText("goBack"),
-      icon: Icon.AntDesign,
-      iconName: "back",
-      onPress: () => animateToCity({ city, dispatch, map }),
-      isSelected: false,
-    },
-  ];
+  const citiesActions = me?.canChooseCity
+    ? []
+    : [
+        {
+          text: getText("goBack"),
+          icon: Icon.AntDesign,
+          iconName: "back",
+          onPress: () => animateToCity({ city, dispatch, map }),
+          isSelected: false,
+        },
+      ];
 
   const actions = shouldRenderCities
     ? citiesActions

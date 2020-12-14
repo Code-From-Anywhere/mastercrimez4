@@ -457,5 +457,6 @@
   "areaNotFound": "Gebied niet gevonden",
   "cityRelease": "Territoriums in deze stad worden $1 toegankelijk",
   "wrongCity": "Je bent niet in de goede stad",
-  "gym": "Sportschool"
+  "gym": "Sportschool",
+  "playerUnderProtection": "Deze speler staat onder bescherming. Spelers onder bescherming kunnen geen goederen ontvangen."
 }

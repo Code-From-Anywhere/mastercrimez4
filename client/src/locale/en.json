@@ -115,6 +115,7 @@
 
   "fly": "Fly",
   "chooseCity": "Choose city",
+  "chooseCityText": "Do you want to live in $1? You can always fly elsewhere later.",
 
   "menuIncome": "Income",
   "menuDonate": "Donate",

@@ -614,7 +614,7 @@ const Overlay = ({
           <Icon.FontAwesome name="shield" color="white" size={24} />
 
           <Countdown
-            until={me?.protectionAt}
+            until={me?.protectionAt - 3600000}
             size={10}
             timeToShow={["H", "mm", "ss"]}
           />
@@ -792,7 +792,7 @@ const Overlay = ({
           device={device}
         />
 
-        <IntroOrInfo screenProps={screenProps} />
+        <IntroOrInfo city={city} map={map} screenProps={screenProps} />
       </Menus>
     </>
   );

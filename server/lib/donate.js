@@ -69,6 +69,10 @@ const donate = async (
       if (user2) {
         if (user2.id !== user.id) {
           if (user2.health > 0) {
+            if (user2.protectionAt > Date.now()) {
+              return res.json({ response: getText("playerUnderProtection") });
+            }
+
             const amount2 = Math.round(amount * 0.95);
 
             const typeName = typeNames[type];

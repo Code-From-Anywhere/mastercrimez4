@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/static/js/app.ebd4003a.chunk.js",
-    "app.js.map": "/static/js/app.ebd4003a.chunk.js.map",
+    "app.js": "/static/js/app.3ae38a81.chunk.js",
+    "app.js.map": "/static/js/app.3ae38a81.chunk.js.map",
     "runtime~app.js": "/static/js/runtime~app.2e9f1821.js",
     "runtime~app.js.map": "/static/js/runtime~app.2e9f1821.js.map",
-    "static/js/2.b54dea3a.chunk.js": "/static/js/2.b54dea3a.chunk.js",
-    "static/js/2.b54dea3a.chunk.js.map": "/static/js/2.b54dea3a.chunk.js.map",
+    "static/js/2.f3ab4730.chunk.js": "/static/js/2.f3ab4730.chunk.js",
+    "static/js/2.f3ab4730.chunk.js.map": "/static/js/2.f3ab4730.chunk.js.map",
     "fonts/AntDesign.ttf": "/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/./fonts/Feather.ttf",
@@ -26,12 +26,11 @@
     "index.html": "/index.html",
     "manifest.json": "/manifest.json",
     "serve.json": "/serve.json",
-    "static/js/2.b54dea3a.chunk.js.LICENSE.txt": "/static/js/2.b54dea3a.chunk.js.LICENSE.txt",
+    "static/js/2.f3ab4730.chunk.js.LICENSE.txt": "/static/js/2.f3ab4730.chunk.js.LICENSE.txt",
     "static/media/airport.png": "/static/media/airport.72e68404.png",
     "static/media/bank.png": "/static/media/bank.94332498.png",
     "static/media/bank.jpg": "/static/media/bank.a34b0cd7.jpg",
     "static/media/banker.jpg": "/static/media/banker.1d9edc53.jpg",
-    "static/media/bombarderen.jpg": "/static/media/bombarderen.3d0c7534.jpg",
     "static/media/bulletfactory.png": "/static/media/bulletfactory.e58e7c97.png",
     "static/media/cardealer.jpg": "/static/media/cardealer.9341f232.jpg",
     "static/media/cars.jpeg": "/static/media/cars.a3f3b108.jpeg",
@@ -45,9 +44,9 @@
     "static/media/dood.jpg": "/static/media/dood.d44e4074.jpg",
     "static/media/drugstore.jpg": "/static/media/drugstore.4fbc8e73.jpg",
     "static/media/forest.jpeg": "/static/media/forest.56ce5166.jpeg",
+    "static/media/gangster3.png": "/static/media/gangster3.65c72ef7.png",
     "static/media/garage.png": "/static/media/garage.6bda310e.png",
     "static/media/gym.png": "/static/media/gym.8d563841.png",
-    "static/media/hacker.jpeg": "/static/media/hacker.010dc613.jpeg",
     "static/media/headquarter.png": "/static/media/headquarter.e93c6de6.png",
     "static/media/highway.jpeg": "/static/media/highway.f8935d04.jpeg",
     "static/media/hospital.png": "/static/media/hospital.77df0a1e.png",
@@ -70,7 +69,6 @@
     "static/media/jewelrystore.jpg": "/static/media/jewelrystore.e2f62912.jpg",
     "static/media/junkies.png": "/static/media/junkies.c17461b4.png",
     "static/media/killer.jpg": "/static/media/killer.fef52faa.jpg",
-    "static/media/logo5.jpg": "/static/media/logo5.8e72dd72.jpg",
     "static/media/market.png": "/static/media/market.32e2d0f1.png",
     "static/media/pimp.jpg": "/static/media/pimp.f2697d22.jpg",
     "static/media/politie.jpeg": "/static/media/politie.211bf938.jpeg",
@@ -87,7 +85,7 @@
   },
   "entrypoints": [
     "static/js/runtime~app.2e9f1821.js",
-    "static/js/2.b54dea3a.chunk.js",
-    "static/js/app.ebd4003a.chunk.js"
+    "static/js/2.f3ab4730.chunk.js",
+    "static/js/app.3ae38a81.chunk.js"
   ]
 }

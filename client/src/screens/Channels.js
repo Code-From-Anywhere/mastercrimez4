@@ -27,51 +27,6 @@ class ChatScreen extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.fetchChannelsubs();
-
-    this.interval = setInterval(() => this.fetchChannelsubs(), 5000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  fetchChannelsubs = () => {
-    const {
-      screenProps: { device, reloadChannels },
-    } = this.props;
-    reloadChannels(device.loginToken);
-  };
-
-  // fetchChannelsubs = () => {
-  //   const {
-  //     screenProps: { device },
-  //   } = this.props;
-  //   fetch(
-  //     `${Constants.SERVER_ADDR}/channelsubs?loginToken=${device.loginToken}`,
-  //     {
-  //       method: "GET",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //     }
-  //   )
-  //     .then((response) => response.json())
-  //     .then((channelsubs) => {
-  //       if (channelsubs.response) {
-  //         this.setState({ response: channelsubs.response });
-  //       } else {
-  //         this.setState({ channelsubs });
-  //       }
-  //       this.setState({ isFetching: false });
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
-
   onRefresh = () => {
     this.setState({ isFetching: true }, function () {
       this.fetchChannelsubs();
@@ -278,15 +233,12 @@ class ChatScreen extends React.Component {
       screenProps: {
         device: { theme },
         me,
+        channels,
       },
     } = this.props;
 
     const getText = getTextFunction(me?.locale);
-    const {
-      screenProps: { channels },
-    } = this.props;
 
-    // console.log("channels", channels);
     return (
       <SafeAreaView style={styles.container}>
         <FlatList

@@ -234,6 +234,12 @@ export const getPosition = (id, type) => {
 
 export const getZoom = (delta) => Math.ceil(Math.log(360 / delta) / Math.LN2);
 
+export const DEFAULT_CITY = {
+  latitude: 52.378, //amsterdam
+  longitude: 4.89707,
+  delta: 0.3,
+};
+
 export const animateToCity = ({
   map,
   dispatch,
@@ -243,7 +249,7 @@ export const animateToCity = ({
   animationTime,
 }) => {
   if (Platform.OS === "web") {
-    const zoom2 = zoom ? zoom : getZoom(city?.delta);
+    const zoom2 = zoom ? zoom : getZoom(city?.delta || DEFAULT_CITY.delta);
     console.log("animateTocity", zoom2);
 
     const doZoom = () => dispatch({ type: "SET_ZOOM", value: zoom2 });
@@ -254,16 +260,16 @@ export const animateToCity = ({
       doZoom();
     }
     map?.panTo({
-      lat: city.latitude,
-      lng: city.longitude,
+      lat: city?.latitude || DEFAULT_CITY.latitude,
+      lng: city?.longitude || DEFAULT_CITY.longitude,
     });
   } else {
     map?.animateToRegion(
       {
-        latitude: city.latitude,
-        longitude: city.longitude,
-        latitudeDelta: city.delta * 1.2,
-        longitudeDelta: city.delta * 1.2,
+        latitude: city?.latitude || DEFAULT_CITY.latitude,
+        longitude: city?.longitude || DEFAULT_CITY.longitude,
+        latitudeDelta: city?.delta || DEFAULT_CITY.delta * 1.2,
+        longitudeDelta: city?.delta || DEFAULT_CITY.delta * 1.2,
       },
       animationTime
     );
