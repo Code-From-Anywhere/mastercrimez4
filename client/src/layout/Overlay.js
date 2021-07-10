@@ -792,9 +792,9 @@ const Overlay = ({
           device={device}
         />
 
-        {false && (
+        {/* {false && (
           <IntroOrInfo city={city} map={map} screenProps={screenProps} />
-        )}
+        )} */}
       </Menus>
     </>
   );
