@@ -1,5 +1,5 @@
 import isEqual from "react-fast-compare";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { applyMiddleware, compose, createStore } from "redux";
 import { persistCombineReducers, persistStore } from "redux-persist";
 import createSagaMiddleware from "redux-saga";
