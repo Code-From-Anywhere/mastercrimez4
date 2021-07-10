@@ -36,10 +36,10 @@ const MyObjects = ({
         {amount === 1 ? getText("property") : getText("properties")}!
       </T>
 
-      {properties
-        .map((p) => p.name)
-        .map((property) => {
-          return cities?.map((city, index) => {
+      {cities?.map((city, index) => {
+        return properties
+          .map((p) => p.name)
+          .map((property) => {
             const ownerKey = `${property}Owner`;
             const propertyString = getText(property);
             if (propertyString === undefined) console.log(property);
@@ -71,7 +71,7 @@ const MyObjects = ({
               );
             }
           });
-        })}
+      })}
 
       <View style={{ height: 80 }} />
     </View>

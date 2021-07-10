@@ -8,7 +8,8 @@
     "web": "expo start --web",
     "build": "expo build:web",
     "deploy": "yarn build && expo publish && cd .. && git add . && git commit -m \"Improvements\" && git push && cd client",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "cloc": "cloc src"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.6.0",
@@ -70,6 +71,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
+    "@types/react-native": "~0.62.13",
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "^8.2.3",
     "eslint": "^7.15.0",
@@ -77,7 +79,8 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.2.0"
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "typescript": "~3.9.5"
   },
   "private": true
 }
