@@ -703,6 +703,8 @@
   "goBack": "Go back",
 
   "noAirplane": "You don't have an airplane",
+  "noAirplaneText": "You don't have an airplane, do you want to buy one?",
+
   "travelToCityXYZ": "Do you want to travel with your $1 to $2? It will take $3 seconds and it will cost €$4,-.",
 
   "removeProtectionText": "Do you want to remove your protection?",

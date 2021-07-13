@@ -165,14 +165,8 @@ const GameObjects = React.memo(
     const dispatch = useDispatch();
     const alertAlert = React.useContext(AlertContext);
 
-    const {
-      latitude,
-      longitude,
-      radius,
-      square,
-      bounds,
-      platformBounds,
-    } = getObjectMeta({ object, index, city, cityAreas });
+    const { latitude, longitude, radius, square, bounds, platformBounds } =
+      getObjectMeta({ object, index, city, cityAreas });
 
     const draggable = level >= 5;
     const onDragEnd = async ({ nativeEvent: { coordinate } }) => {

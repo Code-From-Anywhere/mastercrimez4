@@ -292,12 +292,20 @@ class StealCar extends Component {
                   );
                 })
               : null}
-            <Text style={{ color: device.theme.primaryText }}>
+            <Text style={{ color: device.theme.primaryText, margin: 10 }}>
               {response.response}
             </Text>
 
+            {response.linkToGarage && (
+              <Button
+                style={{ margin: 10 }}
+                title={getText("menuGarageShop")}
+                onPress={() => navigation.navigate("GarageShop")}
+              />
+            )}
+
             <Button
-              theme={this.props.screenProps.device.theme}
+              style={{ margin: 10 }}
               title={getText("ok")}
               onPress={() => this.setState({ response: null })}
             />

@@ -166,6 +166,8 @@
   "cancel": "Annuleren",
 
   "noAirplane": "Je hebt geen vliegtuig",
+  "noAirplaneText": "Je hebt geen vliegtuig, wil je er een kopen?",
+
   "travelToCityXYZ": "Wil je reizen met je $1 naar $2? Het duurt $3 seconden en kost €$4,-.",
 
   "bombNoAirplane": "Jij hebt nog geen vliegtuig, dus kan niet bombarderen",

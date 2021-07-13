@@ -73,6 +73,7 @@ const stealcar = async (req, res, User, Garage, Action, Gang, GangMission) => {
     if (maxCars[user.garage] < amountCarsAlready) {
       return res.json({
         response: getText("stealCarTooManyCars", maxCars[user.garage]),
+        linkToGarage: true,
       });
     }
 

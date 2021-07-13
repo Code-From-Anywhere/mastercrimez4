@@ -15,6 +15,7 @@ require("dotenv").config();
 const rateLimit = require("express-rate-limit");
 
 const { importAreas } = require("./importAreas");
+const listEndpoints = require("express-list-endpoints");
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
@@ -1393,6 +1394,10 @@ server.use("/uploads", express.static("uploads"));
 
 /** ENDPOINTS  */
 
+server.get("/", (req, res) => {
+  res.send(listEndpoints(server));
+});
+
 server.post("/upload", async (req, res, next) => {
   const { image, token } = req.body;
 
@@ -2742,7 +2747,8 @@ server.post("/forgotPassword2", async (req, res) => {
 });
 
 function isEmail(email) {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var re =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 }
 
@@ -3363,6 +3369,11 @@ const createStreetraces = async (period) => {
   if (!isReleased) {
     return;
   }
+
+  const already = await Streetrace.findAll({});
+
+  if (already.length > 20) return; //max 20 races
+
   const citiesArr = (await City.findAll({})).map((city) => city.city);
   const randomCity = () =>
     citiesArr[Math.floor(Math.random() * citiesArr.length)];

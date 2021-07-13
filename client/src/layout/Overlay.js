@@ -450,13 +450,14 @@ const Overlay = ({
           marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         }}
       >
-        {view === "territories" ? (
-          renderTerritoriesSwiper
-        ) : view === "game" ? (
-          renderPropertiesSwiper
-        ) : view === "crimes" || view === "stats" ? (
-          <StatsHeader navigation={navigation} device={device} me={me} />
-        ) : null}
+        <StatsHeader navigation={navigation} device={device} me={me} />
+
+        {view === "territories"
+          ? renderTerritoriesSwiper
+          : view === "game"
+          ? renderPropertiesSwiper
+          : null}
+
         {!isSmallDevice && (
           <Chat me={me} device={device} navigation={navigation} />
         )}

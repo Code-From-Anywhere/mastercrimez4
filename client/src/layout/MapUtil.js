@@ -173,18 +173,13 @@ export const selectBuilding = ({
   }
 
   if (animate) {
-    const {
-      latitude,
-      longitude,
-      zoom,
-      deltaLatitude,
-      deltaLongitude,
-    } = getObjectMeta({
-      city,
-      cityAreas,
-      index: objectIndex,
-      object,
-    });
+    const { latitude, longitude, zoom, deltaLatitude, deltaLongitude } =
+      getObjectMeta({
+        city,
+        cityAreas,
+        index: objectIndex,
+        object,
+      });
 
     if (latitude && longitude) {
       if (Platform.OS === "web") {
@@ -341,16 +336,21 @@ export const getObjectMeta = ({ object, index, city, cityAreas }) => {
     west: topRightLongitude,
   };
 
-  const platformBounds =
-    Platform.OS === "ios"
-      ? [
-          [topLeftLatitude, topLeftLongitude],
-          [bottomRightLatitude, bottomRightLongitude],
-        ]
-      : [
-          [bottomRightLatitude, topLeftLongitude],
-          [topLeftLatitude, bottomRightLongitude],
-        ];
+  // const platformBounds =
+  //   Platform.OS === "ios"
+  //     ? [
+  //         [topLeftLatitude, topLeftLongitude],
+  //         [bottomRightLatitude, bottomRightLongitude],
+  //       ]
+  //     : [
+  //         [bottomRightLatitude, topLeftLongitude],
+  //         [topLeftLatitude, bottomRightLongitude],
+  //       ];
+
+  const platformBounds = [
+    [topLeftLatitude, topLeftLongitude],
+    [bottomRightLatitude, bottomRightLongitude],
+  ];
 
   const radius = biggestDeltaLatitude * 50000;
 

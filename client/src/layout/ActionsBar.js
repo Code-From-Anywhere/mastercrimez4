@@ -287,7 +287,26 @@ const ActionsBar = ({
         icon: Icon.Ionicons,
         iconName: "ios-airplane",
         onPress: () => {
-          animateToWorld({ map, dispatch, city });
+          if (me.airplane === 0) {
+            alertAlert(
+              getText("noAirplane"),
+              getText("noAirplaneText"),
+              [
+                {
+                  text: getText("ok"),
+                  onPress: () => {
+                    navigation.navigate("AirplaneShop");
+                  },
+                },
+                {
+                  text: getText("cancel"),
+                },
+              ],
+              { key: "noAirplaneAlert" }
+            );
+          } else {
+            animateToWorld({ map, dispatch, city });
+          }
         },
         badgeAmount: 0,
       },
