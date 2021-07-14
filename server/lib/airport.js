@@ -25,7 +25,7 @@ const airport = async (req, res, User, Action) => {
 
   getText = getTextFunction(user.locale);
 
-  if (true || (user.airplane === 0 && !user.canChooseCity)) {
+  if (user.airplane === 0 && !user.canChooseCity) {
     res.json({ response: getText("noAirplane") });
     return;
   }
