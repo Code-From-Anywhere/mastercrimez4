@@ -53,7 +53,7 @@
     "react-native-markdown-display": "^7.0.0-alpha.2",
     "react-native-marquee": "^0.3.2",
     "react-native-md5": "^1.0.0",
-    "react-native-reanimated": "~2.2.0",
+    "react-native-reanimated": "~2.10.0",
     "react-native-redash": "^14.2.4",
     "react-native-safe-area-context": "3.2.0",
     "react-native-safe-area-view": "^1.0.0",
